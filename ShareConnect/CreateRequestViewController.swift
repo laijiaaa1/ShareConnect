@@ -11,6 +11,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseCore
 import JGProgressHUD
+import FirebaseStorage
 
 class CreateRequestViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
 
@@ -96,49 +97,50 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
 
     }
     @objc func doneButtonTapped() {
-        let db = Firestore.firestore()
+            let db = Firestore.firestore()
+            let storage = Storage.storage()
+            let user = Auth.auth().currentUser
+            let imageName = UUID().uuidString
 
-        let user = User(uid: "uid", email: "email@com")
+            let storageRef = storage.reference().child("images/\(imageName).jpg")
 
-        var requestData: [String: Any] = [:]
+            if let imageURL = uploadButton.backgroundImage(for: .normal), let imageData = imageURL.jpegData(compressionQuality: 0.1) {
+                storageRef.putData(imageData, metadata: nil) { (metadata, error) in
+                    if let error = error {
+                        print("Error uploading image: \(error)")
+                    } else {
+                        storageRef.downloadURL { (url, error) in
+                            if let error = error {
+                                print("Error getting download URL: \(error)")
+                            } else if let downloadURL = url {
+                                var requestData: [String: Any] = [:]
+                                requestData["image"] = downloadURL.absoluteString
 
-        
-        if let imageURL = uploadButton.backgroundImage(for: .normal){
-            let imageData = imageURL.jpegData(compressionQuality: 0.1)
-            let imageString = imageData?.base64EncodedString()
-            requestData["image"] = imageString
-        }
+                                for i in 0..<self.requestTableView.numberOfSections {
+                                    for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
+                                        let indexPath = IndexPath(row: j, section: i)
+                                        if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
+                                            let key = cell.requestLabel.text ?? ""
+                                            let value = cell.textField.text ?? ""
+                                            requestData[key] = value
+                                        }
+                                    }
+                                }
 
-        for i in 0..<requestTableView.numberOfSections {
-            for j in 0..<requestTableView.numberOfRows(inSection: i) {
-                let indexPath = IndexPath(row: j, section: i)
-                if let cell = requestTableView.cellForRow(at: indexPath) as? RequestCell {
-                    let key = cell.requestLabel.text ?? ""
-                    let value = cell.textField.text ?? ""
-                    requestData[key] = value
+                                let uid = user!.uid
+                                db.collection("users").document(uid).collection("request").document("request").setData(requestData) { error in
+                                    if let error = error {
+                                        print("Error writing document: \(error)")
+                                    } else {
+                                        print("Document successfully written!")
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-
-//        if let user = Auth.auth().currentUser {
-            let uid = user.uid
-            db.collection("users").document(uid).collection("request").document("request").setData(requestData) { error in
-                if let error = error {
-                    print("Error writing document: \(error)")
-                    let hud = JGProgressHUD()
-                    hud.textLabel.text = "Error"
-                    hud.show(in: self.view)
-                    hud.dismiss(afterDelay: 2.0)
-                } else {
-                    print("Document successfully written!")
-                    let hud = JGProgressHUD()
-                    hud.textLabel.text = "Success"
-                    hud.show(in: self.view)
-                    hud.dismiss(afterDelay: 2.0)
-                }
-            }
-//        }
-    }
 
     struct User {
         let uid: String
