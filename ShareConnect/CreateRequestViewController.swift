@@ -102,8 +102,11 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
 
         var requestData: [String: Any] = [:]
 
-        if let imageURL = uploadButton.backgroundImage(for: .normal)?.accessibilityIdentifier {
-            requestData["imageURL"] = imageURL
+        
+        if let imageURL = uploadButton.backgroundImage(for: .normal){
+            let imageData = imageURL.jpegData(compressionQuality: 0.1)
+            let imageString = imageData?.base64EncodedString()
+            requestData["image"] = imageString
         }
 
         for i in 0..<requestTableView.numberOfSections {
