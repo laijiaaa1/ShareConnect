@@ -128,7 +128,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 }
 
                                 let uid = user!.uid
-                                db.collection("users").document(uid).collection("request").document("request").setData(requestData) { error in
+                                db.collection("users").document(uid).collection("request").addDocument(data: requestData) { error in
                                     if let error = error {
                                         print("Error writing document: \(error)")
                                     } else {
