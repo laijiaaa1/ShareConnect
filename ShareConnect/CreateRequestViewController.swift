@@ -20,6 +20,19 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     let uploadButton = UIButton()
     let requestSelectSegment = UISegmentedControl()
     let doneButton = UIButton()
+    var groupOptions: [String] = []
+    var selectedGroup: String? {
+           didSet {
+               updateSelectedGroupUI()
+           }
+       }
+    private lazy var groupHeaderLabel: UILabel = {
+          let label = UILabel()
+          label.textAlignment = .center
+          label.textColor = .black
+          label.backgroundColor = .lightGray
+          return label
+      }()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -193,9 +206,75 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             print("public")
         } else {
             print("group")
+            fetchUserGroups()
             
         }
     }
+    func fetchUserGroups() {
+            guard let userId = Auth.auth().currentUser?.uid else {
+                print("User not authenticated.")
+                return
+            }
+            
+            let db = Firestore.firestore()
+            
+            db.collection("users").document(userId).collection("groups").getDocuments { [weak self] (querySnapshot, error) in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    print("Error fetching user groups: \(error)")
+                } else {
+                    self.groupOptions = querySnapshot?.documents.map { $0.documentID } ?? []
+                    
+                    self.showGroupOptions()
+                }
+            }
+        }
+        
+        func showGroupOptions() {
+            let alertController = UIAlertController(title: "Select Group", message: nil, preferredStyle: .actionSheet)
+            
+            for groupOption in groupOptions {
+                let action = UIAlertAction(title: groupOption, style: .default) { [weak self] _ in
+                    print("Selected group: \(groupOption)")
+                    self?.selectedGroup = groupOption
+                    self?.updateSelectedGroupUI()
+                }
+                alertController.addAction(action)
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            alertController.addAction(cancelAction)
+            
+            present(alertController, animated: true, completion: nil)
+        }
+    func updateSelectedGroupUI() {
+           if let selectedGroup = selectedGroup {
+               groupHeaderLabel.text = "Selected Group: \(selectedGroup)"
+               
+               if requestTableView.tableHeaderView == nil {
+                           requestTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: requestTableView.bounds.size.width, height: 50))
+                           requestTableView.tableHeaderView?.addSubview(groupHeaderLabel)
+                   groupHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
+                     NSLayoutConstraint.activate([
+                            groupHeaderLabel.leadingAnchor.constraint(equalTo: requestTableView.tableHeaderView!.leadingAnchor, constant: 16),
+                            groupHeaderLabel.trailingAnchor.constraint(equalTo: requestTableView.tableHeaderView!.trailingAnchor, constant: -16),
+                            groupHeaderLabel.topAnchor.constraint(equalTo: requestTableView.tableHeaderView!.topAnchor),
+                            groupHeaderLabel.bottomAnchor.constraint(equalTo: requestTableView.tableHeaderView!.bottomAnchor, constant: -16)
+                            ])
+                   groupHeaderLabel.textAlignment = .center
+                     groupHeaderLabel.textColor = .black
+                   groupHeaderLabel.backgroundColor = CustomColors.B1
+                   groupHeaderLabel.font = UIFont.systemFont(ofSize: 12)
+                   
+                   
+                       }
+           } else {
+               
+               requestTableView.tableHeaderView = nil
+           }
+       }
+        
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 8
     }
