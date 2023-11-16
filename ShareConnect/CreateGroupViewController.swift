@@ -33,7 +33,7 @@ class CreateGroupViewController: CreateRequestViewController {
         cell.addBtn.tintColor = .black
 
         let requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Require", "Number of people"]
-        
+
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info
@@ -53,23 +53,30 @@ class CreateGroupViewController: CreateRequestViewController {
                 cell.textField.tag = 2
             }
         }
+
         if indexPath.row == 6 {
-            cell.textField.keyboardType = .numberPad
-            
-            
+            let stepper = UIStepper()
+            stepper.minimumValue = 0
+            stepper.maximumValue = 100
+            stepper.stepValue = 1
+            stepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
+
+            cell.textField.inputView = stepper
+            cell.textField.tag = 3
+            cell.textField.text = "0"
+        } else {
+            cell.textField.keyboardType = .default
         }
+
         cell.addBtn.tag = indexPath.row
 
         return cell
     }
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @objc func stepperValueChanged(sender: UIStepper) {
+        
+        if let cell = findCellWithTag(3) {
+            cell.textField.text = "\(Int(sender.value))"
+        }
     }
-    */
-
 }
