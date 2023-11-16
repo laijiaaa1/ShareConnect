@@ -11,5 +11,6 @@ target 'ShareConnect' do
   pod 'Firebase/Core', '~> 10.9.0'
   pod 'Firebase/Firestore', '~> 10.9.0'
   pod 'SwiftLint'
+  pod 'JGProgressHUD'
 
 end

@@ -6,6 +6,11 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseCore
+import JGProgressHUD
 
 class CreateRequestViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
 
@@ -13,6 +18,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     let requestTableView = UITableView()
     let uploadButton = UIButton()
     let requestSelectSegment = UISegmentedControl()
+    let doneButton = UIButton()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -69,11 +75,73 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             requestTableView.topAnchor.constraint(equalTo: requestSelectSegment.bottomAnchor, constant: 20),
             requestTableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             requestTableView.widthAnchor.constraint(equalToConstant: 320),
-            requestTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            requestTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -80)
+        ])
+        
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(doneButton)
+        doneButton.backgroundColor = .yellow
+        doneButton.setTitle("Done", for: .normal)
+        doneButton.setTitleColor(.black, for: .normal)
+        doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        doneButton.layer.cornerRadius = 10
+        doneButton.layer.masksToBounds = true
+        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        NSLayoutConstraint.activate([
+            doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            doneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            doneButton.widthAnchor.constraint(equalToConstant: 320),
+            doneButton.heightAnchor.constraint(equalToConstant: 40)
         ])
 
     }
-    
+    @objc func doneButtonTapped() {
+        let db = Firestore.firestore()
+
+        let user = User(uid: "uid", email: "email@com")
+
+        var requestData: [String: Any] = [:]
+
+        if let imageURL = uploadButton.backgroundImage(for: .normal)?.accessibilityIdentifier {
+            requestData["imageURL"] = imageURL
+        }
+
+        for i in 0..<requestTableView.numberOfSections {
+            for j in 0..<requestTableView.numberOfRows(inSection: i) {
+                let indexPath = IndexPath(row: j, section: i)
+                if let cell = requestTableView.cellForRow(at: indexPath) as? RequestCell {
+                    let key = cell.requestLabel.text ?? ""
+                    let value = cell.textField.text ?? ""
+                    requestData[key] = value
+                }
+            }
+        }
+
+//        if let user = Auth.auth().currentUser {
+            let uid = user.uid
+            db.collection("users").document(uid).collection("request").document("request").setData(requestData) { error in
+                if let error = error {
+                    print("Error writing document: \(error)")
+                    let hud = JGProgressHUD()
+                    hud.textLabel.text = "Error"
+                    hud.show(in: self.view)
+                    hud.dismiss(afterDelay: 2.0)
+                } else {
+                    print("Document successfully written!")
+                    let hud = JGProgressHUD()
+                    hud.textLabel.text = "Success"
+                    hud.show(in: self.view)
+                    hud.dismiss(afterDelay: 2.0)
+                }
+            }
+//        }
+    }
+
+    struct User {
+        let uid: String
+        let email: String
+    }
+
     @objc func uploadButtonTapped() {
 
         let imagePickerController = UIImagePickerController()
@@ -166,10 +234,12 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
 
         if let startCell = findCellWithTag(1) {
             startCell.textField.text = timeString
+            startCell.textField.resignFirstResponder()
         }
 
         if let endCell = findCellWithTag(2) {
             endCell.textField.text = timeString
+            endCell.textField.resignFirstResponder()
         }
     }
 
