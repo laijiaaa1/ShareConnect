@@ -18,6 +18,8 @@
 		346DE7C92B05AE4D008D411A /* CreateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */; };
 		346DE7CB2B05FE48008D411A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7CA2B05FE48008D411A /* SearchViewController.swift */; };
 		346DE7CE2B063616008D411A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7CD2B063616008D411A /* LoginViewController.swift */; };
+		346DE7D02B065DA2008D411A /* CreateSupplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */; };
+		346DE7D22B065DB1008D411A /* CreateGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */; };
 		CC99D844D6CD00D0115262BD /* Pods_ShareConnect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19192464EEB9831E46A38D35 /* Pods_ShareConnect.framework */; };
 /* End PBXBuildFile section */
 
@@ -36,6 +38,8 @@
 		346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRequestViewController.swift; sourceTree = "<group>"; };
 		346DE7CA2B05FE48008D411A /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		346DE7CD2B063616008D411A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSupplyViewController.swift; sourceTree = "<group>"; };
+		346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupViewController.swift; sourceTree = "<group>"; };
 		D7AAC5A05BCEF95BCA4A2B9B /* Pods-ShareConnect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareConnect.release.xcconfig"; path = "Target Support Files/Pods-ShareConnect/Pods-ShareConnect.release.xcconfig"; sourceTree = "<group>"; };
 		E0D3BC877A1806FFBEA6A27A /* Pods-ShareConnect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareConnect.debug.xcconfig"; path = "Target Support Files/Pods-ShareConnect/Pods-ShareConnect.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,6 +82,8 @@
 				341E9B8F2B03629800997FE9 /* HomePageViewController.swift */,
 				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
 				346DE7C62B05AB5C008D411A /* CreateViewController.swift */,
+				346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */,
+				346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */,
 				346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */,
 				346DE7CD2B063616008D411A /* LoginViewController.swift */,
 				341E9B912B03629800997FE9 /* Main.storyboard */,
@@ -245,7 +251,9 @@
 				346DE7C72B05AB5C008D411A /* CreateViewController.swift in Sources */,
 				341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */,
 				341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */,
+				346DE7D22B065DB1008D411A /* CreateGroupViewController.swift in Sources */,
 				346DE7C92B05AE4D008D411A /* CreateRequestViewController.swift in Sources */,
+				346DE7D02B065DA2008D411A /* CreateSupplyViewController.swift in Sources */,
 				341E9B8E2B03629800997FE9 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

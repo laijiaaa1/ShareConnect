@@ -7,6 +7,9 @@
 
 import UIKit
 
+struct CustomColors {
+    static let B1 = UIColor(red: 246/255, green: 246/255, blue: 244/255, alpha: 1)
+}
 class HomePageViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     
@@ -29,13 +32,14 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                                 ("Travel", "icons8-camp-64")]
     
     let hotCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let textAttributes = [NSAttributedString.Key.font:UIFont(name: "GeezaPro-Bold", size: 20)]
         
-        view.backgroundColor = UIColor(red: 246/255, green: 246/255, blue: 244/255, alpha: 1)
-        
+        view.backgroundColor = CustomColors.B1
         searchTextField.layer.borderWidth = 1
         searchTextField.layer.cornerRadius = 22
         searchTextField.layer.masksToBounds = true

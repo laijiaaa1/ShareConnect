@@ -32,8 +32,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationItem.title = "My request"
+        view.backgroundColor = CustomColors.B1
+        navigationItem.title = "Create request"
 
         uploadButton.backgroundColor = .yellow
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
@@ -71,12 +71,14 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         view.addSubview(requestTableView)
         requestTableView.delegate = self
         requestTableView.dataSource = self
+        requestTableView.layer.cornerRadius = 10
+        requestTableView.backgroundColor = CustomColors.B1
         requestTableView.register(UITableViewCell.self, forCellReuseIdentifier: "requestCell")
         NSLayoutConstraint.activate([
             requestTableView.topAnchor.constraint(equalTo: requestSelectSegment.bottomAnchor, constant: 20),
             requestTableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             requestTableView.widthAnchor.constraint(equalToConstant: 320),
-            requestTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -80)
+            requestTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
         ])
         
         doneButton.translatesAutoresizingMaskIntoConstraints = false
@@ -92,7 +94,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
             doneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             doneButton.widthAnchor.constraint(equalToConstant: 320),
-            doneButton.heightAnchor.constraint(equalToConstant: 40)
+            doneButton.heightAnchor.constraint(equalToConstant: 60)
         ])
 
     }

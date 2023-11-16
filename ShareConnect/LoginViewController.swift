@@ -15,7 +15,7 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        view.backgroundColor = CustomColors.B1
         // Do any additional setup after loading the view.
     }
     @IBAction func registerButtonTapped(_ sender: UIButton) {

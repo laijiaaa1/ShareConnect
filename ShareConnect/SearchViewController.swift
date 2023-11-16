@@ -24,36 +24,37 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let cellHeight = collectionView.frame.height / 2
         let xPosition = CGFloat(indexPath.item % 2) * cellWidth
         let yPosition = CGFloat(indexPath.item / 2) * cellHeight
-
+        
         cell.frame = CGRect(x: xPosition, y: yPosition, width: cellWidth, height: cellHeight)
         if indexPath.item < allRequests.count {
-               cell.request = allRequests[indexPath.item]
-           } else {
-               cell.request = nil
-           }
+            cell.request = allRequests[indexPath.item]
+        } else {
+            cell.request = nil
+        }
         return cell
     }
     var allRequests: [RequestData] = []
-
+    
     let scrollView = UIScrollView()
     let stackView = UIStackView()
     let lineView = UIView()
     let button1 = UIButton()
     let button2 = UIButton()
     let collectionView: UICollectionView = {
-           let layout = UICollectionViewFlowLayout()
-           layout.scrollDirection = .horizontal
-           let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-           collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-           collectionView.backgroundColor = .white
-      
-           collectionView.translatesAutoresizingMaskIntoConstraints = false
-           return collectionView
-       }()
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.backgroundColor = .white
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }()
     override func viewDidLoad() {
+        view.backgroundColor = CustomColors.B1
         super.viewDidLoad()
         setupUI()
-        
+        navigationItem.title = "SHARECONNECT"
         collectionView.delegate = self
         collectionView.dataSource = self
         let userID = Auth.auth().currentUser?.uid ?? ""
@@ -72,7 +73,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-        stackView.spacing = 10
+//        stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
@@ -84,12 +85,12 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         button1.setTitle("Request", for: .normal)
         button1.setTitleColor(.black, for: .normal)
-        button1.backgroundColor = .yellow
+        button1.layer.borderWidth = 1
         button1.addTarget(self, action: #selector(button1Action), for: .touchUpInside)
         
         button2.setTitle("Available", for: .normal)
         button2.setTitleColor(.black, for: .normal)
-        button2.backgroundColor = .yellow
+        button2.layer.borderWidth = 1
         button2.addTarget(self, action: #selector(button2Action), for: .touchUpInside)
         
         stackView.addArrangedSubview(button1)
@@ -107,61 +108,79 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         ])
         
         view.addSubview(collectionView)
-               
-               NSLayoutConstraint.activate([
-                   collectionView.topAnchor.constraint(equalTo: lineView.bottomAnchor),
-                   collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                   collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                   collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-               ])
-               scrollView.contentSize = CGSize(width: view.frame.width, height: lineView.frame.origin.y + collectionView.frame.height)
-           }
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: lineView.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        scrollView.contentSize = CGSize(width: view.frame.width, height: lineView.frame.origin.y + collectionView.frame.height)
+    }
     @objc func button1Action() {
         UIView.animate(withDuration: 0.3) {
             self.lineView.frame.origin.x = 0
         }
+        
+        let userID = Auth.auth().currentUser?.uid ?? ""
+        fetchRequestsForUser(userID: userID)
     }
+
     @objc func button2Action() {
         UIView.animate(withDuration: 0.3) {
             self.lineView.frame.origin.x = self.view.frame.width / 2
         }
+        let userID = Auth.auth().currentUser?.uid ?? ""
+        fetchRequestsForUser(userID: userID)
     }
+
     func fetchRequestsForUser(userID: String) {
-           let db = Firestore.firestore()
+        let db = Firestore.firestore()
+        
+        print("Current user UID: \(userID)")
+      
+        var collectionName = "request"
+        if lineView.frame.origin.x == view.frame.width / 2 {
+            collectionName = "supply"
+        }
 
-           print("Current user UID: \(userID)")
-           db.collection("users").document(userID).collection("request").getDocuments { (querySnapshot, error) in
-               if let error = error {
-                   print("Error getting documents: \(error)")
-               } else {
-                   self.allRequests = []
-                   print("Number of documents: \(querySnapshot?.documents.count ?? 0)")
+        guard !collectionName.isEmpty else {
+            print("Error: Collection name is empty")
+            return
+        }
 
-                   for document in querySnapshot!.documents {
-                       let requestData = document.data()
-                       print("Document data: \(requestData)")
-
-                       if let name = requestData["Name"] as? String,
-                          let price = requestData["Price"] as? String,
-                          let startTime = requestData["Start Time"] as? String,
-                          let imageString = requestData["image"] as? String,
-                          let date = DateFormatter.iso8601Full.date(from: startTime) {
-
-                           let request = RequestData(name: name, price: price, date: date, imageString: imageString)
-                           self.allRequests.append(request)
-                       }
-                   }
-
-                   print("Number of requests: \(self.allRequests.count)")
-
-                   // Reload the collection view data on the main thread
-                   DispatchQueue.main.async {
-                       self.collectionView.reloadData()
-                   }
-               }
-           }
-       }
-
+        
+        db.collection("users").document(userID).collection(collectionName).getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                self.allRequests = []
+                print("Number of documents: \(querySnapshot?.documents.count ?? 0)")
+                
+                for document in querySnapshot!.documents {
+                    let requestData = document.data()
+                    print("Document data: \(requestData)")
+                    
+                    if let name = requestData["Name"] as? String,
+                       let price = requestData["Price"] as? String,
+                       let startTime = requestData["Start Time"] as? String,
+                       let imageString = requestData["image"] as? String,
+                       let date = DateFormatter.iso8601Full.date(from: startTime) {
+                        
+                        let request = RequestData(name: name, price: price, date: date, imageString: imageString)
+                        self.allRequests.append(request)
+                    }
+                }
+                
+                print("Number of requests: \(self.allRequests.count)")
+                
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
+            }
+        }
+    }
+    
 }
 
 class SearchCollectionViewCell: UICollectionViewCell {
@@ -179,7 +198,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
             updateUI()
         }
     }
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -201,8 +220,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
             imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.6)
         ])
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        //data from firebase
-                nameLabel.text = "Name"
+        nameLabel.text = "Name"
         nameLabel.font = UIFont.systemFont(ofSize: 12)
         contentView.addSubview(nameLabel)
         NSLayoutConstraint.activate([
@@ -213,7 +231,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         ])
         
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
-                priceLabel.text = "$ 0.00"
+        priceLabel.text = "$ 0.00"
         priceLabel.font = UIFont.systemFont(ofSize: 12)
         contentView.addSubview(priceLabel)
         NSLayoutConstraint.activate([
@@ -224,7 +242,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         ])
         
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
-                dateLabel.text = "Date"
+        dateLabel.text = "Date"
         dateLabel.font = UIFont.systemFont(ofSize: 12)
         contentView.addSubview(dateLabel)
         NSLayoutConstraint.activate([
@@ -247,16 +265,16 @@ class SearchCollectionViewCell: UICollectionViewCell {
         
     }
     func updateUI() {
-            if let request = request {
-                nameLabel.text = request.name
-                priceLabel.text = "$\(request.price)"
-                dateLabel.text = DateFormatter.localizedString(from: request.date, dateStyle: .short, timeStyle: .short)
-                
-                if let url = URL(string: request.imageString) {
-                               imageView.kf.setImage(with: url)
-                           }
+        if let request = request {
+            nameLabel.text = request.name
+            priceLabel.text = "$\(request.price)"
+            dateLabel.text = DateFormatter.localizedString(from: request.date, dateStyle: .short, timeStyle: .short)
+            
+            if let url = URL(string: request.imageString) {
+                imageView.kf.setImage(with: url)
             }
         }
+    }
 }
 struct RequestData {
     let name: String
