@@ -87,6 +87,21 @@
             </objects>
             <point key="canvasLocation" x="3929" y="1516"/>
         </scene>
+        <!--Detail View Controller-->
+        <scene sceneID="BBN-5D-mJv">
+            <objects>
+                <viewController storyboardIdentifier="DetailViewController" id="BcP-v8-9q1" customClass="DetailViewController" customModule="ShareConnect" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zoj-Cp-sU9">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="CIp-au-k1F"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xzy-KS-vbk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5277" y="1413"/>
+        </scene>
         <!--Search View Controller-->
         <scene sceneID="Ola-kW-VkO">
             <objects>

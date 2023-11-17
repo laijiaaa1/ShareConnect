@@ -31,7 +31,21 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             cell.request = nil
         }
+        
+        //select cell to show detail
+        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
         return cell
+    }
+    @objc func tap(_ sender: UITapGestureRecognizer) {
+        let location = sender.location(in: self.collectionView)
+        let indexPath = self.collectionView.indexPathForItem(at: location)
+        if let index = indexPath {
+            let cell = self.collectionView.cellForItem(at: index) as! SearchCollectionViewCell
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+//            vc.request = cell.request
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     var allRequests: [RequestData] = []
     
@@ -40,6 +54,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     let lineView = UIView()
     let button1 = UIButton()
     let button2 = UIButton()
+    let buttonClassification = UIButton()
+    
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -107,10 +123,24 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             lineView.heightAnchor.constraint(equalToConstant: 2)
         ])
         
-        view.addSubview(collectionView)
-        
+        buttonClassification.backgroundColor = .white
+        buttonClassification.translatesAutoresizingMaskIntoConstraints = false
+        buttonClassification.layer.borderWidth = 1
+        buttonClassification.layer.cornerRadius = 20
+        buttonClassification.setTitle("Class", for: .normal)
+        buttonClassification.setTitleColor(.black, for: .normal)
+        view.addSubview(buttonClassification)
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: lineView.bottomAnchor),
+            buttonClassification.topAnchor.constraint(equalTo: lineView.bottomAnchor, constant: 10),
+            buttonClassification.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            buttonClassification.widthAnchor.constraint(equalToConstant: 60),
+            buttonClassification.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        
+        view.addSubview(collectionView)
+        collectionView.backgroundColor = CustomColors.B1
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: buttonClassification.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -252,17 +282,27 @@ class SearchCollectionViewCell: UICollectionViewCell {
         ])
         
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Request", for: .normal)
+        button.setTitle("Provide", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = .yellow
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        button.backgroundColor = .white
+        button.layer.borderWidth = 1
         button.layer.cornerRadius = 10
         contentView.addSubview(button)
         NSLayoutConstraint.activate([
             button.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 15),
             button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            button.heightAnchor.constraint(equalToConstant: 15)
+            button.heightAnchor.constraint(equalToConstant: 30),
+            button.widthAnchor.constraint(equalToConstant: 100)
         ])
-        
+        button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+    }
+    @objc func buttonAction(sender: UIButton!) {
+       let storyboard = UIStoryboard(name: "Main", bundle: nil)
+         let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+//          vc.request = request
+          vc.modalPresentationStyle = .fullScreen
+          self.window?.rootViewController?.present(vc, animated: true, completion: nil)
     }
     func updateUI() {
         if let request = request {

@@ -24,7 +24,9 @@ class CreateGroupViewController: CreateRequestViewController {
         }
     }
     
-   
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 7
+    }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "requestCell", for: indexPath) as? RequestCell ?? RequestCell()
 
@@ -33,7 +35,7 @@ class CreateGroupViewController: CreateRequestViewController {
         cell.addBtn.tintColor = .black
 
         let requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Require", "Number of people"]
-
+      
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info

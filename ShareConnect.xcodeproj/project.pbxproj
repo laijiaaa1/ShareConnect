@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3410D9662B07125600D32744 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9652B07125600D32744 /* GroupViewController.swift */; };
+		3410D9682B07129800D32744 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9672B07129800D32744 /* DetailViewController.swift */; };
 		341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341E9B8B2B03629800997FE9 /* AppDelegate.swift */; };
 		341E9B8E2B03629800997FE9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341E9B8D2B03629800997FE9 /* SceneDelegate.swift */; };
 		341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341E9B8F2B03629800997FE9 /* HomePageViewController.swift */; };
@@ -25,6 +27,8 @@
 
 /* Begin PBXFileReference section */
 		19192464EEB9831E46A38D35 /* Pods_ShareConnect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShareConnect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3410D9652B07125600D32744 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
+		3410D9672B07129800D32744 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		341E9B882B03629800997FE9 /* ShareConnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShareConnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		341E9B8B2B03629800997FE9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		341E9B8D2B03629800997FE9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -82,6 +86,8 @@
 				341E9B8F2B03629800997FE9 /* HomePageViewController.swift */,
 				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
 				346DE7C62B05AB5C008D411A /* CreateViewController.swift */,
+				3410D9652B07125600D32744 /* GroupViewController.swift */,
+				3410D9672B07129800D32744 /* DetailViewController.swift */,
 				346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */,
 				346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */,
 				346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */,
@@ -246,10 +252,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3410D9682B07129800D32744 /* DetailViewController.swift in Sources */,
 				346DE7CE2B063616008D411A /* LoginViewController.swift in Sources */,
 				346DE7CB2B05FE48008D411A /* SearchViewController.swift in Sources */,
 				346DE7C72B05AB5C008D411A /* CreateViewController.swift in Sources */,
 				341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */,
+				3410D9662B07125600D32744 /* GroupViewController.swift in Sources */,
 				341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */,
 				346DE7D22B065DB1008D411A /* CreateGroupViewController.swift in Sources */,
 				346DE7C92B05AE4D008D411A /* CreateRequestViewController.swift in Sources */,
