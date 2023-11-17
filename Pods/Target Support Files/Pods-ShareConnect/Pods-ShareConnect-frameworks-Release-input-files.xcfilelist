@@ -1,5 +1,7 @@
 ${PODS_ROOT}/Target Support Files/Pods-ShareConnect/Pods-ShareConnect-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework
+${BUILT_PRODUCTS_DIR}/DatePicker/DatePicker.framework
+${BUILT_PRODUCTS_DIR}/Extended/Extended.framework
 ${BUILT_PRODUCTS_DIR}/FirebaseAppCheckInterop/FirebaseAppCheckInterop.framework
 ${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework
 ${BUILT_PRODUCTS_DIR}/FirebaseAuthInterop/FirebaseAuthInterop.framework

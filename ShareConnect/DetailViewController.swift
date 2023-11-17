@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Kingfisher
+import DatePicker
 
 class DetailViewController: UIViewController {
+    var request: RequestData?
     
     let titleLabel = UILabel()
     let detailImage = UIImageView()
@@ -30,13 +33,24 @@ class DetailViewController: UIViewController {
     let collectionButton = UIButton()
     let shareButton = UIButton()
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = CustomColors.B1
         setupView()
-        
+        if let request = request {
+            titleLabel.text = request.name
+       
+            let url = URL(string: request.imageString)
+            detailImage.kf.setImage(with: url)
+            price.text = request.price
+            descriptionLabel.text = request.description
+            
+           
+        }
     }
-    
     func setupView() {
         view.addSubview(titleLabel)
         titleLabel.text = "Title"
@@ -49,12 +63,14 @@ class DetailViewController: UIViewController {
         
         view.addSubview(detailImage)
         detailImage.image = UIImage(named: "wait")
-        detailImage.contentMode = .scaleAspectFit
+        detailImage.contentMode = .scaleAspectFill
+        detailImage.clipsToBounds = true
+        detailImage.layer.cornerRadius = 15
         detailImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            detailImage.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 60),
+            detailImage.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             detailImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            detailImage.heightAnchor.constraint(equalToConstant: 160),
+            detailImage.heightAnchor.constraint(equalToConstant: 180),
             detailImage.widthAnchor.constraint(equalToConstant: 320)
         ])
         view.addSubview(priceImage)
@@ -79,7 +95,7 @@ class DetailViewController: UIViewController {
         addCartButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             addCartButton.centerYAnchor.constraint(equalTo: price.centerYAnchor),
-            addCartButton.leadingAnchor.constraint(equalTo: price.trailingAnchor, constant: 100),
+            addCartButton.leadingAnchor.constraint(equalTo: price.trailingAnchor, constant: 150),
             addCartButton.heightAnchor.constraint(equalToConstant: 30),
             addCartButton.widthAnchor.constraint(equalToConstant: 30)
         ])
@@ -121,7 +137,7 @@ class DetailViewController: UIViewController {
             availabilityView.topAnchor.constraint(equalTo: priceImage.bottomAnchor, constant: 30),
             availabilityView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             availabilityView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            availabilityView.heightAnchor.constraint(equalToConstant: 80)
+            availabilityView.heightAnchor.constraint(equalToConstant: 70)
         ])
         
         availabilityView.addSubview(availability)
@@ -138,6 +154,7 @@ class DetailViewController: UIViewController {
         let dateImage = UIImageView()
         availabilityView.addSubview(dateImage)
         dateImage.image = UIImage(named: "icons8-today-72(@3×)")
+
         dateImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             dateImage.centerYAnchor.constraint(equalTo: availability.centerYAnchor),
@@ -145,6 +162,11 @@ class DetailViewController: UIViewController {
             dateImage.heightAnchor.constraint(equalToConstant: 30),
             dateImage.trailingAnchor.constraint(equalTo: availabilityView.trailingAnchor, constant: -30)
         ])
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dateImageTapped))
+        dateImage.isUserInteractionEnabled = true
+        dateImage.addGestureRecognizer(tapGesture)
+
         
         view.addSubview(descriptionView)
         descriptionView.backgroundColor = .white
@@ -154,7 +176,7 @@ class DetailViewController: UIViewController {
             descriptionView.topAnchor.constraint(equalTo: availabilityView.bottomAnchor, constant: 30),
             descriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             descriptionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            descriptionView.heightAnchor.constraint(equalToConstant: 80)
+            descriptionView.heightAnchor.constraint(equalToConstant: 70)
         ])
         
         descriptionView.addSubview(descriptionLabel)
@@ -184,7 +206,7 @@ class DetailViewController: UIViewController {
             otherView.topAnchor.constraint(equalTo: descriptionView.bottomAnchor, constant: 30),
             otherView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             otherView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            otherView.heightAnchor.constraint(equalToConstant: 80)
+            otherView.heightAnchor.constraint(equalToConstant: 70)
         ])
         otherView.addSubview(otherLabel)
         otherLabel.text = "Other remark"
@@ -204,6 +226,43 @@ class DetailViewController: UIViewController {
             otherButton.heightAnchor.constraint(equalToConstant: 20),
             otherButton.widthAnchor.constraint(equalToConstant: 20)
         ])
+        
+        let backButton = UIButton()
+        view.addSubview(backButton)
+        backButton.setImage(UIImage(named: "icons8-back-to-50"), for: .normal)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 65),
+            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            backButton.heightAnchor.constraint(equalToConstant: 40),
+            backButton.widthAnchor.constraint(equalToConstant: 40)
+        ])
+        backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
+    }
+    @objc func back() {
+        navigationController?.popViewController(animated: true)
     }
     
+    func showDatePicker() {
+        let minDate = DatePickerHelper.shared.dateFrom(day: 18, month: 08, year: 1990)!
+        let maxDate = DatePickerHelper.shared.dateFrom(day: 18, month: 08, year: 2030)!
+        let today = Date()
+
+        let datePicker = DatePicker()
+        
+        datePicker.setup(beginWith: today, min: minDate, max: maxDate) { (selected, date) in
+            if selected, let selectedDate = date {
+                print(selectedDate.string())
+                self.availability.text = selectedDate.string()
+            } else {
+                print("Cancelled")
+            }
+        }
+
+        datePicker.show(in: self, on: self.view)
+    }
+    @objc func dateImageTapped() {
+        showDatePicker()
+    }
+
 }

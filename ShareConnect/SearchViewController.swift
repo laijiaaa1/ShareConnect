@@ -15,6 +15,14 @@ import MJRefresh
 import Kingfisher
 
 class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! SearchCollectionViewCell
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        vc.request = cell.request
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return allRequests.count
     }
@@ -31,22 +39,12 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             cell.request = nil
         }
-        
-        //select cell to show detail
-        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+
         return cell
     }
-    @objc func tap(_ sender: UITapGestureRecognizer) {
-        let location = sender.location(in: self.collectionView)
-        let indexPath = self.collectionView.indexPathForItem(at: location)
-        if let index = indexPath {
-            let cell = self.collectionView.cellForItem(at: index) as! SearchCollectionViewCell
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-//            vc.request = cell.request
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
-    }
+
+    var selectedIndexPath: IndexPath?
+       
     var allRequests: [RequestData] = []
     
     let scrollView = UIScrollView()
@@ -195,9 +193,14 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                        let price = requestData["Price"] as? String,
                        let startTime = requestData["Start Time"] as? String,
                        let imageString = requestData["image"] as? String,
-                       let date = DateFormatter.iso8601Full.date(from: startTime) {
+                       let sort = requestData["Sort"] as? String,
+                       let endTime = requestData["End Time"] as? String,
+                       let description = requestData["Description"] as? String,
+                       let quantity = requestData["Quantity"] as? String,
+                       let use = requestData["Use"] as? String,
+                       let date = DateFormatter.iso8601Full.date(from: startTime){
                         
-                        let request = RequestData(name: name, price: price, date: date, imageString: imageString)
+                        let request = RequestData(name: name, price: price, startTime: date, imageString: imageString, description: description, sort: sort, quantity: quantity, use: use, endTime: endTime)
                         self.allRequests.append(request)
                     }
                 }
@@ -295,20 +298,13 @@ class SearchCollectionViewCell: UICollectionViewCell {
             button.heightAnchor.constraint(equalToConstant: 30),
             button.widthAnchor.constraint(equalToConstant: 100)
         ])
-        button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
     }
-    @objc func buttonAction(sender: UIButton!) {
-       let storyboard = UIStoryboard(name: "Main", bundle: nil)
-         let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-//          vc.request = request
-          vc.modalPresentationStyle = .fullScreen
-          self.window?.rootViewController?.present(vc, animated: true, completion: nil)
-    }
+
     func updateUI() {
         if let request = request {
             nameLabel.text = request.name
             priceLabel.text = "$\(request.price)"
-            dateLabel.text = DateFormatter.localizedString(from: request.date, dateStyle: .short, timeStyle: .short)
+            dateLabel.text = DateFormatter.localizedString(from: request.startTime, dateStyle: .short, timeStyle: .short)
             
             if let url = URL(string: request.imageString) {
                 imageView.kf.setImage(with: url)
@@ -319,9 +315,16 @@ class SearchCollectionViewCell: UICollectionViewCell {
 struct RequestData {
     let name: String
     let price: String
-    let date: Date
+    let startTime: Date
     let imageString: String
+    let description: String?
+    let sort: String?
+    let quantity: String?
+    let use: String?
+    let endTime: String?
+    
 }
+
 extension DateFormatter {
     static let iso8601Full: DateFormatter = {
         let formatter = DateFormatter()
