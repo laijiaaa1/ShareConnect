@@ -72,14 +72,14 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.delegate = self
         collectionView.dataSource = self
         let userID = Auth.auth().currentUser?.uid ?? ""
-        fetchRequestsForUser(userID: userID)
+        fetchRequestsForUser()
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
         
     }
     @objc func refresh() {
         let userID = Auth.auth().currentUser?.uid ?? ""
-        fetchRequestsForUser(userID: userID)
+        fetchRequestsForUser()
         collectionView.reloadData()
         collectionView.refreshControl?.endRefreshing()
     }
@@ -151,7 +151,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         
         let userID = Auth.auth().currentUser?.uid ?? ""
-        fetchRequestsForUser(userID: userID)
+        fetchRequestsForUser()
     }
     
     @objc func button2Action() {
@@ -159,10 +159,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             self.lineView.frame.origin.x = self.view.frame.width / 2
         }
         let userID = Auth.auth().currentUser?.uid ?? ""
-        fetchRequestsForUser(userID: userID)
+        fetchRequestsForUser()
     }
     
-    func fetchRequestsForUser(userID: String) {
+    func fetchRequestsForUser() {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
         
@@ -206,9 +206,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             print("Error: Missing required fields in product data")
             return nil
         }
-
-        // Now you can use startTime and endTime as strings
-
         let sellerData = product["seller"] as? [String: Any]
 //        let itemTypeRawValue = product["type"] as? String
 
@@ -227,7 +224,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
 
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
 
-        // Assuming `product` is already declared or used elsewhere in this scope
         let newProduct = Product(
             name: name,
             price: price,
@@ -239,7 +235,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             use: use,
             endTime: endTime,
             seller: seller,
-            itemType: ProductType(rawValue: itemType) ?? .request
+            itemType: .request
         )
 
         return newProduct

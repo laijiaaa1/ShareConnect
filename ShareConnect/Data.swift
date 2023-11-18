@@ -54,12 +54,12 @@ struct UserData {
     var username: String
 }
 
-let seller = Seller(sellerID: "123", sellerName: "Seller Name")
-
-let demandProduct = Product(name: "Demand Product", price: "50", startTime: "2023-11-30", imageString: "demandImageURL", description: "Demand Description", sort: "Electronics", quantity: "10", use: "New", endTime: "2023-12-31", seller: seller, itemType: .request)
-
-let supplyProduct = Product(name: "Supply Product", price: "30", startTime: "2023-11-30", imageString: "supplyImageURL", description: "Supply Description", sort: "Clothing", quantity: "20", use: "Used", endTime: "2023-11-30", seller: seller, itemType: .supply)
-
-let request = Request(requestID: "456", buyerID: "789", items: [demandProduct, supplyProduct], selectedSellerID: "123", status: .open)
-
-let user = UserData(userID: "789", username: "BuyerName")
+//let seller = Seller(sellerID: "123", sellerName: "Seller Name")
+//
+//let demandProduct = Product(name: "Demand Product", price: "50", startTime: "2023-11-30", imageString: "demandImageURL", description: "Demand Description", sort: "Electronics", quantity: "10", use: "New", endTime: "2023-12-31", seller: seller, itemType: .request)
+//
+//let supplyProduct = Product(name: "Supply Product", price: "30", startTime: "2023-11-30", imageString: "supplyImageURL", description: "Supply Description", sort: "Clothing", quantity: "20", use: "Used", endTime: "2023-11-30", seller: seller, itemType: .supply)
+//
+//let request = Request(requestID: "456", buyerID: "789", items: [demandProduct, supplyProduct], selectedSellerID: "123", status: .open)
+//
+//let user = UserData(userID: "789", username: "BuyerName")
