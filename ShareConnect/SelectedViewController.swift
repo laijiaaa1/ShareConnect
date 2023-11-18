@@ -237,18 +237,16 @@ class SelectedViewController: UIViewController {
             closeButton.heightAnchor.constraint(equalToConstant: 60),
             closeButton.widthAnchor.constraint(equalToConstant: 60)
         ])
-        closeButton.addtarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)
     }
     @objc func trolleyButtonTapped() {
-        let trolley = Trolley(context: PersistenceService.context)
-        trolley.name = request?.name
-        trolley.price = request?.price
-        trolley.quantity = request?.quantity
-        trolley.image = request?.image
-        PersistenceService.saveContext()
-        dismiss(animated: true, completion: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
+        vc.modalPresentationStyle = .fullScreen
+        vc.request = request
+        present(vc, animated: true, completion: nil)  
     }
 }
