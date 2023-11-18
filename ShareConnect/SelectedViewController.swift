@@ -59,7 +59,7 @@ class SelectedViewController: UIViewController {
         let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
         
         vc.cart = self.product.map { [Seller: [Product]](uniqueKeysWithValues: [($0.seller, [$0])]) } ?? [:]
-        
+//        UserDefaults.standard.set(product, forKey: "carts")
         navigationController?.pushViewController(vc, animated: true)
     }
 

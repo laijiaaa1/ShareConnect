@@ -26,7 +26,7 @@ class CreateSupplyViewController: CreateRequestViewController {
         let storage = Storage.storage()
         let user = Auth.auth().currentUser
         let imageName = UUID().uuidString
-        
+//        let productId = UUID().uuidString
         let storageRef = storage.reference().child("images/\(imageName).jpg")
         
         if let imageURL = uploadButton.backgroundImage(for: .normal), let imageData = imageURL.jpegData(compressionQuality: 0.1) {
@@ -39,6 +39,7 @@ class CreateSupplyViewController: CreateRequestViewController {
                             print("Error getting download URL: \(error)")
                         } else if let downloadURL = url {
                             var productData: [String: Any] = [:]
+//                            productData["productId"] = productId
                             productData["image"] = downloadURL.absoluteString
                             productData["seller"] = [
                                 "sellerID": user?.uid ?? "",
@@ -57,6 +58,7 @@ class CreateSupplyViewController: CreateRequestViewController {
                             }
                             
                             let supplyProduct = Product(
+//                                productId: productId,
                                 name: productData["name"] as? String ?? "",
                                 price: productData["price"] as? String ?? "",
                                 startTime: productData["startTime"] as? String ?? "",

@@ -197,6 +197,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
+//              let productId = product["productId"] as? String,
               let name = product["Name"] as? String,
               let price = product["Price"] as? String,
               let imageString = product["image"] as? String,
@@ -217,7 +218,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             print("Error: Failed to parse seller or itemType")
             return nil
         }
-
+        
         let description = productData["Description"] as? String ?? ""
         let sort = productData["Sort"] as? String ?? ""
         let quantity = productData["Quantity"] as? String ?? ""
@@ -226,6 +227,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
 
         let newProduct = Product(
+//            productId: productId,
             name: name,
             price: price,
             startTime: startTime,

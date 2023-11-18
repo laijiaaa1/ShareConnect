@@ -36,7 +36,16 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             tableView.heightAnchor.constraint(equalToConstant: 400),
             tableView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
-        
+        if let savedCartData = UserDefaults.standard.array(forKey: "carts") as? [[String: Any]] {
+            cart = savedCartData.reduce(into: [Seller: [Product]]()) { result, dict in
+                guard let seller = dict["seller"] as? Seller,
+                      let products = dict["products"] as? [Product] else {
+                    return
+                }
+                result[seller] = products
+            }
+        }
+
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
@@ -56,20 +65,26 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     func numberOfSections(in tableView: UITableView) -> Int {
         return cart.keys.count
     }
-    func clearCart() {
-        cart = [:]
+    func addToCart(product: Product) {
+        let seller = product.seller
+        
+        if var sellerProducts = cart[seller] {
+            sellerProducts.append(product)
+            cart[seller] = sellerProducts
+        } else {
+            cart[seller] = [product]
+        }
+
         saveCartToUserDefaults()
+        tableView.reloadData()
     }
 
     func saveCartToUserDefaults() {
-        do {
-            let cartData = try NSKeyedArchiver.archivedData(withRootObject: cart, requiringSecureCoding: false)
-            UserDefaults.standard.set(cartData, forKey: "cart")
-        } catch {
-            print("Error saving cart data: \(error.localizedDescription)")
+        let cartData = cart.map { (seller, products) in
+            return ["seller": seller, "products": products]
         }
+        UserDefaults.standard.set(cartData, forKey: "carts")
     }
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }

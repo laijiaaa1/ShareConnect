@@ -8,6 +8,7 @@
 import Foundation
 
 struct Product {
+//    let productId: String
     let name: String
     let price: String
     let startTime: String
@@ -20,6 +21,13 @@ struct Product {
     let seller: Seller
     let itemType: ProductType
 }
+//extension Product: Equatable {
+//    static func == (lhs: Product, rhs: Product) -> Bool {
+//        // Implement the equality comparison based on your requirements
+//        return lhs.productId == rhs.productId
+//    }
+//}
+
 
 enum ProductType: String {
     case request
