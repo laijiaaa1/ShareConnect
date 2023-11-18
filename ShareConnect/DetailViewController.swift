@@ -50,7 +50,8 @@ class DetailViewController: UIViewController {
             let url = URL(string: request.imageString)
             detailImage.kf.setImage(with: url)
             price.text = request.price
-            
+           
+            let use = request.use
             
         }
     }
@@ -92,13 +93,15 @@ class DetailViewController: UIViewController {
         price.translatesAutoresizingMaskIntoConstraints = false
         price.centerYAnchor.constraint(equalTo: priceImage.centerYAnchor).isActive = true
         price.leadingAnchor.constraint(equalTo: priceImage.trailingAnchor, constant: 30).isActive = true
+        price.widthAnchor.constraint(equalToConstant: 200)
         
         view.addSubview(addCartButton)
         addCartButton.setImage(UIImage(named: "icons8-buy-72(@3×)"), for: .normal)
         addCartButton.translatesAutoresizingMaskIntoConstraints = false
+        addCartButton.addTarget(self, action: #selector(goSelectedPage), for: .touchUpInside)
         NSLayoutConstraint.activate([
             addCartButton.centerYAnchor.constraint(equalTo: price.centerYAnchor),
-            addCartButton.leadingAnchor.constraint(equalTo: price.trailingAnchor, constant: 150),
+            addCartButton.leadingAnchor.constraint(equalTo: price.trailingAnchor, constant: 120),
             addCartButton.heightAnchor.constraint(equalToConstant: 30),
             addCartButton.widthAnchor.constraint(equalToConstant: 30)
         ])
@@ -273,6 +276,37 @@ class DetailViewController: UIViewController {
     @objc func dateImageTapped() {
         showDatePicker()
     }
+    
+    @objc func goSelectedPage() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "SelectedViewController") as! SelectedViewController
+
+        if let imageURL = URL(string: request?.imageString ?? ""),
+            let startTimeString = availability.text {
+            // Note: Removed unnecessary force-unwrap in the following lines
+            if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
+                vc.request = RequestData(
+                    name: titleLabel.text ?? "",
+                    price: price.text ?? "",
+                    startTime: startTime,
+                    imageString: imageURL.absoluteString,
+                    description: descriptionLabel.text,
+                    sort: sort.text,
+                    quantity: quantity.text,
+                    use: use.text,
+                    endTime: "someEndTime"
+                )
+                self.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                // Handle the case where conversion fails
+                print("Failed to convert startTimeString to Date")
+            }
+        } else {
+            // Handle the case where either imageURL or availability.text is nil
+            print("Failed to get availability or create image URL")
+        }
+    }
+
     @objc func descriptionButtonTapped() {
         let expandedHeight: CGFloat = 200
         let collapsedHeight: CGFloat = 70
@@ -347,4 +381,14 @@ class DetailViewController: UIViewController {
         
         self.view.layoutIfNeeded()
     }
+}
+
+extension DateFormatter {
+    static let customDateFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM月 dd, yyyy"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return formatter
+    }()
 }
