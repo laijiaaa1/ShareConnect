@@ -10,6 +10,7 @@ import Kingfisher
 
 class SelectedViewController: UIViewController {
     var product: Product?
+    var cart: [Seller: [Product]] = [:]
 
     let backImage = UIImageView()
     let backView = UIView()
@@ -53,11 +54,13 @@ class SelectedViewController: UIViewController {
     }
 
     @objc func trolleyButtonTapped() {
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
-//        vc.modalPresentationStyle = .fullScreen
-//        vc.product = product
-//        present(vc, animated: true, completion: nil)
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
+        
+        vc.cart = self.product.map { [Seller: [Product]](uniqueKeysWithValues: [($0.seller, [$0])]) } ?? [:]
+        
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func setup(){

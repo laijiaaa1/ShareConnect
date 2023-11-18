@@ -81,7 +81,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let userID = Auth.auth().currentUser?.uid ?? ""
         fetchRequestsForUser()
         collectionView.reloadData()
-        collectionView.refreshControl?.endRefreshing()
     }
     func setupUI() {
         
@@ -190,6 +189,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                     }
                 }
                 print("Fetched products: \(self.allRequests)")
+                self.collectionView.reloadData()
+                self.collectionView.refreshControl?.endRefreshing()
             }
         }
     }

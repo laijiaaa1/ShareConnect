@@ -14,6 +14,7 @@
 		3410D9712B0888E800D32744 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9702B0888E800D32744 /* Data.swift */; };
 		3410D9732B08890300D32744 /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9722B08890300D32744 /* Setting.swift */; };
 		3410D9772B08B3C800D32744 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9762B08B3C800D32744 /* FirebaseManager.swift */; };
+		3410D9792B08ECBB00D32744 /* CartManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9782B08ECBB00D32744 /* CartManager.swift */; };
 		341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341E9B8B2B03629800997FE9 /* AppDelegate.swift */; };
 		341E9B8E2B03629800997FE9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341E9B8D2B03629800997FE9 /* SceneDelegate.swift */; };
 		341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341E9B8F2B03629800997FE9 /* HomePageViewController.swift */; };
@@ -39,6 +40,7 @@
 		3410D9702B0888E800D32744 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		3410D9722B08890300D32744 /* Setting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
 		3410D9762B08B3C800D32744 /* FirebaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
+		3410D9782B08ECBB00D32744 /* CartManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartManager.swift; sourceTree = "<group>"; };
 		341E9B882B03629800997FE9 /* ShareConnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShareConnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		341E9B8B2B03629800997FE9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		341E9B8D2B03629800997FE9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				3410D9762B08B3C800D32744 /* FirebaseManager.swift */,
+				3410D9782B08ECBB00D32744 /* CartManager.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3410D9792B08ECBB00D32744 /* CartManager.swift in Sources */,
 				3410D9682B07129800D32744 /* DetailViewController.swift in Sources */,
 				346DE7CE2B063616008D411A /* LoginViewController.swift in Sources */,
 				3410D96C2B08747200D32744 /* TrolleyViewController.swift in Sources */,

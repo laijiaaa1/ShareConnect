@@ -27,7 +27,7 @@ enum ProductType: String {
 }
 
 
-struct Seller {
+struct Seller: Hashable {
     var sellerID: String
     var sellerName: String
 }

@@ -1,189 +1,278 @@
-////
-////  TrolleyViewController.swift
-////  ShareConnect
-////
-////  Created by laijiaaa1 on 2023/11/18.
-////
 //
-//import UIKit
+//  TrolleyViewController.swift
+//  ShareConnect
 //
+//  Created by laijiaaa1 on 2023/11/18.
 //
-//class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
-//    var product: Product?
-//    
-////    var trolleyList: [Trolley] = []
-//    
-//    let tableView = UITableView()
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        navigationItem.title = "Trolley"
-//        view.backgroundColor = CustomColors.B1
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//        tableView.register(TrolleyCell.self, forCellReuseIdentifier: "TrolleyCell")
-//        view.addSubview(tableView)
-//        tableView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-//            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-//            tableView.heightAnchor.constraint(equalToConstant: 700),
-//            tableView.widthAnchor.constraint(equalToConstant: view.frame.width)
-//        ])
-//    }
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
-//        let seller = Array(cart.keys)[indexPath.section]
-//        let cartItems = cart[seller] ?? []
-//        
-//        // Configure the cell
-//        cell.setupUI(seller: seller, cartItems: cartItems, delegate: self)
-//        
-//        return cell
-//    }
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return cart.values[section].count
-//    }
-//    
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return cart.keys.count
-//    }
-//    func didSelectSeller(seller: Seller) {
-//           // Handle seller selection, e.g., update UI or perform any related actions
-//           print("Selected seller: \(seller.sellerName) (ID: \(seller.sellerID))")
-//           // Implement further actions as needed
-//       }
-//    
-//    
-//}
-//class TrolleyCell: UITableViewCell {
-//    
-//    weak var delegate: TrolleyCellDelegate?
-//       var sellerID: String?
-//
-//       func setupUI(sellerID: String, delegate: TrolleyCellDelegate) {
-//           self.sellerID = sellerID
-//           self.delegate = delegate
-//           
-//           setupUI()
-//           // Example: Call the delegate method when the cell is tapped
-//           let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cellTapped))
-//           contentView.addGestureRecognizer(tapGesture)
-//       }
-//
-//       @objc private func cellTapped() {
-//           guard let sellerID = sellerID else { return }
-//           delegate?.didSelectSeller(sellerID: sellerID)
-//       }
-//    
-//    var number: Int = 1 {
-//        didSet {
-//            numberLabel.text = "\(number)"
-//        }
-//    }
-//    
-//    let numberLabel = UILabel()
-//    let priceLabel = UILabel()
-//
-//    func setupUI() {
-//        
-//        let backView = UIView()
-//        backView.backgroundColor = .white
-//        contentView.addSubview(backView)
-//        backView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            backView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-//            backView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-//            backView.heightAnchor.constraint(equalToConstant: 100),
-//            backView.widthAnchor.constraint(equalToConstant: 100),
-//            backView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
-//        ])
-//        let imageView = UIImageView()
-//        contentView.addSubview(imageView)
-//        imageView.layer.cornerRadius = 10
-//        imageView.layer.masksToBounds = true
-//        imageView.layer.borderWidth = 1
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            imageView.topAnchor.constraint(equalTo: backView.topAnchor, constant: 10),
-//            imageView.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 10),
-//            imageView.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -10),
-//            imageView.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -10)
-//        ])
-//        
-//        let nameLabel = UILabel()
-//        nameLabel.text = "TrolleyCell"
-//        contentView.addSubview(nameLabel)
-//        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            nameLabel.topAnchor.constraint(equalTo: imageView.topAnchor),
-//            nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 20),
-//            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
-//        ])
-//        
-//        let priceLabel = UILabel()
-//        priceLabel.text = "NT$ "
-//        contentView.addSubview(priceLabel)
-//        priceLabel.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-//            priceLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-//            priceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
-//        ])
-//        numberLabel.text = "\(number)"
-//        numberLabel.textAlignment = .center
-//        numberLabel.backgroundColor = .white
-//        numberLabel.layer.cornerRadius = 10
-//        numberLabel.layer.masksToBounds = true
-//        numberLabel.layer.borderWidth = 1
-//        contentView.addSubview(numberLabel)
-//        numberLabel.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            numberLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-//            numberLabel.widthAnchor.constraint(equalToConstant: 100),
-//            numberLabel.heightAnchor.constraint(equalToConstant: 30),
-//            numberLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
-//        ])
-//        
-//        let minusButton = UIButton()
-//        minusButton.setTitle("-", for: .normal)
-//        minusButton.setTitleColor(.black, for: .normal)
-//        minusButton.backgroundColor = .white
-//        minusButton.layer.cornerRadius = 10
-//        minusButton.layer.masksToBounds = true
-//        minusButton.layer.borderWidth = 1
-//        contentView.addSubview(minusButton)
-//        minusButton.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            minusButton.topAnchor.constraint(equalTo: numberLabel.topAnchor),
-//            minusButton.leadingAnchor.constraint(equalTo: numberLabel.leadingAnchor),
-//            minusButton.widthAnchor.constraint(equalToConstant: 30),
-//            minusButton.heightAnchor.constraint(equalToConstant: 30)
-//        ])
-//        minusButton.addTarget(self, action: #selector(minusButtonTapped), for: .touchUpInside)
-//        
-//        let plusButton = UIButton()
-//        plusButton.setTitle("+", for: .normal)
-//        plusButton.setTitleColor(.black, for: .normal)
-//        plusButton.backgroundColor = .white
-//        plusButton.layer.cornerRadius = 10
-//        plusButton.layer.masksToBounds = true
-//        plusButton.layer.borderWidth = 1
-//        contentView.addSubview(plusButton)
-//        plusButton.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            plusButton.topAnchor.constraint(equalTo: numberLabel.topAnchor),
-//            plusButton.trailingAnchor.constraint(equalTo: numberLabel.trailingAnchor),
-//            plusButton.widthAnchor.constraint(equalToConstant: 30),
-//            plusButton.heightAnchor.constraint(equalToConstant: 30)
-//        ])
-//        plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
-//    }
-//    
-//    @objc func minusButtonTapped() {
-//        number = max(1, number - 1)
-//    }
-//    
-//    @objc func plusButtonTapped() {
-//        number += 1
-//    }
-//}
+
+import UIKit
+import Kingfisher
+
+
+class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TrolleyCellDelegate{
+    func didSelectSeller(sellerID: String) {
+        print("Selected seller: \(sellerID)")
+   
+    }
+    
+    
+    var cart: [Seller: [Product]] = [:]
+    
+    let tableView = UITableView()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+     
+        navigationItem.title = "Trolley"
+        view.backgroundColor = CustomColors.B1
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(TrolleyCell.self, forCellReuseIdentifier: "TrolleyCell")
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            tableView.heightAnchor.constraint(equalToConstant: 400),
+            tableView.widthAnchor.constraint(equalToConstant: view.frame.width)
+        ])
+        
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
+        let seller = Array(cart.keys)[indexPath.section]
+        let cartItems = cart[seller] ?? []
+        
+        cell.setupUI(seller: seller, cartItems: cartItems, delegate: self)
+        
+        return cell
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let seller = Array(cart.keys)[section]
+        return cart[seller]?.count ?? 0
+    }
+
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return cart.keys.count
+    }
+    func clearCart() {
+        cart = [:]
+        saveCartToUserDefaults()
+    }
+
+    func saveCartToUserDefaults() {
+        do {
+            let cartData = try NSKeyedArchiver.archivedData(withRootObject: cart, requiringSecureCoding: false)
+            UserDefaults.standard.set(cartData, forKey: "cart")
+        } catch {
+            print("Error saving cart data: \(error.localizedDescription)")
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let seller = Array(cart.keys)[section]
+        let headerView = UIView()
+        headerView.backgroundColor = .white
+        let sellerNameLabel = UILabel()
+        sellerNameLabel.text = seller.sellerName
+        headerView.addSubview(sellerNameLabel)
+        sellerNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            sellerNameLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
+            sellerNameLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 10),
+            sellerNameLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -10),
+            sellerNameLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10)
+        ])
+        return headerView
+    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let seller = Array(cart.keys)[indexPath.section]
+        let cartItems = cart[seller] ?? []
+        let product = cartItems[indexPath.row]
+        let productDetailVC = DetailViewController()
+        productDetailVC.product = product
+        navigationController?.pushViewController(productDetailVC, animated: true)
+    }
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let seller = Array(cart.keys)[indexPath.section]
+        var cartItems = cart[seller] ?? []
+
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
+            guard indexPath.row < cartItems.count else {
+                completionHandler(false)
+                return
+            }
+            
+            cartItems.remove(at: indexPath.row)
+            self?.cart[seller] = cartItems
+            
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            
+            if cartItems.isEmpty {
+                let indexSet = IndexSet(integer: indexPath.section)
+                self?.cart.removeValue(forKey: seller)
+                tableView.deleteSections(indexSet, with: .automatic)
+            }
+
+            completionHandler(true)
+        }
+
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
+    }
+
+    
+
+}
+class TrolleyCell: UITableViewCell {
+    
+    weak var delegate: TrolleyCellDelegate?
+    var sellerID: String?
+    
+    var number: Int = 1 {
+        didSet {
+            numberLabel.text = "\(number)"
+        }
+    }
+    
+    let backView = UIView()
+    let imageViewUP = UIImageView()
+    let nameLabel = UILabel()
+    let numberLabel = UILabel()
+    let priceLabel = UILabel()
+    let quantityLabel = UILabel()
+    let minusButton = UIButton()
+    let plusButton = UIButton()
+    
+    let selectSellerButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.addTarget(self, action: #selector(selectSellerButtonTapped), for: .touchUpInside)
+        return button
+    }()
+  @objc func selectSellerButtonTapped() {
+        guard let sellerID = sellerID else { return }
+        delegate?.didSelectSeller(sellerID: sellerID)
+    }
+    func setupUI(seller: Seller, cartItems: [Product], delegate: TrolleyCellDelegate) {
+        self.sellerID = seller.sellerID
+        self.delegate = delegate
+        if let product = cartItems.first {
+            nameLabel.text = product.name
+            priceLabel.text = "NT$ \(product.price)"
+            imageViewUP.kf.setImage(with: URL(string: product.imageString))
+            quantityLabel.text = "\(product.quantity)"
+        }
+
+        backView.backgroundColor = .white
+        contentView.addSubview(backView)
+        backView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            backView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            backView.heightAnchor.constraint(equalToConstant: 100),
+            backView.widthAnchor.constraint(equalToConstant: 100),
+            backView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+        ])
+        backView.addSubview(imageViewUP)
+        imageViewUP.layer.cornerRadius = 10
+        imageViewUP.layer.masksToBounds = true
+        imageViewUP.layer.borderWidth = 1
+        imageViewUP.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageViewUP.topAnchor.constraint(equalTo: backView.topAnchor, constant: 10),
+            imageViewUP.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 10),
+            imageViewUP.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -10),
+            imageViewUP.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -10)
+        ])
+        
+        contentView.addSubview(nameLabel)
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            nameLabel.topAnchor.constraint(equalTo: imageViewUP.topAnchor),
+            nameLabel.leadingAnchor.constraint(equalTo: imageViewUP.trailingAnchor, constant: 20),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
+        ])
+        
+       
+        contentView.addSubview(priceLabel)
+        priceLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
+            priceLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            priceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
+        ])
+        numberLabel.text = "\(number)"
+        numberLabel.textAlignment = .center
+        numberLabel.backgroundColor = .white
+        numberLabel.layer.cornerRadius = 10
+        numberLabel.layer.masksToBounds = true
+        numberLabel.layer.borderWidth = 1
+        contentView.addSubview(numberLabel)
+        numberLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            numberLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            numberLabel.widthAnchor.constraint(equalToConstant: 100),
+            numberLabel.heightAnchor.constraint(equalToConstant: 30),
+            numberLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
+        ])
+        
+        minusButton.setTitle("-", for: .normal)
+        minusButton.setTitleColor(.black, for: .normal)
+        minusButton.backgroundColor = .white
+        minusButton.layer.cornerRadius = 10
+        minusButton.layer.masksToBounds = true
+        minusButton.layer.borderWidth = 1
+        contentView.addSubview(minusButton)
+        minusButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            minusButton.topAnchor.constraint(equalTo: numberLabel.topAnchor),
+            minusButton.leadingAnchor.constraint(equalTo: numberLabel.leadingAnchor),
+            minusButton.widthAnchor.constraint(equalToConstant: 30),
+            minusButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        minusButton.addTarget(self, action: #selector(minusButtonTapped), for: .touchUpInside)
+        
+        plusButton.setTitle("+", for: .normal)
+        plusButton.setTitleColor(.black, for: .normal)
+        plusButton.backgroundColor = .white
+        plusButton.layer.cornerRadius = 10
+        plusButton.layer.masksToBounds = true
+        plusButton.layer.borderWidth = 1
+        contentView.addSubview(plusButton)
+        plusButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            plusButton.topAnchor.constraint(equalTo: numberLabel.topAnchor),
+            plusButton.trailingAnchor.constraint(equalTo: numberLabel.trailingAnchor),
+            plusButton.widthAnchor.constraint(equalToConstant: 30),
+            plusButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
+        
+        contentView.addSubview(selectSellerButton)
+        selectSellerButton.layer.cornerRadius = 10
+        selectSellerButton.layer.masksToBounds = true
+        selectSellerButton.layer.borderWidth = 1
+        selectSellerButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            selectSellerButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            selectSellerButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            selectSellerButton.widthAnchor.constraint(equalToConstant: 30),
+            selectSellerButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+    }
+    
+    @objc func minusButtonTapped() {
+        number = max(1, number - 1)
+    }
+    
+    @objc func plusButtonTapped() {
+        number += 1
+    }
+}
