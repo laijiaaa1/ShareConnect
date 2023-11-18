@@ -113,43 +113,65 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
 
     }
     @objc func doneButtonTapped() {
-            let db = Firestore.firestore()
-            let storage = Storage.storage()
-            let user = Auth.auth().currentUser
-            let imageName = UUID().uuidString
+        let db = Firestore.firestore()
+        let storage = Storage.storage()
+        let user = Auth.auth().currentUser
+        let imageName = UUID().uuidString
 
-            let storageRef = storage.reference().child("images/\(imageName).jpg")
+        let storageRef = storage.reference().child("images/\(imageName).jpg")
 
-            if let imageURL = uploadButton.backgroundImage(for: .normal), let imageData = imageURL.jpegData(compressionQuality: 0.1) {
-                storageRef.putData(imageData, metadata: nil) { (metadata, error) in
-                    if let error = error {
-                        print("Error uploading image: \(error)")
-                    } else {
-                        storageRef.downloadURL { (url, error) in
-                            if let error = error {
-                                print("Error getting download URL: \(error)")
-                            } else if let downloadURL = url {
-                                var requestData: [String: Any] = [:]
-                                requestData["image"] = downloadURL.absoluteString
+        if let imageURL = uploadButton.backgroundImage(for: .normal), let imageData = imageURL.jpegData(compressionQuality: 0.1) {
+            storageRef.putData(imageData, metadata: nil) { (metadata, error) in
+                if let error = error {
+                    print("Error uploading image: \(error)")
+                } else {
+                    storageRef.downloadURL { (url, error) in
+                        if let error = error {
+                            print("Error getting download URL: \(error)")
+                        } else if let downloadURL = url {
+                            var productData: [String: Any] = [:]
+                            productData["image"] = downloadURL.absoluteString
+                            productData["seller"] = [
+                                "sellerID": user?.uid ?? "",
+                                "sellerName": user?.email ?? ""
+                            ]
 
-                                for i in 0..<self.requestTableView.numberOfSections {
-                                    for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
-                                        let indexPath = IndexPath(row: j, section: i)
-                                        if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
-                                            let key = cell.requestLabel.text ?? ""
-                                            let value = cell.textField.text ?? ""
-                                            requestData[key] = value
-                                        }
+                            for i in 0..<self.requestTableView.numberOfSections {
+                                for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
+                                    let indexPath = IndexPath(row: j, section: i)
+                                    if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
+                                        let key = cell.requestLabel.text ?? ""
+                                        let value = cell.textField.text ?? ""
+                                        productData[key] = value
                                     }
                                 }
+                            }
 
-                                let uid = user!.uid
-                                db.collection("users").document(uid).collection("request").addDocument(data: requestData) { error in
-                                    if let error = error {
-                                        print("Error writing document: \(error)")
-                                    } else {
-                                        print("Document successfully written!")
-                                    }
+                            let demandProduct = Product(
+                                name: productData["name"] as? String ?? "",
+                                price: productData["price"] as? String ?? "",
+                                startTime: productData["endTime"] as? String ?? "",
+                                imageString: productData["image"] as? String ?? "",
+                                description: productData["description"] as? String,
+                                sort: productData["sort"] as? String,
+                                quantity: productData["quantity"] as? String,
+                                use: productData["use"] as? String,
+                                endTime: productData["endTime"] as? String,
+                                seller: Seller(
+                                    sellerID: user?.uid ?? "",
+                                    sellerName: user?.email ?? ""
+                                ),
+                                itemType: .request
+                            )
+
+                            db.collection("products").addDocument(data: [
+                                "type": ProductType.request.rawValue,
+                                "product": productData
+                            ]) { error in
+                                if let error = error {
+                                    print("Error writing document: \(error)")
+                                } else {
+                                    print("Document successfully written!")
                                 }
                             }
                         }
@@ -157,11 +179,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 }
             }
         }
-
-    struct User {
-        let uid: String
-        let email: String
     }
+
 
     @objc func uploadButtonTapped() {
 

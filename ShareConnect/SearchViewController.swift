@@ -20,7 +20,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let cell = collectionView.cellForItem(at: indexPath) as! SearchCollectionViewCell
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-        vc.request = cell.request
+        vc.product = cell.product
         self.navigationController?.pushViewController(vc, animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -35,17 +35,17 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         cell.frame = CGRect(x: xPosition, y: yPosition, width: cellWidth, height: cellHeight)
         if indexPath.item < allRequests.count {
-            cell.request = allRequests[indexPath.item]
+            cell.product = allRequests[indexPath.item]
         } else {
-            cell.request = nil
+            cell.product = nil
         }
-
+        
         return cell
     }
-
+    
     var selectedIndexPath: IndexPath?
-       
-    var allRequests: [RequestData] = []
+    
+    var allRequests: [Product] = []
     
     let scrollView = UIScrollView()
     let stackView = UIStackView()
@@ -87,7 +87,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-//        stackView.spacing = 10
+        //        stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
@@ -153,7 +153,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let userID = Auth.auth().currentUser?.uid ?? ""
         fetchRequestsForUser(userID: userID)
     }
-
+    
     @objc func button2Action() {
         UIView.animate(withDuration: 0.3) {
             self.lineView.frame.origin.x = self.view.frame.width / 2
@@ -161,61 +161,92 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let userID = Auth.auth().currentUser?.uid ?? ""
         fetchRequestsForUser(userID: userID)
     }
-
+    
     func fetchRequestsForUser(userID: String) {
         let db = Firestore.firestore()
+        let productsCollection = db.collection("products")
         
-        print("Current user UID: \(userID)")
-      
-        var collectionName = "request"
-        if lineView.frame.origin.x == view.frame.width / 2 {
-            collectionName = "supply"
-        }
-
-        guard !collectionName.isEmpty else {
-            print("Error: Collection name is empty")
-            return
-        }
-
-        
-        db.collection("users").document(userID).collection(collectionName).getDocuments { (querySnapshot, error) in
+        productsCollection.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error)")
             } else {
-                self.allRequests = []
-                print("Number of documents: \(querySnapshot?.documents.count ?? 0)")
+                self.allRequests.removeAll()
                 
                 for document in querySnapshot!.documents {
-                    let requestData = document.data()
-                    print("Document data: \(requestData)")
+                    let productData = document.data()
                     
-                    if let name = requestData["Name"] as? String,
-                       let price = requestData["Price"] as? String,
-                       let startTime = requestData["Start Time"] as? String,
-                       let imageString = requestData["image"] as? String,
-                       let sort = requestData["Sort"] as? String,
-                       let endTime = requestData["End Time"] as? String,
-                       let description = requestData["Description"] as? String,
-                       let quantity = requestData["Quantity"] as? String,
-                       let use = requestData["Use"] as? String,
-                       let date = DateFormatter.iso8601Full.date(from: startTime){
+                    if let productTypeRawValue = productData["type"] as? String,
+                       let productType = ProductType(rawValue: productTypeRawValue),
+                       let product = self.parseProductData(productData: productData) {
                         
-                        let request = RequestData(name: name, price: price, startTime: date, imageString: imageString, description: description, sort: sort, quantity: quantity, use: use, endTime: endTime)
-                        self.allRequests.append(request)
+                        if (productType == .request && product.itemType == .request) ||
+                            (productType == .supply && product.itemType == .supply) {
+                            self.allRequests.append(product)
+                        } else {
+                            print("Skipped product with type \(productType) and itemType \(product.itemType)")
+                        }
+                    } else {
+                        print("Error parsing product type")
                     }
                 }
-                
-                print("Number of requests: \(self.allRequests.count)")
-                
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
+                print("Fetched products: \(self.allRequests)")
             }
         }
     }
     
-}
+    func parseProductData(productData: [String: Any]) -> Product? {
+        guard let product = productData["product"] as? [String: Any],
+              let name = product["Name"] as? String,
+              let price = product["Price"] as? String,
+              let imageString = product["image"] as? String,
+              let startTimeString = product["Start Time"] as? String,
+              let startTime = product["Start Time"] as? String,
+              let endTimeString = product["End Time"] as? String,
+              let endTime = product["End Time"] as? String else {
+            print("Error: Missing required fields in product data")
+            return nil
+        }
 
+        // Now you can use startTime and endTime as strings
+
+        let sellerData = product["seller"] as? [String: Any]
+//        let itemTypeRawValue = product["type"] as? String
+
+        guard let sellerID = sellerData?["sellerID"] as? String,
+              let sellerName = sellerData?["sellerName"] as? String,
+              let itemType = productData["type"] as? String
+        else {
+            print("Error: Failed to parse seller or itemType")
+            return nil
+        }
+
+        let description = productData["Description"] as? String ?? ""
+        let sort = productData["Sort"] as? String ?? ""
+        let quantity = productData["Quantity"] as? String ?? ""
+        let use = productData["Use"] as? String ?? ""
+
+        let seller = Seller(sellerID: sellerID, sellerName: sellerName)
+
+        // Assuming `product` is already declared or used elsewhere in this scope
+        let newProduct = Product(
+            name: name,
+            price: price,
+            startTime: startTime,
+            imageString: imageString,
+            description: description,
+            sort: sort,
+            quantity: quantity,
+            use: use,
+            endTime: endTime,
+            seller: seller,
+            itemType: ProductType(rawValue: itemType) ?? .request
+        )
+
+        return newProduct
+
+    }
+
+}
 class SearchCollectionViewCell: UICollectionViewCell {
     let underView = UIView()
     let imageView = UIImageView()
@@ -225,7 +256,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
     let nameLabel = UILabel()
     let collectionButton = UIButton()
     
-    var request: RequestData? {
+    var product: Product? {
         didSet {
             print("Request didSet")
             updateUI()
@@ -301,36 +332,14 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }
 
     func updateUI() {
-        if let request = request {
-            nameLabel.text = request.name
-            priceLabel.text = "$\(request.price)"
-            dateLabel.text = DateFormatter.localizedString(from: request.startTime, dateStyle: .short, timeStyle: .short)
+        if let product = product {
+            nameLabel.text = product.name
+            priceLabel.text = "$\(product.price)"
+            dateLabel.text = product.startTime.description
             
-            if let url = URL(string: request.imageString) {
+            if let url = URL(string: product.imageString) {
                 imageView.kf.setImage(with: url)
             }
         }
     }
-}
-struct RequestData {
-    let name: String
-    let price: String
-    let startTime: Date
-    let imageString: String
-    let description: String?
-    let sort: String?
-    let quantity: String?
-    let use: String?
-    let endTime: String?
-    
-}
-
-extension DateFormatter {
-    static let iso8601Full: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        return formatter
-    }()
 }

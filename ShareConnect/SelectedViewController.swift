@@ -9,50 +9,66 @@ import UIKit
 import Kingfisher
 
 class SelectedViewController: UIViewController {
-    var request: RequestData?
+    var product: Product?
+
     let backImage = UIImageView()
     let backView = UIView()
     let infoView = UIView()
     let nameLabel = UILabel()
-    
+
     let priceView = UIImageView()
     let priceLabel = UILabel()
-    
+
     let availabilityView = UIView()
     let availability = UILabel()
-    
+
     let itemLabel = UILabel()
     let itemView = UIView()
     let itemInfo = UILabel()
-    
+
     let quantity = UILabel()
     let numberLabel = UILabel()
     let addButton = UIButton()
     let minusButton = UIButton()
-    
+
     let trolleyButton = UIButton()
-    
+
     let closeButton = UIButton()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        print("Image URL String: \(request!.imageString)")
-        
-        print("Request in SelectedViewController: \(request)")
-    }
-    
-    func setup(){
-        if let request = request, let imageURL = URL(string: request.imageString) {
+
+        if let product = product, let imageURL = URL(string: product.imageString) {
             backImage.kf.setImage(with: imageURL)
+            priceLabel.text = product.price
+            availability.text = "\(product.startTime)"
+            itemInfo.text = product.name
+        } else {
+            print("Failed to load image: product or imageString is nil or invalid")
+        }
+    }
+    @objc func closeButtonTapped() {
+        dismiss(animated: true, completion: nil)
+    }
+
+    @objc func trolleyButtonTapped() {
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
+//        vc.modalPresentationStyle = .fullScreen
+//        vc.product = product
+//        present(vc, animated: true, completion: nil)
+    }
+
+    func setup(){
+//        if let request = request, let imageURL = URL(string: request.imageString) {
+//            backImage.kf.setImage(with: imageURL)
             
             backImage.frame = CGRect(x: 0, y: 0, width: view.frame.width , height: view.frame.height / 2)
             backImage.layer.cornerRadius = 15
             backImage.layer.masksToBounds = true
             view.addSubview(backImage)
-        } else {
-            print("Failed to load image: request or imageString is nil or invalid")
-        }
+       
         
         backView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         backView.backgroundColor = UIColor(red: 228/255, green: 220/255, blue: 209/255, alpha: 0.5)
@@ -80,7 +96,7 @@ class SelectedViewController: UIViewController {
         infoView.addSubview(priceView)
         priceLabel.frame = CGRect(x: 90, y: 70, width: 130, height: 30)
         priceLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        priceLabel.text = request?.price
+//        priceLabel.text = request?.price
         infoView.addSubview(priceLabel)
         
         availabilityView.backgroundColor = .white
@@ -107,7 +123,7 @@ class SelectedViewController: UIViewController {
         ])
         
         availabilityView.addSubview(availability)
-        availability.text = "\(request!.startTime)"
+//        availability.text = "\(request!.startTime)"
         availability.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         availability.textColor = .black
         availability.translatesAutoresizingMaskIntoConstraints = false
@@ -138,7 +154,7 @@ class SelectedViewController: UIViewController {
         ])
         
         itemView.addSubview(itemInfo)
-        itemInfo.text = request?.name
+//        itemInfo.text = request?.name
         itemInfo.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         itemInfo.textColor = .black
         itemInfo.translatesAutoresizingMaskIntoConstraints = false
@@ -238,15 +254,5 @@ class SelectedViewController: UIViewController {
             closeButton.widthAnchor.constraint(equalToConstant: 60)
         ])
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
-    }
-    @objc func closeButtonTapped() {
-        dismiss(animated: true, completion: nil)
-    }
-    @objc func trolleyButtonTapped() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
-        vc.modalPresentationStyle = .fullScreen
-        vc.request = request
-        present(vc, animated: true, completion: nil)  
     }
 }

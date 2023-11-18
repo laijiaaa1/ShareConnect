@@ -10,7 +10,7 @@ import Kingfisher
 import DatePicker
 
 class DetailViewController: UIViewController {
-    var request: RequestData?
+    var product: Product?
     
     let titleLabel = UILabel()
     let detailImage = UIImageView()
@@ -44,16 +44,12 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = CustomColors.B1
         setupView()
-        if let request = request {
-            titleLabel.text = request.name
-            
-            let url = URL(string: request.imageString)
-            detailImage.kf.setImage(with: url)
-            price.text = request.price
-           
-            let use = request.use
-            
-        }
+        if let product = product {
+                   titleLabel.text = product.name
+                   let url = URL(string: product.imageString)
+                   detailImage.kf.setImage(with: url)
+                   price.text = product.price
+               }
     }
     func setupView() {
         view.addSubview(titleLabel)
@@ -278,35 +274,22 @@ class DetailViewController: UIViewController {
     }
     
     @objc func goSelectedPage() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "SelectedViewController") as! SelectedViewController
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "SelectedViewController") as! SelectedViewController
 
-        if let imageURL = URL(string: request?.imageString ?? ""),
-            let startTimeString = availability.text {
-            // Note: Removed unnecessary force-unwrap in the following lines
-            if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
-                vc.request = RequestData(
-                    name: titleLabel.text ?? "",
-                    price: price.text ?? "",
-                    startTime: startTime,
-                    imageString: imageURL.absoluteString,
-                    description: descriptionLabel.text,
-                    sort: sort.text,
-                    quantity: quantity.text,
-                    use: use.text,
-                    endTime: "someEndTime"
-                )
-                self.navigationController?.pushViewController(vc, animated: true)
+            if let imageURL = URL(string: product?.imageString ?? ""),
+                let startTimeString = availability.text {
+                if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
+                    // Pass the product instead of constructing a new RequestData
+                    vc.product = product
+                    self.navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    print("Failed to convert startTimeString to Date")
+                }
             } else {
-                // Handle the case where conversion fails
-                print("Failed to convert startTimeString to Date")
+                print("Failed to get availability or create image URL")
             }
-        } else {
-            // Handle the case where either imageURL or availability.text is nil
-            print("Failed to get availability or create image URL")
         }
-    }
-
     @objc func descriptionButtonTapped() {
         let expandedHeight: CGFloat = 200
         let collapsedHeight: CGFloat = 70
@@ -327,7 +310,7 @@ class DetailViewController: UIViewController {
     func addDescriptionLabel() {
         if descriptionLabel2.superview == nil {
             descriptionView.addSubview(descriptionLabel2)
-            descriptionLabel2.text = request?.description
+            descriptionLabel2.text = product?.description
             descriptionLabel2.translatesAutoresizingMaskIntoConstraints = false
             
             NSLayoutConstraint.activate([
@@ -338,7 +321,7 @@ class DetailViewController: UIViewController {
             ])
             
             descriptionView.addSubview(sort)
-            sort.text = request?.sort
+            sort.text = product?.sort
             sort.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 sort.topAnchor.constraint(equalTo: descriptionLabel2.bottomAnchor, constant: 10),
@@ -348,7 +331,7 @@ class DetailViewController: UIViewController {
             ])
             
             descriptionView.addSubview(quantity)
-            quantity.text = request?.quantity
+            quantity.text = product?.quantity
             quantity.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 quantity.topAnchor.constraint(equalTo: sort.bottomAnchor, constant: 10),
@@ -358,7 +341,7 @@ class DetailViewController: UIViewController {
             ])
             
             descriptionView.addSubview(use)
-            use.text = request?.use
+            use.text = product?.use
             use.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 use.topAnchor.constraint(equalTo: quantity.bottomAnchor, constant: 10),
@@ -381,14 +364,4 @@ class DetailViewController: UIViewController {
         
         self.view.layoutIfNeeded()
     }
-}
-
-extension DateFormatter {
-    static let customDateFormat: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM月 dd, yyyy"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        return formatter
-    }()
 }
