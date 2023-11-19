@@ -13,28 +13,28 @@ import FirebaseFirestore
 
 class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // the number of groups based on user data
-        return 2
+       
+        return products.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyRequestCell", for: indexPath) as! MyRequestCell
 
-        // Check if the index is within the bounds of the array
-        guard indexPath.row < requests.count else {
-            // Handle the case where the index is out of bounds
+        guard indexPath.row < products.count else {
+            cell.requestNameLabel.text = "N/A"
+            cell.requestDescriptionLabel.text = "N/A"
+            cell.requestDateLabel.text = "N/A"
             return cell
         }
 
-        // Access the request at the corresponding index
-        let request = requests[indexPath.row]
-
-        // Update the cell based on the request data
-        cell.requestNameLabel.text = request.items[0].name
-        
+        let product = products[indexPath.row]
+        cell.requestNameLabel.text = product.name
+        cell.requestDescriptionLabel.text = product.description
+        cell.requestDateLabel.text = product.startTime
 
         return cell
     }
+
+
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //  the number of collection items based on user data
@@ -172,29 +172,25 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             let db = Firestore.firestore()
             let productsCollection = db.collection("products")
 
-            // Assuming 'seller.sellerID' is the correct path in your Firestore structure
-            let query = productsCollection.whereField("seller.sellerID", isEqualTo: userId)
+            let query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId)
 
             query.getDocuments { (querySnapshot, error) in
                 if let error = error {
                     print("Error getting documents: \(error.localizedDescription)")
                 } else {
-//                    self.products.removeAll()
+                    self.products.removeAll()
 
                     for document in querySnapshot!.documents {
                     let data = document.data()
 
-                        if let product = self.parseProductData(data) {
+                        if let product = self.parseProductData(productData: data) {
                             self.products.append(product)
                         }
                     }
-
-                    // Reload your table or collection view after the loop
                     self.groupTableView.reloadData()
                 }
             }
         }
-    // Method to convert Firestore data to Request object
     func parseRequestData(_ data: [String: Any]) -> Request? {
         guard
             let requestID = data["requestID"] as? String,
@@ -206,10 +202,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         else {
             return nil
         }
-
-        // Convert itemsData to an array of Product objects
         let items = itemsData.compactMap { productData in
-            return parseProductData(productData)
+            return parseProductData(productData: productData)
         }
 
         return Request(
@@ -221,28 +215,38 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         )
     }
 
-    func parseProductData(_ data: [String: Any]) -> Product? {
-        guard
-            let name = data["name"] as? String,
-            let price = data["price"] as? String,
-            let startTime = data["startTime"] as? String,
-            let imageString = data["imageString"] as? String,
-            let sellerData = data["seller"] as? [String: Any],
-            let seller = parseSellerData(sellerData),
-            let itemTypeString = data["itemType"] as? String,
-            let itemType = ProductType(rawValue: itemTypeString)
-        else {
+    func parseProductData(productData: [String: Any]) -> Product? {
+        guard let product = productData["product"] as? [String: Any],
+              //              let productId = product["productId"] as? String,
+              let name = product["Name"] as? String,
+              let price = product["Price"] as? String,
+              let imageString = product["image"] as? String,
+              let startTimeString = product["Start Time"] as? String,
+              let startTime = product["Start Time"] as? String,
+              let endTimeString = product["End Time"] as? String,
+              let endTime = product["End Time"] as? String else {
+            print("Error: Missing required fields in product data")
             return nil
         }
-
-        // Optional fields
-        let description = data["description"] as? String
-        let sort = data["sort"] as? String
-        let quantity = data["quantity"] as? String
-        let use = data["use"] as? String
-        let endTime = data["endTime"] as? String
-
-        return Product(
+        let sellerData = product["seller"] as? [String: Any]
+        //        let itemTypeRawValue = product["type"] as? String
+        
+        guard let sellerID = sellerData?["sellerID"] as? String,
+              let sellerName = sellerData?["sellerName"] as? String,
+              let itemType = productData["type"] as? String
+        else {
+            print("Error: Failed to parse seller or itemType")
+            return nil
+        }
+        let description = productData["Description"] as? String ?? ""
+        let sort = productData["Sort"] as? String ?? ""
+        let quantity = productData["Quantity"] as? String ?? ""
+        let use = productData["Use"] as? String ?? ""
+        
+        let seller = Seller(sellerID: sellerID, sellerName: sellerName)
+        
+        let newProduct = Product(
+            //            productId: productId,
             name: name,
             price: price,
             startTime: startTime,
@@ -253,11 +257,12 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             use: use,
             endTime: endTime,
             seller: seller,
-            itemType: itemType
+            itemType: .request
         )
+        
+        return newProduct
+        
     }
-
-    // Method to parse Seller data
     func parseSellerData(_ data: [String: Any]) -> Seller? {
         guard
             let sellerID = data["sellerID"] as? String,
@@ -265,69 +270,49 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         else {
             return nil
         }
-
         return Seller(sellerID: sellerID, sellerName: sellerName)
     }
-
-
-
     @objc func groupButtonTapped() {
         animateLineViewTransition(to: groupButton)
         animateViewTransition(to: groupTableView)
         fetchRequests(userId: userId)
     }
-    
     @objc func collectionButtonTapped() {
         animateLineViewTransition(to: collectionButton)
         animateViewTransition(to: collectionCollectionView)
     }
-    
     @objc func requestButtonTapped() {
         animateLineViewTransition(to: requestButton)
         animateViewTransition(to: requestTableView)
     }
-    
     @objc func supplyButtonTapped() {
         animateLineViewTransition(to: supplyButton)
         animateViewTransition(to: supplyTableView)
     }
-    
-    // Function to update lineView position with animation
     func animateLineViewTransition(to button: UIButton) {
-        // Update selectedButton
         selectedButton?.setTitleColor(.black, for: .normal)
         button.setTitleColor(.blue, for: .normal)
         selectedButton = button
-        
-        // Animate the movement of the lineView
         UIView.animate(withDuration: 0.3) {
             self.lineView.frame.origin.x = button.frame.origin.x
         }
     }
-    
-    // Function to animate view transition
     func animateViewTransition(to newView: UIView) {
         UIView.animate(withDuration: 0.3) {
-            // Fade out all views
             self.groupTableView.alpha = 0
             self.collectionCollectionView.alpha = 0
             self.requestTableView.alpha = 0
             self.supplyTableView.alpha = 0
         } completion: { _ in
-            // Hide all views after animation completion
             self.groupTableView.isHidden = true
             self.collectionCollectionView.isHidden = true
             self.requestTableView.isHidden = true
             self.supplyTableView.isHidden = true
-            
-            // Show the selected view
             newView.alpha = 1
             newView.isHidden = false
         }
     }
 }
-
-
 class CollectionCell: UICollectionViewCell {
     let imageView = UIImageView()
     let nameLabel = UILabel()
@@ -370,7 +355,6 @@ class MyRequestCell: UITableViewCell {
         contentView.addSubview(requestNameLabel)
         contentView.addSubview(requestDescriptionLabel)
         contentView.addSubview(requestDateLabel)
-        
         requestImageView.translatesAutoresizingMaskIntoConstraints = false
         requestNameLabel.translatesAutoresizingMaskIntoConstraints = false
         requestDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
