@@ -15,7 +15,6 @@ import MJRefresh
 import Kingfisher
 
 class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! SearchCollectionViewCell
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -32,35 +31,28 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let cellHeight = collectionView.frame.height / 2
         let xPosition = CGFloat(indexPath.item % 2) * cellWidth
         let yPosition = CGFloat(indexPath.item / 2) * cellHeight
-        
         cell.frame = CGRect(x: xPosition, y: yPosition, width: cellWidth, height: cellHeight)
         if indexPath.item < allRequests.count {
             cell.product = allRequests[indexPath.item]
         } else {
             cell.product = nil
         }
-        
         return cell
     }
-    
     var selectedIndexPath: IndexPath?
-    
     var allRequests: [Product] = []
-    
     let scrollView = UIScrollView()
     let stackView = UIStackView()
     let lineView = UIView()
     let button1 = UIButton()
     let button2 = UIButton()
     let buttonClassification = UIButton()
-    
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.backgroundColor = .white
-        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
@@ -75,7 +67,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         fetchRequestsForUser()
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        
     }
     @objc func refresh() {
         let userID = Auth.auth().currentUser?.uid ?? ""
@@ -83,7 +74,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.reloadData()
     }
     func setupUI() {
-        
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         //        stackView.spacing = 10
@@ -95,20 +85,16 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
         button1.setTitle("Request", for: .normal)
         button1.setTitleColor(.black, for: .normal)
         button1.layer.borderWidth = 1
         button1.addTarget(self, action: #selector(button1Action), for: .touchUpInside)
-        
         button2.setTitle("Available", for: .normal)
         button2.setTitleColor(.black, for: .normal)
         button2.layer.borderWidth = 1
         button2.addTarget(self, action: #selector(button2Action), for: .touchUpInside)
-        
         stackView.addArrangedSubview(button1)
         stackView.addArrangedSubview(button2)
-        
         lineView.backgroundColor = .black
         lineView.translatesAutoresizingMaskIntoConstraints = false
         lineView.center.x = button1.center.x
@@ -119,7 +105,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2),
             lineView.heightAnchor.constraint(equalToConstant: 2)
         ])
-        
         buttonClassification.backgroundColor = .white
         buttonClassification.translatesAutoresizingMaskIntoConstraints = false
         buttonClassification.layer.borderWidth = 1
@@ -133,7 +118,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             buttonClassification.widthAnchor.constraint(equalToConstant: 60),
             buttonClassification.heightAnchor.constraint(equalToConstant: 40)
         ])
-        
         view.addSubview(collectionView)
         collectionView.backgroundColor = CustomColors.B1
         NSLayoutConstraint.activate([
@@ -148,11 +132,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         UIView.animate(withDuration: 0.3) {
             self.lineView.frame.origin.x = 0
         }
-        
         let userID = Auth.auth().currentUser?.uid ?? ""
         fetchRequestsForUser()
     }
-    
     @objc func button2Action() {
         UIView.animate(withDuration: 0.3) {
             self.lineView.frame.origin.x = self.view.frame.width / 2
@@ -160,24 +142,19 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let userID = Auth.auth().currentUser?.uid ?? ""
         fetchRequestsForUser()
     }
-    
     func fetchRequestsForUser() {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
-        
         productsCollection.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error)")
             } else {
                 self.allRequests.removeAll()
-                
                 for document in querySnapshot!.documents {
                     let productData = document.data()
-                    
                     if let productTypeRawValue = productData["type"] as? String,
                        let productType = ProductType(rawValue: productTypeRawValue),
                        let product = self.parseProductData(productData: productData) {
-                        
                         if (productType == .request && product.itemType == .request) ||
                             (productType == .supply && product.itemType == .supply) {
                             self.allRequests.append(product)
@@ -194,10 +171,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             }
         }
     }
-    
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
-//              let productId = product["productId"] as? String,
+              //              let productId = product["productId"] as? String,
               let name = product["Name"] as? String,
               let price = product["Price"] as? String,
               let imageString = product["image"] as? String,
@@ -209,8 +185,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             return nil
         }
         let sellerData = product["seller"] as? [String: Any]
-//        let itemTypeRawValue = product["type"] as? String
-
+        //        let itemTypeRawValue = product["type"] as? String
+        
         guard let sellerID = sellerData?["sellerID"] as? String,
               let sellerName = sellerData?["sellerName"] as? String,
               let itemType = productData["type"] as? String
@@ -218,16 +194,15 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             print("Error: Failed to parse seller or itemType")
             return nil
         }
-        
         let description = productData["Description"] as? String ?? ""
         let sort = productData["Sort"] as? String ?? ""
         let quantity = productData["Quantity"] as? String ?? ""
         let use = productData["Use"] as? String ?? ""
-
+        
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
-
+        
         let newProduct = Product(
-//            productId: productId,
+            //            productId: productId,
             name: name,
             price: price,
             startTime: startTime,
@@ -240,11 +215,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             seller: seller,
             itemType: .request
         )
-
+        
         return newProduct
-
+        
     }
-
+    
 }
 class SearchCollectionViewCell: UICollectionViewCell {
     let underView = UIView()
@@ -254,24 +229,20 @@ class SearchCollectionViewCell: UICollectionViewCell {
     let dateLabel = UILabel()
     let nameLabel = UILabel()
     let collectionButton = UIButton()
-    
     var product: Product? {
         didSet {
             print("Request didSet")
             updateUI()
         }
     }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func setupUI(){
-        
+    func setupUI() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = .yellow
         imageView.layer.cornerRadius = 10
@@ -292,7 +263,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
             nameLabel.widthAnchor.constraint(equalToConstant: contentView.frame.width),
             nameLabel.heightAnchor.constraint(equalToConstant: 15)
         ])
-        
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
         priceLabel.text = "$ 0.00"
         priceLabel.font = UIFont.systemFont(ofSize: 12)
@@ -303,7 +273,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
             priceLabel.widthAnchor.constraint(equalToConstant: contentView.frame.width),
             priceLabel.heightAnchor.constraint(equalToConstant: 15)
         ])
-        
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         dateLabel.text = "Date"
         dateLabel.font = UIFont.systemFont(ofSize: 12)
@@ -313,7 +282,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
             dateLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 15),
             dateLabel.heightAnchor.constraint(equalToConstant: 15)
         ])
-        
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Provide", for: .normal)
         button.setTitleColor(.black, for: .normal)
@@ -329,13 +297,12 @@ class SearchCollectionViewCell: UICollectionViewCell {
             button.widthAnchor.constraint(equalToConstant: 100)
         ])
     }
-
+    
     func updateUI() {
         if let product = product {
             nameLabel.text = product.name
             priceLabel.text = "$\(product.price)"
             dateLabel.text = product.startTime.description
-            
             if let url = URL(string: product.imageString) {
                 imageView.kf.setImage(with: url)
             }

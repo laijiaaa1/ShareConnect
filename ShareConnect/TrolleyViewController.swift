@@ -8,21 +8,14 @@
 import UIKit
 import Kingfisher
 
-
 class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TrolleyCellDelegate{
     func didSelectSeller(sellerID: String) {
         print("Selected seller: \(sellerID)")
-   
     }
-    
-    
     var cart: [Seller: [Product]] = [:]
-    
     let tableView = UITableView()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-     
         navigationItem.title = "Trolley"
         view.backgroundColor = CustomColors.B1
         tableView.delegate = self
@@ -36,54 +29,55 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             tableView.heightAnchor.constraint(equalToConstant: 400),
             tableView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
-        if let savedCartData = UserDefaults.standard.array(forKey: "carts") as? [[String: Any]] {
+        if let savedCartData = UserDefaults.standard.array(forKey: "carts") as? [[String: Data]] {
             cart = savedCartData.reduce(into: [Seller: [Product]]()) { result, dict in
-                guard let seller = dict["seller"] as? Seller,
-                      let products = dict["products"] as? [Product] else {
+                guard let encodedSeller = dict["seller"],
+                      let encodedProducts = dict["products"],
+                      let seller = try? JSONDecoder().decode(Seller.self, from: encodedSeller),
+                      let products = try? JSONDecoder().decode([Product].self, from: encodedProducts) else {
                     return
                 }
                 result[seller] = products
             }
         }
-
+        
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
         let seller = Array(cart.keys)[indexPath.section]
         let cartItems = cart[seller] ?? []
-        
         cell.setupUI(seller: seller, cartItems: cartItems, delegate: self)
-        
         return cell
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let seller = Array(cart.keys)[section]
         return cart[seller]?.count ?? 0
     }
-
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return cart.keys.count
     }
     func addToCart(product: Product) {
         let seller = product.seller
-        
+        // Check if the seller is already in the cart
         if var sellerProducts = cart[seller] {
-            sellerProducts.append(product)
-            cart[seller] = sellerProducts
+            // Check if the product is already in the seller's products
+            if !sellerProducts.contains(where: { $0.name == product.name }) {
+                sellerProducts.append(product)
+                cart[seller] = sellerProducts
+            }
         } else {
+            // Seller is not in the cart, add a new entry
             cart[seller] = [product]
         }
-
+        
         saveCartToUserDefaults()
         tableView.reloadData()
     }
-
     func saveCartToUserDefaults() {
-        let cartData = cart.map { (seller, products) in
-            return ["seller": seller, "products": products]
-        }
-        UserDefaults.standard.set(cartData, forKey: "carts")
+        // Encode and save the cart dictionary to UserDefaults
+        let encodedCart = try? JSONEncoder().encode(cart)
+        UserDefaults.standard.set(encodedCart, forKey: "cart")
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
@@ -118,45 +112,36 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let seller = Array(cart.keys)[indexPath.section]
         var cartItems = cart[seller] ?? []
-
+        
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
             guard indexPath.row < cartItems.count else {
                 completionHandler(false)
                 return
             }
-            
             cartItems.remove(at: indexPath.row)
             self?.cart[seller] = cartItems
-            
             tableView.deleteRows(at: [indexPath], with: .automatic)
-            
             if cartItems.isEmpty {
                 let indexSet = IndexSet(integer: indexPath.section)
                 self?.cart.removeValue(forKey: seller)
                 tableView.deleteSections(indexSet, with: .automatic)
             }
-
+            
             completionHandler(true)
         }
-
+        
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
     }
-
-    
-
 }
 class TrolleyCell: UITableViewCell {
-    
     weak var delegate: TrolleyCellDelegate?
     var sellerID: String?
-    
     var number: Int = 1 {
         didSet {
             numberLabel.text = "\(number)"
         }
     }
-    
     let backView = UIView()
     let imageViewUP = UIImageView()
     let nameLabel = UILabel()
@@ -165,13 +150,12 @@ class TrolleyCell: UITableViewCell {
     let quantityLabel = UILabel()
     let minusButton = UIButton()
     let plusButton = UIButton()
-    
     let selectSellerButton: UIButton = {
         let button = UIButton(type: .system)
         button.addTarget(self, action: #selector(selectSellerButtonTapped), for: .touchUpInside)
         return button
     }()
-  @objc func selectSellerButtonTapped() {
+    @objc func selectSellerButtonTapped() {
         guard let sellerID = sellerID else { return }
         delegate?.didSelectSeller(sellerID: sellerID)
     }
@@ -184,7 +168,7 @@ class TrolleyCell: UITableViewCell {
             imageViewUP.kf.setImage(with: URL(string: product.imageString))
             quantityLabel.text = "\(product.quantity)"
         }
-
+        
         backView.backgroundColor = .white
         contentView.addSubview(backView)
         backView.translatesAutoresizingMaskIntoConstraints = false
@@ -206,7 +190,6 @@ class TrolleyCell: UITableViewCell {
             imageViewUP.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -10),
             imageViewUP.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -10)
         ])
-        
         contentView.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -214,8 +197,6 @@ class TrolleyCell: UITableViewCell {
             nameLabel.leadingAnchor.constraint(equalTo: imageViewUP.trailingAnchor, constant: 20),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
         ])
-        
-       
         contentView.addSubview(priceLabel)
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -253,7 +234,6 @@ class TrolleyCell: UITableViewCell {
             minusButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         minusButton.addTarget(self, action: #selector(minusButtonTapped), for: .touchUpInside)
-        
         plusButton.setTitle("+", for: .normal)
         plusButton.setTitleColor(.black, for: .normal)
         plusButton.backgroundColor = .white
@@ -269,7 +249,6 @@ class TrolleyCell: UITableViewCell {
             plusButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
-        
         contentView.addSubview(selectSellerButton)
         selectSellerButton.layer.cornerRadius = 10
         selectSellerButton.layer.masksToBounds = true
@@ -282,11 +261,9 @@ class TrolleyCell: UITableViewCell {
             selectSellerButton.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
-    
     @objc func minusButtonTapped() {
         number = max(1, number - 1)
     }
-    
     @objc func plusButtonTapped() {
         number += 1
     }

@@ -11,35 +11,35 @@ import Kingfisher
 class SelectedViewController: UIViewController {
     var product: Product?
     var cart: [Seller: [Product]] = [:]
-
+    
     let backImage = UIImageView()
     let backView = UIView()
     let infoView = UIView()
     let nameLabel = UILabel()
-
+    
     let priceView = UIImageView()
     let priceLabel = UILabel()
-
+    
     let availabilityView = UIView()
     let availability = UILabel()
-
+    
     let itemLabel = UILabel()
     let itemView = UIView()
     let itemInfo = UILabel()
-
+    
     let quantity = UILabel()
     let numberLabel = UILabel()
     let addButton = UIButton()
     let minusButton = UIButton()
-
+    
     let trolleyButton = UIButton()
-
+    
     let closeButton = UIButton()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-
+        
         if let product = product, let imageURL = URL(string: product.imageString) {
             backImage.kf.setImage(with: imageURL)
             priceLabel.text = product.price
@@ -52,37 +52,46 @@ class SelectedViewController: UIViewController {
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)
     }
-
+    
     @objc func trolleyButtonTapped() {
+        guard let product = product else {
+            print("Product is nil")
+            return
+        }
         
+        let cart: [Seller: [Product]] = [product.seller: [product]]
+        saveCartToUserDefaults(cart)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
-        
-        vc.cart = self.product.map { [Seller: [Product]](uniqueKeysWithValues: [($0.seller, [$0])]) } ?? [:]
-//        UserDefaults.standard.set(product, forKey: "carts")
         navigationController?.pushViewController(vc, animated: true)
     }
-
-    func setup(){
-//        if let request = request, let imageURL = URL(string: request.imageString) {
-//            backImage.kf.setImage(with: imageURL)
-            
-            backImage.frame = CGRect(x: 0, y: 0, width: view.frame.width , height: view.frame.height / 2)
-            backImage.layer.cornerRadius = 15
-            backImage.layer.masksToBounds = true
-            view.addSubview(backImage)
-       
+    func saveCartToUserDefaults(_ cart: [Seller: [Product]]) {
+        // Convert the cart to a format that can be saved in UserDefaults
+        let cartData = cart.map { (seller, products) in
+            let encodedSeller = try? JSONEncoder().encode(seller)
+            let encodedProducts = try? JSONEncoder().encode(products)
+            return ["seller": encodedSeller, "products": encodedProducts]
+        }
         
+        // Save the cart data to UserDefaults
+        UserDefaults.standard.set(cartData, forKey: "carts")
+    }
+    
+    func setup() {
+        //        if let request = request, let imageURL = URL(string: request.imageString) {
+        //            backImage.kf.setImage(with: imageURL)
+        backImage.frame = CGRect(x: 0, y: 0, width: view.frame.width , height: view.frame.height / 2)
+        backImage.layer.cornerRadius = 15
+        backImage.layer.masksToBounds = true
+        view.addSubview(backImage)
         backView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         backView.backgroundColor = UIColor(red: 228/255, green: 220/255, blue: 209/255, alpha: 0.5)
         view.addSubview(backView)
-        
         infoView.frame = CGRect(x: 0, y: 250, width: view.frame.width, height: view.frame.height - 250)
         infoView.backgroundColor = CustomColors.B1
         infoView.layer.cornerRadius = 15
         infoView.layer.masksToBounds = true
         view.addSubview(infoView)
-        
         //        nameLabel.text = request?.name
         //        backImage.addSubview(nameLabel)
         //        nameLabel.textColor = CustomColors.B1
@@ -93,15 +102,13 @@ class SelectedViewController: UIViewController {
         //            nameLabel.topAnchor.constraint(equalTo: backImage.topAnchor, constant: 70),
         //            nameLabel.leadingAnchor.constraint(equalTo: backImage.leadingAnchor, constant: 30)
         //        ])
-        
         priceView.frame = CGRect(x: 40, y: 70, width: 30, height: 30)
         priceView.image = UIImage(named: "price")
         infoView.addSubview(priceView)
         priceLabel.frame = CGRect(x: 90, y: 70, width: 130, height: 30)
         priceLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-//        priceLabel.text = request?.price
+        //        priceLabel.text = request?.price
         infoView.addSubview(priceLabel)
-        
         availabilityView.backgroundColor = .white
         availabilityView.layer.cornerRadius = 10
         infoView.addSubview(availabilityView)
@@ -112,11 +119,9 @@ class SelectedViewController: UIViewController {
             availabilityView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             availabilityView.heightAnchor.constraint(equalToConstant: 70)
         ])
-        
         let dateImage = UIImageView()
         availabilityView.addSubview(dateImage)
         dateImage.image = UIImage(named: "icons8-today-72(@3×)")
-        
         dateImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             dateImage.centerYAnchor.constraint(equalTo: availabilityView.centerYAnchor),
@@ -124,9 +129,8 @@ class SelectedViewController: UIViewController {
             dateImage.heightAnchor.constraint(equalToConstant: 30),
             dateImage.leadingAnchor.constraint(equalTo: availabilityView.leadingAnchor, constant: 10)
         ])
-        
         availabilityView.addSubview(availability)
-//        availability.text = "\(request!.startTime)"
+        //        availability.text = "\(request!.startTime)"
         availability.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         availability.textColor = .black
         availability.translatesAutoresizingMaskIntoConstraints = false
@@ -134,7 +138,6 @@ class SelectedViewController: UIViewController {
             availability.centerYAnchor.constraint(equalTo: availabilityView.centerYAnchor),
             availability.leadingAnchor.constraint(equalTo: dateImage.trailingAnchor, constant: 30)
         ])
-        
         itemLabel.text = "Item"
         itemLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         itemLabel.textColor = .black
@@ -144,7 +147,6 @@ class SelectedViewController: UIViewController {
             itemLabel.topAnchor.constraint(equalTo: availabilityView.bottomAnchor, constant: 60),
             itemLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
         ])
-        
         itemView.backgroundColor = .white
         itemView.layer.cornerRadius = 10
         infoView.addSubview(itemView)
@@ -155,9 +157,8 @@ class SelectedViewController: UIViewController {
             itemView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             itemView.heightAnchor.constraint(equalToConstant: 70)
         ])
-        
         itemView.addSubview(itemInfo)
-//        itemInfo.text = request?.name
+        //        itemInfo.text = request?.name
         itemInfo.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         itemInfo.textColor = .black
         itemInfo.translatesAutoresizingMaskIntoConstraints = false
@@ -165,7 +166,6 @@ class SelectedViewController: UIViewController {
             itemInfo.centerYAnchor.constraint(equalTo: itemView.centerYAnchor),
             itemInfo.leadingAnchor.constraint(equalTo: itemView.leadingAnchor, constant: 30)
         ])
-        
         quantity.text = "Quantity"
         quantity.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         quantity.textColor = .black
@@ -175,7 +175,6 @@ class SelectedViewController: UIViewController {
             quantity.topAnchor.constraint(equalTo: itemLabel.bottomAnchor, constant: 60),
             quantity.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
         ])
-        
         numberLabel.text = "1"
         numberLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         numberLabel.textColor = .black
@@ -192,7 +191,6 @@ class SelectedViewController: UIViewController {
             numberLabel.widthAnchor.constraint(equalToConstant: 180),
             numberLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
-        
         addButton.setTitle("+", for: .normal)
         addButton.setTitleColor(.black, for: .normal)
         addButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
@@ -208,7 +206,6 @@ class SelectedViewController: UIViewController {
             addButton.widthAnchor.constraint(equalToConstant: 30),
             addButton.heightAnchor.constraint(equalToConstant: 30)
         ])
-        
         minusButton.setTitle("-", for: .normal)
         minusButton.setTitleColor(.black, for: .normal)
         minusButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
@@ -224,7 +221,6 @@ class SelectedViewController: UIViewController {
             minusButton.widthAnchor.constraint(equalToConstant: 30),
             minusButton.heightAnchor.constraint(equalToConstant: 30)
         ])
-        
         trolleyButton.setTitle("Add to trolley", for: .normal)
         trolleyButton.setTitleColor(.white, for: .normal)
         trolleyButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
@@ -240,9 +236,7 @@ class SelectedViewController: UIViewController {
             trolleyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             trolleyButton.heightAnchor.constraint(equalToConstant: 60)
         ])
-        
         trolleyButton.addTarget(self, action: #selector(trolleyButtonTapped), for: .touchUpInside)
-        
         closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         closeButton.imageView?.tintColor = .black
         closeButton.backgroundColor = .white

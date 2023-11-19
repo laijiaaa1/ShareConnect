@@ -14,21 +14,17 @@ import JGProgressHUD
 import FirebaseStorage
 
 class CreateSupplyViewController: CreateRequestViewController {
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         navigationItem.title = "Create Supply"
     }
-    
     @objc override func doneButtonTapped() {
         let db = Firestore.firestore()
         let storage = Storage.storage()
         let user = Auth.auth().currentUser
         let imageName = UUID().uuidString
-//        let productId = UUID().uuidString
+        //        let productId = UUID().uuidString
         let storageRef = storage.reference().child("images/\(imageName).jpg")
-        
         if let imageURL = uploadButton.backgroundImage(for: .normal), let imageData = imageURL.jpegData(compressionQuality: 0.1) {
             storageRef.putData(imageData, metadata: nil) { (metadata, error) in
                 if let error = error {
@@ -39,13 +35,12 @@ class CreateSupplyViewController: CreateRequestViewController {
                             print("Error getting download URL: \(error)")
                         } else if let downloadURL = url {
                             var productData: [String: Any] = [:]
-//                            productData["productId"] = productId
+                            //                            productData["productId"] = productId
                             productData["image"] = downloadURL.absoluteString
                             productData["seller"] = [
                                 "sellerID": user?.uid ?? "",
                                 "sellerName": user?.email ?? ""
                             ]
-                            
                             for i in 0..<self.requestTableView.numberOfSections {
                                 for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
                                     let indexPath = IndexPath(row: j, section: i)
@@ -56,9 +51,8 @@ class CreateSupplyViewController: CreateRequestViewController {
                                     }
                                 }
                             }
-                            
                             let supplyProduct = Product(
-//                                productId: productId,
+                                //                                productId: productId,
                                 name: productData["name"] as? String ?? "",
                                 price: productData["price"] as? String ?? "",
                                 startTime: productData["startTime"] as? String ?? "",
@@ -74,7 +68,6 @@ class CreateSupplyViewController: CreateRequestViewController {
                                 ),
                                 itemType: .supply
                             )
-                            
                             db.collection("products").addDocument(data: [
                                 "type": ProductType.supply.rawValue,
                                 "product": productData

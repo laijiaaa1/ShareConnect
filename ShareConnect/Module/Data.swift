@@ -7,8 +7,7 @@
 
 import Foundation
 
-struct Product {
-//    let productId: String
+struct Product: Codable {
     let name: String
     let price: String
     let startTime: String
@@ -21,26 +20,40 @@ struct Product {
     let seller: Seller
     let itemType: ProductType
 }
-//extension Product: Equatable {
-//    static func == (lhs: Product, rhs: Product) -> Bool {
-//        // Implement the equality comparison based on your requirements
-//        return lhs.productId == rhs.productId
-//    }
-//}
 
-
-enum ProductType: String {
+enum ProductType: String, Codable {
     case request
     case supply
 }
+extension ProductType {
+    init?(rawValue: String) {
+        switch rawValue {
+        case "request": self = .request
+        case "supply": self = .supply
+        default: return nil
+        }
+    }
+}
 
-
-struct Seller: Hashable {
+struct Seller: Hashable, Codable {
     var sellerID: String
     var sellerName: String
 }
+extension Seller {
+    init?(data: [String: Any]) {
+        guard
+            let sellerID = data["sellerID"] as? String,
+            let sellerName = data["sellerName"] as? String
+        else {
+            return nil
+        }
 
-struct Request {
+        self.sellerID = sellerID
+        self.sellerName = sellerName
+    }
+}
+
+struct Request: Codable {
     let requestID: String
     let buyerID: String
     let items: [Product]
@@ -48,26 +61,27 @@ struct Request {
     let status: RequestStatus
 }
 
-enum RequestStatus {
+enum RequestStatus: String, Codable {
     case open
     case closed
+
+    init?(rawValue: String) {
+        switch rawValue {
+        case "open":
+            self = .open
+        case "closed":
+            self = .closed
+        default:
+            return nil
+        }
+    }
 }
 
 protocol TrolleyCellDelegate: AnyObject {
     func didSelectSeller(sellerID: String)
 }
 
-struct UserData {
+struct UserData: Codable {
     var userID: String
     var username: String
 }
-
-//let seller = Seller(sellerID: "123", sellerName: "Seller Name")
-//
-//let demandProduct = Product(name: "Demand Product", price: "50", startTime: "2023-11-30", imageString: "demandImageURL", description: "Demand Description", sort: "Electronics", quantity: "10", use: "New", endTime: "2023-12-31", seller: seller, itemType: .request)
-//
-//let supplyProduct = Product(name: "Supply Product", price: "30", startTime: "2023-11-30", imageString: "supplyImageURL", description: "Supply Description", sort: "Clothing", quantity: "20", use: "Used", endTime: "2023-11-30", seller: seller, itemType: .supply)
-//
-//let request = Request(requestID: "456", buyerID: "789", items: [demandProduct, supplyProduct], selectedSellerID: "123", status: .open)
-//
-//let user = UserData(userID: "789", username: "BuyerName")

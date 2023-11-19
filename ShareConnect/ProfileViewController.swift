@@ -6,22 +6,38 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseStorage
+import FirebaseCore
+import FirebaseFirestore
 
 class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Placeholder: Replace with logic to determine the number of groups based on user data
+        // the number of groups based on user data
         return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "GroupCell", for: indexPath) as! GroupCell
-        // Placeholder: Customize the cell based on user data
-        cell.nameLabel.text = "Group \(indexPath.row + 1)"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MyRequestCell", for: indexPath) as! MyRequestCell
+
+        // Check if the index is within the bounds of the array
+        guard indexPath.row < requests.count else {
+            // Handle the case where the index is out of bounds
+            return cell
+        }
+
+        // Access the request at the corresponding index
+        let request = requests[indexPath.row]
+
+        // Update the cell based on the request data
+        cell.requestNameLabel.text = request.items[0].name
+        
+
         return cell
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // Placeholder: Replace with logic to determine the number of collection items based on user data
+        //  the number of collection items based on user data
         return 4
     }
     
@@ -32,6 +48,12 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         cell.nameLabel.text = "Item \(indexPath.item + 1)"
         return cell
     }
+    
+    var requests: [Request] = []
+    var products: [Product] = []
+//    var groups: [Group] = []
+//    var collections: [Collection] = []
+//    var supplies: [Supply] = []
     
     let headerImage = UIImageView()
     let nameLabel = UILabel()
@@ -50,6 +72,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     let requestTableView = UITableView()
     let supplyTableView = UITableView()
     var selectedButton: UIButton?
+    let userId = Auth.auth().currentUser!.uid
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,7 +142,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         groupTableView.dataSource = self
         groupTableView.delegate = self
-        groupTableView.register(GroupCell.self, forCellReuseIdentifier: "GroupCell")
+        groupTableView.register(MyRequestCell.self, forCellReuseIdentifier: "MyRequestCell")
         
         // Collection Collection View
         collectionCollectionView.isHidden = true
@@ -138,10 +161,121 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         collectionCollectionView.dataSource = self
         collectionCollectionView.delegate = self
         collectionCollectionView.register(CollectionCell.self, forCellWithReuseIdentifier: "CollectionCell")
+        
+        if let currentUser = Auth.auth().currentUser {
+            let userId = currentUser.uid
+            fetchRequests(userId: userId)
+        }
     }
+       
+        func fetchRequests(userId: String) {
+            let db = Firestore.firestore()
+            let productsCollection = db.collection("products")
+
+            // Assuming 'seller.sellerID' is the correct path in your Firestore structure
+            let query = productsCollection.whereField("seller.sellerID", isEqualTo: userId)
+
+            query.getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Error getting documents: \(error)")
+                } else {
+                    self.products.removeAll()
+
+                    for document in querySnapshot!.documents {
+                        // Use nil-coalescing to provide an empty dictionary if document.data() is nil
+                        let data = document.data() ?? [:]
+
+                        if let product = self.parseProductData(data) {
+                            self.products.append(product)
+                        }
+                    }
+
+                    // Reload your table or collection view after the loop
+                    self.groupTableView.reloadData()
+                }
+            }
+        }
+    // Method to convert Firestore data to Request object
+    func parseRequestData(_ data: [String: Any]) -> Request? {
+        guard
+            let requestID = data["requestID"] as? String,
+            let buyerID = data["buyerID"] as? String,
+            let itemsData = data["items"] as? [[String: Any]],
+            let selectedSellerID = data["selectedSellerID"] as? String,
+            let statusString = data["status"] as? String,
+            let status = RequestStatus(rawValue: statusString)
+        else {
+            return nil
+        }
+
+        // Convert itemsData to an array of Product objects
+        let items = itemsData.compactMap { productData in
+            return parseProductData(productData)
+        }
+
+        return Request(
+            requestID: requestID,
+            buyerID: buyerID,
+            items: items,
+            selectedSellerID: selectedSellerID,
+            status: status
+        )
+    }
+
+    func parseProductData(_ data: [String: Any]) -> Product? {
+        guard
+            let name = data["name"] as? String,
+            let price = data["price"] as? String,
+            let startTime = data["startTime"] as? String,
+            let imageString = data["imageString"] as? String,
+            let sellerData = data["seller"] as? [String: Any],
+            let seller = parseSellerData(sellerData),
+            let itemTypeString = data["itemType"] as? String,
+            let itemType = ProductType(rawValue: itemTypeString)
+        else {
+            return nil
+        }
+
+        // Optional fields
+        let description = data["description"] as? String
+        let sort = data["sort"] as? String
+        let quantity = data["quantity"] as? String
+        let use = data["use"] as? String
+        let endTime = data["endTime"] as? String
+
+        return Product(
+            name: name,
+            price: price,
+            startTime: startTime,
+            imageString: imageString,
+            description: description,
+            sort: sort,
+            quantity: quantity,
+            use: use,
+            endTime: endTime,
+            seller: seller,
+            itemType: itemType
+        )
+    }
+
+    // Method to parse Seller data
+    func parseSellerData(_ data: [String: Any]) -> Seller? {
+        guard
+            let sellerID = data["sellerID"] as? String,
+            let sellerName = data["sellerName"] as? String
+        else {
+            return nil
+        }
+
+        return Seller(sellerID: sellerID, sellerName: sellerName)
+    }
+
+
+
     @objc func groupButtonTapped() {
         animateLineViewTransition(to: groupButton)
         animateViewTransition(to: groupTableView)
+        fetchRequests(userId: userId)
     }
     
     @objc func collectionButtonTapped() {
@@ -160,7 +294,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     // Function to update lineView position with animation
-    private func animateLineViewTransition(to button: UIButton) {
+    func animateLineViewTransition(to button: UIButton) {
         // Update selectedButton
         selectedButton?.setTitleColor(.black, for: .normal)
         button.setTitleColor(.blue, for: .normal)
@@ -173,7 +307,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     // Function to animate view transition
-    private func animateViewTransition(to newView: UIView) {
+    func animateViewTransition(to newView: UIView) {
         UIView.animate(withDuration: 0.3) {
             // Fade out all views
             self.groupTableView.alpha = 0
@@ -225,35 +359,41 @@ class CollectionCell: UICollectionViewCell {
     }
 }
 
-class GroupCell: UITableViewCell {
+class MyRequestCell: UITableViewCell {
 
-    let nameLabel = UILabel()
-    let descriptionLabel = UILabel()
-    let dateLabel = UILabel()
+    let requestImageView = UIImageView()
+    let requestNameLabel = UILabel()
+    let requestDescriptionLabel = UILabel()
+    let requestDateLabel = UILabel()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(descriptionLabel)
-        contentView.addSubview(dateLabel)
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(requestImageView)
+        contentView.addSubview(requestNameLabel)
+        contentView.addSubview(requestDescriptionLabel)
+        contentView.addSubview(requestDateLabel)
+        
+        requestImageView.translatesAutoresizingMaskIntoConstraints = false
+        requestNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        requestDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        requestDateLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            dateLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 10),
-            dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+            requestImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            requestImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            requestImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            requestNameLabel.topAnchor.constraint(equalTo: requestImageView.bottomAnchor, constant: 10),
+            requestNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            requestDescriptionLabel.topAnchor.constraint(equalTo: requestNameLabel.bottomAnchor, constant: 10),
+            requestDescriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            requestDescriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            requestDateLabel.topAnchor.constraint(equalTo: requestDescriptionLabel.bottomAnchor, constant: 10),
+            requestDateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            requestDateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            requestDateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
-        nameLabel.numberOfLines = 0
-        descriptionLabel.numberOfLines = 0
-        dateLabel.numberOfLines = 0
+        requestNameLabel.numberOfLines = 0
+        requestDescriptionLabel.numberOfLines = 0
+        requestDateLabel.numberOfLines = 0
     }
 
     required init?(coder: NSCoder) {
