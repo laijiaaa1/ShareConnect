@@ -10,7 +10,8 @@ import UIKit
 class ChatViewController: UIViewController, WebSocketManagerDelegate {
 
     var cart: [Seller: [Product]]?
-
+    var sellerID: String?
+    
     let tableView = UITableView()
     let messageTextField = UITextField()
     let sendButton = UIButton()
@@ -21,14 +22,25 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
     }
+
     override func viewDidDisappear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        navigationItem.title = "CHATROOM"
         setupUI()
         webSocketManager.delegate = self
+        //anto send message to seller
+        if let sellerID = sellerID {
+            setUserWebSocketID(sellerID)
+        }
+        //to send shopping cart to seller
+        if let cart = cart {
+            sendShoppingCartToSeller()
+        }
+        
     }
 
     private func setupUI() {
@@ -70,18 +82,22 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
         let chatMessage = ChatMessage(text: message, isMe: true)
         chatMessages.append(chatMessage)
         tableView.reloadData()
-        webSocketManager.send(message: message)
-    }
 
-    func sendShoppingCartToSeller() {
-        // Check if there is a shopping cart information
-        guard let cart = cart else {
-            print("Shopping cart is empty.")
+        // Get the WebSocket ID of the seller
+        guard let sellerWebSocketID = webSocketManager.userWebSocketID else {
+            print("Error: Seller WebSocket ID is not set.")
             return
         }
-
-        // Convert the shopping cart information to a string
-        let cartString = convertCartToString(cart)
+        webSocketManager.send(message: message, to: sellerWebSocketID)
+    }
+    func setUserWebSocketID(_ sellerID: String){
+        webSocketManager.userWebSocketID = sellerID
+    }
+    func sendShoppingCartToSeller() {
+        guard let cart = cart else {
+            print("Shopping cart or sellerID is nil.")
+            return
+        }
 
         // Get the WebSocket ID of the seller
         guard let sellerWebSocketID = webSocketManager.userWebSocketID else {
@@ -89,20 +105,27 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
             return
         }
 
-        // Create a message containing the shopping cart information
-        let message = "New order: \(cartString)"
-
-        // Use WebSocketManager to send the message to the seller
+        let cartString = convertCartToString(cart)
+        let message = "New order from seller \(sellerWebSocketID): \(cartString)"
         webSocketManager.send(message: message, to: sellerWebSocketID)
     }
 
-    // Add this method to convert the cart to a string
+
     private func convertCartToString(_ cart: [Seller: [Product]]) -> String {
-        // Implement your logic to convert the cart to a string
-        // For example, you can iterate through the sellers and products and build a formatted string
-        // Return a formatted string representation of the cart
-        return "Formatted string representation of the cart"
+        var cartString = ""
+        for (seller, products) in cart {
+            cartString.append("Seller: \(seller.sellerName)\n")
+
+            for product in products {
+                cartString.append(" - Product: \(product.name)\n")
+                cartString.append("   Quantity: \(product.quantity ?? "1")\n")
+                cartString.append("   Price: \(product.price)\n")
+            }
+            cartString.append("\n")
+        }
+        return cartString
     }
+
 }
 
 extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
@@ -118,9 +141,13 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
           cell.label.textAlignment = chatMessage.isMe ? .right : .left
 
           cell.label.text = chatMessage.text
-          cell.backgroundColor = chatMessage.isMe ? .green : .white
+          cell.backgroundColor = chatMessage.isMe ? .lightGray : .white
+          cell.label.textColor = chatMessage.isMe ? .white : .black
           return cell
       }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
 }
 
 class ChatMessageCell: UITableViewCell {

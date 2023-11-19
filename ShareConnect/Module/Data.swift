@@ -81,7 +81,7 @@ protocol TrolleyCellDelegate: AnyObject {
     func didSelectSeller(sellerID: String)
 }
 
-struct UserData: Codable {
+struct UserData: Codable, Hashable {
     var userID: String
     var username: String
 }

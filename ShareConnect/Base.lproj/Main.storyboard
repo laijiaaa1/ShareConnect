@@ -13,7 +13,7 @@
             <objects>
                 <viewController storyboardIdentifier="HomePageViewController" id="BYZ-38-t0r" customClass="HomePageViewController" customModule="ShareConnect" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="787"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -204,7 +204,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="qSG-Cj-WF1">
             <objects>
-                <tabBarController id="DYw-AW-csk" sceneMemberID="viewController">
+                <tabBarController modalPresentationStyle="fullScreen" id="DYw-AW-csk" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="NOg-Kd-UT8"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="M2z-dY-iGU">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="49"/>
@@ -226,7 +226,7 @@
         <!--PROFILE-->
         <scene sceneID="evd-gF-Q0R">
             <objects>
-                <viewController storyboardIdentifier="ProfileViewController" id="Ldx-I1-g2x" customClass="ProfileViewController" customModule="ShareConnect" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfileViewController" modalPresentationStyle="fullScreen" id="Ldx-I1-g2x" customClass="ProfileViewController" customModule="ShareConnect" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aqp-RN-Osj">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="787"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -258,7 +258,7 @@
         <!--Item-->
         <scene sceneID="jcZ-GQ-TLb">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8mu-1b-zXN" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" id="8mu-1b-zXN" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" image="house" catalog="system" selectedImage="house.fill" id="2Y2-Xo-d5c">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
@@ -336,7 +336,7 @@
         <!--Item-->
         <scene sceneID="rlx-YW-OKz">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="J4D-to-TLu" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" id="J4D-to-TLu" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" image="person" catalog="system" selectedImage="person.fill" id="ZC3-c7-1XF"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="TMg-xF-BLu">

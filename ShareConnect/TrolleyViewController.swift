@@ -9,11 +9,20 @@ import UIKit
 import Kingfisher
 
 class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TrolleyCellDelegate{
+    
+    
     func didSelectSeller(sellerID: String) {
         print("Selected seller: \(sellerID)")
     }
+    
+    let buyerWebSocketManager = WebSocketManager()
+      let sellerWebSocketManager = WebSocketManager()
+    var selectedSellerID: String?
     var cart: [Seller: [Product]] = [:]
     let tableView = UITableView()
+    override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Trolley"
@@ -26,7 +35,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            tableView.heightAnchor.constraint(equalToConstant: 400),
+            tableView.heightAnchor.constraint(equalToConstant: 600),
             tableView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
         
@@ -39,7 +48,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         view.addSubview(checkoutButton)
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            checkoutButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10),
+            checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             checkoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             checkoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50)
@@ -75,15 +84,12 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     func addToCart(product: Product) {
         let seller = product.seller
-        // Check if the seller is already in the cart
         if var sellerProducts = cart[seller] {
-            // Check if the product is already in the seller's products
             if !sellerProducts.contains(where: { $0.name == product.name }) {
                 sellerProducts.append(product)
                 cart[seller] = sellerProducts
             }
         } else {
-            // Seller is not in the cart, add a new entry
             cart[seller] = [product]
         }
         
@@ -91,12 +97,11 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.reloadData()
     }
     func saveCartToUserDefaults() {
-        // Encode and save the cart dictionary to UserDefaults
         let encodedCart = try? JSONEncoder().encode(cart)
         UserDefaults.standard.set(encodedCart, forKey: "cart")
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+        return 150
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let seller = Array(cart.keys)[section]
@@ -112,6 +117,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             sellerNameLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -10),
             sellerNameLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10)
         ])
+        selectedSellerID = seller.sellerID
         return headerView
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -152,8 +158,17 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     @objc func checkoutButtonTapped() {
         let checkoutVC = ChatViewController()
         checkoutVC.cart = cart
+//        checkoutVC.sellerID = selectedSellerID
+        
+        if let sellerID = getSellerID(){
+            checkoutVC.setUserWebSocketID(sellerID)
+        }
         checkoutVC.sendShoppingCartToSeller()
         navigationController?.pushViewController(checkoutVC, animated: true)
+    }
+    func getSellerID() -> String? {
+        guard let sellerID = selectedSellerID else { return nil }
+        return sellerID
     }
 }
 class TrolleyCell: UITableViewCell {
@@ -197,9 +212,8 @@ class TrolleyCell: UITableViewCell {
         NSLayoutConstraint.activate([
             backView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             backView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            backView.heightAnchor.constraint(equalToConstant: 100),
-            backView.widthAnchor.constraint(equalToConstant: 100),
-            backView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+            backView.heightAnchor.constraint(equalToConstant: 140),
+            backView.widthAnchor.constraint(equalToConstant: 140)
         ])
         backView.addSubview(imageViewUP)
         imageViewUP.layer.cornerRadius = 10
