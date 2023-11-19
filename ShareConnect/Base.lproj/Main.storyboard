@@ -44,7 +44,7 @@
         <!--Chat View Controller-->
         <scene sceneID="7aL-FD-SeL">
             <objects>
-                <viewController storyboardIdentifier="ChatViewController" id="Fjq-1i-m0G" customClass="ChatViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChatViewController" id="Fjq-1i-m0G" customClass="ChatViewController" customModule="ShareConnect" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JVs-3X-or0">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -210,6 +210,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="selectedImageTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
                         <segue destination="8mu-1b-zXN" kind="relationship" relationship="viewControllers" id="S25-Vv-NRJ"/>
@@ -255,11 +256,11 @@
             </objects>
             <point key="canvasLocation" x="3149.2307692307691" y="738.62559241706163"/>
         </scene>
-        <!--Item-->
+        <!--Navigation Controller-->
         <scene sceneID="jcZ-GQ-TLb">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" id="8mu-1b-zXN" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="house" catalog="system" selectedImage="house.fill" id="2Y2-Xo-d5c">
+                    <tabBarItem key="tabBarItem" title="" image="house" catalog="system" selectedImage="house.fill" id="2Y2-Xo-d5c">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
                     <toolbarItems/>
@@ -276,11 +277,11 @@
             </objects>
             <point key="canvasLocation" x="2071" y="-567"/>
         </scene>
-        <!--Item 2-->
+        <!--Navigation Controller-->
         <scene sceneID="KCy-au-M5V">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7vZ-Ed-dbd" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item 2" image="plus.circle" catalog="system" selectedImage="plus.circle.fill" id="wwb-p0-w33"/>
+                    <tabBarItem key="tabBarItem" title="" image="plus.circle" catalog="system" selectedImage="plus.circle.fill" id="wwb-p0-w33"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="OSI-IN-4wl">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="56"/>
@@ -295,11 +296,11 @@
             </objects>
             <point key="canvasLocation" x="4155.3846153846152" y="738.62559241706163"/>
         </scene>
-        <!--Item 1-->
+        <!--Navigation Controller-->
         <scene sceneID="ZQr-TN-AaE">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="GdP-mP-bef" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item 1" image="magnifyingglass" catalog="system" selectedImage="magnifyingglass.circle.fill" id="Q8a-P3-CAg"/>
+                    <tabBarItem key="tabBarItem" title="" image="magnifyingglass" catalog="system" selectedImage="magnifyingglass.circle.fill" id="Q8a-P3-CAg"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="lu7-H5-ibY">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="56"/>
@@ -314,12 +315,12 @@
             </objects>
             <point key="canvasLocation" x="6189.2307692307686" y="738.62559241706163"/>
         </scene>
-        <!--Item-->
+        <!--Navigation Controller-->
         <scene sceneID="RDx-Ck-kWe">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ll6-Ky-j92" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="baN-5i-xWE" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="cart" catalog="system" selectedImage="cart.fill" id="iiP-vY-XKV"/>
+                    <tabBarItem key="tabBarItem" title="" image="cart" catalog="system" selectedImage="cart.fill" id="iiP-vY-XKV"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="d88-uG-nEx">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="56"/>
@@ -333,11 +334,11 @@
             </objects>
             <point key="canvasLocation" x="2220" y="738.62559241706163"/>
         </scene>
-        <!--Item-->
+        <!--Navigation Controller-->
         <scene sceneID="rlx-YW-OKz">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" id="J4D-to-TLu" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="person" catalog="system" selectedImage="person.fill" id="ZC3-c7-1XF"/>
+                    <tabBarItem key="tabBarItem" title="" image="person" catalog="system" selectedImage="person.fill" id="ZC3-c7-1XF"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="TMg-xF-BLu">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="56"/>

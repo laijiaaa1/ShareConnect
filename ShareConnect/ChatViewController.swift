@@ -11,7 +11,6 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
 
     var cart: [Seller: [Product]]?
     var sellerID: String?
-    
     let tableView = UITableView()
     let messageTextField = UITextField()
     let sendButton = UIButton()
@@ -32,13 +31,11 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
         navigationItem.title = "CHATROOM"
         setupUI()
         webSocketManager.delegate = self
-        //anto send message to seller
+        tableView.separatorStyle = .none
         if let sellerID = sellerID {
             setUserWebSocketID(sellerID)
         }
-        //to send shopping cart to seller
         if let cart = cart {
-            sendShoppingCartToSeller()
             sendMessage(cartString)
         }
         
@@ -83,8 +80,6 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
         let chatMessage = ChatMessage(text: message, isMe: true)
         chatMessages.append(chatMessage)
         tableView.reloadData()
-
-        // Get the WebSocket ID of the seller
         guard let sellerWebSocketID = webSocketManager.userWebSocketID else {
             print("Error: Seller WebSocket ID is not set.")
             return
@@ -99,8 +94,6 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
             print("Shopping cart or sellerID is nil.")
             return
         }
-
-        // Get the WebSocket ID of the seller
         guard let sellerWebSocketID = webSocketManager.userWebSocketID else {
             print("Error: Seller WebSocket ID is not set.")
             return
@@ -111,9 +104,7 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
         webSocketManager.send(message: message, to: sellerWebSocketID)
     }
 
-
     func convertCartToString(_ cart: [Seller: [Product]]) -> String {
-        
         for (seller, products) in cart {
             cartString.append("Seller: \(seller.sellerName)\n")
 
@@ -122,7 +113,6 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
                 cartString.append("   Quantity: \(product.quantity ?? "1")\n")
                 cartString.append("   Price: \(product.price)\n")
             }
-            
             cartString.append("\n")
         }
         return cartString
@@ -139,17 +129,18 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
           let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! ChatMessageCell
           let chatMessage = chatMessages[indexPath.row]
 
-          // Align user's messages to the right and seller's messages to the left
           cell.label.textAlignment = chatMessage.isMe ? .right : .left
 
           cell.label.text = chatMessage.text
-          cell.backgroundColor = chatMessage.isMe ? .lightGray : .white
-          cell.label.textColor = chatMessage.isMe ? .white : .black
+//          cell.backgroundColor = chatMessage.isMe ? .lightGray : .white
+            cell.backgroundColor = CustomColors.B1
+          cell.label.textColor = chatMessage.isMe ? .black : .black
         cell.label.numberOfLines = 0
           return cell
       }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        //auto
+        return 300
     }
 }
 
@@ -160,7 +151,19 @@ class ChatMessageCell: UITableViewCell {
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             contentView.addSubview(label)
             label.frame = contentView.bounds
-            label.numberOfLines = 0 // Allow multiple lines for long messages
+            label.numberOfLines = 0
+        label.backgroundColor = UIColor(named: "G1")
+        label.layer.cornerRadius = 20
+        label.layer.masksToBounds = true
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: contentView.topAnchor),
+            label.widthAnchor.constraint(equalToConstant: 200),
+            label.heightAnchor.constraint(equalToConstant: 200),
+            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            
+        ])
         }
 
     required init?(coder: NSCoder) {

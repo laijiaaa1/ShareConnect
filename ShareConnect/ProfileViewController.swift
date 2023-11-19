@@ -78,7 +78,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         
         view.backgroundColor = CustomColors.B1
-        
+        tabBarController?.tabBar.backgroundColor = CustomColors.B1
         view.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.text = "Luna"

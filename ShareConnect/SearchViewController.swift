@@ -59,6 +59,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     override func viewDidLoad() {
         view.backgroundColor = CustomColors.B1
         super.viewDidLoad()
+        tabBarController?.tabBar.backgroundColor = CustomColors.B1
         setupUI()
         navigationItem.title = "SHARECONNECT"
         collectionView.delegate = self
@@ -124,9 +125,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             collectionView.topAnchor.constraint(equalTo: buttonClassification.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        scrollView.contentSize = CGSize(width: view.frame.width, height: lineView.frame.origin.y + collectionView.frame.height)
+        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
+
     }
     @objc func button1Action() {
         UIView.animate(withDuration: 0.3) {

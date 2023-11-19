@@ -48,7 +48,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         view.addSubview(checkoutButton)
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
             checkoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             checkoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50)
