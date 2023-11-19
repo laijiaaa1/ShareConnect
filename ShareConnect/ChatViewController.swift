@@ -18,7 +18,7 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
 
     var chatMessages = [ChatMessage]()
     let webSocketManager = WebSocketManager()
-
+    var cartString = ""
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
     }
@@ -39,6 +39,7 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
         //to send shopping cart to seller
         if let cart = cart {
             sendShoppingCartToSeller()
+            sendMessage(cartString)
         }
         
     }
@@ -111,8 +112,8 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
     }
 
 
-    private func convertCartToString(_ cart: [Seller: [Product]]) -> String {
-        var cartString = ""
+    func convertCartToString(_ cart: [Seller: [Product]]) -> String {
+        
         for (seller, products) in cart {
             cartString.append("Seller: \(seller.sellerName)\n")
 
@@ -121,6 +122,7 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
                 cartString.append("   Quantity: \(product.quantity ?? "1")\n")
                 cartString.append("   Price: \(product.price)\n")
             }
+            
             cartString.append("\n")
         }
         return cartString
@@ -143,6 +145,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
           cell.label.text = chatMessage.text
           cell.backgroundColor = chatMessage.isMe ? .lightGray : .white
           cell.label.textColor = chatMessage.isMe ? .white : .black
+        cell.label.numberOfLines = 0
           return cell
       }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
