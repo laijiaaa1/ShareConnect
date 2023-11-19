@@ -9,14 +9,11 @@ import UIKit
 import Kingfisher
 
 class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TrolleyCellDelegate{
-    
-    
     func didSelectSeller(sellerID: String) {
         print("Selected seller: \(sellerID)")
     }
-    
     let buyerWebSocketManager = WebSocketManager()
-      let sellerWebSocketManager = WebSocketManager()
+    let sellerWebSocketManager = WebSocketManager()
     var selectedSellerID: String?
     var cart: [Seller: [Product]] = [:]
     let tableView = UITableView()
@@ -38,7 +35,6 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             tableView.heightAnchor.constraint(equalToConstant: 600),
             tableView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
-        
         let checkoutButton = UIButton(type: .system)
         checkoutButton.setTitle("CONFIRM ORDER", for: .normal)
         checkoutButton.setTitleColor(.white, for: .normal)
@@ -53,7 +49,6 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             checkoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
         if let savedCartData = UserDefaults.standard.array(forKey: "carts") as? [[String: Data]] {
             cart = savedCartData.reduce(into: [Seller: [Product]]()) { result, dict in
                 guard let encodedSeller = dict["seller"],
@@ -65,7 +60,6 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
                 result[seller] = products
             }
         }
-        
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
@@ -78,7 +72,6 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         let seller = Array(cart.keys)[section]
         return cart[seller]?.count ?? 0
     }
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return cart.keys.count
     }
@@ -92,7 +85,6 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         } else {
             cart[seller] = [product]
         }
-        
         saveCartToUserDefaults()
         tableView.reloadData()
     }
@@ -134,7 +126,6 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let seller = Array(cart.keys)[indexPath.section]
         var cartItems = cart[seller] ?? []
-        
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
             guard indexPath.row < cartItems.count else {
                 completionHandler(false)
@@ -148,18 +139,15 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
                 self?.cart.removeValue(forKey: seller)
                 tableView.deleteSections(indexSet, with: .automatic)
             }
-            
             completionHandler(true)
         }
-        
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
     }
     @objc func checkoutButtonTapped() {
         let checkoutVC = ChatViewController()
         checkoutVC.cart = cart
-//        checkoutVC.sellerID = selectedSellerID
-        
+        //        checkoutVC.sellerID = selectedSellerID
         if let sellerID = getSellerID(){
             checkoutVC.setUserWebSocketID(sellerID)
         }
@@ -205,7 +193,6 @@ class TrolleyCell: UITableViewCell {
             imageViewUP.kf.setImage(with: URL(string: product.imageString))
             quantityLabel.text = "\(product.quantity)"
         }
-        
         backView.backgroundColor = .white
         contentView.addSubview(backView)
         backView.translatesAutoresizingMaskIntoConstraints = false
@@ -254,7 +241,6 @@ class TrolleyCell: UITableViewCell {
             numberLabel.heightAnchor.constraint(equalToConstant: 30),
             numberLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
-        
         minusButton.setTitle("-", for: .normal)
         minusButton.setTitleColor(.black, for: .normal)
         minusButton.backgroundColor = .white

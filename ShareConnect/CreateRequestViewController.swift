@@ -15,7 +15,6 @@ import FirebaseStorage
 import DatePicker
 
 class CreateRequestViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
-    
     let requestTableView = UITableView()
     let uploadButton = UIButton()
     let requestSelectSegment = UISegmentedControl()
@@ -45,7 +44,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         super.viewDidLoad()
         view.backgroundColor = CustomColors.B1
         navigationItem.title = "Create request"
-        
         uploadButton.backgroundColor = .yellow
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(uploadButton)
@@ -103,7 +101,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             doneButton.widthAnchor.constraint(equalToConstant: 320),
             doneButton.heightAnchor.constraint(equalToConstant: 60)
         ])
-        
     }
     @objc func doneButtonTapped() {
         let db = Firestore.firestore()
@@ -112,7 +109,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         let imageName = UUID().uuidString
         //        let productId = UUID().uuidString
         let storageRef = storage.reference().child("images/\(imageName).jpg")
-        
         if let imageURL = uploadButton.backgroundImage(for: .normal), let imageData = imageURL.jpegData(compressionQuality: 0.1) {
             storageRef.putData(imageData, metadata: nil) { (metadata, error) in
                 if let error = error {
@@ -129,7 +125,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 "sellerID": user?.uid ?? "",
                                 "sellerName": user?.email ?? ""
                             ]
-                            
                             for i in 0..<self.requestTableView.numberOfSections {
                                 for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
                                     let indexPath = IndexPath(row: j, section: i)
@@ -140,7 +135,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                     }
                                 }
                             }
-                            
                             let demandProduct = Product(
                                 //                                productId: productId,
                                 name: productData["name"] as? String ?? "",
@@ -158,7 +152,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 ),
                                 itemType: .request
                             )
-                            
                             db.collection("products").addDocument(data: [
                                 "type": ProductType.request.rawValue,
                                 "product": productData
@@ -176,12 +169,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         }
     }
     @objc func uploadButtonTapped() {
-        
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
-        
         let alertController = UIAlertController(title: "Choose Image Source", message: nil, preferredStyle: .actionSheet)
-        
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
                 imagePickerController.sourceType = .camera
@@ -189,24 +179,19 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             }
             alertController.addAction(cameraAction)
         }
-        
         let photoLibraryAction = UIAlertAction(title: "Photo Library", style: .default) { _ in
             imagePickerController.sourceType = .photoLibrary
             self.present(imagePickerController, animated: true)
         }
         alertController.addAction(photoLibraryAction)
-        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
-        
         present(alertController, animated: true, completion: nil)
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
-        
         uploadButton.setBackgroundImage(info[UIImagePickerController.InfoKey.originalImage] as? UIImage, for: .normal)
     }
-    
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
@@ -275,23 +260,19 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "requestCell", for: indexPath) as? RequestCell ?? RequestCell()
-        
         cell.requestLabel.text = "name"
         cell.addBtn.setBackgroundImage(UIImage(systemName: "plus"), for: .normal)
         cell.addBtn.tintColor = .black
-        
         let requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Quantity", "Use", "Price"]
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info
         }
-        
         if indexPath.row == 3 || indexPath.row == 4 {
             let timePicker = UIDatePicker()
             timePicker.datePickerMode = .dateAndTime
             timePicker.preferredDatePickerStyle = .wheels
             timePicker.addTarget(self, action: #selector(timePickerChanged), for: .valueChanged)
-            
             if indexPath.row == 3 {
                 cell.textField.inputView = timePicker
                 cell.textField.tag = 1
@@ -300,29 +281,23 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 cell.textField.tag = 2
             }
         }
-        
         cell.addBtn.tag = indexPath.row
-        
         return cell
     }
-    
     @objc func timePickerChanged(sender: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
         let timeString = formatter.string(from: sender.date)
         print(timeString)
-        
         if let startCell = findCellWithTag(1) {
             startCell.textField.text = timeString
             startCell.textField.resignFirstResponder()
         }
-        
         if let endCell = findCellWithTag(2) {
             endCell.textField.text = timeString
             endCell.textField.resignFirstResponder()
         }
     }
-    
     func findCellWithTag(_ tag: Int) -> RequestCell? {
         for i in 0..<requestTableView.numberOfSections {
             for j in 0..<requestTableView.numberOfRows(inSection: i) {
@@ -334,7 +309,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         }
         return nil
     }
-    
 }
 class RequestCell: UITableViewCell {
     let requestLabel = UILabel()

@@ -128,7 +128,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
         scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
-
+        
     }
     @objc func button1Action() {
         UIView.animate(withDuration: 0.3) {
@@ -188,7 +188,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         let sellerData = product["seller"] as? [String: Any]
         //        let itemTypeRawValue = product["type"] as? String
-        
         guard let sellerID = sellerData?["sellerID"] as? String,
               let sellerName = sellerData?["sellerName"] as? String,
               let itemType = productData["type"] as? String
@@ -200,9 +199,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let sort = productData["Sort"] as? String ?? ""
         let quantity = productData["Quantity"] as? String ?? ""
         let use = productData["Use"] as? String ?? ""
-        
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
-        
         let newProduct = Product(
             //            productId: productId,
             name: name,
@@ -217,11 +214,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             seller: seller,
             itemType: .request
         )
-        
         return newProduct
-        
     }
-    
 }
 class SearchCollectionViewCell: UICollectionViewCell {
     let underView = UIView()
@@ -299,7 +293,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
             button.widthAnchor.constraint(equalToConstant: 100)
         ])
     }
-    
     func updateUI() {
         if let product = product {
             nameLabel.text = product.name

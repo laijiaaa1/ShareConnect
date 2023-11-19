@@ -47,7 +47,7 @@ extension Seller {
         else {
             return nil
         }
-
+        
         self.sellerID = sellerID
         self.sellerName = sellerName
     }
@@ -64,7 +64,7 @@ struct Request: Codable {
 enum RequestStatus: String, Codable {
     case open
     case closed
-
+    
     init?(rawValue: String) {
         switch rawValue {
         case "open":

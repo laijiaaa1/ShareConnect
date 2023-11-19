@@ -16,8 +16,6 @@ extension DateFormatter {
         return formatter
     }()
 }
-
-
 extension DateFormatter {
     static let customDateFormat: DateFormatter = {
         let formatter = DateFormatter()

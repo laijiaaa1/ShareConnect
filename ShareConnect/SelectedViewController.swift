@@ -11,35 +11,26 @@ import Kingfisher
 class SelectedViewController: UIViewController {
     var product: Product?
     var cart: [Seller: [Product]] = [:]
-    
     let backImage = UIImageView()
     let backView = UIView()
     let infoView = UIView()
     let nameLabel = UILabel()
-    
     let priceView = UIImageView()
     let priceLabel = UILabel()
-    
     let availabilityView = UIView()
     let availability = UILabel()
-    
     let itemLabel = UILabel()
     let itemView = UIView()
     let itemInfo = UILabel()
-    
     let quantity = UILabel()
     let numberLabel = UILabel()
     let addButton = UIButton()
     let minusButton = UIButton()
-    
     let trolleyButton = UIButton()
-    
     let closeButton = UIButton()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        
         if let product = product, let imageURL = URL(string: product.imageString) {
             backImage.kf.setImage(with: imageURL)
             priceLabel.text = product.price
@@ -52,13 +43,11 @@ class SelectedViewController: UIViewController {
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)
     }
-    
     @objc func trolleyButtonTapped() {
         guard let product = product else {
             print("Product is nil")
             return
         }
-        
         let cart: [Seller: [Product]] = [product.seller: [product]]
         saveCartToUserDefaults(cart)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -72,11 +61,9 @@ class SelectedViewController: UIViewController {
             let encodedProducts = try? JSONEncoder().encode(products)
             return ["seller": encodedSeller, "products": encodedProducts]
         }
-        
         // Save the cart data to UserDefaults
         UserDefaults.standard.set(cartData, forKey: "carts")
     }
-    
     func setup() {
         //        if let request = request, let imageURL = URL(string: request.imageString) {
         //            backImage.kf.setImage(with: imageURL)

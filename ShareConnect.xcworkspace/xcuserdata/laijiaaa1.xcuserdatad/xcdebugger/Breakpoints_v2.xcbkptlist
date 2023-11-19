@@ -7,54 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F67A0A30-341D-4623-961E-AE624DBCCA7F"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ShareConnect/SearchViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "176"
-            endingLineNumber = "176"
-            landmarkName = "parseProductData(productData:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "F67A0A30-341D-4623-961E-AE624DBCCA7F - c2631c5f698293eb"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.SearchViewController.parseProductData(productData: Swift.Dictionary&lt;Swift.String, Any&gt;) -&gt; Swift.Optional&lt;ShareConnect.Product&gt;"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/SearchViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "177"
-                  endingLineNumber = "177"
-                  offsetFromSymbolStart = "284">
-               </Location>
-               <Location
-                  uuid = "F67A0A30-341D-4623-961E-AE624DBCCA7F - c2631c5f6982938c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.SearchViewController.parseProductData(productData: Swift.Dictionary&lt;Swift.String, Any&gt;) -&gt; Swift.Optional&lt;ShareConnect.Product&gt;"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/SearchViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "176"
-                  endingLineNumber = "176"
-                  offsetFromSymbolStart = "7372">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "0203785B-FA71-4F4E-B419-079088782DDF"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -62,8 +14,8 @@
             filePath = "ShareConnect/TrolleyViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -78,8 +30,8 @@
             filePath = "ShareConnect/TrolleyViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
             landmarkName = "setupUI(seller:cartItems:delegate:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -94,10 +46,10 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "ChatViewController"
-            landmarkType = "3">
+            startingLineNumber = "78"
+            endingLineNumber = "78"
+            landmarkName = "sendMessage(_:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -110,9 +62,9 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
-            landmarkName = "setUserWebSocketID(_:)"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
+            landmarkName = "sendShoppingCartToSeller()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -126,8 +78,8 @@
             filePath = "ShareConnect/TrolleyViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
             landmarkName = "checkoutButtonTapped()"
             landmarkType = "7">
          </BreakpointContent>
@@ -142,8 +94,8 @@
             filePath = "ShareConnect/TrolleyViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "169"
-            endingLineNumber = "169"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
             landmarkName = "getSellerID()"
             landmarkType = "7">
          </BreakpointContent>
@@ -158,9 +110,9 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "89"
-            endingLineNumber = "89"
-            landmarkName = "sendMessage(_:)"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
+            landmarkName = "setUserWebSocketID(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -174,8 +126,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
             landmarkName = "sendShoppingCartToSeller()"
             landmarkType = "7">
          </BreakpointContent>
@@ -190,8 +142,8 @@
             filePath = "ShareConnect/Module/WebSocketManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "61"
-            endingLineNumber = "61"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
             landmarkName = "send(message:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +158,8 @@
             filePath = "ShareConnect/Module/WebSocketManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
             landmarkName = "send(message:to:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,10 +174,10 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
-            landmarkName = "ChatViewController"
-            landmarkType = "3">
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "didReceiveMessage(_:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -238,10 +190,10 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
-            landmarkName = "ChatViewController"
-            landmarkType = "3">
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "convertCartToString(_:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -257,38 +209,6 @@
             startingLineNumber = "36"
             endingLineNumber = "36"
             landmarkName = "viewDidLoad()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "35E3C05D-C9BF-481F-98B1-73B394028B58"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ShareConnect/ProfileViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "15"
-            endingLineNumber = "15"
-            landmarkName = "tableView(_:numberOfRowsInSection:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A4E2E2E9-D88C-40BB-893B-0FD0FC05AA2C"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ShareConnect/ProfileViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
-            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

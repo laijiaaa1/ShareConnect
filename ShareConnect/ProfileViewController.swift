@@ -13,34 +13,29 @@ import FirebaseFirestore
 
 class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       
         return products.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyRequestCell", for: indexPath) as! MyRequestCell
-
+        
         guard indexPath.row < products.count else {
             cell.requestNameLabel.text = "N/A"
             cell.requestDescriptionLabel.text = "N/A"
             cell.requestDateLabel.text = "N/A"
             return cell
         }
-
+        
         let product = products[indexPath.row]
         cell.requestNameLabel.text = product.name
         cell.requestDescriptionLabel.text = product.description
         cell.requestDateLabel.text = product.startTime
-
+        
         return cell
     }
-
-
-
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //  the number of collection items based on user data
         return 4
     }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as! CollectionCell
         // Placeholder: Customize the cell based on user data
@@ -48,35 +43,29 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         cell.nameLabel.text = "Item \(indexPath.item + 1)"
         return cell
     }
-    
     var requests: [Request] = []
     var products: [Product] = []
-//    var groups: [Group] = []
-//    var collections: [Collection] = []
-//    var supplies: [Supply] = []
-    
+    //    var groups: [Group] = []
+    //    var collections: [Collection] = []
+    //    var supplies: [Supply] = []
     let headerImage = UIImageView()
     let nameLabel = UILabel()
     let stackView = UIStackView()
     let lineView = UIView()
-    
     let groupButton = UIButton()
     let collectionButton = UIButton()
     let requestButton = UIButton()
     let supplyButton = UIButton()
     let settingButton = UIButton()
     let logoutButton = UIButton()
-    
     let groupTableView = UITableView()
     let collectionCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     let requestTableView = UITableView()
     let supplyTableView = UITableView()
     var selectedButton: UIButton?
     let userId = Auth.auth().currentUser!.uid
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = CustomColors.B1
         tabBarController?.tabBar.backgroundColor = CustomColors.B1
         view.addSubview(nameLabel)
@@ -102,7 +91,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 5),
             stackView.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
         // Setting buttons
         let labels = [groupButton, collectionButton, requestButton, supplyButton]
         labels.forEach { (label) in
@@ -114,12 +102,10 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         collectionButton.setTitle("Collection", for: .normal)
         requestButton.setTitle("Request", for: .normal)
         supplyButton.setTitle("Supply", for: .normal)
-        
         groupButton.addTarget(self, action: #selector(groupButtonTapped), for: .touchUpInside)
         collectionButton.addTarget(self, action: #selector(collectionButtonTapped), for: .touchUpInside)
         requestButton.addTarget(self, action: #selector(requestButtonTapped), for: .touchUpInside)
         supplyButton.addTarget(self, action: #selector(supplyButtonTapped), for: .touchUpInside)
-        
         // Line view
         view.addSubview(lineView)
         lineView.backgroundColor = .black
@@ -129,7 +115,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             lineView.heightAnchor.constraint(equalToConstant: 1),
             lineView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
         ])
-        
         // Group Table View
         view.addSubview(groupTableView)
         groupTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -139,11 +124,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             groupTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             groupTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
         ])
-        
         groupTableView.dataSource = self
         groupTableView.delegate = self
         groupTableView.register(MyRequestCell.self, forCellReuseIdentifier: "MyRequestCell")
-        
         // Collection Collection View
         collectionCollectionView.isHidden = true
         view.addSubview(collectionCollectionView)
@@ -154,43 +137,40 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             collectionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             collectionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
         ])
-        
         // Add this configuration for collectionCollectionView
         let layout = UICollectionViewFlowLayout()
         collectionCollectionView.collectionViewLayout = layout
         collectionCollectionView.dataSource = self
         collectionCollectionView.delegate = self
         collectionCollectionView.register(CollectionCell.self, forCellWithReuseIdentifier: "CollectionCell")
-        
         if let currentUser = Auth.auth().currentUser {
             let userId = currentUser.uid
             fetchRequests(userId: userId)
         }
     }
-       
-        func fetchRequests(userId: String) {
-            let db = Firestore.firestore()
-            let productsCollection = db.collection("products")
-
-            let query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId)
-
-            query.getDocuments { (querySnapshot, error) in
-                if let error = error {
-                    print("Error getting documents: \(error.localizedDescription)")
-                } else {
-                    self.products.removeAll()
-
-                    for document in querySnapshot!.documents {
+    func fetchRequests(userId: String) {
+        let db = Firestore.firestore()
+        let productsCollection = db.collection("products")
+        
+        let query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId)
+        
+        query.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error getting documents: \(error.localizedDescription)")
+            } else {
+                self.products.removeAll()
+                
+                for document in querySnapshot!.documents {
                     let data = document.data()
-
-                        if let product = self.parseProductData(productData: data) {
-                            self.products.append(product)
-                        }
+                    
+                    if let product = self.parseProductData(productData: data) {
+                        self.products.append(product)
                     }
-                    self.groupTableView.reloadData()
                 }
+                self.groupTableView.reloadData()
             }
         }
+    }
     func parseRequestData(_ data: [String: Any]) -> Request? {
         guard
             let requestID = data["requestID"] as? String,
@@ -205,7 +185,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let items = itemsData.compactMap { productData in
             return parseProductData(productData: productData)
         }
-
+        
         return Request(
             requestID: requestID,
             buyerID: buyerID,
@@ -214,7 +194,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             status: status
         )
     }
-
+    
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
               //              let productId = product["productId"] as? String,
@@ -230,7 +210,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         let sellerData = product["seller"] as? [String: Any]
         //        let itemTypeRawValue = product["type"] as? String
-        
         guard let sellerID = sellerData?["sellerID"] as? String,
               let sellerName = sellerData?["sellerName"] as? String,
               let itemType = productData["type"] as? String
@@ -242,9 +221,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let sort = productData["Sort"] as? String ?? ""
         let quantity = productData["Quantity"] as? String ?? ""
         let use = productData["Use"] as? String ?? ""
-        
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
-        
         let newProduct = Product(
             //            productId: productId,
             name: name,
@@ -259,9 +236,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             seller: seller,
             itemType: .request
         )
-        
         return newProduct
-        
     }
     func parseSellerData(_ data: [String: Any]) -> Seller? {
         guard
@@ -316,7 +291,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 class CollectionCell: UICollectionViewCell {
     let imageView = UIImageView()
     let nameLabel = UILabel()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
@@ -336,19 +311,19 @@ class CollectionCell: UICollectionViewCell {
         nameLabel.textAlignment = .center
         nameLabel.numberOfLines = 0
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 class MyRequestCell: UITableViewCell {
-
+    
     let requestImageView = UIImageView()
     let requestNameLabel = UILabel()
     let requestDescriptionLabel = UILabel()
     let requestDateLabel = UILabel()
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(requestImageView)
@@ -377,7 +352,7 @@ class MyRequestCell: UITableViewCell {
         requestDescriptionLabel.numberOfLines = 0
         requestDateLabel.numberOfLines = 0
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -11,17 +11,14 @@ import DatePicker
 
 class DetailViewController: UIViewController {
     var product: Product?
-    
     let titleLabel = UILabel()
     let detailImage = UIImageView()
     let price = UILabel()
     let priceImage = UIImageView()
     let addCartButton = UIButton()
     let chatButton = UIButton()
-    
     let availabilityView = UIView()
     let availability = UILabel()
-    
     let descriptionView = UIView()
     let descriptionLabel = UILabel()
     let descriptionButton = UIButton()
@@ -29,14 +26,11 @@ class DetailViewController: UIViewController {
     let sort = UILabel()
     let quantity = UILabel()
     let use = UILabel()
-    
     let otherView = UIView()
     let otherLabel = UILabel()
     let otherButton = UIButton()
-    
     let collectionButton = UIButton()
     let shareButton = UIButton()
-    
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
     }
@@ -45,11 +39,11 @@ class DetailViewController: UIViewController {
         view.backgroundColor = CustomColors.B1
         setupView()
         if let product = product {
-                   titleLabel.text = product.name
-                   let url = URL(string: product.imageString)
-                   detailImage.kf.setImage(with: url)
-                   price.text = product.price
-               }
+            titleLabel.text = product.name
+            let url = URL(string: product.imageString)
+            detailImage.kf.setImage(with: url)
+            price.text = product.price
+        }
     }
     func setupView() {
         view.addSubview(titleLabel)
@@ -60,7 +54,6 @@ class DetailViewController: UIViewController {
         titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
         titleLabel.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        
         view.addSubview(detailImage)
         detailImage.image = UIImage(named: "wait")
         detailImage.contentMode = .scaleAspectFill
@@ -90,7 +83,6 @@ class DetailViewController: UIViewController {
         price.centerYAnchor.constraint(equalTo: priceImage.centerYAnchor).isActive = true
         price.leadingAnchor.constraint(equalTo: priceImage.trailingAnchor, constant: 30).isActive = true
         price.widthAnchor.constraint(equalToConstant: 200)
-        
         view.addSubview(addCartButton)
         addCartButton.setImage(UIImage(named: "icons8-buy-72(@3×)"), for: .normal)
         addCartButton.translatesAutoresizingMaskIntoConstraints = false
@@ -101,7 +93,6 @@ class DetailViewController: UIViewController {
             addCartButton.heightAnchor.constraint(equalToConstant: 30),
             addCartButton.widthAnchor.constraint(equalToConstant: 30)
         ])
-        
         view.addSubview(chatButton)
         chatButton.setImage(UIImage(named: "icons8-chat-72(@3×)"), for: .normal)
         chatButton.translatesAutoresizingMaskIntoConstraints = false
@@ -111,7 +102,6 @@ class DetailViewController: UIViewController {
             chatButton.heightAnchor.constraint(equalToConstant: 30),
             chatButton.widthAnchor.constraint(equalToConstant: 30)
         ])
-        
         view.addSubview(collectionButton)
         collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
         collectionButton.translatesAutoresizingMaskIntoConstraints = false
@@ -130,7 +120,6 @@ class DetailViewController: UIViewController {
             shareButton.heightAnchor.constraint(equalToConstant: 30),
             shareButton.widthAnchor.constraint(equalToConstant: 30)
         ])
-        
         view.addSubview(availabilityView)
         availabilityView.backgroundColor = .white
         availabilityView.layer.cornerRadius = 10
@@ -141,7 +130,6 @@ class DetailViewController: UIViewController {
             availabilityView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             availabilityView.heightAnchor.constraint(equalToConstant: 70)
         ])
-        
         availabilityView.addSubview(availability)
         availability.text = "Availability"
         availability.font = UIFont(name: "PingFangTC-Semibold", size: 20)
@@ -151,12 +139,9 @@ class DetailViewController: UIViewController {
             availability.centerYAnchor.constraint(equalTo: availabilityView.centerYAnchor),
             availability.leadingAnchor.constraint(equalTo: availabilityView.leadingAnchor, constant: 30)
         ])
-        
-        
         let dateImage = UIImageView()
         availabilityView.addSubview(dateImage)
         dateImage.image = UIImage(named: "icons8-today-72(@3×)")
-        
         dateImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             dateImage.centerYAnchor.constraint(equalTo: availability.centerYAnchor),
@@ -164,12 +149,9 @@ class DetailViewController: UIViewController {
             dateImage.heightAnchor.constraint(equalToConstant: 30),
             dateImage.trailingAnchor.constraint(equalTo: availabilityView.trailingAnchor, constant: -30)
         ])
-        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dateImageTapped))
         dateImage.isUserInteractionEnabled = true
         dateImage.addGestureRecognizer(tapGesture)
-        
-        
         view.addSubview(descriptionView)
         descriptionView.backgroundColor = .white
         descriptionView.layer.cornerRadius = 10
@@ -180,7 +162,6 @@ class DetailViewController: UIViewController {
             descriptionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             descriptionView.heightAnchor.constraint(equalToConstant: 70)
         ])
-        
         descriptionView.addSubview(descriptionLabel)
         descriptionLabel.text = "Product details"
         descriptionLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
@@ -199,13 +180,10 @@ class DetailViewController: UIViewController {
             descriptionButton.heightAnchor.constraint(equalToConstant: 20),
             descriptionButton.widthAnchor.constraint(equalToConstant: 20)
         ])
-        
         //tap the descriptionButton, extend the descriptionView and show product's description
         let tap = UITapGestureRecognizer(target: self, action: #selector(descriptionButtonTapped))
         descriptionButton.isUserInteractionEnabled = true
         descriptionButton.addGestureRecognizer(tap)
-        
-        
         view.addSubview(otherView)
         otherView.backgroundColor = .white
         otherView.layer.cornerRadius = 10
@@ -234,7 +212,6 @@ class DetailViewController: UIViewController {
             otherButton.heightAnchor.constraint(equalToConstant: 20),
             otherButton.widthAnchor.constraint(equalToConstant: 20)
         ])
-        
         let backButton = UIButton()
         view.addSubview(backButton)
         backButton.setImage(UIImage(named: "icons8-back-to-50"), for: .normal)
@@ -250,14 +227,11 @@ class DetailViewController: UIViewController {
     @objc func back() {
         navigationController?.popViewController(animated: true)
     }
-    
     func showDatePicker() {
         let minDate = DatePickerHelper.shared.dateFrom(day: 18, month: 08, year: 1990)!
         let maxDate = DatePickerHelper.shared.dateFrom(day: 18, month: 08, year: 2030)!
         let today = Date()
-        
         let datePicker = DatePicker()
-        
         datePicker.setup(beginWith: today, min: minDate, max: maxDate) { (selected, date) in
             if selected, let selectedDate = date {
                 print(selectedDate.string())
@@ -266,34 +240,31 @@ class DetailViewController: UIViewController {
                 print("Cancelled")
             }
         }
-        
         datePicker.show(in: self, on: self.view)
     }
     @objc func dateImageTapped() {
         showDatePicker()
     }
-    
     @objc func goSelectedPage() {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "SelectedViewController") as! SelectedViewController
-
-            if let imageURL = URL(string: product?.imageString ?? ""),
-                let startTimeString = availability.text {
-                if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
-                    // Pass the product instead of constructing a new RequestData
-                    vc.product = product
-                    self.navigationController?.pushViewController(vc, animated: true)
-                } else {
-                    print("Failed to convert startTimeString to Date")
-                }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "SelectedViewController") as! SelectedViewController
+        
+        if let imageURL = URL(string: product?.imageString ?? ""),
+           let startTimeString = availability.text {
+            if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
+                // Pass the product instead of constructing a new RequestData
+                vc.product = product
+                self.navigationController?.pushViewController(vc, animated: true)
             } else {
-                print("Failed to get availability or create image URL")
+                print("Failed to convert startTimeString to Date")
             }
+        } else {
+            print("Failed to get availability or create image URL")
         }
+    }
     @objc func descriptionButtonTapped() {
         let expandedHeight: CGFloat = 200
         let collapsedHeight: CGFloat = 70
-        
         if descriptionView.frame.height == collapsedHeight {
             UIView.animate(withDuration: 0.5) {
                 self.descriptionView.frame.size.height = expandedHeight
@@ -306,20 +277,17 @@ class DetailViewController: UIViewController {
             }
         }
     }
-    
     func addDescriptionLabel() {
         if descriptionLabel2.superview == nil {
             descriptionView.addSubview(descriptionLabel2)
             descriptionLabel2.text = product?.description
             descriptionLabel2.translatesAutoresizingMaskIntoConstraints = false
-            
             NSLayoutConstraint.activate([
                 descriptionLabel2.topAnchor.constraint(equalTo: descriptionView.topAnchor, constant: 10),
                 descriptionLabel2.leadingAnchor.constraint(equalTo: descriptionView.leadingAnchor, constant: 30),
                 descriptionLabel2.trailingAnchor.constraint(equalTo: descriptionView.trailingAnchor, constant: -30),
                 descriptionLabel2.bottomAnchor.constraint(equalTo: descriptionView.bottomAnchor, constant: -10)
             ])
-            
             descriptionView.addSubview(sort)
             sort.text = product?.sort
             sort.translatesAutoresizingMaskIntoConstraints = false
@@ -329,7 +297,6 @@ class DetailViewController: UIViewController {
                 sort.trailingAnchor.constraint(equalTo: descriptionView.trailingAnchor, constant: -30),
                 sort.heightAnchor.constraint(equalToConstant: 20)
             ])
-            
             descriptionView.addSubview(quantity)
             quantity.text = product?.quantity
             quantity.translatesAutoresizingMaskIntoConstraints = false
@@ -339,7 +306,6 @@ class DetailViewController: UIViewController {
                 quantity.trailingAnchor.constraint(equalTo: descriptionView.trailingAnchor, constant: -30),
                 quantity.heightAnchor.constraint(equalToConstant: 20)
             ])
-            
             descriptionView.addSubview(use)
             use.text = product?.use
             use.translatesAutoresizingMaskIntoConstraints = false
@@ -349,19 +315,16 @@ class DetailViewController: UIViewController {
                 use.trailingAnchor.constraint(equalTo: descriptionView.trailingAnchor, constant: -30),
                 use.heightAnchor.constraint(equalToConstant: 20)
             ])
-            
             self.view.layoutIfNeeded()
         } else {
             removeDescriptionLabel()
         }
     }
-    
     func removeDescriptionLabel() {
         descriptionLabel2.removeFromSuperview()
         sort.removeFromSuperview()
         quantity.removeFromSuperview()
         use.removeFromSuperview()
-        
         self.view.layoutIfNeeded()
     }
 }
