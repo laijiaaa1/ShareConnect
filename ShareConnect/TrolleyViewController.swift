@@ -29,6 +29,22 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             tableView.heightAnchor.constraint(equalToConstant: 400),
             tableView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
+        
+        let checkoutButton = UIButton(type: .system)
+        checkoutButton.setTitle("CONFIRM ORDER", for: .normal)
+        checkoutButton.setTitleColor(.white, for: .normal)
+        checkoutButton.backgroundColor = .black
+        checkoutButton.layer.cornerRadius = 10
+        checkoutButton.addTarget(self, action: #selector(checkoutButtonTapped), for: .touchUpInside)
+        view.addSubview(checkoutButton)
+        checkoutButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            checkoutButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10),
+            checkoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            checkoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            checkoutButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
         if let savedCartData = UserDefaults.standard.array(forKey: "carts") as? [[String: Data]] {
             cart = savedCartData.reduce(into: [Seller: [Product]]()) { result, dict in
                 guard let encodedSeller = dict["seller"],
@@ -80,7 +96,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         UserDefaults.standard.set(encodedCart, forKey: "cart")
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        return 200
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let seller = Array(cart.keys)[section]
@@ -132,6 +148,11 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
+    }
+    @objc func checkoutButtonTapped() {
+        let checkoutVC = ChatViewController()
+        checkoutVC.cart = cart
+        navigationController?.pushViewController(checkoutVC, animated: true)
     }
 }
 class TrolleyCell: UITableViewCell {

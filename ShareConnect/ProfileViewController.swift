@@ -177,13 +177,12 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 
             query.getDocuments { (querySnapshot, error) in
                 if let error = error {
-                    print("Error getting documents: \(error)")
+                    print("Error getting documents: \(error.localizedDescription)")
                 } else {
-                    self.products.removeAll()
+//                    self.products.removeAll()
 
                     for document in querySnapshot!.documents {
-                        // Use nil-coalescing to provide an empty dictionary if document.data() is nil
-                        let data = document.data() ?? [:]
+                    let data = document.data()
 
                         if let product = self.parseProductData(data) {
                             self.products.append(product)
@@ -330,7 +329,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 
 
 class CollectionCell: UICollectionViewCell {
-
     let imageView = UIImageView()
     let nameLabel = UILabel()
 
