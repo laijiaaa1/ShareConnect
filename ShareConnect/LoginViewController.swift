@@ -10,6 +10,9 @@ import FirebaseAuth
 
 class LoginViewController: UIViewController {
 
+    let buyerWebSocketManager = WebSocketManager()
+      let sellerWebSocketManager = WebSocketManager()
+    
     @IBOutlet weak var emailTextField: UITextField!
         @IBOutlet weak var passwordTextField: UITextField!
 
@@ -51,6 +54,9 @@ class LoginViewController: UIViewController {
                     print("Error signing in: \(error.localizedDescription)")
                     // Handle login error
                 } else {
+                    //userID as userWebSocketID
+                    self.buyerWebSocketManager.userWebSocketID = Auth.auth().currentUser?.uid
+                    self.sellerWebSocketManager.userWebSocketID = Auth.auth().currentUser?.uid
                    
                     // User signed in successfully
 //                    let storyboard = UIStoryboard(name: "Main", bundle: nil)

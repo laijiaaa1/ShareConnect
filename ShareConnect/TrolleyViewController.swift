@@ -152,6 +152,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     @objc func checkoutButtonTapped() {
         let checkoutVC = ChatViewController()
         checkoutVC.cart = cart
+        checkoutVC.sendShoppingCartToSeller()
         navigationController?.pushViewController(checkoutVC, animated: true)
     }
 }
