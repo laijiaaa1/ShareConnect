@@ -64,6 +64,12 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! SearchCollectionViewCell
+        
+        guard let name = cell.product?.name else { return  }
+        let image = (cell.product?.imageString)!
+        let price = (cell.product?.price)!
+        let type = (cell.product?.itemType)!
+        FirestoreService.shared.addBrowsingRecord(name: name, image: image, price: price, type: type.rawValue)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
         vc.product = cell.product

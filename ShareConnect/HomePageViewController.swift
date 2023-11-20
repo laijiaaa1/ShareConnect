@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseFirestore
+import Kingfisher
 
 struct CustomColors {
     static let B1 = UIColor(red: 246/255, green: 246/255, blue: 244/255, alpha: 1)
@@ -22,12 +25,20 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                     ("Picnic", "icons8-camp-64"),
                     ("Travel", "icons8-camp-64")]
     let browsingHistory = UILabel()
-    let browsingHistoryItems = [("Camping", "icons8-camp-64"),
-                                ("Hiking", "icons8-camp-64"),
-                                ("Fishing", "icons8-camp-64"),
-                                ("Picnic", "icons8-camp-64"),
-                                ("Travel", "icons8-camp-64")]
+    var browsingHistoryItems = [(String, String)]() {
+        didSet {
+            browsingHistoryCollection.reloadData()
+        }
+    }
+//        ("Camping", "icons8-camp-64"),
+//                                ("Hiking", "icons8-camp-64"),
+//                                ("Fishing", "icons8-camp-64"),
+//                                ("Picnic", "icons8-camp-64"),
+//                                ("Travel", "icons8-camp-64")
+    
     let hotCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
+    let browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
+    let db = Firestore.firestore()
     override func viewDidLoad() {
         super.viewDidLoad()
         let textAttributes = [NSAttributedString.Key.font:UIFont(name: "GeezaPro-Bold", size: 20)]
@@ -114,7 +125,16 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         scrollView2.showsHorizontalScrollIndicator = false
         let totalWidth2 = CGFloat(browsingHistoryItems.count) * 320
         scrollView2.contentSize = CGSize(width: totalWidth2, height: browsingHistoryCollection.frame.height)
+        
+        listenForBrowsingHistory()
     }
+    func listenForBrowsingHistory() {
+        FirestoreService.shared.listenForBrowsingHistoryChanges { [weak self] browsingRecords in
+            self?.browsingHistoryItems = browsingRecords.map { ($0.name, $0.image) }
+            self?.browsingHistoryCollection.reloadData()
+        }
+    }
+
     @objc func buttonClick(sender: UIButton) {
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -146,24 +166,31 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             imageButton.addTarget(self, action: #selector(imageButtonClick), for: .touchUpInside)
             cell.addSubview(imageButton)
         } else {
+            let browsingRecord = browsingHistoryItems[indexPath.row]
             let xpoint = CGFloat(indexPath.item) * 320
             cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
-            var view = UIView()
+            var view2 = UIView()
             let viewPoint = CGFloat(indexPath.item) * 320
-            view.frame = CGRect(x: 20+viewPoint, y: 35, width: 80, height: 80)
-            view.layer.cornerRadius = 10
-            view.layer.borderWidth = 1
-            collectionView.addSubview(view)
+            view2.frame = CGRect(x: 20+viewPoint, y: 35, width: 80, height: 80)
+            view2.layer.cornerRadius = 10
+            view2.layer.borderWidth = 1
+            collectionView.addSubview(view2)
             let historyXpoint = CGFloat(indexPath.item) * 320
             cell.frame = CGRect(x: historyXpoint, y: 0, width: 310, height: 150)
+
             let imageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 60, height: 60))
-            imageView.image = UIImage(named: browsingHistoryItems[indexPath.row].1)
-            view.addSubview(imageView)
+            // 使用 Kingfisher 加載圖片
+            if let url = URL(string: browsingRecord.1) {
+                imageView.kf.setImage(with: url)
+            }
+            view2.addSubview(imageView)
+
             let label = UILabel(frame: CGRect(x: 80, y: 50, width: 150, height: 20))
-            label.text = browsingHistoryItems[indexPath.row].0
+            label.text = browsingRecord.0
             label.font = UIFont(name: "GeezaPro-Bold", size: 15)
             label.textAlignment = .center
             cell.addSubview(label)
+
             let imageButton = UIButton(frame: CGRect(x: 230, y: 80, width: 60, height: 30))
             imageButton.setTitle("Detail", for: .normal)
             imageButton.setTitleColor(.black, for: .normal)
@@ -173,11 +200,17 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             imageButton.tag = indexPath.row
             imageButton.addTarget(self, action: #selector(imageButtonClick), for: .touchUpInside)
             cell.addSubview(imageButton)
+
         }
         return cell
     }
     @objc func imageButtonClick(sender: UIButton) {
-        let selectedItem = hotItems[sender.tag]
-        print("Selected item: \(selectedItem.0)")
+        if sender.superview == hotCollection {
+            let selectedItem = hotItems[sender.tag]
+            print("Selected item from Hot Collection: \(selectedItem.0)")
+        } else if sender.superview == browsingHistoryCollection {
+            let selectedItem = browsingHistoryItems[sender.tag]
+            print("Selected item from Browsing History: \(selectedItem.0)")
+        }
     }
 }
