@@ -15,38 +15,18 @@ import MJRefresh
 import Kingfisher
 
 class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! SearchCollectionViewCell
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-        vc.product = cell.product
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return allRequests.count
-    }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
-        let cellWidth = collectionView.frame.width / 2
-        let cellHeight = collectionView.frame.height / 2
-        let xPosition = CGFloat(indexPath.item % 2) * cellWidth
-        let yPosition = CGFloat(indexPath.item / 2) * cellHeight
-        cell.frame = CGRect(x: xPosition, y: yPosition, width: cellWidth, height: cellHeight)
-        if indexPath.item < allRequests.count {
-            cell.product = allRequests[indexPath.item]
-        } else {
-            cell.product = nil
-        }
-        return cell
-    }
+   
     var selectedIndexPath: IndexPath?
     var allRequests: [Product] = []
+    var allSupplies: [Product] = []
     let scrollView = UIScrollView()
     let stackView = UIStackView()
     let lineView = UIView()
     let button1 = UIButton()
     let button2 = UIButton()
     let buttonClassification = UIButton()
+    var currentButtonType: ProductType = .request
+    
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -56,6 +36,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
+    override func viewWillAppear(_ animated: Bool) {
+        fetchRequestsForUser(type: .request)
+    }
     override func viewDidLoad() {
         view.backgroundColor = CustomColors.B1
         super.viewDidLoad()
@@ -65,13 +48,60 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.delegate = self
         collectionView.dataSource = self
         let userID = Auth.auth().currentUser?.uid ?? ""
-        fetchRequestsForUser()
+//        fetchRequestsForUser(type: .request)
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
     }
     @objc func refresh() {
         let userID = Auth.auth().currentUser?.uid ?? ""
-        fetchRequestsForUser()
+        if currentButtonType == .request {
+            fetchRequestsForUser(type: currentButtonType)
+        } else if currentButtonType == .supply {
+            fetchRequestsForUser(type: currentButtonType)
+        }
+
+        collectionView.reloadData()
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! SearchCollectionViewCell
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        vc.product = cell.product
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if currentButtonType == .request {
+            return allRequests.count
+        } else if currentButtonType == .supply {
+            return allSupplies.count
+        }
+        return 0
+    }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
+        let cellWidth = collectionView.frame.width / 2
+        let cellHeight = collectionView.frame.height / 2
+        let xPosition = CGFloat(indexPath.item % 2) * cellWidth
+        let yPosition = CGFloat(indexPath.item / 2) * cellHeight
+        cell.frame = CGRect(x: xPosition, y: yPosition, width: cellWidth, height: cellHeight)
+
+        if currentButtonType == .request {
+            cell.product = allRequests[indexPath.item]
+        } else if currentButtonType == .supply {
+            cell.product = allSupplies[indexPath.item]
+        }
+        return cell
+    }
+    @objc func button1Action() {
+        currentButtonType = .request
+        lineView.center.x = button1.center.x
+        fetchRequestsForUser(type: .request)
+        collectionView.reloadData()
+    }
+    @objc func button2Action() {
+        currentButtonType = .supply
+        lineView.center.x = button2.center.x
+        fetchRequestsForUser(type: .supply)
         collectionView.reloadData()
     }
     func setupUI() {
@@ -130,44 +160,46 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
         
     }
-    @objc func button1Action() {
-        UIView.animate(withDuration: 0.3) {
-            self.lineView.frame.origin.x = 0
-        }
-        let userID = Auth.auth().currentUser?.uid ?? ""
-        fetchRequestsForUser()
-    }
-    @objc func button2Action() {
-        UIView.animate(withDuration: 0.3) {
-            self.lineView.frame.origin.x = self.view.frame.width / 2
-        }
-        let userID = Auth.auth().currentUser?.uid ?? ""
-        fetchRequestsForUser()
-    }
-    func fetchRequestsForUser() {
+    func fetchRequestsForUser(type: ProductType) {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
         productsCollection.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error)")
             } else {
-                self.allRequests.removeAll()
+                if self.currentButtonType == .request {
+                    self.allRequests.removeAll()
+                } else if self.currentButtonType == .supply {
+                    self.allSupplies.removeAll()
+                }
                 for document in querySnapshot!.documents {
                     let productData = document.data()
                     if let productTypeRawValue = productData["type"] as? String,
                        let productType = ProductType(rawValue: productTypeRawValue),
                        let product = self.parseProductData(productData: productData) {
-                        if (productType == .request && product.itemType == .request) ||
-                            (productType == .supply && product.itemType == .supply) {
-                            self.allRequests.append(product)
+                        if productType == type {
+                            if product.itemType == type {
+                                print("Appending \(type): \(product)")
+                                if type == .request {
+                                    self.allRequests.append(product)
+                                } else if type == .supply {
+                                    self.allSupplies.append(product)
+                                }
+                            }
                         } else {
-                            print("Skipped product with type \(productType) and itemType \(product.itemType)")
+                            print("Skipped product with unknown type: \(productType)")
                         }
                     } else {
                         print("Error parsing product type")
                     }
                 }
-                print("Fetched products: \(self.allRequests)")
+                if type == .request {
+                    self.allRequests.sort(by: { $0.startTime < $1.startTime })
+                } else if type == .supply {
+                    self.allSupplies.sort(by: { $0.startTime < $1.startTime })
+                }
+                print("All requests: \(self.allRequests)")
+                print("All supplies: \(self.allSupplies)")
                 self.collectionView.reloadData()
                 self.collectionView.refreshControl?.endRefreshing()
             }
@@ -187,7 +219,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             return nil
         }
         let sellerData = product["seller"] as? [String: Any]
-        //        let itemTypeRawValue = product["type"] as? String
         guard let sellerID = sellerData?["sellerID"] as? String,
               let sellerName = sellerData?["sellerName"] as? String,
               let itemType = productData["type"] as? String
@@ -212,7 +243,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             use: use,
             endTime: endTime,
             seller: seller,
-            itemType: .request
+            itemType: ProductType(rawValue: itemType)!
         )
         return newProduct
     }

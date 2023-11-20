@@ -8,24 +8,20 @@
 import UIKit
 
 class ChatViewController: UIViewController, WebSocketManagerDelegate {
-    
     var cart: [Seller: [Product]]?
     var sellerID: String?
     let tableView = UITableView()
     let messageTextField = UITextField()
     let sendButton = UIButton()
-    
     var chatMessages = [ChatMessage]()
     let webSocketManager = WebSocketManager()
     var cartString = ""
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
     }
-    
     override func viewDidDisappear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
     }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "CHATROOM"
@@ -39,7 +35,6 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
             sendMessage(cartString)
         }
     }
-    
     private func setupUI() {
         view.backgroundColor = CustomColors.B1
         tableView.dataSource = self
@@ -48,13 +43,11 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
         tableView.backgroundColor = CustomColors.B1
         view.addSubview(tableView)
         tableView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 200)
-        
         messageTextField.placeholder = "Type your message here..."
         messageTextField.borderStyle = .roundedRect
         messageTextField.backgroundColor = .white
         messageTextField.frame = CGRect(x: 20, y: view.bounds.height - 80, width: view.bounds.width - 120, height: 40)
         view.addSubview(messageTextField)
-        
         sendButton.setTitle("Send", for: .normal)
         sendButton.setTitleColor(.black, for: .normal)
         sendButton.frame = CGRect(x: view.bounds.width - 90, y: view.bounds.height - 80, width: 60, height: 40)

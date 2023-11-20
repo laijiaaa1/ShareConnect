@@ -8,7 +8,6 @@
 import UIKit
 
 class CreateViewController: UIViewController {
-    
     let greenBackColor = UIColor(red: 183/255, green: 234/255, blue: 24/255, alpha: 1.0)
     let myRequestView = UIView()
     let myRequestLabel = UILabel()
@@ -96,7 +95,6 @@ class CreateViewController: UIViewController {
         navigationController?.pushViewController(createSupplyViewController, animated: true)
     }
     @objc func createGroupButtonTapped() {
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let createGroupViewController = storyboard.instantiateViewController(withIdentifier: "CreateGroupViewController") as! CreateGroupViewController
         navigationController?.pushViewController(createGroupViewController, animated: true)

@@ -15,7 +15,12 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     let buyerWebSocketManager = WebSocketManager()
     let sellerWebSocketManager = WebSocketManager()
     var selectedSellerID: String?
-    var cart: [Seller: [Product]] = [:]
+    var cart: [Seller: [Product]] = [:] {
+        didSet {
+            saveCartToUserDefaults()
+            tableView.reloadData()
+        }
+    }
     let tableView = UITableView()
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
@@ -61,6 +66,21 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
+    func addToCart(product: Product) {
+        let seller = product.seller
+        if var sellerProducts = cart[seller] {
+            if !sellerProducts.contains(where: { $0.name == product.name }) {
+                sellerProducts.append(product)
+                cart[seller] = sellerProducts
+            }
+        } else {
+            cart[seller] = [product]
+        }
+    }
+    func saveCartToUserDefaults() {
+        let encodedCart = try? JSONEncoder().encode(cart)
+        UserDefaults.standard.set(encodedCart, forKey: "cart")
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
         let seller = Array(cart.keys)[indexPath.section]
@@ -75,23 +95,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     func numberOfSections(in tableView: UITableView) -> Int {
         return cart.keys.count
     }
-    func addToCart(product: Product) {
-        let seller = product.seller
-        if var sellerProducts = cart[seller] {
-            if !sellerProducts.contains(where: { $0.name == product.name }) {
-                sellerProducts.append(product)
-                cart[seller] = sellerProducts
-            }
-        } else {
-            cart[seller] = [product]
-        }
-        saveCartToUserDefaults()
-        tableView.reloadData()
-    }
-    func saveCartToUserDefaults() {
-        let encodedCart = try? JSONEncoder().encode(cart)
-        UserDefaults.standard.set(encodedCart, forKey: "cart")
-    }
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }

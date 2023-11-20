@@ -116,7 +116,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         scrollView2.contentSize = CGSize(width: totalWidth2, height: browsingHistoryCollection.frame.height)
     }
     @objc func buttonClick(sender: UIButton) {
-        
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == hotCollection {
