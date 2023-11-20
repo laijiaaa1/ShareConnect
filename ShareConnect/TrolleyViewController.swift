@@ -22,11 +22,15 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     let tableView = UITableView()
+    let refreshControl = UIRefreshControl()
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+
         navigationItem.title = "Trolley"
         view.backgroundColor = CustomColors.B1
         tableView.delegate = self
@@ -66,13 +70,15 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
+    @objc func refresh() {
+        tableView.reloadData()
+        refreshControl.endRefreshing()
+    }
     func addToCart(product: Product) {
         let seller = product.seller
         if var sellerProducts = cart[seller] {
-            if !sellerProducts.contains(where: { $0.name == product.name }) {
-                sellerProducts.append(product)
-                cart[seller] = sellerProducts
-            }
+            sellerProducts.append(product)
+            cart[seller] = sellerProducts
         } else {
             cart[seller] = [product]
         }

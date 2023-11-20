@@ -145,15 +145,25 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         collectionCollectionView.register(CollectionCell.self, forCellWithReuseIdentifier: "CollectionCell")
         if let currentUser = Auth.auth().currentUser {
             let userId = currentUser.uid
-            fetchRequests(userId: userId)
         }
     }
-    func fetchRequests(userId: String) {
+    func fetchRequests(userId: String, dataType: String) {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
         
-        let query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId)
+        var query: Query
         
+        if dataType == "request" {
+            // Fetch request data
+            query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId)
+        } else if dataType == "supply" {
+            // Fetch supply data (modify this part based on your actual data structure)
+            query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId)
+        } else {
+            // Handle other types if needed
+            return
+        }
+
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error.localizedDescription)")
@@ -171,6 +181,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
+
     func parseRequestData(_ data: [String: Any]) -> Request? {
         guard
             let requestID = data["requestID"] as? String,
@@ -250,7 +261,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     @objc func groupButtonTapped() {
         animateLineViewTransition(to: groupButton)
         animateViewTransition(to: groupTableView)
-        fetchRequests(userId: userId)
+        
     }
     @objc func collectionButtonTapped() {
         animateLineViewTransition(to: collectionButton)
@@ -259,11 +270,15 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     @objc func requestButtonTapped() {
         animateLineViewTransition(to: requestButton)
         animateViewTransition(to: requestTableView)
+        fetchRequests(userId: userId, dataType: "request")
     }
+
     @objc func supplyButtonTapped() {
         animateLineViewTransition(to: supplyButton)
         animateViewTransition(to: supplyTableView)
+        fetchRequests(userId: userId, dataType: "supply")
     }
+
     func animateLineViewTransition(to button: UIButton) {
         selectedButton?.setTitleColor(.black, for: .normal)
         button.setTitleColor(.blue, for: .normal)

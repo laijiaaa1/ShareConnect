@@ -180,7 +180,6 @@ class DetailViewController: UIViewController {
             descriptionButton.heightAnchor.constraint(equalToConstant: 20),
             descriptionButton.widthAnchor.constraint(equalToConstant: 20)
         ])
-        //tap the descriptionButton, extend the descriptionView and show product's description
         let tap = UITapGestureRecognizer(target: self, action: #selector(descriptionButtonTapped))
         descriptionButton.isUserInteractionEnabled = true
         descriptionButton.addGestureRecognizer(tap)
@@ -252,7 +251,6 @@ class DetailViewController: UIViewController {
         if let imageURL = URL(string: product?.imageString ?? ""),
            let startTimeString = availability.text {
             if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
-                // Pass the product instead of constructing a new RequestData
                 vc.product = product
                 self.navigationController?.pushViewController(vc, animated: true)
             } else {
@@ -280,7 +278,7 @@ class DetailViewController: UIViewController {
     func addDescriptionLabel() {
         if descriptionLabel2.superview == nil {
             descriptionView.addSubview(descriptionLabel2)
-            descriptionLabel2.text = product?.description
+            descriptionLabel2.text = "\(product?.description)\n \(product?.sort)\n \(product?.use)\n \(product?.endTime)"
             descriptionLabel2.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 descriptionLabel2.topAnchor.constraint(equalTo: descriptionView.topAnchor, constant: 10),

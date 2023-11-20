@@ -14,7 +14,7 @@ struct Product: Codable {
     let imageString: String
     let description: String?
     let sort: String?
-    let quantity: String?
+    var quantity: String?
     let use: String?
     let endTime: String?
     let seller: Seller
@@ -84,4 +84,27 @@ protocol TrolleyCellDelegate: AnyObject {
 struct UserData: Codable, Hashable {
     var userID: String
     var username: String
+}
+
+struct Supply: Codable{
+    let supplyID: String
+    let sellerID: String
+    let items: [Product]
+    let status: SupplyStatus
+}
+
+enum SupplyStatus: String, Codable {
+    case open
+    case closed
+    
+    init?(rawValue: String) {
+        switch rawValue {
+        case "open":
+            self = .open
+        case "closed":
+            self = .closed
+        default:
+            return nil
+        }
+    }
 }
