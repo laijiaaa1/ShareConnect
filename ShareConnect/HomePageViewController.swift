@@ -25,16 +25,28 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                     ("Picnic", "icons8-camp-64"),
                     ("Travel", "icons8-camp-64")]
     let browsingHistory = UILabel()
-    var browsingHistoryItems = [("Camping", "icons8-camp-64"),
-                                ("Hiking", "icons8-camp-64"),
-                                ("Fishing", "icons8-camp-64"),
-                                ("Picnic", "icons8-camp-64"),
-                                ("Travel", "icons8-camp-64")]
+    var browsingHistoryItems = [(String, String)]() {
+        didSet {
+            browsingHistoryCollection.reloadData()
+        }
+    }
+
+//        ("Camping", "icons8-camp-64"),
+//                                ("Hiking", "icons8-camp-64"),
+//                                ("Fishing", "icons8-camp-64"),
+//                                ("Picnic", "icons8-camp-64"),
+//                                ("Travel", "icons8-camp-64")
+    
     let hotCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
-    let browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
+    var browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     let db = Firestore.firestore()
     override func viewDidLoad() {
         super.viewDidLoad()
+        //refresh
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshrefresh), for: .valueChanged)
+        hotCollection.refreshControl = refreshControl
+        browsingHistoryCollection.refreshControl = refreshControl
         let textAttributes = [NSAttributedString.Key.font:UIFont(name: "GeezaPro-Bold", size: 20)]
         view.backgroundColor = CustomColors.B1
         searchTextField.layer.borderWidth = 1
@@ -109,7 +121,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         layout2.scrollDirection = .horizontal
         let scrollView2 = UIScrollView(frame: CGRect(x: 30, y: 600, width: view.frame.width - 60, height: 150))
         view.addSubview(scrollView2)
-        let browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: browsingHistoryItems.count * 320, height: Int(scrollView2.frame.height)), collectionViewLayout: layout2)
+        self.browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: browsingHistoryItems.count * 320, height: Int(scrollView2.frame.height)), collectionViewLayout: layout2)
+
         scrollView2.addSubview(browsingHistoryCollection)
         browsingHistoryCollection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         browsingHistoryCollection.backgroundColor = .clear
@@ -122,6 +135,11 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         listenForBrowsingHistory()
     }
+    @objc func refreshrefresh() {
+        self.browsingHistoryCollection.reloadData()
+        self.hotCollection.reloadData()
+        
+    }
     func listenForBrowsingHistory() {
         FirestoreService.shared.listenForBrowsingHistoryChanges { [weak self] browsingRecords in
             self?.browsingHistoryItems = browsingRecords.map { ($0.name, $0.image) }
@@ -132,11 +150,12 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     @objc func buttonClick(sender: UIButton) {
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == hotCollection {
+        if hotCollection.isEqual(collectionView) {
             return hotItems.count
-        } else {
+        } else if browsingHistoryCollection.isEqual(collectionView){
             return browsingHistoryItems.count
         }
+        return 2
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
@@ -144,7 +163,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         cell.layer.cornerRadius = 10
         cell.layer.masksToBounds = true
         cell.layer.borderWidth = 1
-        if collectionView == hotCollection {
+        if hotCollection.isEqual(collectionView) {
             let xpoint = CGFloat(indexPath.item) * 160
             cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
             let imageView = UIImageView(frame: CGRect(x: 25, y: 20, width: 100, height: 100))
@@ -159,26 +178,32 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             imageButton.tag = indexPath.row
             imageButton.addTarget(self, action: #selector(imageButtonClick), for: .touchUpInside)
             cell.addSubview(imageButton)
-        } else {
-            let browsingRecord = browsingHistoryItems[indexPath.row]
+        } else if browsingHistoryCollection.isEqual(collectionView){
+            let browsingRecord = browsingHistoryItems[indexPath.row].self
             let xpoint = CGFloat(indexPath.item) * 320
             cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
-            var view = UIView()
+            var view2 = UIView()
             let viewPoint = CGFloat(indexPath.item) * 320
-            view.frame = CGRect(x: 20+viewPoint, y: 35, width: 80, height: 80)
-            view.layer.cornerRadius = 10
-            view.layer.borderWidth = 1
-            collectionView.addSubview(view)
+            view2.frame = CGRect(x: 20+viewPoint, y: 35, width: 80, height: 80)
+            view2.layer.cornerRadius = 10
+            view2.layer.borderWidth = 1
+            collectionView.addSubview(view2)
             let historyXpoint = CGFloat(indexPath.item) * 320
             cell.frame = CGRect(x: historyXpoint, y: 0, width: 310, height: 150)
+
             let imageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 60, height: 60))
-            imageView.kf.setImage(with: URL(string: browsingRecord.1))
-            view.addSubview(imageView)
+            // 使用 Kingfisher 加載圖片
+            if let url = URL(string: browsingRecord.1) {
+                imageView.kf.setImage(with: url)
+            }
+            view2.addSubview(imageView)
+
             let label = UILabel(frame: CGRect(x: 80, y: 50, width: 150, height: 20))
             label.text = browsingRecord.0
             label.font = UIFont(name: "GeezaPro-Bold", size: 15)
             label.textAlignment = .center
             cell.addSubview(label)
+
             let imageButton = UIButton(frame: CGRect(x: 230, y: 80, width: 60, height: 30))
             imageButton.setTitle("Detail", for: .normal)
             imageButton.setTitleColor(.black, for: .normal)
@@ -188,6 +213,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             imageButton.tag = indexPath.row
             imageButton.addTarget(self, action: #selector(imageButtonClick), for: .touchUpInside)
             cell.addSubview(imageButton)
+
         }
         return cell
     }
