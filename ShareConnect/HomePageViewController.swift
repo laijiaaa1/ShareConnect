@@ -41,8 +41,13 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     var browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     
     let db = Firestore.firestore()
+    
+    override func viewWillAppear(_ animated: Bool) {
+            browsingHistoryCollection.reloadData()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         let textAttributes = [NSAttributedString.Key.font:UIFont(name: "GeezaPro-Bold", size: 20)]
         view.backgroundColor = CustomColors.B1
         searchTextField.layer.borderWidth = 1

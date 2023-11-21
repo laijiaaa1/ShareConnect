@@ -69,7 +69,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let image = (cell.product?.imageString)!
         let price = (cell.product?.price)!
         let type = (cell.product?.itemType)!
-        FirestoreService.shared.addBrowsingRecord(name: name, image: image, price: price, type: type.rawValue)
+        let productId = (cell.product?.productId)!
+        FirestoreService.shared.addBrowsingRecord(name: name, image: image, price: price, type: type.rawValue, productId: productId)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
         vc.product = cell.product
@@ -213,7 +214,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
-              //              let productId = product["productId"] as? String,
+              let productId = product["productId"] as? String,
               let name = product["Name"] as? String,
               let price = product["Price"] as? String,
               let imageString = product["image"] as? String,
@@ -238,7 +239,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let use = productData["Use"] as? String ?? ""
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
         let newProduct = Product(
-            //            productId: productId,
+            productId: productId,
             name: name,
             price: price,
             startTime: startTime,
