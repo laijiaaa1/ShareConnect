@@ -14,6 +14,7 @@ struct CustomColors {
     static let B1 = UIColor(red: 246/255, green: 246/255, blue: 244/255, alpha: 1)
 }
 class HomePageViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+    let chatListButton = UIButton()
     let searchTextField = UITextField()
     let productView = UIView()
     let placeView = UIView()
@@ -25,7 +26,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                     ("Picnic", "icons8-camp-64"),
                     ("Travel", "icons8-camp-64")]
     let browsingHistory = UILabel()
-    var browsingHistoryItems = [(String, String)](){
+    var browsingHistoryItems = [(String, String)]() {
         didSet{
             browsingHistoryCollection.reloadData()
         }
@@ -37,7 +38,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 //                                ("Picnic", "icons8-camp-64"),
 //                                ("Travel", "icons8-camp-64")]
     let hotCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
-    let browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
+    var browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     let db = Firestore.firestore()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,7 +116,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         layout2.scrollDirection = .horizontal
         let scrollView2 = UIScrollView(frame: CGRect(x: 30, y: 600, width: view.frame.width - 60, height: 150))
         view.addSubview(scrollView2)
-        let browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: browsingHistoryItems.count * 320, height: Int(scrollView2.frame.height)), collectionViewLayout: layout2)
+        self.browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: browsingHistoryItems.count * 320, height: Int(scrollView2.frame.height)), collectionViewLayout: layout2)
+
         scrollView2.addSubview(browsingHistoryCollection)
         browsingHistoryCollection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         browsingHistoryCollection.backgroundColor = .clear
@@ -127,6 +129,16 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         scrollView2.contentSize = CGSize(width: totalWidth2, height: browsingHistoryCollection.frame.height)
         
         listenForBrowsingHistory()
+        
+        chatListButton.setImage(UIImage(named: "icons8-chat-24(@1×)"), for: .normal)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: chatListButton)
+        chatListButton.addTarget(self, action: #selector(chatListButtonClick), for: .touchUpInside)
+        view.addSubview(chatListButton)
+    }
+    @objc func chatListButtonClick(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "ChatListViewController") as? ChatListViewController ?? ChatListViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     func listenForBrowsingHistory() {
         FirestoreService.shared.listenForBrowsingHistoryChanges { [weak self] browsingRecords in

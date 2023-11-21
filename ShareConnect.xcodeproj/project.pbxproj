@@ -19,6 +19,7 @@
 		3410D97D2B09BA0400D32744 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D97C2B09BA0400D32744 /* ChatViewController.swift */; };
 		3410D97F2B09C05600D32744 /* WebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D97E2B09C05600D32744 /* WebSocketManager.swift */; };
 		3410D9852B0B5EAE00D32744 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9842B0B5EAE00D32744 /* FirestoreService.swift */; };
+		3410D9872B0C42C600D32744 /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9862B0C42C600D32744 /* ChatListViewController.swift */; };
 		341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341E9B8B2B03629800997FE9 /* AppDelegate.swift */; };
 		341E9B8E2B03629800997FE9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341E9B8D2B03629800997FE9 /* SceneDelegate.swift */; };
 		341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341E9B8F2B03629800997FE9 /* HomePageViewController.swift */; };
@@ -49,6 +50,7 @@
 		3410D97C2B09BA0400D32744 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		3410D97E2B09C05600D32744 /* WebSocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
 		3410D9842B0B5EAE00D32744 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
+		3410D9862B0C42C600D32744 /* ChatListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		341E9B882B03629800997FE9 /* ShareConnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShareConnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		341E9B8B2B03629800997FE9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		341E9B8D2B03629800997FE9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				3410D9692B07665700D32744 /* SelectedViewController.swift */,
 				3410D96B2B08747200D32744 /* TrolleyViewController.swift */,
 				3410D97C2B09BA0400D32744 /* ChatViewController.swift */,
+				3410D9862B0C42C600D32744 /* ChatListViewController.swift */,
 				346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */,
 				346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */,
 				346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */,
@@ -300,6 +303,7 @@
 				3410D9852B0B5EAE00D32744 /* FirestoreService.swift in Sources */,
 				3410D9732B08890300D32744 /* Setting.swift in Sources */,
 				341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */,
+				3410D9872B0C42C600D32744 /* ChatListViewController.swift in Sources */,
 				3410D9662B07125600D32744 /* GroupViewController.swift in Sources */,
 				3410D9712B0888E800D32744 /* Data.swift in Sources */,
 				3410D97F2B09C05600D32744 /* WebSocketManager.swift in Sources */,
