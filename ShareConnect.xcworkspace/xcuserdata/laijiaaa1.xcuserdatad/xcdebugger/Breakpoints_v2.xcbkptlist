@@ -16,8 +16,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "92"
             endingLineNumber = "92"
-            landmarkName = "tableView(_:cellForRowAt:)"
-            landmarkType = "7">
+            landmarkName = "TrolleyViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -32,8 +32,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "198"
             endingLineNumber = "198"
-            landmarkName = "setupUI(seller:cartItems:delegate:)"
-            landmarkType = "7">
+            landmarkName = "selectSellerButton"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -80,8 +80,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "157"
             endingLineNumber = "157"
-            landmarkName = "checkoutButtonTapped()"
-            landmarkType = "7">
+            landmarkName = "tableView(_:trailingSwipeActionsConfigurationForRowAt:)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -96,8 +96,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "167"
             endingLineNumber = "167"
-            landmarkName = "getSellerID()"
-            landmarkType = "7">
+            landmarkName = "checkoutButtonTapped()"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -318,8 +318,8 @@
             filePath = "ShareConnect/HomePageViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
             landmarkName = "collectionView(_:numberOfItemsInSection:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -334,42 +334,10 @@
             filePath = "ShareConnect/HomePageViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "193"
-            endingLineNumber = "193"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
             landmarkName = "collectionView(_:cellForItemAt:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "42561E56-BCA0-4ED8-A984-DF43783B3400 - 9c1962c08a125975"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.HomePageViewController.collectionView(_: __C.UICollectionView, cellForItemAt: Foundation.IndexPath) -&gt; __C.UICollectionViewCell"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/HomePageViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "182"
-                  endingLineNumber = "182"
-                  offsetFromSymbolStart = "3164">
-               </Location>
-               <Location
-                  uuid = "42561E56-BCA0-4ED8-A984-DF43783B3400 - 9c1962c08a125975"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.HomePageViewController.collectionView(_: __C.UICollectionView, cellForItemAt: Foundation.IndexPath) -&gt; __C.UICollectionViewCell"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/HomePageViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "182"
-                  endingLineNumber = "182"
-                  offsetFromSymbolStart = "3252">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -384,11 +352,11 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "29"
             endingLineNumber = "29"
-            landmarkName = "browsingHistoryItems"
-            landmarkType = "24">
+            landmarkName = "HomePageViewController"
+            landmarkType = "3">
             <Locations>
                <Location
-                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - 2687f441b8ae8718"
+                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - 2687f441b8ae873b"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -398,12 +366,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/HomePageViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "28"
-                  endingLineNumber = "28"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
                   offsetFromSymbolStart = "88">
                </Location>
                <Location
-                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - e792842e62276314"
+                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - e792842e62276337"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -413,12 +381,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/HomePageViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "28"
-                  endingLineNumber = "28"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
                   offsetFromSymbolStart = "116">
                </Location>
                <Location
-                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - 9935783b4ec01e05"
+                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - 9935783b4ec01e26"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -428,12 +396,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/HomePageViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "28"
-                  endingLineNumber = "28"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
                   offsetFromSymbolStart = "0">
                </Location>
                <Location
-                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - e189d3d5844b9104"
+                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - e189d3d5844b9127"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -443,12 +411,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/HomePageViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "28"
-                  endingLineNumber = "28"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
                   offsetFromSymbolStart = "20">
                </Location>
                <Location
-                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - 4eaca909424f879"
+                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - 4eaca909424f85a"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -458,12 +426,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/HomePageViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "28"
-                  endingLineNumber = "28"
-                  offsetFromSymbolStart = "944">
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "1000">
                </Location>
                <Location
-                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - f4e1ab162dd812e"
+                  uuid = "2E6759AB-EE47-4F9B-9C96-EF95ACF5E287 - f4e1ab162dd810d"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -473,9 +441,9 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/HomePageViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "28"
-                  endingLineNumber = "28"
-                  offsetFromSymbolStart = "920">
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "976">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -490,8 +458,40 @@
             filePath = "ShareConnect/HomePageViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "181"
-            endingLineNumber = "181"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
+            landmarkName = "collectionView(_:cellForItemAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2F1EAD59-438D-4C42-8AF5-6ECD34EE18E1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/HomePageViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "HomePageViewController"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9B1DAD1C-0B1D-4753-97D2-A8CE119DC43C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/HomePageViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
             landmarkName = "collectionView(_:cellForItemAt:)"
             landmarkType = "7">
          </BreakpointContent>

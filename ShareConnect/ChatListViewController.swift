@@ -41,15 +41,19 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
            return cell
     }
 
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
+    }
     let tableView = UITableView()
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        navigationItem.title = "Chat List"
         tableView.frame = view.bounds
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ChatListCell.self, forCellReuseIdentifier: "ChatListCell")
         fackData()
+        view.addSubview(tableView)
     }
 }
 class ChatListCell: UITableViewCell {
@@ -101,7 +105,7 @@ class ChatListCell: UITableViewCell {
             avatarImageView.widthAnchor.constraint(equalToConstant: 50),
             avatarImageView.heightAnchor.constraint(equalToConstant: 50),
             avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
+            avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50)
             
         ])
         contentView.addSubview(unreadLabel)
@@ -117,7 +121,7 @@ class ChatListCell: UITableViewCell {
             unreadLabel.widthAnchor.constraint(equalToConstant: 20),
             unreadLabel.heightAnchor.constraint(equalToConstant: 20),
             unreadLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            unreadLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
+            unreadLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50)
         ])
         
     }

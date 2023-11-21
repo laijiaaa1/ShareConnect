@@ -9,6 +9,14 @@ import Foundation
 import FirebaseFirestore
 import FirebaseAuth
 
+struct BrowsingRecord {
+    let name: String
+    let image: String
+    let price: String
+    let type: String
+    let timestamp: Date
+}
+
 class FirestoreService {
     static let shared = FirestoreService()
     
@@ -73,10 +81,4 @@ class FirestoreService {
     }
 }
 
-struct BrowsingRecord {
-    let name: String
-    let image: String
-    let price: String
-    let type: String
-    let timestamp: Date
-}
+
