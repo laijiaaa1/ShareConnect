@@ -7,13 +7,16 @@
 
 import UIKit
 import Kingfisher
+import Firebase
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseStorage
 
 class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TrolleyCellDelegate{
     func didSelectSeller(sellerID: String) {
         print("Selected seller: \(sellerID)")
     }
-    let buyerWebSocketManager = WebSocketManager()
-    let sellerWebSocketManager = WebSocketManager()
+    
     var selectedSellerID: String?
     var cart: [Seller: [Product]] = [:] {
         didSet {
@@ -23,6 +26,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     let tableView = UITableView()
     let refreshControl = UIRefreshControl()
+    var chatRoomID: String!
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
     }
@@ -155,14 +159,64 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         return configuration
     }
     @objc func checkoutButtonTapped() {
-        let checkoutVC = ChatViewController()
-        checkoutVC.cart = cart
-        //        checkoutVC.sellerID = selectedSellerID
-        if let sellerID = getSellerID(){
-            checkoutVC.setUserWebSocketID(sellerID)
+        guard let sellerID = selectedSellerID else {
+            print("Seller ID is nil.")
+            return
         }
-        checkoutVC.sendShoppingCartToSeller()
-        navigationController?.pushViewController(checkoutVC, animated: true)
+
+        createChatRoom(with: sellerID) { [weak self] chatRoomID in
+            guard let self = self else { return }
+
+            let checkoutVC = ChatViewController()
+            checkoutVC.cart = self.cart
+            checkoutVC.sellerID = sellerID
+            checkoutVC.chatRoomID = chatRoomID
+            checkoutVC.createOrGetChatRoomDocument()
+//            checkoutVC.startListeningForChatMessages()
+            self.navigationController?.pushViewController(checkoutVC, animated: true)
+        }
+    }
+
+    func createChatRoom(with sellerID: String?, completion: @escaping (String) -> Void) {
+       
+        let chatRoomCollection = Firestore.firestore().collection("chatRooms")
+        let newChatRoomRef = chatRoomCollection.addDocument(data: [
+                    "buyerID": Auth.auth().currentUser?.uid ?? "",
+                    "sellerID": sellerID ?? "",
+                    "createdAt": FieldValue.serverTimestamp(),
+                    "cart": encodeCart(),
+                ])
+            chatRoomID = newChatRoomRef.documentID
+            let messagesCollection = newChatRoomRef.collection("messages")
+
+            let initialMessage = "Hello!"
+            messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
+
+            completion(chatRoomID)
+    }
+    func encodeCart() -> [[String: Any]] {
+        var encodedCart: [[String: Any]] = []
+
+        for (seller, products) in cart {
+            let encodedProducts = products.map { product in
+                [
+                    "Name": product.name,
+                    "Price": product.price,
+                ]
+            }
+
+            let encodedSeller: [String: Any] = [
+                "sellerID": seller.sellerID,
+                "sellerName": seller.sellerName,
+            ]
+
+            encodedCart.append([
+                "seller": encodedSeller,
+                "products": encodedProducts,
+            ])
+        }
+
+        return encodedCart
     }
     func getSellerID() -> String? {
         guard let sellerID = selectedSellerID else { return nil }

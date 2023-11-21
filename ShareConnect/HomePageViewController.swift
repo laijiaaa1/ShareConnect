@@ -31,12 +31,12 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 //            browsingHistoryCollection.reloadData()
 //        }
 //    }
-    var browsingHistoryItems = [
-        ("", "icons8-camp-64"),
-                                ("", "icons8-camp-64"),
-                                ("", "icons8-camp-64"),
-                                ("", "icons8-camp-64"),
-                                ("", "icons8-camp-64")]
+            var browsingHistoryItems = [
+        ("", "icons8-camp-64", ""),
+                                ("", "icons8-camp-64", ""),
+                                ("", "icons8-camp-64", ""),
+                                ("", "icons8-camp-64", ""),
+                                ("", "icons8-camp-64", "")]
     let hotCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     var browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -47,7 +47,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        browsingHistoryCollection.reloadData()
         let textAttributes = [NSAttributedString.Key.font:UIFont(name: "GeezaPro-Bold", size: 20)]
         view.backgroundColor = CustomColors.B1
         searchTextField.layer.borderWidth = 1
@@ -153,7 +153,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     func listenForBrowsingHistory() {
         FirestoreService.shared.listenForBrowsingHistoryChanges { [weak self] browsingRecords in
-            self?.browsingHistoryItems = browsingRecords.map { ($0.name, $0.image) }
+            self?.browsingHistoryItems = browsingRecords.map { ($0.name, $0.image, $0.productId) }
             self?.browsingHistoryCollection.reloadData()
         }
     }
@@ -234,9 +234,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     @objc func imageButtonClick(sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController ?? DetailViewController()
-        vc.product?.name = browsingHistoryItems[sender.tag].0
-        vc.product?.imageString = browsingHistoryItems[sender.tag].1
+        let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        
+        vc.product?.productId = browsingHistoryItems[sender.tag].2
         navigationController?.pushViewController(vc, animated: true)
     }
 }

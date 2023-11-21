@@ -6,16 +6,24 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
-class ChatViewController: UIViewController, WebSocketManagerDelegate {
+class ChatViewController: UIViewController {
     var cart: [Seller: [Product]]?
     var sellerID: String?
     let tableView = UITableView()
     let messageTextField = UITextField()
     let sendButton = UIButton()
     var chatMessages = [ChatMessage]()
-    let webSocketManager = WebSocketManager()
     var cartString = ""
+    
+    var firestore: Firestore = Firestore.firestore()
+
+    var chatRoomDocument: DocumentReference!
+    var chatRoomListener: ListenerRegistration!
+    var chatRoomID: String!
+    var chatRoomMessageListener: ListenerRegistration!
+    
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
     }
@@ -24,17 +32,101 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        firestore = Firestore.firestore()
         navigationItem.title = "CHATROOM"
         setupUI()
-        webSocketManager.delegate = self
         tableView.separatorStyle = .none
         if let sellerID = sellerID {
-            setUserWebSocketID(sellerID)
+            createOrGetChatRoomDocument()
+//            startListeningForChatMessages()
         }
         if let cart = cart {
-            sendMessage(cartString)
+            convertCartToString(cart)
+        }
+        sendMessageToFirestore(cartString, isMe: false)
+    }
+    func createOrGetChatRoomDocument() {
+            guard let sellerID = sellerID else {
+                print("Seller ID is nil.")
+                return
+            }
+
+            let chatRoomsCollection = firestore.collection("chatRooms")
+
+            chatRoomsCollection.document(sellerID).getDocument { [weak self] (documentSnapshot, error) in
+                if let error = error {
+                    print("Error getting chat room document: \(error.localizedDescription)")
+                    return
+                }
+
+                if let document = documentSnapshot, document.exists {
+                    self?.chatRoomDocument = document.reference
+                    self?.startListeningForChatMessages()
+                } else {
+                    chatRoomsCollection.document(sellerID).setData(["createdAt": FieldValue.serverTimestamp()])
+                    self?.chatRoomDocument = chatRoomsCollection.document(sellerID)
+                    self?.startListeningForChatMessages()
+                }
+            }
+        }
+
+    func startListeningForChatMessages() {
+        guard let chatRoomDocument = chatRoomDocument else {
+            print("Chat room document is nil.")
+            return
+        }
+
+        let messagesCollection = chatRoomDocument.collection("messages")
+
+        chatRoomMessageListener = messagesCollection.addSnapshotListener { [weak self] (querySnapshot, error) in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("Error listening for chat messages: \(error.localizedDescription)")
+                return
+            }
+
+            guard let documents = querySnapshot?.documents else {
+                print("No documents in the chat messages collection.")
+                return
+            }
+
+            self.chatMessages.removeAll()
+
+            for document in documents {
+                let data = document.data()
+                if let text = data["text"] as? String,
+                   let isMe = data["isMe"] as? Bool {
+                    let chatMessage = ChatMessage(text: text, isMe: isMe)
+                    self.chatMessages.append(chatMessage)
+                }
+            }
+
+            self.tableView.reloadData()
         }
     }
+
+        func sendMessageToFirestore(_ message: String, isMe: Bool) {
+            guard let chatRoomDocument = chatRoomDocument else {
+                print("Chat room document is nil.")
+                return
+            }
+
+            let messagesCollection = chatRoomDocument.collection("messages")
+
+            messagesCollection.addDocument(data: [
+                "text": message,
+                "isMe": isMe,
+                "timestamp": FieldValue.serverTimestamp()
+            ]) { [weak self] (error) in
+                if let error = error {
+                    print("Error sending message: \(error.localizedDescription)")
+                    return
+                }
+
+                self?.tableView.reloadData()
+            }
+        }
     private func setupUI() {
         view.backgroundColor = CustomColors.B1
         tableView.dataSource = self
@@ -55,47 +147,11 @@ class ChatViewController: UIViewController, WebSocketManagerDelegate {
         view.addSubview(sendButton)
     }
     
-    @objc private func sendButtonTapped() {
-        if let message = messageTextField.text, !message.isEmpty {
-            sendMessage(message)
-            messageTextField.text = ""
-        }
+    @objc func sendButtonTapped() {
+        guard let message = messageTextField.text else { return }
+        sendMessageToFirestore(message, isMe: true)
+        messageTextField.text = ""
     }
-    
-    func didReceiveMessage(_ message: String) {
-        let chatMessage = ChatMessage(text: message, isMe: false)
-        chatMessages.append(chatMessage)
-        tableView.reloadData()
-    }
-    
-    func sendMessage(_ message: String) {
-        let chatMessage = ChatMessage(text: message, isMe: true)
-        chatMessages.append(chatMessage)
-        tableView.reloadData()
-        guard let sellerWebSocketID = webSocketManager.userWebSocketID else {
-            print("Error: Seller WebSocket ID is not set.")
-            return
-        }
-        webSocketManager.send(message: message, to: sellerWebSocketID)
-    }
-    func setUserWebSocketID(_ sellerID: String){
-        webSocketManager.userWebSocketID = sellerID
-    }
-    func sendShoppingCartToSeller() {
-        guard let cart = cart else {
-            print("Shopping cart or sellerID is nil.")
-            return
-        }
-        guard let sellerWebSocketID = webSocketManager.userWebSocketID else {
-            print("Error: Seller WebSocket ID is not set.")
-            return
-        }
-        
-        let cartString = convertCartToString(cart)
-        let message = "New order from seller \(sellerWebSocketID): \(cartString)"
-        webSocketManager.send(message: message, to: sellerWebSocketID)
-    }
-    
     func convertCartToString(_ cart: [Seller: [Product]]) -> String {
         for (seller, products) in cart {
             cartString.append("Seller: \(seller.sellerName)\n")
@@ -131,11 +187,9 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //auto
         return 300
     }
 }
-
 class ChatMessageCell: UITableViewCell {
     let label = UILabel()
     

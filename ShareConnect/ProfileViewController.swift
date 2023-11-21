@@ -63,7 +63,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     let requestTableView = UITableView()
     let supplyTableView = UITableView()
     var selectedButton: UIButton?
-    let userId = Auth.auth().currentUser!.uid
+    let userId = Auth.auth().currentUser?.uid
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = CustomColors.B1
@@ -270,13 +270,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     @objc func requestButtonTapped() {
         animateLineViewTransition(to: requestButton)
         animateViewTransition(to: requestTableView)
-        fetchRequests(userId: userId, dataType: "request")
+        fetchRequests(userId: userId ?? "", dataType: "request")
     }
 
     @objc func supplyButtonTapped() {
         animateLineViewTransition(to: supplyButton)
         animateViewTransition(to: supplyTableView)
-        fetchRequests(userId: userId, dataType: "supply")
+        fetchRequests(userId: userId ?? "", dataType: "supply")
     }
 
     func animateLineViewTransition(to button: UIButton) {
