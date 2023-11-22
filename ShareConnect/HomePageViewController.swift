@@ -219,6 +219,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             label.text = browsingRecord.0
             label.font = UIFont(name: "GeezaPro-Bold", size: 15)
             label.textAlignment = .center
+            label.backgroundColor = .white
             cell.addSubview(label)
             let imageButton = UIButton(frame: CGRect(x: 230, y: 80, width: 60, height: 30))
             imageButton.setTitle("Detail", for: .normal)
@@ -235,9 +236,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     @objc func imageButtonClick(sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-        
-        vc.product?.productId = browsingHistoryItems[sender.tag].2
+        vc.productID = browsingHistoryItems[sender.tag].2
         navigationController?.pushViewController(vc, animated: true)
+        
     }
 }
 

@@ -31,6 +31,7 @@ class DetailViewController: UIViewController {
     let otherButton = UIButton()
     let collectionButton = UIButton()
     let shareButton = UIButton()
+    var productID: String?
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
     }
@@ -43,6 +44,7 @@ class DetailViewController: UIViewController {
             let url = URL(string: product.imageString)
             detailImage.kf.setImage(with: url)
             price.text = product.price
+            productID = product.productId
         }
     }
     func setupView() {

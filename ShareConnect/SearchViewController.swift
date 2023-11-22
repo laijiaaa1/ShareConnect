@@ -38,7 +38,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: 180, height: 250)
+        layout.itemSize = CGSize(width: 180, height: 300)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.backgroundColor = .white
@@ -101,7 +101,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if collectionView == classCollectionView {
-            return 6
+            return 1
         }
         if collectionView == collectionView{
             if currentButtonType == .request {
@@ -189,7 +189,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         ])
         
         //        classCollectionView.register(ClassCollectionViewCell.self, forCellWithReuseIdentifier: "classCell")
-        classCollectionView.backgroundColor = .white
+        classCollectionView.backgroundColor = CustomColors.B1
         classCollectionView.translatesAutoresizingMaskIntoConstraints = false
         classCollectionView.showsHorizontalScrollIndicator = false
         
@@ -202,7 +202,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         ])
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 100, height: 40)
+        layout.itemSize = CGSize(width: 600, height: 40)
         classCollectionView.collectionViewLayout = layout
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10
@@ -451,7 +451,6 @@ class ClassCollectionViewCell: UICollectionViewCell {
     let productClassification = ["Camping", "Tableware", "Activity props", "Party", "Electronics", "Others"]
     var allRequests: [Product] = []
     var allSupplies: [Product] = []
-    let button = UIButton()
     var currentButtonType: ProductType? {
         didSet {
             updateUI()
@@ -479,8 +478,8 @@ class ClassCollectionViewCell: UICollectionViewCell {
             buttonsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             buttonsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             buttonsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
-            buttonsStackView.heightAnchor.constraint(equalToConstant: 40),
-            buttonsStackView.widthAnchor.constraint(equalToConstant: 600)
+//            buttonsStackView.heightAnchor.constraint(equalToConstant: 300),
+//            buttonsStackView.widthAnchor.constraint(equalToConstant: 700)
         ])
     }
     
@@ -489,28 +488,17 @@ class ClassCollectionViewCell: UICollectionViewCell {
             buttonsStackView.removeArrangedSubview(subview)
             subview.removeFromSuperview()
         }
-        
+
         for classification in productClassification {
-            
+            let button = UIButton()
+
             button.setTitle(classification, for: .normal)
             button.setTitleColor(.black, for: .normal)
             button.backgroundColor = .white
-            button.layer.borderWidth = 1
-            button.layer.cornerRadius = 20
+            
             button.addTarget(self, action: #selector(classificationButtonTapped(_:)), for: .touchUpInside)
             buttonsStackView.addArrangedSubview(button)
         }
-        
-        
-    }
-    override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-        setNeedsLayout()
-        layoutIfNeeded()
-        let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
-        var newFrame = layoutAttributes.frame
-        newFrame.size.height = ceil(size.height)
-        layoutAttributes.frame = newFrame
-        return layoutAttributes
     }
     weak var delegate: ClassCollectionViewCellDelegate?
     
