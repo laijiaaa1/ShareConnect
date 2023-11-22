@@ -14,8 +14,8 @@ import FirebaseStorage
 import MJRefresh
 import Kingfisher
 
-class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
-   
+class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, ClassCollectionViewCellDelegate {
+    
     var selectedIndexPath: IndexPath?
     var allRequests: [Product] = []
     var allSupplies: [Product] = []
@@ -24,12 +24,21 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     let lineView = UIView()
     let button1 = UIButton()
     let button2 = UIButton()
-    let buttonClassification = UIButton()
-    var currentButtonType: ProductType = .request
     
-    let collectionView: UICollectionView = {
+    var currentButtonType: ProductType = .request
+    let classCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(ClassCollectionViewCell.self, forCellWithReuseIdentifier: "classCell")
+        collectionView.backgroundColor = .white
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }()
+    let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.itemSize = CGSize(width: 180, height: 250)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.backgroundColor = .white
@@ -47,8 +56,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         navigationItem.title = "SHARECONNECT"
         collectionView.delegate = self
         collectionView.dataSource = self
+        classCollectionView.delegate = self
+        classCollectionView.dataSource = self
+        
         let userID = Auth.auth().currentUser?.uid ?? ""
-//        fetchRequestsForUser(type: .request)
+        //        fetchRequestsForUser(type: .request)
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
     }
@@ -59,46 +71,78 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else if currentButtonType == .supply {
             fetchRequestsForUser(type: currentButtonType)
         }
-
+        
         collectionView.reloadData()
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! SearchCollectionViewCell
+        if collectionView == classCollectionView {
+            let cell = collectionView.cellForItem(at: indexPath) as? ClassCollectionViewCell
+            cell?.updateUI()
+        }
         
-        guard let name = cell.product?.name else { return  }
-        let image = (cell.product?.imageString)!
-        let price = (cell.product?.price)!
-        let type = (cell.product?.itemType)!
-        let productId = (cell.product?.productId)!
-        FirestoreService.shared.addBrowsingRecord(name: name, image: image, price: price, type: type.rawValue, productId: productId)
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-        vc.product = cell.product
-        self.navigationController?.pushViewController(vc, animated: true)
+        if collectionView == self.collectionView {
+            if let cell = collectionView.cellForItem(at: indexPath) as? SearchCollectionViewCell {
+                guard let name = cell.product?.name else { return }
+                let image = cell.product?.imageString ?? ""
+                let price = cell.product?.price ?? ""
+                let type = cell.product?.itemType ?? .request
+                let productId = cell.product?.productId ?? ""
+                
+                FirestoreService.shared.addBrowsingRecord(name: name, image: image, price: price, type: type.rawValue, productId: productId)
+                
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+                vc.product = cell.product
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        }
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if currentButtonType == .request {
-            return allRequests.count
-        } else if currentButtonType == .supply {
-            return allSupplies.count
+        
+        if collectionView == classCollectionView {
+            return 6
+        }
+        if collectionView == collectionView{
+            if currentButtonType == .request {
+                
+                return allRequests.count
+                
+            } else if currentButtonType == .supply {
+                return allSupplies.count
+            }
+            return 0
         }
         return 0
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
+        if collectionView == classCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "classCell", for: indexPath) as! ClassCollectionViewCell
+            cell.currentButtonType = currentButtonType
+            cell.delegate = self
+            cell.updateUI()
+            return cell
+        }
+        if collectionView == collectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
+            if currentButtonType == .request {
+                cell.product = allRequests[indexPath.item]
+            } else if currentButtonType == .supply {
+                cell.product = allSupplies[indexPath.item]
+            }
+            return cell
+        }
+        return UICollectionViewCell()
+    }
+    func didSelectClassification(_ classification: String, forType type: ProductType) {
+        fetchDataForSort(classification: classification, type: type)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellWidth = collectionView.frame.width / 2
         let cellHeight = collectionView.frame.height / 2
-        let xPosition = CGFloat(indexPath.item % 2) * cellWidth
-        let yPosition = CGFloat(indexPath.item / 2) * cellHeight
-        cell.frame = CGRect(x: xPosition, y: yPosition, width: cellWidth, height: cellHeight)
-
-        if currentButtonType == .request {
-            cell.product = allRequests[indexPath.item]
-        } else if currentButtonType == .supply {
-            cell.product = allSupplies[indexPath.item]
-        }
-        return cell
+        return CGSize(width: cellWidth, height: cellHeight)
     }
+    
     @objc func button1Action() {
         currentButtonType = .request
         lineView.center.x = button1.center.x
@@ -143,28 +187,34 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2),
             lineView.heightAnchor.constraint(equalToConstant: 2)
         ])
-        buttonClassification.backgroundColor = .white
-        buttonClassification.translatesAutoresizingMaskIntoConstraints = false
-        buttonClassification.layer.borderWidth = 1
-        buttonClassification.layer.cornerRadius = 20
-        buttonClassification.setTitle("Class", for: .normal)
-        buttonClassification.setTitleColor(.black, for: .normal)
-        view.addSubview(buttonClassification)
+        
+        //        classCollectionView.register(ClassCollectionViewCell.self, forCellWithReuseIdentifier: "classCell")
+        classCollectionView.backgroundColor = .white
+        classCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        classCollectionView.showsHorizontalScrollIndicator = false
+        
+        view.addSubview(classCollectionView)
         NSLayoutConstraint.activate([
-            buttonClassification.topAnchor.constraint(equalTo: lineView.bottomAnchor, constant: 10),
-            buttonClassification.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            buttonClassification.widthAnchor.constraint(equalToConstant: 60),
-            buttonClassification.heightAnchor.constraint(equalToConstant: 40)
+            classCollectionView.topAnchor.constraint(equalTo: lineView.bottomAnchor),
+            classCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            classCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            classCollectionView.heightAnchor.constraint(equalToConstant: 50)
         ])
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 100, height: 40)
+        classCollectionView.collectionViewLayout = layout
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
         view.addSubview(collectionView)
         collectionView.backgroundColor = CustomColors.B1
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: buttonClassification.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: classCollectionView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height)
+        scrollView.contentSize = CGSize(width: view.frame.width, height: collectionView.frame.height)
         
     }
     func fetchRequestsForUser(type: ProductType) {
@@ -233,10 +283,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             print("Error: Failed to parse seller or itemType")
             return nil
         }
-        let description = productData["Description"] as? String ?? ""
-        let sort = productData["Sort"] as? String ?? ""
-        let quantity = productData["Quantity"] as? String ?? ""
-        let use = productData["Use"] as? String ?? ""
+        let description = product["Description"] as? String ?? ""
+        let sort = product["Sort"] as? String ?? ""
+        let quantity = product["Quantity"] as? String ?? ""
+        let use = product["Use"] as? String ?? ""
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
         let newProduct = Product(
             productId: productId,
@@ -253,6 +303,58 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             itemType: ProductType(rawValue: itemType)!
         )
         return newProduct
+    }
+    
+    func fetchDataForSort(classification: String, type: ProductType) {
+        let db = Firestore.firestore()
+        let productsCollection = db.collection("products")
+        productsCollection.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                if self.currentButtonType == .request {
+                    self.allRequests.removeAll()
+                } else if self.currentButtonType == .supply {
+                    self.allSupplies.removeAll()
+                }
+                for document in querySnapshot!.documents {
+                    let productData = document.data()
+                    if let productTypeRawValue = productData["type"] as? String,
+                       let productType = ProductType(rawValue: productTypeRawValue),
+                       let product = self.parseProductData(productData: productData) {
+                        if productType == type {
+                            if product.itemType == type {
+                                print("Appending \(type): \(product)")
+                                if type == .request {
+                                    if product.sort == classification {
+                                        self.allRequests.append(product)
+                                    }
+                                    //                                    self.allRequests.append(product)
+                                } else if type == .supply {
+                                    if product.sort == classification {
+                                        self.allSupplies.append(product)
+                                    }
+                                    //                                    self.allSupplies.append(product)
+                                }
+                            }
+                        } else {
+                            print("Skipped product with unknown type: \(productType)")
+                        }
+                    } else {
+                        print("Error parsing product type")
+                    }
+                }
+                if type == .request {
+                    self.allRequests.sort(by: { $0.startTime < $1.startTime })
+                } else if type == .supply {
+                    self.allSupplies.sort(by: { $0.startTime < $1.startTime })
+                }
+                print("All requests: \(self.allRequests)")
+                print("All supplies: \(self.allSupplies)")
+                self.collectionView.reloadData()
+                self.collectionView.refreshControl?.endRefreshing()
+            }
+        }
     }
 }
 class SearchCollectionViewCell: UICollectionViewCell {
@@ -341,4 +443,89 @@ class SearchCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+}
+
+class ClassCollectionViewCell: UICollectionViewCell {
+    let buttonsStackView = UIStackView()
+    let textLabel = UILabel()
+    let productClassification = ["Camping", "Tableware", "Activity props", "Party", "Electronics", "Others"]
+    var allRequests: [Product] = []
+    var allSupplies: [Product] = []
+    let button = UIButton()
+    var currentButtonType: ProductType? {
+        didSet {
+            updateUI()
+        }
+    }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+        updateUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupUI() {
+        buttonsStackView.translatesAutoresizingMaskIntoConstraints = false
+        buttonsStackView.axis = .horizontal
+        buttonsStackView.alignment = .center
+        buttonsStackView.distribution = .fillProportionally
+        contentView.addSubview(buttonsStackView)
+        
+        NSLayoutConstraint.activate([
+            buttonsStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            buttonsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            buttonsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
+            buttonsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+            buttonsStackView.heightAnchor.constraint(equalToConstant: 40),
+            buttonsStackView.widthAnchor.constraint(equalToConstant: 600)
+        ])
+    }
+    
+    func updateUI() {
+        for subview in buttonsStackView.arrangedSubviews {
+            buttonsStackView.removeArrangedSubview(subview)
+            subview.removeFromSuperview()
+        }
+        
+        for classification in productClassification {
+            
+            button.setTitle(classification, for: .normal)
+            button.setTitleColor(.black, for: .normal)
+            button.backgroundColor = .white
+            button.layer.borderWidth = 1
+            button.layer.cornerRadius = 20
+            button.addTarget(self, action: #selector(classificationButtonTapped(_:)), for: .touchUpInside)
+            buttonsStackView.addArrangedSubview(button)
+        }
+        
+        
+    }
+    override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
+        setNeedsLayout()
+        layoutIfNeeded()
+        let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
+        var newFrame = layoutAttributes.frame
+        newFrame.size.height = ceil(size.height)
+        layoutAttributes.frame = newFrame
+        return layoutAttributes
+    }
+    weak var delegate: ClassCollectionViewCellDelegate?
+    
+    @objc func classificationButtonTapped(_ sender: UIButton) {
+        if let classificationText = sender.currentTitle {
+            print("Tapped Classification: \(classificationText)")
+            
+            if let delegate = delegate, let currentButtonType = currentButtonType {
+                delegate.didSelectClassification(classificationText, forType: currentButtonType)
+            }
+        }
+    }
+    
+    
+}
+protocol ClassCollectionViewCellDelegate: AnyObject {
+    func didSelectClassification(_ classification: String, forType type: ProductType)
 }

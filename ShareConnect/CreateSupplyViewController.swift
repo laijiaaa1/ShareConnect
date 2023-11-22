@@ -57,11 +57,11 @@ class CreateSupplyViewController: CreateRequestViewController {
                                 price: productData["price"] as? String ?? "",
                                 startTime: productData["startTime"] as? String ?? "",
                                 imageString: productData["image"] as? String ?? "",
-                                description: productData["description"] as? String,
-                                sort: productData["sort"] as? String,
-                                quantity: productData["quantity"] as? String,
-                                use: productData["use"] as? String,
-                                endTime: productData["endTime"] as? String ,
+                                description: productData["description"] as? String ?? "",
+                                sort: productData["sort"] as? String ?? "",
+                                quantity: productData["quantity"] as? String ?? "",
+                                use: productData["use"] as? String ?? "",
+                                endTime: productData["endTime"] as? String ?? "",
                                 seller: Seller(
                                     sellerID: user?.uid ?? "",
                                     sellerName: user?.email ?? ""

@@ -13,11 +13,11 @@ struct Product: Codable {
     let price: String
     let startTime: String
     var imageString: String
-    let description: String?
-    let sort: String?
-    var quantity: String?
-    let use: String?
-    let endTime: String?
+    let description: String
+    let sort: String
+    var quantity: String
+    let use: String
+    let endTime: String
     let seller: Seller
     let itemType: ProductType
 }

@@ -173,10 +173,10 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
             checkoutVC.chatRoomID = chatRoomID
             
-            let checklistVC = ChatListViewController()
-            checklistVC.sellerID = sellerID
-            checklistVC.buyerID = Auth.auth().currentUser?.uid ?? ""
-            checklistVC.chatRoomID = chatRoomID
+//            let checklistVC = ChatListViewController()
+//            checklistVC.sellerID = sellerID
+//            checklistVC.buyerID = Auth.auth().currentUser?.uid ?? ""
+//            checklistVC.chatRoomID = chatRoomID
             
             self.navigationController?.pushViewController(checkoutVC, animated: true)
         }
