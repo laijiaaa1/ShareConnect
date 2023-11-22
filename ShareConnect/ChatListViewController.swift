@@ -6,6 +6,11 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseFirestore
+import FirebaseStorage
+import FirebaseAuth
+import FirebaseCore
 
 struct ChatItem {
     var name: String
@@ -16,15 +21,57 @@ struct ChatItem {
 }
 
 class ChatListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    var chatItems = [ChatItem(name: "name", time: "time", message: "message", avatarName: "wait", unreadCount: 1)]
-    
-    //fack data
-    func fackData() {
-        for i in 0...10 {
-            let chatItem = ChatItem(name: "name\(i)", time: "time\(i)", message: "message\(i)", avatarName: "wait", unreadCount: i)
-            chatItems.append(chatItem)
-        }
-    }
+//    var chatItems = [ChatItem(name: "name", time: "time", message: "message", avatarName: "wait", unreadCount: 1)]
+//
+//    //fack data
+//    func fackData() {
+//        for i in 0...10 {
+//            let chatItem = ChatItem(name: "name\(i)", time: "time\(i)", message: "message\(i)", avatarName: "wait", unreadCount: i)
+//            chatItems.append(chatItem)
+//        }
+//    }
+    var chatItems = [ChatItem]()
+    var buyerID: String?
+    var sellerID: String?
+    var chatRoomID: String?
+    let firestore = Firestore.firestore()
+    func fetchChatRooms() {
+           let chatRoomsCollection = firestore.collection("chatRooms")
+           
+           // Fetch chat room documents for buyers
+           chatRoomsCollection.whereField("buyerID", isEqualTo: buyerID).getDocuments { [weak self] (querySnapshot, error) in
+               self?.processFetchedChatRooms(querySnapshot, error)
+           }
+
+           // Fetch chat room documents for sellers
+           chatRoomsCollection.whereField("sellerID", isEqualTo: sellerID).getDocuments { [weak self] (querySnapshot, error) in
+               self?.processFetchedChatRooms(querySnapshot, error)
+           }
+       }
+
+       func processFetchedChatRooms(_ querySnapshot: QuerySnapshot?, _ error: Error?) {
+           guard let snapshot = querySnapshot, error == nil else {
+               print("Error fetching chat rooms: \(error?.localizedDescription ?? "")")
+               return
+           }
+
+           for document in snapshot.documents {
+               let chatRoom = document.data()
+               let name = chatRoom["name"] as? String ?? ""
+               let time = chatRoom["time"] as? String ?? ""
+               let message = chatRoom["message"] as? String ?? ""
+               let avatarName = chatRoom["avatarName"] as? String ?? ""
+               let unreadCount = chatRoom["unreadCount"] as? Int ?? 0
+               let buyerID = chatRoom["buyerID"] as? String ?? ""
+               let sellerID = chatRoom["sellerID"] as? String ?? ""
+
+               let chatItem = ChatItem(name: name, time: time, message: message, avatarName: avatarName, unreadCount: unreadCount)
+               self.chatItems.append(chatItem)
+           }
+
+           // Reload table view data after fetching chat rooms
+           self.tableView.reloadData()
+       }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatItems.count
     }
@@ -41,9 +88,9 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
            return cell
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
-    }
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 150
+//    }
     let tableView = UITableView()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +99,8 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ChatListCell.self, forCellReuseIdentifier: "ChatListCell")
-        fackData()
+
+        fetchChatRooms()
         view.addSubview(tableView)
     }
 }

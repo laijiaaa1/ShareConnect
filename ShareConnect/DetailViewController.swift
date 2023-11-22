@@ -120,6 +120,8 @@ class DetailViewController: UIViewController {
             shareButton.heightAnchor.constraint(equalToConstant: 30),
             shareButton.widthAnchor.constraint(equalToConstant: 30)
         ])
+        shareButton.addTarget(self, action: #selector(share), for: .touchUpInside)
+        
         view.addSubview(availabilityView)
         availabilityView.backgroundColor = .white
         availabilityView.layer.cornerRadius = 10
@@ -225,6 +227,14 @@ class DetailViewController: UIViewController {
     }
     @objc func back() {
         navigationController?.popViewController(animated: true)
+    }
+    @objc func share(){
+        //share product details
+        guard let product = product else { return }
+        
+        let productDetail = "Product Name: \(product.name)\nPrice: \(product.price)\nDescription: \(product.description)"
+        let activityVC = UIActivityViewController(activityItems: [productDetail], applicationActivities: nil)
+        present(activityVC, animated: true, completion: nil)
     }
     func showDatePicker() {
         let minDate = DatePickerHelper.shared.dateFrom(day: 18, month: 08, year: 1990)!

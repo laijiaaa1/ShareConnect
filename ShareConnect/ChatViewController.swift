@@ -11,6 +11,7 @@ import FirebaseFirestore
 class ChatViewController: UIViewController {
     var cart: [Seller: [Product]]?
     var sellerID: String?
+    var buyerID: String?
     let tableView = UITableView()
     let messageTextField = UITextField()
     let sendButton = UIButton()
@@ -38,22 +39,22 @@ class ChatViewController: UIViewController {
         tableView.separatorStyle = .none
         if let sellerID = sellerID {
             createOrGetChatRoomDocument()
-//            startListeningForChatMessages()
         }
         if let cart = cart {
             convertCartToString(cart)
         }
-//        sendMessageToFirestore(cartString, isMe: false)
     }
     func createOrGetChatRoomDocument() {
-            guard let sellerID = sellerID else {
+            guard let buyerID = buyerID, let sellerID = sellerID else {
                 print("Seller ID is nil.")
                 return
             }
 
-            let chatRoomsCollection = firestore.collection("chatRooms")
+           
+        let chatRoomID = "\(buyerID)_\(sellerID)"
+               let chatRoomsCollection = firestore.collection("chatRooms")
 
-            chatRoomsCollection.document(sellerID).getDocument { [weak self] (documentSnapshot, error) in
+               chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
                 if let error = error {
                     print("Error getting chat room document: \(error.localizedDescription)")
                     return
@@ -61,13 +62,9 @@ class ChatViewController: UIViewController {
 
                 if let document = documentSnapshot, document.exists {
                     self?.chatRoomDocument = document.reference
-//                    self?.startListeningForChatMessages()
-//                    self?.sendMessageToFirestore(self!.cartString, isMe: false)
                 } else {
                     chatRoomsCollection.document(sellerID).setData(["createdAt": FieldValue.serverTimestamp()])
                     self?.chatRoomDocument = chatRoomsCollection.document(sellerID)
-//                    self?.startListeningForChatMessages()
-//                    self?.sendMessageToFirestore(self!.cartString, isMe: false)
                 }
                 self?.startListeningForChatMessages()
                 self?.sendMessageToFirestore(self!.cartString, isMe: false)
