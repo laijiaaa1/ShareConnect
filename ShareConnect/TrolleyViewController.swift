@@ -171,7 +171,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             checkoutVC.cart = self.cart
             checkoutVC.sellerID = sellerID
             checkoutVC.chatRoomID = chatRoomID
-            checkoutVC.createOrGetChatRoomDocument()
+//            checkoutVC.createOrGetChatRoomDocument()
 //            checkoutVC.startListeningForChatMessages()
             self.navigationController?.pushViewController(checkoutVC, animated: true)
         }

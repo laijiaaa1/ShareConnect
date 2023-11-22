@@ -61,14 +61,16 @@ class ChatViewController: UIViewController {
 
                 if let document = documentSnapshot, document.exists {
                     self?.chatRoomDocument = document.reference
-                    self?.startListeningForChatMessages()
-                    self?.sendMessageToFirestore(self!.cartString, isMe: false)
+//                    self?.startListeningForChatMessages()
+//                    self?.sendMessageToFirestore(self!.cartString, isMe: false)
                 } else {
                     chatRoomsCollection.document(sellerID).setData(["createdAt": FieldValue.serverTimestamp()])
                     self?.chatRoomDocument = chatRoomsCollection.document(sellerID)
-                    self?.startListeningForChatMessages()
+//                    self?.startListeningForChatMessages()
 //                    self?.sendMessageToFirestore(self!.cartString, isMe: false)
                 }
+                self?.startListeningForChatMessages()
+                self?.sendMessageToFirestore(self!.cartString, isMe: false)
             }
         }
 
