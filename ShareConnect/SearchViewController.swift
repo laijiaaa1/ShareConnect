@@ -46,11 +46,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         return collectionView
     }()
     override func viewWillAppear(_ animated: Bool) {
-        if usification[0] == "product" {
+//        if usification[0] == "product" {
+//            fetchRequestsForUser(type: .request)
+//        } else if usification[0] == "place" {
             fetchRequestsForUser(type: .request)
-        } else if usification[0] == "place" {
-            fetchRequestsForUser(type: .request)
-        }
+//        }
     }
     override func viewDidLoad() {
         view.backgroundColor = CustomColors.B1
@@ -71,17 +71,17 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     @objc func refresh() {
         let userID = Auth.auth().currentUser?.uid ?? ""
         if currentButtonType == .request {
-            if usification[0] == "product" {
+//            if usification[0] == "product" {
                 fetchRequestsForUser(type: .request)
-            } else if usification[0] == "place" {
-                fetchRequestsForUser(type: .request)
-            }
+//            } else if usification[0] == "place" {
+//                fetchRequestsForUser(type: .request)
+//            }
         } else if currentButtonType == .supply {
-            if usification[0] == "product" {
+//            if usification[0] == "product" {
                 fetchRequestsForUser(type: .supply)
-            } else if usification[0] == "place" {
-                fetchRequestsForUser(type: .supply)
-            }
+//            } else if usification[0] == "place" {
+//                fetchRequestsForUser(type: .supply)
+//            }
         }
         
         collectionView.reloadData()
@@ -158,17 +158,17 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     @objc func button1Action() {
         currentButtonType = .request
         lineView.center.x = button1.center.x
-        if usification[0] == "product" {
+//        if usification[0] == "product" {
             fetchRequestsForUser(type: .request)
-        }
+//        }
         collectionView.reloadData()
     }
     @objc func button2Action() {
         currentButtonType = .supply
         lineView.center.x = button2.center.x
-        if usification[0] == "place" {
-            fetchRequestsForUser(type: .request)
-        }
+//        if usification[0] == "place" {
+            fetchRequestsForUser(type: .supply)
+//        }
         collectionView.reloadData()
     }
     func setupUI() {
@@ -339,14 +339,14 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                             if product.itemType == type {
                                 print("Appending \(type): \(product)")
                                 if type == .request {
-                                    if product.sort == classification {
+//                                    if product.sort == classification {
                                         self.allRequests.append(product)
-                                    }
+//                                    }
                                     //                                    self.allRequests.append(product)
                                 } else if type == .supply {
-                                    if product.sort == classification {
+//                                    if product.sort == classification {
                                         self.allSupplies.append(product)
-                                    }
+//                                    }
                                     //                                    self.allSupplies.append(product)
                                 }
                             }
@@ -520,7 +520,7 @@ class ClassCollectionViewCell: UICollectionViewCell {
             print("Tapped Classification: \(classificationText)")
             
             if let delegate = delegate, let currentButtonType = currentButtonType {
-                delegate.didSelectClassification(_: classificationText, forType: currentButtonType)
+                delegate.didSelectClassification(classificationText, forType: currentButtonType)
 
             }
         }

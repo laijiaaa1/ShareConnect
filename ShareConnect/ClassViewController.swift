@@ -55,102 +55,110 @@ class ClassViewController: UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "SearchViewController") as! SearchViewController
 
-        fetchDataForSort(classification: "place", type: .request)
+//        fetchDataForSort(classification: "place", type: .request)
+//
+//        fetchDataForSort(classification: "place", type: .supply)
         navigationController?.pushViewController(vc, animated: true)
     }
 
     @objc func classProductButtonAction() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "SearchViewController") as! SearchViewController
-        fetchDataForSort(classification: "product", type: .request)
+//        fetchDataForSort(classification: "product", type: .request)
+//        
+//        fetchDataForSort(classification: "product", type: .supply)
 
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    func fetchDataForSort(classification: String, type: ProductType) {
-        let db = Firestore.firestore()
-        let productsCollection = db.collection("products")
-        productsCollection.getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error getting documents: \(error)")
-            } else {
-                if self.currentButtonType == .request {
-                    self.allRequests.removeAll()
-                } else if self.currentButtonType == .supply {
-                    self.allSupplies.removeAll()
-                }
-                for document in querySnapshot!.documents {
-                    let productData = document.data()
-                    if let productTypeRawValue = productData["type"] as? String,
-                       let productType = ProductType(rawValue: productTypeRawValue),
-                       let product = self.parseProductData(productData: productData) {
-                        if productType == type {
-                            if product.itemType == type {
-                                print("Appending \(type): \(product)")
-                                if type == .request {
-                                   if product.sort == classification {
-                                        self.allRequests.append(product)
-                                    }
-                                }
-                            }
-                        } else {
-                            print("Skipped product with unknown type: \(productType)")
-                        }
-                    } else {
-                        print("Error parsing product type")
-                    }
-                }
-                if type == .request {
-                    self.allRequests.sort(by: { $0.startTime < $1.startTime })
-                } else if type == .supply {
-                    self.allSupplies.sort(by: { $0.startTime < $1.startTime })
-                }
-                print("All requests: \(self.allRequests)")
-                print("All supplies: \(self.allSupplies)")
-            }
-        }
-    }
-
-    func parseProductData(productData: [String: Any]) -> Product? {
-        guard let product = productData["product"] as? [String: Any],
-              let productId = product["productId"] as? String,
-              let name = product["Name"] as? String,
-              let price = product["Price"] as? String,
-              let imageString = product["image"] as? String,
-              let startTimeString = product["Start Time"] as? String,
-              let startTime = product["Start Time"] as? String,
-              let endTimeString = product["End Time"] as? String,
-              let endTime = product["End Time"] as? String else {
-            print("Error: Missing required fields in product data")
-            return nil
-        }
-        let sellerData = product["seller"] as? [String: Any]
-        guard let sellerID = sellerData?["sellerID"] as? String,
-              let sellerName = sellerData?["sellerName"] as? String,
-              let itemType = productData["type"] as? String
-        else {
-            print("Error: Failed to parse seller or itemType")
-            return nil
-        }
-        let description = product["Description"] as? String ?? ""
-        let sort = product["Sort"] as? String ?? ""
-        let quantity = product["Quantity"] as? String ?? ""
-        let use = product["Use"] as? String ?? ""
-        let seller = Seller(sellerID: sellerID, sellerName: sellerName)
-        let newProduct = Product(
-            productId: productId,
-            name: name,
-            price: price,
-            startTime: startTime,
-            imageString: imageString,
-            description: description,
-            sort: sort,
-            quantity: quantity,
-            use: use,
-            endTime: endTime,
-            seller: seller,
-            itemType: ProductType(rawValue: itemType)!
-        )
-        return newProduct
-    }
+//    func fetchDataForSort(classification: String, type: ProductType) {
+//        let db = Firestore.firestore()
+//        let productsCollection = db.collection("products")
+//        productsCollection.getDocuments { (querySnapshot, error) in
+//            if let error = error {
+//                print("Error getting documents: \(error)")
+//            } else {
+//                if self.currentButtonType == .request {
+//                    self.allRequests.removeAll()
+//                } else if self.currentButtonType == .supply {
+//                    self.allSupplies.removeAll()
+//                }
+//                for document in querySnapshot!.documents {
+//                    let productData = document.data()
+//                    if let productTypeRawValue = productData["type"] as? String,
+//                       let productType = ProductType(rawValue: productTypeRawValue),
+//                       let product = self.parseProductData(productData: productData) {
+//                        if productType == type {
+//                            if product.itemType == type {
+//                                print("Appending \(type): \(product)")
+//                                if type == .request {
+//                                   if product.sort == classification {
+//                                        self.allRequests.append(product)
+//                                    }
+//                                } else if type == .supply {
+//                                    if product.sort == classification {
+//                                        self.allSupplies.append(product)
+//                                    }
+//                                }
+//                            }
+//                        } else {
+//                            print("Skipped product with unknown type: \(productType)")
+//                        }
+//                    } else {
+//                        print("Error parsing product type")
+//                    }
+//                }
+//                if type == .request {
+//                    self.allRequests.sort(by: { $0.startTime < $1.startTime })
+//                } else if type == .supply {
+//                    self.allSupplies.sort(by: { $0.startTime < $1.startTime })
+//                }
+//                print("All requests: \(self.allRequests)")
+//                print("All supplies: \(self.allSupplies)")
+//            }
+//        }
+//    }
+//
+//    func parseProductData(productData: [String: Any]) -> Product? {
+//        guard let product = productData["product"] as? [String: Any],
+//              let productId = product["productId"] as? String,
+//              let name = product["Name"] as? String,
+//              let price = product["Price"] as? String,
+//              let imageString = product["image"] as? String,
+//              let startTimeString = product["Start Time"] as? String,
+//              let startTime = product["Start Time"] as? String,
+//              let endTimeString = product["End Time"] as? String,
+//              let endTime = product["End Time"] as? String else {
+//            print("Error: Missing required fields in product data")
+//            return nil
+//        }
+//        let sellerData = product["seller"] as? [String: Any]
+//        guard let sellerID = sellerData?["sellerID"] as? String,
+//              let sellerName = sellerData?["sellerName"] as? String,
+//              let itemType = productData["type"] as? String
+//        else {
+//            print("Error: Failed to parse seller or itemType")
+//            return nil
+//        }
+//        let description = product["Description"] as? String ?? ""
+//        let sort = product["Sort"] as? String ?? ""
+//        let quantity = product["Quantity"] as? String ?? ""
+//        let use = product["Use"] as? String ?? ""
+//        let seller = Seller(sellerID: sellerID, sellerName: sellerName)
+//        let newProduct = Product(
+//            productId: productId,
+//            name: name,
+//            price: price,
+//            startTime: startTime,
+//            imageString: imageString,
+//            description: description,
+//            sort: sort,
+//            quantity: quantity,
+//            use: use,
+//            endTime: endTime,
+//            seller: seller,
+//            itemType: ProductType(rawValue: itemType)!
+//        )
+//        return newProduct
+//    }
 }
