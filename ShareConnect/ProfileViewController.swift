@@ -146,21 +146,29 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         if let currentUser = Auth.auth().currentUser {
             let userId = currentUser.uid
         }
+        
+        let recoderButton = UIButton()
+        view.addSubview(recoderButton)
+        recoderButton.setImage(UIImage(named: "icons8-menu-120(@2×)"), for: .normal)
+        recoderButton.addTarget(self, action: #selector(recoderButtonTapped), for: .touchUpInside)
+        recoderButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            recoderButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            recoderButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            recoderButton.heightAnchor.constraint(equalToConstant: 30),
+            recoderButton.widthAnchor.constraint(equalToConstant: 30)
+        ])
+   
     }
     func fetchRequests(userId: String, dataType: String) {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
-        
         var query: Query
-        
         if dataType == "request" {
-            // Fetch request data
             query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId)
         } else if dataType == "supply" {
-            // Fetch supply data (modify this part based on your actual data structure)
             query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId)
         } else {
-            // Handle other types if needed
             return
         }
 
@@ -180,6 +188,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.groupTableView.reloadData()
             }
         }
+    }
+    @objc func recoderButtonTapped(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "RecoderViewController") as! RecoderViewController
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func parseRequestData(_ data: [String: Any]) -> Request? {

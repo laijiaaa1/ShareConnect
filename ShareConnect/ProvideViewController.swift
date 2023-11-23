@@ -235,8 +235,8 @@ class ProvideViewController: SelectedViewController {
             let vc = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
             vc.chatRoomDocument = documentReference
             vc.chatRoomID = documentReference.documentID
-            vc.buyerID = Auth.auth().currentUser!.uid
-            vc.sellerID = sellerID
+            vc.buyerID = sellerID
+            vc.sellerID = Auth.auth().currentUser!.uid
             vc.cart = [seller: productArray]
 
             self?.navigationController?.pushViewController(vc, animated: true)

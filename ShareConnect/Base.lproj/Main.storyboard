@@ -379,6 +379,21 @@
             </objects>
             <point key="canvasLocation" x="2220" y="738.62559241706163"/>
         </scene>
+        <!--Recoder View Controller-->
+        <scene sceneID="GL6-Dn-ceT">
+            <objects>
+                <viewController storyboardIdentifier="RecoderViewController" id="pcP-hR-ksd" customClass="RecoderViewController" customModule="ShareConnect" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Z3q-cS-3RY">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="T7C-TJ-blL"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Izf-3u-3RE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-550" y="747"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="rlx-YW-OKz">
             <objects>
