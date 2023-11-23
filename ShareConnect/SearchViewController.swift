@@ -26,6 +26,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     let button2 = UIButton()
     let usification = ["product", "place"]
     var currentButtonType: ProductType = .request
+    
     let classCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -87,6 +88,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.reloadData()
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedIndexPath = indexPath
         if collectionView == classCollectionView {
             let cell = collectionView.cellForItem(at: indexPath) as? ClassCollectionViewCell
             cell?.updateUI()
@@ -137,14 +139,54 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         if collectionView == collectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
+
             if currentButtonType == .request {
                 cell.product = allRequests[indexPath.item]
+                cell.button.setTitle("Provide", for: .normal)
+                cell.button.addTarget(self, action: #selector(provideButtonAction), for: .touchUpInside)
             } else if currentButtonType == .supply {
                 cell.product = allSupplies[indexPath.item]
+                cell.button.setTitle("+", for: .normal)
+                cell.button.addTarget(self, action: #selector(addButtonAction), for: .touchUpInside)
             }
             return cell
         }
         return UICollectionViewCell()
+    }
+    @objc func provideButtonAction() {
+        // Check if a cell is selected
+        guard let indexPath = selectedIndexPath else {
+            print("No item selected.")
+            return
+        }
+
+        // Access the selected item from the appropriate array (allRequests or allSupplies)
+        let selectedProduct: Product
+        if currentButtonType == .request {
+            selectedProduct = allRequests[indexPath.item]
+        } else if currentButtonType == .supply {
+            selectedProduct = allSupplies[indexPath.item]
+        } else {
+            print("Unknown product type.")
+            return
+        }
+
+        // Now, you can pass the selected product to the ProvideViewController
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "ProvideViewController") as! ProvideViewController
+
+        // Pass the selected product data to the next view controller
+        vc.product = selectedProduct
+
+        // Navigate to the next view controller
+        self.navigationController?.pushViewController(vc, animated: false)
+    }
+
+    @objc func addButtonAction(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "TrolleyViewController") as! TrolleyViewController
+//        CartManager.shared.addToCart(product: allSupplies[0])
+        self.navigationController?.pushViewController(vc, animated: false)
     }
     func didSelectClassification(_ classification: String, forType type: ProductType) {
         fetchDataForSort(classification: classification, type: type)
@@ -432,7 +474,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
             dateLabel.heightAnchor.constraint(equalToConstant: 15)
         ])
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Provide", for: .normal)
+        
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         button.backgroundColor = .white

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3401F6832B0F17050092E564 /* ProvideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F6822B0F17050092E564 /* ProvideViewController.swift */; };
+		3401F6852B0F1C6A0092E564 /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F6842B0F1C6A0092E564 /* ChatManager.swift */; };
 		3410D9662B07125600D32744 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9652B07125600D32744 /* GroupViewController.swift */; };
 		3410D9682B07129800D32744 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9672B07129800D32744 /* DetailViewController.swift */; };
 		3410D96A2B07665700D32744 /* SelectedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9692B07665700D32744 /* SelectedViewController.swift */; };
@@ -39,6 +41,8 @@
 
 /* Begin PBXFileReference section */
 		19192464EEB9831E46A38D35 /* Pods_ShareConnect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShareConnect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3401F6822B0F17050092E564 /* ProvideViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvideViewController.swift; sourceTree = "<group>"; };
+		3401F6842B0F1C6A0092E564 /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
 		3410D9652B07125600D32744 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
 		3410D9672B07129800D32744 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		3410D9692B07665700D32744 /* SelectedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +93,7 @@
 			children = (
 				3410D9762B08B3C800D32744 /* FirebaseManager.swift */,
 				3410D9842B0B5EAE00D32744 /* FirestoreService.swift */,
+				3401F6842B0F1C6A0092E564 /* ChatManager.swift */,
 				3410D9782B08ECBB00D32744 /* CartManager.swift */,
 				3410D97E2B09C05600D32744 /* WebSocketManager.swift */,
 				3410D9702B0888E800D32744 /* Data.swift */,
@@ -123,6 +128,7 @@
 				341E9B8D2B03629800997FE9 /* SceneDelegate.swift */,
 				341E9B8F2B03629800997FE9 /* HomePageViewController.swift */,
 				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
+				3401F6822B0F17050092E564 /* ProvideViewController.swift */,
 				346DE7C62B05AB5C008D411A /* CreateViewController.swift */,
 				34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */,
 				3410D9652B07125600D32744 /* GroupViewController.swift */,
@@ -296,12 +302,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3401F6852B0F1C6A0092E564 /* ChatManager.swift in Sources */,
 				3410D9792B08ECBB00D32744 /* CartManager.swift in Sources */,
 				3410D9682B07129800D32744 /* DetailViewController.swift in Sources */,
 				346DE7CE2B063616008D411A /* LoginViewController.swift in Sources */,
 				3410D96C2B08747200D32744 /* TrolleyViewController.swift in Sources */,
 				346DE7CB2B05FE48008D411A /* SearchViewController.swift in Sources */,
 				346DE7C72B05AB5C008D411A /* CreateViewController.swift in Sources */,
+				3401F6832B0F17050092E564 /* ProvideViewController.swift in Sources */,
 				34408F1C2B0EE73B005F8E03 /* ClassViewController.swift in Sources */,
 				3410D97B2B0916C700D32744 /* ProfileViewController.swift in Sources */,
 				3410D9852B0B5EAE00D32744 /* FirestoreService.swift in Sources */,

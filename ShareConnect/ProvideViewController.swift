@@ -1,35 +1,25 @@
 //
-//  SelectedViewController.swift
+//  ProvideViewController.swift
 //  ShareConnect
 //
-//  Created by laijiaaa1 on 2023/11/17.
+//  Created by laijiaaa1 on 2023/11/23.
 //
 
 import UIKit
-import Kingfisher
+import FirebaseAuth
+import FirebaseFirestore
 
-class SelectedViewController: UIViewController {
-    var product: Product?
-    var cart: [Seller: [Product]] = [:]
-    let backImage = UIImageView()
-    let backView = UIView()
-    let infoView = UIView()
-    let nameLabel = UILabel()
-    let priceView = UIImageView()
-    let priceLabel = UILabel()
-    let availabilityView = UIView()
-    let availability = UILabel()
-    let itemLabel = UILabel()
-    let itemView = UIView()
-    let itemInfo = UILabel()
-    let quantity = UILabel()
-    let numberLabel = UILabel()
-    let addButton = UIButton()
-    let minusButton = UIButton()
-    let trolleyButton = UIButton()
-    let closeButton = UIButton()
+class ProvideViewController: SelectedViewController {
+
+    private var chatManager = ChatManager.shared
+    private var chatRoomListener: ListenerRegistration?
+
+    var firestore: Firestore!
+    var chatRoomDocument: DocumentReference!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        firestore = Firestore.firestore()
         setup()
         if let product = product, let imageURL = URL(string: product.imageString) {
             backImage.kf.setImage(with: imageURL)
@@ -40,31 +30,9 @@ class SelectedViewController: UIViewController {
             print("Failed to load image: product or imageString is nil or invalid")
         }
     }
-    @objc func closeButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-    @objc func trolleyButtonTapped() {
-        guard let product = product else {
-            print("Product is nil")
-            return
-        }
-        let cart: [Seller: [Product]] = [product.seller: [product]]
-        saveCartToUserDefaults(cart)
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    func saveCartToUserDefaults(_ cart: [Seller: [Product]]) {
-        // Convert the cart to a format that can be saved in UserDefaults
-        let cartData = cart.map { (seller, products) in
-            let encodedSeller = try? JSONEncoder().encode(seller)
-            let encodedProducts = try? JSONEncoder().encode(products)
-            return ["seller": encodedSeller, "products": encodedProducts]
-        }
-        // Save the cart data to UserDefaults
-        UserDefaults.standard.set(cartData, forKey: "carts")
-    }
-    func setup() {
+
+
+    override func setup() {
         //        if let request = request, let imageURL = URL(string: request.imageString) {
         //            backImage.kf.setImage(with: imageURL)
         backImage.frame = CGRect(x: 0, y: 0, width: view.frame.width , height: view.frame.height / 2)
@@ -208,7 +176,7 @@ class SelectedViewController: UIViewController {
             minusButton.widthAnchor.constraint(equalToConstant: 30),
             minusButton.heightAnchor.constraint(equalToConstant: 30)
         ])
-        trolleyButton.setTitle("Add to trolley", for: .normal)
+        trolleyButton.setTitle("Chat with the requester", for: .normal)
         trolleyButton.setTitleColor(.white, for: .normal)
         trolleyButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         trolleyButton.backgroundColor = .black
@@ -238,5 +206,38 @@ class SelectedViewController: UIViewController {
             closeButton.widthAnchor.constraint(equalToConstant: 60)
         ])
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+    }
+    @objc override func trolleyButtonTapped() {
+        guard let seller = product?.seller, let product = product else {
+            print("Seller or product is nil.")
+            return
+        }
+
+        let sellerID = seller.sellerID
+        let productArray = [product]
+
+        chatManager.createOrGetChatRoomDocument(buyerID: Auth.auth().currentUser!.uid, sellerID: sellerID) { [weak self] (documentReference, error) in
+            if let error = error {
+                print("Error creating chat room document: \(error.localizedDescription)")
+                return
+            }
+
+            guard let documentReference = documentReference else {
+                print("Document reference is nil.")
+                return
+            }
+
+            self?.chatRoomDocument = documentReference
+
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
+            vc.chatRoomDocument = documentReference
+            vc.chatRoomID = documentReference.documentID
+            vc.buyerID = Auth.auth().currentUser!.uid
+            vc.sellerID = sellerID
+            vc.cart = [seller: productArray]
+
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }
