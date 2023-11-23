@@ -20,7 +20,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     var selectedSellerID: String?
     var cart: [Seller: [Product]] = [:] {
         didSet {
-            saveCartToUserDefaults()
+            saveCartToFirestore(cart)
             tableView.reloadData()
         }
     }
@@ -62,17 +62,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             checkoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        if let savedCartData = UserDefaults.standard.array(forKey: "carts") as? [[String: Data]] {
-            cart = savedCartData.reduce(into: [Seller: [Product]]()) { result, dict in
-                guard let encodedSeller = dict["seller"],
-                      let encodedProducts = dict["products"],
-                      let seller = try? JSONDecoder().decode(Seller.self, from: encodedSeller),
-                      let products = try? JSONDecoder().decode([Product].self, from: encodedProducts) else {
-                    return
-                }
-                result[seller] = products
-            }
-        }
+        loadCartFromFirestore()
     }
     @objc func refresh() {
         tableView.reloadData()
@@ -87,10 +77,52 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             cart[seller] = [product]
         }
     }
-    func saveCartToUserDefaults() {
-        let encodedCart = try? JSONEncoder().encode(cart)
-        UserDefaults.standard.set(encodedCart, forKey: "cart")
+
+    func saveCartToFirestore(_ cart: [Seller: [Product]]) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let cartCollection = Firestore.firestore().collection("carts")
+        let userCartDocument = cartCollection.document(currentUserID)
+
+        let cartData = cart.map { (seller, products) in
+            let encodedProducts = try? JSONEncoder().encode(products)
+            return ["sellerID": seller.sellerID, "products": encodedProducts]
+        }
+        userCartDocument.setData(["buyerID": currentUserID, "cart": cartData])
     }
+
+    func loadCartFromFirestore() {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
+
+        let cartCollection = Firestore.firestore().collection("carts")
+        let userCartDocument = cartCollection.document(currentUserID)
+
+        userCartDocument.getDocument { [weak self] (document, error) in
+            guard let self = self, let document = document, document.exists,
+                  let buyerID = document.data()?["buyerID"] as? String,
+                  let cartData = document.data()?["cart"] as? [[String: Any]] else {
+                return
+            }
+            let cart = cartData.reduce(into: [Seller: [Product]]()) { result, dict in
+                guard let sellerID = dict["sellerID"] as? String,
+                      let encodedProducts = dict["products"] as? Data,
+                      let products = try? JSONDecoder().decode([Product].self, from: encodedProducts) else {
+                    return
+                }
+
+                let seller = Seller(sellerID: sellerID, sellerName: "Seller")
+                result[seller] = products
+            }
+
+            self.cart = cart
+
+            self.tableView.reloadData()
+        }
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
         let seller = Array(cart.keys)[indexPath.section]

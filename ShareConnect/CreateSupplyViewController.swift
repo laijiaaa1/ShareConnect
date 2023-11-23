@@ -59,7 +59,7 @@ class CreateSupplyViewController: CreateRequestViewController {
                                 imageString: productData["image"] as? String ?? "",
                                 description: productData["description"] as? String ?? "",
                                 sort: productData["sort"] as? String ?? "",
-                                quantity: productData["quantity"] as? String ?? "",
+                                quantity: productData["quantity"] as? Int ?? 1,
                                 use: productData["use"] as? String ?? "",
                                 endTime: productData["endTime"] as? String ?? "",
                                 seller: Seller(

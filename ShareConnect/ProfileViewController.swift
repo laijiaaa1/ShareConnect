@@ -230,7 +230,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         let description = productData["Description"] as? String ?? ""
         let sort = productData["Sort"] as? String ?? ""
-        let quantity = productData["Quantity"] as? String ?? ""
+        let quantity = productData["Quantity"] as? Int ?? 1
         let use = productData["Use"] as? String ?? ""
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
         let newProduct = Product(

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Product: Codable {
+struct Product: Codable, Equatable {
     var productId: String
     var name: String
     var price: String
@@ -15,7 +15,7 @@ struct Product: Codable {
     var imageString: String
     var description: String
     var sort: String
-    var quantity: String
+    var quantity: Int
     var use: String
     var endTime: String
     var seller: Seller
@@ -24,8 +24,11 @@ struct Product: Codable {
     enum CodingKeys: String, CodingKey {
         case productId, name, price, startTime, imageString, description, sort, quantity, use, endTime, seller, itemType
     }
+    static func == (lhs: Product, rhs: Product) -> Bool {
+           return lhs.productId == rhs.productId
+       }
     
-    init(productId: String, name: String, price: String, startTime: String, imageString: String, description: String, sort: String, quantity: String, use: String, endTime: String, seller: Seller, itemType: ProductType) {
+    init(productId: String, name: String, price: String, startTime: String, imageString: String, description: String, sort: String, quantity: Int, use: String, endTime: String, seller: Seller, itemType: ProductType) {
         self.productId = productId
         self.name = name
         self.price = price
@@ -49,7 +52,7 @@ struct Product: Codable {
         imageString = try container.decode(String.self, forKey: .imageString)
         description = try container.decode(String.self, forKey: .description)
         sort = try container.decode(String.self, forKey: .sort)
-        quantity = try container.decode(String.self, forKey: .quantity)
+        quantity = try container.decode(Int.self, forKey: .quantity)
         use = try container.decode(String.self, forKey: .use)
         endTime = try container.decode(String.self, forKey: .endTime)
         seller = try container.decode(Seller.self, forKey: .seller)

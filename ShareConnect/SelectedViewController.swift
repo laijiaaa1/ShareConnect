@@ -7,6 +7,10 @@
 
 import UIKit
 import Kingfisher
+import Firebase
+import FirebaseAuth
+import FirebaseStorage
+import FirebaseFirestore
 
 class SelectedViewController: UIViewController {
     var product: Product?
@@ -49,21 +53,31 @@ class SelectedViewController: UIViewController {
             return
         }
         let cart: [Seller: [Product]] = [product.seller: [product]]
-        saveCartToUserDefaults(cart)
+        saveCartToFirestore(cart)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-    func saveCartToUserDefaults(_ cart: [Seller: [Product]]) {
-        // Convert the cart to a format that can be saved in UserDefaults
-        let cartData = cart.map { (seller, products) in
-            let encodedSeller = try? JSONEncoder().encode(seller)
-            let encodedProducts = try? JSONEncoder().encode(products)
-            return ["seller": encodedSeller, "products": encodedProducts]
+    func saveCartToFirestore(_ cart: [Seller: [Product]]) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
         }
-        // Save the cart data to UserDefaults
-        UserDefaults.standard.set(cartData, forKey: "carts")
+
+        let cartCollection = Firestore.firestore().collection("carts")
+
+        // 使用买家的 ID 作为文档 ID
+        let userCartDocument = cartCollection.document(currentUserID)
+
+        // 将购物车数据转换为包含 "sellerID" 和 "products" 的字典数组
+        let cartData = cart.map { (seller, products) in
+            let encodedProducts = try? JSONEncoder().encode(products)
+            return ["sellerID": seller.sellerID, "products": encodedProducts]
+        }
+
+        // 使用 setDocument 将新的购物车数据设置到文档中
+        userCartDocument.setData(["buyerID": currentUserID, "cart": cartData])
     }
+
     func setup() {
         //        if let request = request, let imageURL = URL(string: request.imageString) {
         //            backImage.kf.setImage(with: imageURL)

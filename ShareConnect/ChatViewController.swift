@@ -160,7 +160,7 @@ class ChatViewController: UIViewController {
             
             for product in products {
                 cartString.append(" - Product: \(product.name)\n")
-                cartString.append("   Quantity: \(product.quantity ?? "1")\n")
+                cartString.append("   Quantity: \(product.quantity ?? 1)\n")
                 cartString.append("   Price: \(product.price)\n")
             }
             cartString.append("\n")

@@ -158,10 +158,10 @@
             filePath = "ShareConnect/TrolleyViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
+            startingLineNumber = "217"
+            endingLineNumber = "217"
             landmarkName = "createChatRoom(with:completion:)"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -321,22 +321,6 @@
             startingLineNumber = "290"
             endingLineNumber = "290"
             landmarkName = "fetchRequestsForUser(type:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2441FE95-F4B1-46FD-993E-7C4D8703B0F6"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ShareConnect/SearchViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "386"
-            endingLineNumber = "386"
-            landmarkName = "fetchDataForSort(classification:type:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

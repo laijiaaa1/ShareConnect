@@ -343,7 +343,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         let description = product["Description"] as? String ?? ""
         let sort = product["Sort"] as? String ?? ""
-        let quantity = product["Quantity"] as? String ?? ""
+        let quantity = product["Quantity"] as? Int ?? 0
         let use = product["Use"] as? String ?? ""
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
         let newProduct = Product(
@@ -381,15 +381,13 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                             if product.itemType == type {
                                 print("Appending \(type): \(product)")
                                 if type == .request {
-//                                    if product.sort == classification {
+                                    if product.sort == classification {
                                         self.allRequests.append(product)
-//                                    }
-                                    //                                    self.allRequests.append(product)
+                                    }
                                 } else if type == .supply {
-//                                    if product.sort == classification {
+                                    if product.sort == classification {
                                         self.allSupplies.append(product)
-//                                    }
-                                    //                                    self.allSupplies.append(product)
+                                    }
                                 }
                             }
                         } else {

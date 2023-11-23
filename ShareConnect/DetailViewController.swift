@@ -308,7 +308,7 @@ class DetailViewController: UIViewController {
                 sort.heightAnchor.constraint(equalToConstant: 20)
             ])
             descriptionView.addSubview(quantity)
-            quantity.text = product?.quantity
+            quantity.text = product?.quantity.codingKey.stringValue
             quantity.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 quantity.topAnchor.constraint(equalTo: sort.bottomAnchor, constant: 10),
