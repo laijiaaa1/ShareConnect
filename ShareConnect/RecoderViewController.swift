@@ -6,21 +6,48 @@
 //
 
 import UIKit
+import Kingfisher
+import Firebase
+import FirebaseAuth
+import FirebaseStorage
+import FirebaseFirestore
+
+// Update your existing Order struct to OrderHistory
+struct Order {
+    // Properties based on your order history data
+    let orderID: String
+    let buyerID: String
+    let sellerID: String
+    let image: String
+    let createdAt: Date
+    let cart: [[String: Any]]
+    
+    init?(document: QueryDocumentSnapshot) {
+        guard let data = document.data() as? [String: Any],
+              let orderID = document.documentID as? String,
+              let buyerID = data["buyerID"] as? String,
+              let sellerID = data["sellerID"] as? String,
+              let image = data["image"] as? String,
+              let createdAtTimestamp = data["createdAt"] as? Timestamp,
+              let cart = data["cart"] as? [[String: Any]]
+        else {
+            return nil
+        }
+        
+        self.orderID = orderID
+        self.buyerID = buyerID
+        self.sellerID = sellerID
+        self.image = image
+        self.createdAt = createdAtTimestamp.dateValue()
+        self.cart = cart
+    }
+}
+
 
 class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! RecoderTableViewCell
-            return cell
-    }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
-    }
 
-    
+    var orderID: [Order] = []
+ 
     let rentalButton = UIButton()
     let loanButton = UIButton()
     let stackView = UIStackView()
@@ -64,10 +91,57 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.backgroundColor = CustomColors.B1
         tableView.separatorStyle = .none
         
+        fetchOrdersFromFirestore()
+        
     }
+    func fetchOrdersFromFirestore() {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
+
+        let ordersCollection = Firestore.firestore().collection("orders")
+
+        // Assuming you have a field in the order documents that specifies the buyer ID
+        ordersCollection.whereField("buyerID", isEqualTo: currentUserID).getDocuments { [weak self] (querySnapshot, error) in
+            guard let self = self, let querySnapshot = querySnapshot else {
+                return
+            }
+
+            if let error = error {
+                print("Error fetching orders: \(error.localizedDescription)")
+                return
+            }
+
+            self.orderID = querySnapshot.documents.compactMap { document in
+                return Order(document: document)
+            }
+            self.tableView.reloadData()
+        }
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return orderID.count
+        }
+
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! RecoderTableViewCell
+            cell.order = orderID[indexPath.row]
+            return cell
+        }
+
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return 150
+        }
 }
 
 class RecoderTableViewCell: UITableViewCell{
+    
+    var order: Order? {
+           didSet {
+               updateUI()
+           }
+       }
+    
     let nameLabel = UILabel()
     let productImageView = UIImageView()
     let returnButton = UIButton()
@@ -125,6 +199,12 @@ class RecoderTableViewCell: UITableViewCell{
         ])
         
     }
+    func updateUI() {
+            guard let order = order else { return }
+        nameLabel.text = order.orderID
+        productImageView.kf.setImage(with: URL(string: order.image))
+        }
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

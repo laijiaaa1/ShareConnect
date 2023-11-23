@@ -219,3 +219,4 @@ enum SupplyStatus: String, Codable {
         }
     }
 }
+

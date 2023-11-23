@@ -24,6 +24,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             tableView.reloadData()
         }
     }
+    var orderIDs: [Order] = []
     let tableView = UITableView()
     let refreshControl = UIRefreshControl()
     var chatRoomID: String!
@@ -196,22 +197,63 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             return
         }
 
-        createChatRoom(with: sellerID) { [weak self] chatRoomID in
+        createOrderRecord { [weak self] orderID in
             guard let self = self else { return }
+            
+            let orderConfirmationVC = RecoderViewController()
+            orderConfirmationVC.orderID = self.orderIDs
+            self.navigationController?.pushViewController(orderConfirmationVC, animated: true)
 
-            let checkoutVC = ChatViewController()
-            checkoutVC.cart = self.cart
-            checkoutVC.sellerID = sellerID
-            checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
-            checkoutVC.chatRoomID = chatRoomID
-            
-//            let checklistVC = ChatListViewController()
-//            checklistVC.sellerID = sellerID
-//            checklistVC.buyerID = Auth.auth().currentUser?.uid ?? ""
-//            checklistVC.chatRoomID = chatRoomID
-            
-            self.navigationController?.pushViewController(checkoutVC, animated: true)
+            self.clearShoppingCart()
         }
+    }
+    func createOrderRecord(completion: @escaping (String) -> Void) {
+        guard let currentUserID = Auth.auth().currentUser?.uid, let sellerID = selectedSellerID else {
+            print("User ID or Seller ID is nil.")
+            return
+        }
+
+        let ordersCollection = Firestore.firestore().collection("orders")
+
+        var newOrderRef: DocumentReference?
+
+        newOrderRef = ordersCollection.addDocument(data: [
+            "buyerID": currentUserID,
+            "sellerID": sellerID,
+            "image": cart.first.map { $0.value.first?.imageString },
+            "createdAt": FieldValue.serverTimestamp(),
+            "cart": encodeCart(),
+        ]) { error in
+            if let error = error {
+                print("Error creating order record: \(error.localizedDescription)")
+                return
+            }
+            completion(newOrderRef?.documentID ?? "")
+        }
+
+        if let newOrderRef = newOrderRef {
+            let messagesCollection = newOrderRef.collection("messages")
+            let initialMessage = "Order placed!"
+            messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
+        }
+    }
+
+
+    func clearShoppingCart() {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
+
+        let cartCollection = Firestore.firestore().collection("carts")
+        let userCartDocument = cartCollection.document(currentUserID)
+
+        userCartDocument.delete { error in
+            if let error = error {
+                print("Error clearing shopping cart: \(error.localizedDescription)")
+            }
+        }
+        cart = [:]
+        tableView.reloadData()
     }
 
     func createChatRoom(with sellerID: String?, completion: @escaping (String) -> Void) {
