@@ -24,7 +24,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     let lineView = UIView()
     let button1 = UIButton()
     let button2 = UIButton()
-    
+    let usification = ["product", "place"]
     var currentButtonType: ProductType = .request
     let classCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -46,7 +46,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         return collectionView
     }()
     override func viewWillAppear(_ animated: Bool) {
-        fetchRequestsForUser(type: .request)
+        if usification[0] == "product" {
+            fetchRequestsForUser(type: .request)
+        } else if usification[0] == "place" {
+            fetchRequestsForUser(type: .request)
+        }
     }
     override func viewDidLoad() {
         view.backgroundColor = CustomColors.B1
@@ -67,9 +71,17 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     @objc func refresh() {
         let userID = Auth.auth().currentUser?.uid ?? ""
         if currentButtonType == .request {
-            fetchRequestsForUser(type: currentButtonType)
+            if usification[0] == "product" {
+                fetchRequestsForUser(type: .request)
+            } else if usification[0] == "place" {
+                fetchRequestsForUser(type: .request)
+            }
         } else if currentButtonType == .supply {
-            fetchRequestsForUser(type: currentButtonType)
+            if usification[0] == "product" {
+                fetchRequestsForUser(type: .supply)
+            } else if usification[0] == "place" {
+                fetchRequestsForUser(type: .supply)
+            }
         }
         
         collectionView.reloadData()
@@ -146,13 +158,17 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     @objc func button1Action() {
         currentButtonType = .request
         lineView.center.x = button1.center.x
-        fetchRequestsForUser(type: .request)
+        if usification[0] == "product" {
+            fetchRequestsForUser(type: .request)
+        }
         collectionView.reloadData()
     }
     @objc func button2Action() {
         currentButtonType = .supply
         lineView.center.x = button2.center.x
-        fetchRequestsForUser(type: .supply)
+        if usification[0] == "place" {
+            fetchRequestsForUser(type: .request)
+        }
         collectionView.reloadData()
     }
     func setupUI() {
@@ -309,9 +325,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
         productsCollection.getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error getting documents: \(error)")
-            } else {
                 if self.currentButtonType == .request {
                     self.allRequests.removeAll()
                 } else if self.currentButtonType == .supply {
@@ -356,7 +369,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             }
         }
     }
-}
+
 class SearchCollectionViewCell: UICollectionViewCell {
     let underView = UIView()
     let imageView = UIImageView()
@@ -507,7 +520,8 @@ class ClassCollectionViewCell: UICollectionViewCell {
             print("Tapped Classification: \(classificationText)")
             
             if let delegate = delegate, let currentButtonType = currentButtonType {
-                delegate.didSelectClassification(classificationText, forType: currentButtonType)
+                delegate.didSelectClassification(_: classificationText, forType: currentButtonType)
+
             }
         }
     }
