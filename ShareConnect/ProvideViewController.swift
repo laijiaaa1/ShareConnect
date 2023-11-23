@@ -16,7 +16,9 @@ class ProvideViewController: SelectedViewController {
 
     var firestore: Firestore!
     var chatRoomDocument: DocumentReference!
-
+    override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         firestore = Firestore.firestore()

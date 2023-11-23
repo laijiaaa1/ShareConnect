@@ -35,6 +35,7 @@ class ChatViewController: UIViewController {
         super.viewDidLoad()
         firestore = Firestore.firestore()
         navigationItem.title = "CHATROOM"
+        navigationController?.navigationBar.isHidden = false
         setupUI()
         tableView.separatorStyle = .none
         if let sellerID = sellerID {
