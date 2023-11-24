@@ -13,18 +13,15 @@ import FirebaseFirestore
 import Kingfisher
 
 class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
     var product: Product?
-    
     private var chatManager = ChatManager.shared
-    
     var firestore: Firestore!
     var chatRoomDocument: DocumentReference!
     let tableView = UITableView()
     var products: [Product] = []
     var supplies: [Supply] = []
     let refreshControl = UIRefreshControl()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "My Supply"
@@ -33,7 +30,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         tableView.dataSource = self
         refreshControl.addTarget(self, action: #selector(handleUIRefresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
-    
         view.backgroundColor = CustomColors.B1
         tableView.register(SupplyTableViewCell.self, forCellReuseIdentifier: "SupplyTableViewCell")
         fetchRequests(userId: Auth.auth().currentUser!.uid, dataType: "supply")
@@ -44,7 +40,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.heightAnchor.constraint(equalToConstant: 600),
         ])
-        
         let createNewButton = UIButton()
         createNewButton.setTitle("Create New", for: .normal)
         createNewButton.backgroundColor = .black
@@ -65,7 +60,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
     @objc private func handleUIRefresh() {
         tableView.reloadData()
         refreshControl.endRefreshing()
-       }
+    }
     @objc func createNewButtonTapped(){
         let vc = CreateSupplyViewController()
         navigationController?.pushViewController(vc, animated: true)
@@ -78,49 +73,42 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SupplyTableViewCell", for: indexPath) as! SupplyTableViewCell
-        
-        
         guard indexPath.row < products.count else {
             cell.requestNameLabel.text = "N/A"
             cell.requestDescriptionLabel.text = "N/A"
             cell.requestDateLabel.text = "N/A"
             return cell
         }
-        
         let product = products[indexPath.row]
         cell.requestNameLabel.text = product.name
         cell.requestDescriptionLabel.text = product.sort
         cell.requestDateLabel.text = product.startTime
         let imageURL = URL(string: product.imageString)
         cell.requestImageView.kf.setImage(with: imageURL)
-        
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-           
         guard indexPath.row < products.count else {
             print("Invalid indexPath.")
             return
         }
-
+        
         let selectedProduct = products[indexPath.row]
         let seller = selectedProduct.seller
         let sellerID = seller.sellerID
         let productArray = [selectedProduct]  // Use selectedProduct here, not product
-
+        
         chatManager.createOrGetChatRoomDocument(buyerID: Auth.auth().currentUser!.uid, sellerID: sellerID) { [weak self] (documentReference, error) in
             if let error = error {
                 print("Error creating chat room document: \(error.localizedDescription)")
                 return
             }
-            
             guard let documentReference = documentReference else {
                 print("Document reference is nil.")
                 return
             }
-            
             self?.chatRoomDocument = documentReference
-
+            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
             vc.chatRoomDocument = documentReference
@@ -128,12 +116,9 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             vc.buyerID = sellerID
             vc.sellerID = Auth.auth().currentUser!.uid
             vc.cart = [seller: productArray]
-            
             self?.navigationController?.pushViewController(vc, animated: false)
         }
     }
-
-        
     func fetchRequests(userId: String, dataType: String) {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
@@ -145,16 +130,14 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         } else {
             return
         }
-
+        
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error.localizedDescription)")
             } else {
                 self.products.removeAll()
-                
                 for document in querySnapshot!.documents {
                     let data = document.data()
-                    
                     if let product = self.parseProductData(productData: data) {
                         self.products.append(product)
                     }
@@ -163,7 +146,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             }
         }
     }
-
+    
     func parseRequestData(_ data: [String: Any]) -> Request? {
         guard
             let requestID = data["requestID"] as? String,
@@ -178,7 +161,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         let items = itemsData.compactMap { productData in
             return parseProductData(productData: productData)
         }
-        
         return Request(
             requestID: requestID,
             buyerID: buyerID,
@@ -187,10 +169,9 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             status: status
         )
     }
-    
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
-                            let productId = product["productId"] as? String,
+              let productId = product["productId"] as? String,
               let name = product["Name"] as? String,
               let price = product["Price"] as? String,
               let imageString = product["image"] as? String,
@@ -216,7 +197,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         let use = productData["Use"] as? String ?? ""
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
         let newProduct = Product(
-                        productId: productId,
+            productId: productId,
             name: name,
             price: price,
             startTime: startTime,
@@ -242,6 +223,4 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
     }
 }
 class SupplyTableViewCell: MyRequestCell {
-
-    
 }

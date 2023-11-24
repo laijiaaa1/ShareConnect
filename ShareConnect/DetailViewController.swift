@@ -231,9 +231,7 @@ class DetailViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     @objc func share(){
-        //share product details
         guard let product = product else { return }
-        
         let productDetail = "Product Name: \(product.name)\nPrice: \(product.price)\nDescription: \(product.description)"
         let activityVC = UIActivityViewController(activityItems: [productDetail], applicationActivities: nil)
         present(activityVC, animated: true, completion: nil)
@@ -259,7 +257,6 @@ class DetailViewController: UIViewController {
     @objc func goSelectedPage() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "SelectedViewController") as! SelectedViewController
-        
         if let imageURL = URL(string: product?.imageString ?? ""),
            let startTimeString = availability.text {
             if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {

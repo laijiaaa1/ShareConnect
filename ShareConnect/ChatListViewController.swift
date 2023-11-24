@@ -17,8 +17,6 @@ struct ChatItem {
 
 class ChatListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var chatItems = [ChatItem(name: "name", time: "time", message: "message", avatarName: "wait", unreadCount: 1)]
-    
-    //fack data
     func fackData() {
         for i in 0...10 {
             let chatItem = ChatItem(name: "name\(i)", time: "time\(i)", message: "message\(i)", avatarName: "wait", unreadCount: i)
@@ -28,19 +26,17 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatItems.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatListCell", for: indexPath) as? ChatListCell ?? ChatListCell()
         let chatItem = chatItems[indexPath.row]
-           cell.nameLabel.text = chatItem.name
-           cell.timeLabel.text = chatItem.time
-           cell.messageLabel.text = chatItem.message
-           cell.avatarImageView.image = UIImage(named: chatItem.avatarName)
-           cell.unreadLabel.text = "\(chatItem.unreadCount)"
-           
-           return cell
+        cell.nameLabel.text = chatItem.name
+        cell.timeLabel.text = chatItem.time
+        cell.messageLabel.text = chatItem.message
+        cell.avatarImageView.image = UIImage(named: chatItem.avatarName)
+        cell.unreadLabel.text = "\(chatItem.unreadCount)"
+        return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
@@ -62,15 +58,11 @@ class ChatListCell: UITableViewCell {
     let messageLabel = UILabel()
     let avatarImageView = UIImageView()
     let unreadLabel = UILabel()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-    
         nameLabel.text = "name"
         nameLabel.frame = CGRect(x: 0, y: 0, width: 100, height: 20)
         contentView.addSubview(nameLabel)
-        
         timeLabel.text = "time"
         contentView.addSubview(timeLabel)
         timeLabel.textAlignment = .right
@@ -83,20 +75,17 @@ class ChatListCell: UITableViewCell {
             timeLabel.widthAnchor.constraint(equalToConstant: 100),
             timeLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
-      
         messageLabel.text = "message"
         contentView.addSubview(messageLabel)
         messageLabel.textColor = .gray
         messageLabel.font = UIFont.systemFont(ofSize: 14)
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-        
             messageLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             messageLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 10),
             messageLabel.widthAnchor.constraint(equalToConstant: 200),
             messageLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
-       
         contentView.addSubview(avatarImageView)
         avatarImageView.image = UIImage(named: "wait")
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -106,7 +95,6 @@ class ChatListCell: UITableViewCell {
             avatarImageView.heightAnchor.constraint(equalToConstant: 50),
             avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50)
-            
         ])
         contentView.addSubview(unreadLabel)
         unreadLabel.text = "1"
@@ -123,12 +111,8 @@ class ChatListCell: UITableViewCell {
             unreadLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             unreadLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50)
         ])
-        
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
 }

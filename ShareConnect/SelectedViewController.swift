@@ -62,22 +62,22 @@ class SelectedViewController: UIViewController {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             return
         }
-
+        
         let cartCollection = Firestore.firestore().collection("carts")
-
+        
         // 使用买家的 ID 作为文档 ID
         let userCartDocument = cartCollection.document(currentUserID)
-
+        
         // 将购物车数据转换为包含 "sellerID" 和 "products" 的字典数组
         let cartData = cart.map { (seller, products) in
             let encodedProducts = try? JSONEncoder().encode(products)
             return ["sellerID": seller.sellerID, "products": encodedProducts]
         }
-
+        
         // 使用 setDocument 将新的购物车数据设置到文档中
         userCartDocument.setData(["buyerID": currentUserID, "cart": cartData])
     }
-
+    
     func setup() {
         //        if let request = request, let imageURL = URL(string: request.imageString) {
         //            backImage.kf.setImage(with: imageURL)

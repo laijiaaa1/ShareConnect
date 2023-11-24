@@ -83,13 +83,11 @@ class CreateViewController: UIViewController {
         ])
     }
     @objc func myRequestButtonTapped() {
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let createRequestViewController = storyboard.instantiateViewController(withIdentifier: "CreateRequestViewController") as! CreateRequestViewController
         navigationController?.pushViewController(createRequestViewController, animated: true)
     }
     @objc func mySupplyButtonTapped() {
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let createSupplyViewController = storyboard.instantiateViewController(withIdentifier: "CreateSupplyViewController") as! CreateSupplyViewController
         navigationController?.pushViewController(createSupplyViewController, animated: true)

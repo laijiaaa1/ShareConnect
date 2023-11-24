@@ -21,21 +21,18 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyRequestCell", for: indexPath) as! MyRequestCell
-        
         guard indexPath.row < products.count else {
             cell.requestNameLabel.text = "N/A"
             cell.requestDescriptionLabel.text = "N/A"
             cell.requestDateLabel.text = "N/A"
             return cell
         }
-        
         let product = products[indexPath.row]
         cell.requestNameLabel.text = product.name
         cell.requestDescriptionLabel.text = product.sort
         cell.requestDateLabel.text = product.startTime
         let imageURL = URL(string: product.imageString)
         cell.requestImageView.kf.setImage(with: imageURL)
-        
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -51,7 +48,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var products: [Product] = []
     //    var groups: [Group] = []
     //    var collections: [Collection] = []
-        var supplies: [Supply] = []
+    var supplies: [Supply] = []
     let headerImage = UIImageView()
     let nameLabel = UILabel()
     let stackView = UIStackView()
@@ -150,7 +147,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         if let currentUser = Auth.auth().currentUser {
             let userId = currentUser.uid
         }
-        
         let recoderButton = UIButton()
         view.addSubview(recoderButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: #selector(recoderButtonTapped))
@@ -167,7 +163,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         } else {
             return
         }
-
+        
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error.localizedDescription)")
@@ -190,7 +186,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let vc = storyboard.instantiateViewController(withIdentifier: "RecoderViewController") as! RecoderViewController
         navigationController?.pushViewController(vc, animated: true)
     }
-
+    
     func parseRequestData(_ data: [String: Any]) -> Request? {
         guard
             let requestID = data["requestID"] as? String,
@@ -217,7 +213,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
-                            let productId = product["productId"] as? String,
+              let productId = product["productId"] as? String,
               let name = product["Name"] as? String,
               let price = product["Price"] as? String,
               let imageString = product["image"] as? String,
@@ -243,7 +239,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let use = productData["Use"] as? String ?? ""
         let seller = Seller(sellerID: sellerID, sellerName: sellerName)
         let newProduct = Product(
-                        productId: productId,
+            productId: productId,
             name: name,
             price: price,
             startTime: startTime,
@@ -281,13 +277,12 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         animateViewTransition(to: groupTableView)
         fetchRequests(userId: userId ?? "", dataType: "request")
     }
-
     @objc func supplyButtonTapped() {
         animateLineViewTransition(to: supplyButton)
         animateViewTransition(to: groupTableView)
         fetchRequests(userId: userId ?? "", dataType: "supply")
     }
-
+    
     func animateLineViewTransition(to button: UIButton) {
         selectedButton?.setTitleColor(.black, for: .normal)
         button.setTitleColor(.blue, for: .normal)

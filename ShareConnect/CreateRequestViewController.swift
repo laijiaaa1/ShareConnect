@@ -107,7 +107,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         let storage = Storage.storage()
         let user = Auth.auth().currentUser
         let imageName = UUID().uuidString
-                let productId = UUID().uuidString
+        let productId = UUID().uuidString
         let storageRef = storage.reference().child("images/\(imageName).jpg")
         if let imageURL = uploadButton.backgroundImage(for: .normal), let imageData = imageURL.jpegData(compressionQuality: 0.1) {
             storageRef.putData(imageData, metadata: nil) { (metadata, error) in
@@ -119,7 +119,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                             print("Error getting download URL: \(error)")
                         } else if let downloadURL = url {
                             var productData: [String: Any] = [:]
-                                                        productData["productId"] = productId
+                            productData["productId"] = productId
                             productData["image"] = downloadURL.absoluteString
                             productData["seller"] = [
                                 "sellerID": user?.uid ?? "",

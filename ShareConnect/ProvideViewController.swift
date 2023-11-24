@@ -10,11 +10,9 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class ProvideViewController: SelectedViewController {
-
-   
     private var chatManager = ChatManager.shared
     private var chatRoomListener: ListenerRegistration?
-
+    
     var firestore: Firestore!
     var chatRoomDocument: DocumentReference!
     override func viewWillAppear(_ animated: Bool) {
@@ -33,8 +31,6 @@ class ProvideViewController: SelectedViewController {
             print("Failed to load image: product or imageString is nil or invalid")
         }
     }
-
-
     override func setup() {
         //        if let request = request, let imageURL = URL(string: request.imageString) {
         //            backImage.kf.setImage(with: imageURL)
@@ -215,23 +211,23 @@ class ProvideViewController: SelectedViewController {
             print("Seller or product is nil.")
             return
         }
-
+        
         let sellerID = seller.sellerID
         let productArray = [product]
-
+        
         chatManager.createOrGetChatRoomDocument(buyerID: Auth.auth().currentUser!.uid, sellerID: sellerID) { [weak self] (documentReference, error) in
             if let error = error {
                 print("Error creating chat room document: \(error.localizedDescription)")
                 return
             }
-
+            
             guard let documentReference = documentReference else {
                 print("Document reference is nil.")
                 return
             }
-
+            
             self?.chatRoomDocument = documentReference
-
+            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
             vc.chatRoomDocument = documentReference
@@ -239,7 +235,7 @@ class ProvideViewController: SelectedViewController {
             vc.buyerID = sellerID
             vc.sellerID = Auth.auth().currentUser!.uid
             vc.cart = [seller: productArray]
-
+            
             self?.navigationController?.pushViewController(vc, animated: true)
         }
     }

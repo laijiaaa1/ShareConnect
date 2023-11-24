@@ -39,7 +39,7 @@ struct Order {
     }
 }
 class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+    
     var orderID: [Order] = []
     let rentalButton = UIButton()
     let loanButton = UIButton()
@@ -98,7 +98,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         fetchOrdersFromFirestore(isRenter: false)
     }
     func fetchOrdersFromFirestore(isRenter: Bool) {
-
+        
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             return
         }
@@ -117,26 +117,26 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return orderID.count
-        }
-
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! RecoderTableViewCell
-            cell.order = orderID[indexPath.row]
-            return cell
-        }
-
-        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 150
-        }
+        return orderID.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! RecoderTableViewCell
+        cell.order = orderID[indexPath.row]
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
+    }
 }
 
 class RecoderTableViewCell: UITableViewCell{
     var order: Order? {
-           didSet {
-               updateUI()
-           }
-       }
+        didSet {
+            updateUI()
+        }
+    }
     let nameLabel = UILabel()
     let productImageView = UIImageView()
     let returnButton = UIButton()
@@ -173,10 +173,8 @@ class RecoderTableViewCell: UITableViewCell{
             nameLabel.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -10),
             nameLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
-        
         returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)
         returnButton.setTitle("Return", for: .normal)
-        
         returnButton.setTitleColor(.black, for: .normal)
         returnButton.backgroundColor = .white
         returnButton.layer.cornerRadius = 5
@@ -195,10 +193,10 @@ class RecoderTableViewCell: UITableViewCell{
         print("returnButtonTapped")
     }
     func updateUI() {
-            guard let order = order else { return }
+        guard let order = order else { return }
         nameLabel.text = order.orderID
         productImageView.kf.setImage(with: URL(string: order.image))
-        }
+    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

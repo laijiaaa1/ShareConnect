@@ -9,7 +9,6 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-
 class LoginViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -24,7 +23,6 @@ class LoginViewController: UIViewController {
             // Handle invalid input
             return
         }
-        
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 print("Error creating user: \(error.localizedDescription)")
@@ -44,17 +42,14 @@ class LoginViewController: UIViewController {
                 }
             }
         }
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "HomePageViewController")
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
     @IBAction func loginButtonTapped(_ sender: UIButton) {
         guard let email = emailTextField.text, let password = passwordTextField.text else {
             return
         }
-        
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 print("Error signing in: \(error.localizedDescription)")

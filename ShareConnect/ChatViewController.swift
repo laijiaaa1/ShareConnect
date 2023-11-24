@@ -17,14 +17,11 @@ class ChatViewController: UIViewController {
     let sendButton = UIButton()
     var chatMessages = [ChatMessage]()
     var cartString = ""
-    
     var firestore: Firestore = Firestore.firestore()
-
     var chatRoomDocument: DocumentReference!
     var chatRoomListener: ListenerRegistration!
     var chatRoomID: String!
     var chatRoomMessageListener: ListenerRegistration!
-    
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
     }
@@ -51,55 +48,53 @@ class ChatViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     func createOrGetChatRoomDocument() {
-            guard let buyerID = buyerID, let sellerID = sellerID else {
-                print("Seller ID is nil.")
+        guard let buyerID = buyerID, let sellerID = sellerID else {
+            print("Seller ID is nil.")
+            return
+        }
+        let chatRoomID = "\(buyerID)_\(sellerID)"
+        let chatRoomsCollection = firestore.collection("chatRooms")
+        
+        chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
+            if let error = error {
+                print("Error getting chat room document: \(error.localizedDescription)")
                 return
             }
-
-           
-        let chatRoomID = "\(buyerID)_\(sellerID)"
-               let chatRoomsCollection = firestore.collection("chatRooms")
-
-               chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
-                if let error = error {
-                    print("Error getting chat room document: \(error.localizedDescription)")
-                    return
-                }
-
-                if let document = documentSnapshot, document.exists {
-                    self?.chatRoomDocument = document.reference
-                } else {
-                    chatRoomsCollection.document(sellerID).setData(["createdAt": FieldValue.serverTimestamp()])
-                    self?.chatRoomDocument = chatRoomsCollection.document(sellerID)
-                }
-                self?.startListeningForChatMessages()
-                self?.sendMessageToFirestore(self!.cartString, isMe: false)
+            
+            if let document = documentSnapshot, document.exists {
+                self?.chatRoomDocument = document.reference
+            } else {
+                chatRoomsCollection.document(sellerID).setData(["createdAt": FieldValue.serverTimestamp()])
+                self?.chatRoomDocument = chatRoomsCollection.document(sellerID)
             }
+            self?.startListeningForChatMessages()
+            self?.sendMessageToFirestore(self!.cartString, isMe: false)
         }
-
+    }
+    
     func startListeningForChatMessages() {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
             return
         }
-
+        
         let messagesCollection = chatRoomDocument.collection("messages")
-
+        
         chatRoomMessageListener = messagesCollection.addSnapshotListener { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
-
+            
             if let error = error {
                 print("Error listening for chat messages: \(error.localizedDescription)")
                 return
             }
-
+            
             guard let documents = querySnapshot?.documents else {
                 print("No documents in the chat messages collection.")
                 return
             }
-
+            
             self.chatMessages.removeAll()
-
+            
             for document in documents {
                 let data = document.data()
                 if let text = data["text"] as? String,
@@ -108,32 +103,32 @@ class ChatViewController: UIViewController {
                     self.chatMessages.append(chatMessage)
                 }
             }
-
+            
             self.tableView.reloadData()
         }
     }
-
-        func sendMessageToFirestore(_ message: String, isMe: Bool) {
-            guard let chatRoomDocument = chatRoomDocument else {
-                print("Chat room document is nil.")
+    
+    func sendMessageToFirestore(_ message: String, isMe: Bool) {
+        guard let chatRoomDocument = chatRoomDocument else {
+            print("Chat room document is nil.")
+            return
+        }
+        
+        let messagesCollection = chatRoomDocument.collection("messages")
+        
+        messagesCollection.addDocument(data: [
+            "text": message,
+            "isMe": isMe,
+            "timestamp": FieldValue.serverTimestamp()
+        ]) { [weak self] (error) in
+            if let error = error {
+                print("Error sending message: \(error.localizedDescription)")
                 return
             }
-
-            let messagesCollection = chatRoomDocument.collection("messages")
-
-            messagesCollection.addDocument(data: [
-                "text": message,
-                "isMe": isMe,
-                "timestamp": FieldValue.serverTimestamp()
-            ]) { [weak self] (error) in
-                if let error = error {
-                    print("Error sending message: \(error.localizedDescription)")
-                    return
-                }
-
-                self?.tableView.reloadData()
-            }
+            
+            self?.tableView.reloadData()
         }
+    }
     private func setupUI() {
         view.backgroundColor = CustomColors.B1
         tableView.dataSource = self
@@ -153,7 +148,6 @@ class ChatViewController: UIViewController {
         sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
         view.addSubview(sendButton)
     }
-    
     @objc func sendButtonTapped() {
         guard let message = messageTextField.text else { return }
         sendMessageToFirestore(message, isMe: true)
@@ -162,7 +156,6 @@ class ChatViewController: UIViewController {
     func convertCartToString(_ cart: [Seller: [Product]]) -> String {
         for (seller, products) in cart {
             cartString.append("Seller: \(seller.sellerName)\n")
-            
             for product in products {
                 cartString.append(" - Product: \(product.name)\n")
                 cartString.append("   Quantity: \(product.quantity ?? 1)\n")
@@ -172,20 +165,16 @@ class ChatViewController: UIViewController {
         }
         return cartString
     }
-    
 }
 
 extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatMessages.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! ChatMessageCell
         let chatMessage = chatMessages[indexPath.row]
-        
         cell.label.textAlignment = chatMessage.isMe ? .right : .left
-        
         cell.label.text = chatMessage.text
         //          cell.backgroundColor = chatMessage.isMe ? .lightGray : .white
         cell.backgroundColor = CustomColors.B1
@@ -199,7 +188,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
 }
 class ChatMessageCell: UITableViewCell {
     let label = UILabel()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(label)

@@ -15,7 +15,6 @@ import MJRefresh
 import Kingfisher
 
 class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, ClassCollectionViewCellDelegate {
-    
     var selectedIndexPath: IndexPath?
     var allRequests: [Product] = []
     var allSupplies: [Product] = []
@@ -26,7 +25,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     let button2 = UIButton()
     let usification = ["product", "place"]
     var currentButtonType: ProductType = .request
-    
     let classCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -47,11 +45,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         return collectionView
     }()
     override func viewWillAppear(_ animated: Bool) {
-//        if usification[0] == "product" {
-//            fetchRequestsForUser(type: .request)
-//        } else if usification[0] == "place" {
-            fetchRequestsForUser(type: .request)
-//        }
+        //        if usification[0] == "product" {
+        //            fetchRequestsForUser(type: .request)
+        //        } else if usification[0] == "place" {
+        fetchRequestsForUser(type: .request)
+        //        }
     }
     override func viewDidLoad() {
         view.backgroundColor = CustomColors.B1
@@ -63,7 +61,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.dataSource = self
         classCollectionView.delegate = self
         classCollectionView.dataSource = self
-        
         let userID = Auth.auth().currentUser?.uid ?? ""
         //        fetchRequestsForUser(type: .request)
         collectionView.refreshControl = UIRefreshControl()
@@ -72,19 +69,18 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     @objc func refresh() {
         let userID = Auth.auth().currentUser?.uid ?? ""
         if currentButtonType == .request {
-//            if usification[0] == "product" {
-                fetchRequestsForUser(type: .request)
-//            } else if usification[0] == "place" {
-//                fetchRequestsForUser(type: .request)
-//            }
+            //            if usification[0] == "product" {
+            fetchRequestsForUser(type: .request)
+            //            } else if usification[0] == "place" {
+            //                fetchRequestsForUser(type: .request)
+            //            }
         } else if currentButtonType == .supply {
-//            if usification[0] == "product" {
-                fetchRequestsForUser(type: .supply)
-//            } else if usification[0] == "place" {
-//                fetchRequestsForUser(type: .supply)
-//            }
+            //            if usification[0] == "product" {
+            fetchRequestsForUser(type: .supply)
+            //            } else if usification[0] == "place" {
+            //                fetchRequestsForUser(type: .supply)
+            //            }
         }
-        
         collectionView.reloadData()
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -93,7 +89,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             let cell = collectionView.cellForItem(at: indexPath) as? ClassCollectionViewCell
             cell?.updateUI()
         }
-        
         if collectionView == self.collectionView {
             if let cell = collectionView.cellForItem(at: indexPath) as? SearchCollectionViewCell {
                 guard let name = cell.product?.name else { return }
@@ -101,9 +96,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                 let price = cell.product?.price ?? ""
                 let type = cell.product?.itemType ?? .request
                 let productId = cell.product?.productId ?? ""
-                
                 FirestoreService.shared.addBrowsingRecord(name: name, image: image, price: price, type: type.rawValue, productId: productId)
-                
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
                 vc.product = cell.product
@@ -111,17 +104,13 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             }
         }
     }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
         if collectionView == classCollectionView {
             return 1
         }
         if collectionView == collectionView{
             if currentButtonType == .request {
-                
                 return allRequests.count
-                
             } else if currentButtonType == .supply {
                 return allSupplies.count
             }
@@ -139,7 +128,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         if collectionView == collectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
-
+            
             if currentButtonType == .request {
                 cell.product = allRequests[indexPath.item]
                 cell.button.setTitle("Provide", for: .normal)
@@ -159,7 +148,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             print("No item selected.")
             return
         }
-
+        
         // Access the selected item from the appropriate array (allRequests or allSupplies)
         let selectedProduct: Product
         if currentButtonType == .request {
@@ -170,22 +159,22 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             print("Unknown product type.")
             return
         }
-
+        
         // Now, you can pass the selected product to the ProvideViewController
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "ProvideViewController") as! ProvideViewController
-
+        
         // Pass the selected product data to the next view controller
         vc.product = selectedProduct
-
+        
         // Navigate to the next view controller
         self.navigationController?.pushViewController(vc, animated: false)
     }
-
+    
     @objc func addButtonAction(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "TrolleyViewController") as! TrolleyViewController
-//        CartManager.shared.addToCart(product: allSupplies[0])
+        //        CartManager.shared.addToCart(product: allSupplies[0])
         self.navigationController?.pushViewController(vc, animated: false)
     }
     func didSelectClassification(_ classification: String, forType type: ProductType) {
@@ -196,21 +185,20 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let cellHeight = collectionView.frame.height / 2
         return CGSize(width: cellWidth, height: cellHeight)
     }
-    
     @objc func button1Action() {
         currentButtonType = .request
         lineView.center.x = button1.center.x
-//        if usification[0] == "product" {
-            fetchRequestsForUser(type: .request)
-//        }
+        //        if usification[0] == "product" {
+        fetchRequestsForUser(type: .request)
+        //        }
         collectionView.reloadData()
     }
     @objc func button2Action() {
         currentButtonType = .supply
         lineView.center.x = button2.center.x
-//        if usification[0] == "place" {
-            fetchRequestsForUser(type: .supply)
-//        }
+        //        if usification[0] == "place" {
+        fetchRequestsForUser(type: .supply)
+        //        }
         collectionView.reloadData()
     }
     func setupUI() {
@@ -245,12 +233,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2),
             lineView.heightAnchor.constraint(equalToConstant: 2)
         ])
-        
         //        classCollectionView.register(ClassCollectionViewCell.self, forCellWithReuseIdentifier: "classCell")
         classCollectionView.backgroundColor = CustomColors.B1
         classCollectionView.translatesAutoresizingMaskIntoConstraints = false
         classCollectionView.showsHorizontalScrollIndicator = false
-        
         view.addSubview(classCollectionView)
         NSLayoutConstraint.activate([
             classCollectionView.topAnchor.constraint(equalTo: lineView.bottomAnchor),
@@ -273,7 +259,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
         scrollView.contentSize = CGSize(width: view.frame.width, height: collectionView.frame.height)
-        
     }
     func fetchRequestsForUser(type: ProductType) {
         let db = Firestore.firestore()
@@ -362,53 +347,52 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         )
         return newProduct
     }
-    
     func fetchDataForSort(classification: String, type: ProductType) {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
         productsCollection.getDocuments { (querySnapshot, error) in
-                if self.currentButtonType == .request {
-                    self.allRequests.removeAll()
-                } else if self.currentButtonType == .supply {
-                    self.allSupplies.removeAll()
-                }
-                for document in querySnapshot!.documents {
-                    let productData = document.data()
-                    if let productTypeRawValue = productData["type"] as? String,
-                       let productType = ProductType(rawValue: productTypeRawValue),
-                       let product = self.parseProductData(productData: productData) {
-                        if productType == type {
-                            if product.itemType == type {
-                                print("Appending \(type): \(product)")
-                                if type == .request {
-                                    if product.sort == classification {
-                                        self.allRequests.append(product)
-                                    }
-                                } else if type == .supply {
-                                    if product.sort == classification {
-                                        self.allSupplies.append(product)
-                                    }
+            if self.currentButtonType == .request {
+                self.allRequests.removeAll()
+            } else if self.currentButtonType == .supply {
+                self.allSupplies.removeAll()
+            }
+            for document in querySnapshot!.documents {
+                let productData = document.data()
+                if let productTypeRawValue = productData["type"] as? String,
+                   let productType = ProductType(rawValue: productTypeRawValue),
+                   let product = self.parseProductData(productData: productData) {
+                    if productType == type {
+                        if product.itemType == type {
+                            print("Appending \(type): \(product)")
+                            if type == .request {
+                                if product.sort == classification {
+                                    self.allRequests.append(product)
+                                }
+                            } else if type == .supply {
+                                if product.sort == classification {
+                                    self.allSupplies.append(product)
                                 }
                             }
-                        } else {
-                            print("Skipped product with unknown type: \(productType)")
                         }
                     } else {
-                        print("Error parsing product type")
+                        print("Skipped product with unknown type: \(productType)")
                     }
+                } else {
+                    print("Error parsing product type")
                 }
-                if type == .request {
-                    self.allRequests.sort(by: { $0.startTime < $1.startTime })
-                } else if type == .supply {
-                    self.allSupplies.sort(by: { $0.startTime < $1.startTime })
-                }
-                print("All requests: \(self.allRequests)")
-                print("All supplies: \(self.allSupplies)")
-                self.collectionView.reloadData()
-                self.collectionView.refreshControl?.endRefreshing()
             }
+            if type == .request {
+                self.allRequests.sort(by: { $0.startTime < $1.startTime })
+            } else if type == .supply {
+                self.allSupplies.sort(by: { $0.startTime < $1.startTime })
+            }
+            print("All requests: \(self.allRequests)")
+            print("All supplies: \(self.allSupplies)")
+            self.collectionView.reloadData()
+            self.collectionView.refreshControl?.endRefreshing()
         }
     }
+}
 
 class SearchCollectionViewCell: UICollectionViewCell {
     let underView = UIView()
@@ -472,7 +456,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
             dateLabel.heightAnchor.constraint(equalToConstant: 15)
         ])
         button.translatesAutoresizingMaskIntoConstraints = false
-        
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         button.backgroundColor = .white
@@ -514,59 +497,50 @@ class ClassCollectionViewCell: UICollectionViewCell {
         setupUI()
         updateUI()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     func setupUI() {
         buttonsStackView.translatesAutoresizingMaskIntoConstraints = false
         buttonsStackView.axis = .horizontal
         buttonsStackView.alignment = .center
         buttonsStackView.distribution = .fillProportionally
         contentView.addSubview(buttonsStackView)
-        
         NSLayoutConstraint.activate([
             buttonsStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
             buttonsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             buttonsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             buttonsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
-//            buttonsStackView.heightAnchor.constraint(equalToConstant: 300),
-//            buttonsStackView.widthAnchor.constraint(equalToConstant: 700)
+            //            buttonsStackView.heightAnchor.constraint(equalToConstant: 300),
+            //            buttonsStackView.widthAnchor.constraint(equalToConstant: 700)
         ])
     }
-    
     func updateUI() {
         for subview in buttonsStackView.arrangedSubviews {
             buttonsStackView.removeArrangedSubview(subview)
             subview.removeFromSuperview()
         }
-
+        
         for classification in productClassification {
             let button = UIButton()
-
+            
             button.setTitle(classification, for: .normal)
             button.setTitleColor(.black, for: .normal)
             button.backgroundColor = .white
-            
             button.addTarget(self, action: #selector(classificationButtonTapped(_:)), for: .touchUpInside)
             buttonsStackView.addArrangedSubview(button)
         }
     }
     weak var delegate: ClassCollectionViewCellDelegate?
-    
     @objc func classificationButtonTapped(_ sender: UIButton) {
         if let classificationText = sender.currentTitle {
             print("Tapped Classification: \(classificationText)")
-            
             if let delegate = delegate, let currentButtonType = currentButtonType {
                 delegate.didSelectClassification(classificationText, forType: currentButtonType)
-
+                
             }
         }
     }
-    
-    
 }
 protocol ClassCollectionViewCellDelegate: AnyObject {
     func didSelectClassification(_ classification: String, forType type: ProductType)
