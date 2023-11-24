@@ -193,6 +193,8 @@
 			dependencies = (
 			);
 			name = ShareConnect;
+			packageProductDependencies = (
+			);
 			productName = ShareConnect;
 			productReference = 341E9B882B03629800997FE9 /* ShareConnect.app */;
 			productType = "com.apple.product-type.application";
@@ -221,6 +223,8 @@
 				Base,
 			);
 			mainGroup = 341E9B7F2B03629800997FE9;
+			packageReferences = (
+			);
 			productRefGroup = 341E9B892B03629800997FE9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";

@@ -16,8 +16,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "58"
             endingLineNumber = "58"
-            landmarkName = "send(message:)"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -32,8 +32,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "66"
             endingLineNumber = "66"
-            landmarkName = "send(message:to:)"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -68,7 +68,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "B1273887-3EA1-4AA7-9BEE-392D83D97B6F - bb8d81f9637b9710"
+                  uuid = "B1273887-3EA1-4AA7-9BEE-392D83D97B6F - bb8d81f9637b9646"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -78,12 +78,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ProfileViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "202"
-                  endingLineNumber = "202"
+                  startingLineNumber = "192"
+                  endingLineNumber = "192"
                   offsetFromSymbolStart = "164">
                </Location>
                <Location
-                  uuid = "B1273887-3EA1-4AA7-9BEE-392D83D97B6F - bb8d81f9637b975e"
+                  uuid = "B1273887-3EA1-4AA7-9BEE-392D83D97B6F - bb8d81f9637b9684"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -93,8 +93,8 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ProfileViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "200"
-                  endingLineNumber = "200"
+                  startingLineNumber = "190"
+                  endingLineNumber = "190"
                   offsetFromSymbolStart = "2316">
                </Location>
             </Locations>
@@ -212,7 +212,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "7892FE3C-5B79-4BBF-900A-F72737A0057F - b3f991bb31f66932"
+                  uuid = "7892FE3C-5B79-4BBF-900A-F72737A0057F - b3f991bb31f66b42"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -222,12 +222,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/SearchViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "379"
-                  endingLineNumber = "379"
+                  startingLineNumber = "363"
+                  endingLineNumber = "363"
                   offsetFromSymbolStart = "1544">
                </Location>
                <Location
-                  uuid = "7892FE3C-5B79-4BBF-900A-F72737A0057F - b3f991bb31f66932"
+                  uuid = "7892FE3C-5B79-4BBF-900A-F72737A0057F - b3f991bb31f66b42"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -237,8 +237,8 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/SearchViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "379"
-                  endingLineNumber = "379"
+                  startingLineNumber = "363"
+                  endingLineNumber = "363"
                   offsetFromSymbolStart = "1600">
                </Location>
             </Locations>
@@ -276,7 +276,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "81650DDB-F0B9-437D-AC4D-2ABA80CA7C23 - 49bb97a74584c5e8"
+                  uuid = "81650DDB-F0B9-437D-AC4D-2ABA80CA7C23 - 49bb97a74584c3f9"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -286,12 +286,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/SearchViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "281"
-                  endingLineNumber = "281"
+                  startingLineNumber = "266"
+                  endingLineNumber = "266"
                   offsetFromSymbolStart = "204">
                </Location>
                <Location
-                  uuid = "81650DDB-F0B9-437D-AC4D-2ABA80CA7C23 - 1629ce81db35ac82"
+                  uuid = "81650DDB-F0B9-437D-AC4D-2ABA80CA7C23 - 1629ce81db35aa91"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -301,8 +301,8 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/SearchViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "282"
-                  endingLineNumber = "282"
+                  startingLineNumber = "267"
+                  endingLineNumber = "267"
                   offsetFromSymbolStart = "276">
                </Location>
             </Locations>
@@ -384,6 +384,38 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "120"
             endingLineNumber = "120"
+            landmarkName = "tableView(_:numberOfRowsInSection:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "417177AF-C74C-4252-9684-62E74CE7C1D4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ChatListViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "fackData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0EB1BBBB-D947-40FD-90E5-AD160F2C8FD9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ChatListViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
             landmarkName = "tableView(_:numberOfRowsInSection:)"
             landmarkType = "7">
          </BreakpointContent>

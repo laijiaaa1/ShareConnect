@@ -54,13 +54,13 @@ class ChatViewController: UIViewController {
         }
         let chatRoomID = "\(buyerID)_\(sellerID)"
         let chatRoomsCollection = firestore.collection("chatRooms")
-        
+
         chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
             if let error = error {
                 print("Error getting chat room document: \(error.localizedDescription)")
                 return
             }
-            
+
             if let document = documentSnapshot, document.exists {
                 self?.chatRoomDocument = document.reference
             } else {
@@ -71,30 +71,30 @@ class ChatViewController: UIViewController {
             self?.sendMessageToFirestore(self!.cartString, isMe: false)
         }
     }
-    
+
     func startListeningForChatMessages() {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
             return
         }
-        
+
         let messagesCollection = chatRoomDocument.collection("messages")
-        
+
         chatRoomMessageListener = messagesCollection.addSnapshotListener { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
-            
+
             if let error = error {
                 print("Error listening for chat messages: \(error.localizedDescription)")
                 return
             }
-            
+
             guard let documents = querySnapshot?.documents else {
                 print("No documents in the chat messages collection.")
                 return
             }
-            
+
             self.chatMessages.removeAll()
-            
+
             for document in documents {
                 let data = document.data()
                 if let text = data["text"] as? String,
@@ -103,19 +103,19 @@ class ChatViewController: UIViewController {
                     self.chatMessages.append(chatMessage)
                 }
             }
-            
+
             self.tableView.reloadData()
         }
     }
-    
+
     func sendMessageToFirestore(_ message: String, isMe: Bool) {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
             return
         }
-        
+
         let messagesCollection = chatRoomDocument.collection("messages")
-        
+
         messagesCollection.addDocument(data: [
             "text": message,
             "isMe": isMe,
@@ -125,7 +125,7 @@ class ChatViewController: UIViewController {
                 print("Error sending message: \(error.localizedDescription)")
                 return
             }
-            
+
             self?.tableView.reloadData()
         }
     }

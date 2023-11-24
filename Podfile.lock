@@ -780,7 +780,6 @@ PODS:
   - nanopb/encode (2.30909.1)
   - PromisesObjC (2.3.1)
   - RecaptchaInterop (100.0.0)
-  - Starscream (4.0.6)
   - SwiftLint (0.54.0)
 
 DEPENDENCIES:
@@ -793,7 +792,6 @@ DEPENDENCIES:
   - JGProgressHUD
   - Kingfisher
   - MJRefresh
-  - Starscream
   - SwiftLint
 
 SPEC REPOS:
@@ -826,7 +824,6 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - RecaptchaInterop
-    - Starscream
     - SwiftLint
 
 SPEC CHECKSUMS:
@@ -858,9 +855,8 @@ SPEC CHECKSUMS:
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
-  Starscream: fb2c4510bebf908c62bd383bcf05e673720e91fd
   SwiftLint: c1de071d9d08c8aba837545f6254315bc900e211
 
-PODFILE CHECKSUM: 52cf5a81dccaf4facc9cda46e2d956b1ead847fd
+PODFILE CHECKSUM: 9b0bc3957a8dcb91a5d7db6df61f091978bb80d8
 
 COCOAPODS: 1.13.0
