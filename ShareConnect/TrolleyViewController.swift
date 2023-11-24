@@ -38,6 +38,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
 
         navigationItem.title = "Trolley"
         view.backgroundColor = CustomColors.B1
+        tableView.backgroundColor = CustomColors.B1
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TrolleyCell.self, forCellReuseIdentifier: "TrolleyCell")

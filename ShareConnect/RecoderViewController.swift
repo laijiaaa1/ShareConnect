@@ -12,9 +12,7 @@ import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
 
-// Update your existing Order struct to OrderHistory
 struct Order {
-    // Properties based on your order history data
     let orderID: String
     let buyerID: String
     let sellerID: String

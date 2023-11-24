@@ -23,12 +23,17 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
     let tableView = UITableView()
     var products: [Product] = []
     var supplies: [Supply] = []
+    let refreshControl = UIRefreshControl()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "My Supply"
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
+        refreshControl.addTarget(self, action: #selector(handleUIRefresh), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+    
         view.backgroundColor = CustomColors.B1
         tableView.register(SupplyTableViewCell.self, forCellReuseIdentifier: "SupplyTableViewCell")
         fetchRequests(userId: Auth.auth().currentUser!.uid, dataType: "supply")
@@ -37,8 +42,33 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.heightAnchor.constraint(equalToConstant: 600),
         ])
+        
+        let createNewButton = UIButton()
+        createNewButton.setTitle("Create New", for: .normal)
+        createNewButton.backgroundColor = .black
+        createNewButton.layer.cornerRadius = 15
+        view.addSubview(createNewButton)
+        createNewButton.setTitleColor(.white, for: .normal)
+        createNewButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            createNewButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10),
+            createNewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            createNewButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            createNewButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            createNewButton.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        createNewButton.addTarget(self, action: #selector(createNewButtonTapped), for: .touchUpInside)
+        tableView.reloadData()
+    }
+    @objc private func handleUIRefresh() {
+        tableView.reloadData()
+        refreshControl.endRefreshing()
+       }
+    @objc func createNewButtonTapped(){
+        let vc = CreateSupplyViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return products.count
