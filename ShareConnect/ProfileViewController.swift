@@ -10,6 +10,7 @@ import FirebaseAuth
 import FirebaseStorage
 import FirebaseCore
 import FirebaseFirestore
+import Kingfisher
 
 class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -27,18 +28,18 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         let product = products[indexPath.row]
         cell.requestNameLabel.text = product.name
-        cell.requestDescriptionLabel.text = product.description
+        cell.requestDescriptionLabel.text = product.sort
         cell.requestDateLabel.text = product.startTime
+        let imageURL = URL(string: product.imageString)
+        cell.requestImageView.kf.setImage(with: imageURL)
         
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //  the number of collection items based on user data
         return 4
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as! CollectionCell
-        // Placeholder: Customize the cell based on user data
         cell.backgroundColor = .lightGray
         cell.nameLabel.text = "Item \(indexPath.item + 1)"
         return cell
@@ -47,7 +48,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var products: [Product] = []
     //    var groups: [Group] = []
     //    var collections: [Collection] = []
-    //    var supplies: [Supply] = []
+        var supplies: [Supply] = []
     let headerImage = UIImageView()
     let nameLabel = UILabel()
     let stackView = UIStackView()
@@ -160,14 +161,15 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         ])
    
     }
+    
     func fetchRequests(userId: String, dataType: String) {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
         var query: Query
         if dataType == "request" {
-            query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId)
+            query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId).whereField("type", isEqualTo: "request")
         } else if dataType == "supply" {
-            query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId)
+            query = productsCollection.whereField("product.seller.sellerID", isEqualTo: userId).whereField("type", isEqualTo: "supply")
         } else {
             return
         }
@@ -363,18 +365,18 @@ class MyRequestCell: UITableViewCell {
         requestDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         requestDateLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            requestImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            requestImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             requestImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            requestImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            requestNameLabel.topAnchor.constraint(equalTo: requestImageView.bottomAnchor, constant: 10),
-            requestNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            requestImageView.heightAnchor.constraint(equalToConstant: 80),
+            requestImageView.widthAnchor.constraint(equalToConstant: 80),
+            requestNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
+            requestNameLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),
             requestDescriptionLabel.topAnchor.constraint(equalTo: requestNameLabel.bottomAnchor, constant: 10),
-            requestDescriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            requestDescriptionLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),
             requestDescriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             requestDateLabel.topAnchor.constraint(equalTo: requestDescriptionLabel.bottomAnchor, constant: 10),
-            requestDateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            requestDateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            requestDateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+            requestDateLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),
+            requestDateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
         ])
         requestNameLabel.numberOfLines = 0
         requestDescriptionLabel.numberOfLines = 0

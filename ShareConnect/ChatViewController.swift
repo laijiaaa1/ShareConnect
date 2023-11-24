@@ -44,6 +44,11 @@ class ChatViewController: UIViewController {
         if let cart = cart {
             convertCartToString(cart)
         }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
+    }
+    @objc func addButtonTapped() {
+        let vc = ChatSupplyCreateViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     func createOrGetChatRoomDocument() {
             guard let buyerID = buyerID, let sellerID = sellerID else {

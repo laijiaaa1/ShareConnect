@@ -199,26 +199,19 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.createChatRoom(with: sellerID) { [weak self] chatRoomID in
                 guard let self = self else { return }
 
-                // Set up the checkout view controller
                 let checkoutVC = ChatViewController()
                 checkoutVC.cart = self.cart
                 checkoutVC.sellerID = sellerID
                 checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
                 checkoutVC.chatRoomID = chatRoomID
-
-                // Navigate to the checkout view controller
                 self.navigationController?.pushViewController(checkoutVC, animated: true)
             }
         createOrderRecord { [weak self] orderID in
             guard let self = self else { return }
-
-            // Set the order ID for confirmation view controller
             let orderConfirmationVC = RecoderViewController()
             orderConfirmationVC.orderID = self.orderIDs
 
-            // Clear the shopping cart
             self.clearShoppingCart()
-
         }
     }
 
