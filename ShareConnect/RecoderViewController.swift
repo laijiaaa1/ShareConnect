@@ -19,7 +19,6 @@ struct Order {
     let image: String
     let createdAt: Date
     let cart: [[String: Any]]
-    
     init?(document: QueryDocumentSnapshot) {
         guard let data = document.data() as? [String: Any],
               let orderID = document.documentID as? String,
@@ -31,7 +30,6 @@ struct Order {
         else {
             return nil
         }
-        
         self.orderID = orderID
         self.buyerID = buyerID
         self.sellerID = sellerID
@@ -40,12 +38,9 @@ struct Order {
         self.cart = cart
     }
 }
-
-
 class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var orderID: [Order] = []
- 
     let rentalButton = UIButton()
     let loanButton = UIButton()
     let stackView = UIStackView()
@@ -54,12 +49,12 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         view.backgroundColor = CustomColors.B1
         navigationItem.title = "RECODER"
-        
         rentalButton.setTitle("Rental Items", for: .normal)
         loanButton.setTitle("On Loan", for: .normal)
         rentalButton.setTitleColor(.black, for: .normal)
         loanButton.setTitleColor(.black, for: .normal)
-        
+        rentalButton.addTarget(self, action: #selector(rentalButtonTapped), for: .touchUpInside)
+        loanButton.addTarget(self, action: #selector(loanButtonTapped), for: .touchUpInside)
         view.addSubview(stackView)
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -73,7 +68,6 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         ])
         stackView.addArrangedSubview(rentalButton)
         stackView.addArrangedSubview(loanButton)
-        
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -82,41 +76,46 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
         tableView.register(RecoderTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = CustomColors.B1
         tableView.separatorStyle = .none
-        
-        fetchOrdersFromFirestore()
-        
+        fetchOrdersFromFirestore(isRenter: true)
     }
-    func fetchOrdersFromFirestore() {
+    @objc func rentalButtonTapped() {
+        rentalButton.isSelected = true
+        loanButton.isSelected = false
+        rentalButton.setTitleColor(.black, for: .normal)
+        loanButton.setTitleColor(.lightGray, for: .normal)
+        fetchOrdersFromFirestore(isRenter: true)
+    }
+    @objc func loanButtonTapped() {
+        rentalButton.isSelected = false
+        loanButton.isSelected = true
+        rentalButton.setTitleColor(.lightGray, for: .normal)
+        loanButton.setTitleColor(.black, for: .normal)
+        fetchOrdersFromFirestore(isRenter: false)
+    }
+    func fetchOrdersFromFirestore(isRenter: Bool) {
+
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             return
         }
-
         let ordersCollection = Firestore.firestore().collection("orders")
-
-        // Assuming you have a field in the order documents that specifies the buyer ID
-        ordersCollection.whereField("buyerID", isEqualTo: currentUserID).getDocuments { [weak self] (querySnapshot, error) in
+        let fieldToFilter = isRenter ? "buyerID" : "sellerID"
+        ordersCollection.whereField(fieldToFilter, isEqualTo: currentUserID).getDocuments { [weak self] (querySnapshot, error) in
             guard let self = self, let querySnapshot = querySnapshot else {
                 return
             }
-
             if let error = error {
                 print("Error fetching orders: \(error.localizedDescription)")
                 return
             }
-
-            self.orderID = querySnapshot.documents.compactMap { document in
-                return Order(document: document)
-            }
+            self.orderID = querySnapshot.documents.compactMap { Order(document: $0) }
             self.tableView.reloadData()
         }
     }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return orderID.count
         }
@@ -133,21 +132,17 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
 }
 
 class RecoderTableViewCell: UITableViewCell{
-    
     var order: Order? {
            didSet {
                updateUI()
            }
        }
-    
     let nameLabel = UILabel()
     let productImageView = UIImageView()
     let returnButton = UIButton()
     let backView = UIView()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         backView.backgroundColor = .white
         backView.layer.cornerRadius = 10
         backView.layer.masksToBounds = true
@@ -159,7 +154,6 @@ class RecoderTableViewCell: UITableViewCell{
             backView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             backView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
-        
         productImageView.image = UIImage(named: "product")
         backView.addSubview(productImageView)
         productImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -169,7 +163,6 @@ class RecoderTableViewCell: UITableViewCell{
             productImageView.widthAnchor.constraint(equalToConstant: 80),
             productImageView.heightAnchor.constraint(equalToConstant: 80)
         ])
-        
         nameLabel.text = "Product Name"
         nameLabel.font = UIFont.systemFont(ofSize: 15)
         backView.addSubview(nameLabel)
@@ -181,7 +174,9 @@ class RecoderTableViewCell: UITableViewCell{
             nameLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
         
+        returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)
         returnButton.setTitle("Return", for: .normal)
+        
         returnButton.setTitleColor(.black, for: .normal)
         returnButton.backgroundColor = .white
         returnButton.layer.cornerRadius = 5
@@ -195,15 +190,15 @@ class RecoderTableViewCell: UITableViewCell{
             returnButton.widthAnchor.constraint(equalToConstant: 80),
             returnButton.heightAnchor.constraint(equalToConstant: 30)
         ])
-        
+    }
+    @objc func returnButtonTapped() {
+        print("returnButtonTapped")
     }
     func updateUI() {
             guard let order = order else { return }
         nameLabel.text = order.orderID
         productImageView.kf.setImage(with: URL(string: order.image))
         }
-
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

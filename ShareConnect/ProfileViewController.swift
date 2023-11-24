@@ -153,18 +153,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         let recoderButton = UIButton()
         view.addSubview(recoderButton)
-        recoderButton.setImage(UIImage(named: "icons8-menu-120(@2×)"), for: .normal)
-        recoderButton.addTarget(self, action: #selector(recoderButtonTapped), for: .touchUpInside)
-        recoderButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            recoderButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            recoderButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            recoderButton.heightAnchor.constraint(equalToConstant: 30),
-            recoderButton.widthAnchor.constraint(equalToConstant: 30)
-        ])
-   
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: #selector(recoderButtonTapped))
+        navigationItem.rightBarButtonItem?.tintColor = .black
     }
-    
     func fetchRequests(userId: String, dataType: String) {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
@@ -287,13 +278,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     @objc func requestButtonTapped() {
         animateLineViewTransition(to: requestButton)
-        animateViewTransition(to: requestTableView)
+        animateViewTransition(to: groupTableView)
         fetchRequests(userId: userId ?? "", dataType: "request")
     }
 
     @objc func supplyButtonTapped() {
         animateLineViewTransition(to: supplyButton)
-        animateViewTransition(to: supplyTableView)
+        animateViewTransition(to: groupTableView)
         fetchRequests(userId: userId ?? "", dataType: "supply")
     }
 
