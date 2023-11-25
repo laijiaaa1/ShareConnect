@@ -19,6 +19,7 @@ struct Order {
     let image: String
     let createdAt: Date
     let cart: [[String: Any]]
+    
     init?(document: QueryDocumentSnapshot) {
         guard let data = document.data() as? [String: Any],
               let orderID = document.documentID as? String,
@@ -39,7 +40,7 @@ struct Order {
     }
 }
 class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+    var order: Order?
     var orderID: [Order] = []
     let rentalButton = UIButton()
     let loanButton = UIButton()
@@ -123,11 +124,20 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! RecoderTableViewCell
         cell.order = orderID[indexPath.row]
+        cell.returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)
         return cell
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
+    }
+    @objc func returnButtonTapped() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(identifier: "CommendViewController") as! CommendViewController
+        vc.productName = orderID.compactMap { $0.orderID }[0]
+        vc.productImage = orderID.compactMap { $0.image }[0]
+        vc.productID = orderID.compactMap { $0.orderID }[0]
+      navigationController?.pushViewController(vc, animated: true)
+        
     }
 }
 
@@ -173,7 +183,7 @@ class RecoderTableViewCell: UITableViewCell{
             nameLabel.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -10),
             nameLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
-        returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)
+       
         returnButton.setTitle("Return", for: .normal)
         returnButton.setTitleColor(.black, for: .normal)
         returnButton.backgroundColor = .white
@@ -188,15 +198,15 @@ class RecoderTableViewCell: UITableViewCell{
             returnButton.widthAnchor.constraint(equalToConstant: 80),
             returnButton.heightAnchor.constraint(equalToConstant: 30)
         ])
+        
     }
-    @objc func returnButtonTapped() {
-        print("returnButtonTapped")
-    }
+
     func updateUI() {
         guard let order = order else { return }
         nameLabel.text = order.orderID
         productImageView.kf.setImage(with: URL(string: order.image))
     }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
