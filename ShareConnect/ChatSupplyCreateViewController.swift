@@ -52,7 +52,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             createNewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             createNewButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             createNewButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            createNewButton.heightAnchor.constraint(equalToConstant: 60)
+            createNewButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         createNewButton.addTarget(self, action: #selector(createNewButtonTapped), for: .touchUpInside)
         tableView.reloadData()
@@ -96,7 +96,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         let selectedProduct = products[indexPath.row]
         let seller = selectedProduct.seller
         let sellerID = seller.sellerID
-        let productArray = [selectedProduct]  // Use selectedProduct here, not product
+        let productArray = [selectedProduct]
         
         chatManager.createOrGetChatRoomDocument(buyerID: Auth.auth().currentUser!.uid, sellerID: sellerID) { [weak self] (documentReference, error) in
             if let error = error {

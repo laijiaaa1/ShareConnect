@@ -150,6 +150,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         // Group Table View
         view.addSubview(groupTableView)
         groupTableView.separatorStyle = .none
+        groupTableView.showsVerticalScrollIndicator = false
         groupTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             groupTableView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 10),
@@ -162,6 +163,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         groupTableView.register(MyRequestCell.self, forCellReuseIdentifier: "MyRequestCell")
         // Collection Collection View
         collectionCollectionView.isHidden = true
+        collectionCollectionView.showsVerticalScrollIndicator = false
         view.addSubview(collectionCollectionView)
         collectionCollectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -379,9 +381,9 @@ class CollectionCell: UICollectionViewCell {
         nameLabel.textAlignment = .center
         nameLabel.backgroundColor = .white
         nameLabel.alpha = 0.8
-        nameLabel.layer.cornerRadius = 5
+        nameLabel.layer.cornerRadius = 10
         nameLabel.clipsToBounds = true
-        imageView.layer.cornerRadius = 5
+        imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -424,7 +426,7 @@ class MyRequestCell: UITableViewCell {
             requestImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             requestImageView.heightAnchor.constraint(equalToConstant: 80),
             requestImageView.widthAnchor.constraint(equalToConstant: 80),
-            requestNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
+            requestNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40),
             requestNameLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),
             requestDescriptionLabel.topAnchor.constraint(equalTo: requestNameLabel.bottomAnchor, constant: 10),
             requestDescriptionLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),

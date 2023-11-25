@@ -44,13 +44,14 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         super.viewDidLoad()
         view.backgroundColor = CustomColors.B1
         navigationItem.title = "Create request"
-        uploadButton.backgroundColor = .yellow
+        uploadButton.backgroundColor = .clear
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(uploadButton)
         uploadButton.setTitle("+", for: .normal)
         uploadButton.setTitleColor(.black, for: .normal)
         uploadButton.titleLabel?.font = UIFont.systemFont(ofSize: 40)
         uploadButton.layer.cornerRadius = 10
+        uploadButton.layer.borderWidth = 1
         uploadButton.layer.borderColor = UIColor.black.cgColor
         uploadButton.layer.masksToBounds = true
         uploadButton.addTarget(self, action: #selector(uploadButtonTapped), for: .touchUpInside)
@@ -88,18 +89,18 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         ])
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(doneButton)
-        doneButton.backgroundColor = .yellow
+        doneButton.backgroundColor = .black
         doneButton.setTitle("Done", for: .normal)
-        doneButton.setTitleColor(.black, for: .normal)
+        doneButton.setTitleColor(.white, for: .normal)
         doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         doneButton.layer.cornerRadius = 10
         doneButton.layer.masksToBounds = true
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         NSLayoutConstraint.activate([
-            doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60),
             doneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             doneButton.widthAnchor.constraint(equalToConstant: 320),
-            doneButton.heightAnchor.constraint(equalToConstant: 60)
+            doneButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     @objc func doneButtonTapped() {

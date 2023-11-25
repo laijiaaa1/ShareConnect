@@ -235,7 +235,7 @@ class SelectedViewController: UIViewController {
             trolleyButton.topAnchor.constraint(equalTo: quantity.bottomAnchor, constant: 50),
             trolleyButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             trolleyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            trolleyButton.heightAnchor.constraint(equalToConstant: 60)
+            trolleyButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         trolleyButton.addTarget(self, action: #selector(trolleyButtonTapped), for: .touchUpInside)
         closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
