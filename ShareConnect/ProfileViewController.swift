@@ -12,6 +12,22 @@ import FirebaseCore
 import FirebaseFirestore
 import Kingfisher
 
+struct Collection{
+    var name: String
+    var imageString: String
+    var productId: String
+    init(name: String, imageString: String, productId: String) {
+        self.name = name
+        self.imageString = imageString
+        self.productId = productId
+    }
+    init?(dictionary: [String: Any]) {
+        guard let name = dictionary["name"] as? String,
+              let imageString = dictionary["imageString"] as? String,
+              let productId = dictionary["productId"] as? String else { return nil }
+        self.init(name: name, imageString: imageString, productId: productId)
+    }
+}
 class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return products.count
@@ -36,18 +52,32 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return collections.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as! CollectionCell
+        cell.layer.cornerRadius = 10
         cell.backgroundColor = .lightGray
-        cell.nameLabel.text = "Item \(indexPath.item + 1)"
+        cell.nameLabel.text = collections[indexPath.row].name
+        cell.imageView.kf.setImage(with: URL(string: collections[indexPath.row].imageString))
         return cell
     }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellWidth = (collectionView.bounds.width - 20) / 3
+        let cellHigh = cellWidth
+        return CGSize(width: cellWidth, height: cellHigh)
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedCollection = collections[indexPath.row]
+        let detailViewController = DetailViewController()
+        detailViewController.product?.productId = selectedCollection.productId
+        navigationController?.pushViewController(detailViewController, animated: true)
+    }
+    
     var requests: [Request] = []
     var products: [Product] = []
     //    var groups: [Group] = []
-    //    var collections: [Collection] = []
+    var collections: [Collection] = []
     var supplies: [Supply] = []
     let headerImage = UIImageView()
     let nameLabel = UILabel()
@@ -64,6 +94,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     let requestTableView = UITableView()
     let supplyTableView = UITableView()
     var selectedButton: UIButton?
+    var selectedCollection: Collection?
     let userId = Auth.auth().currentUser?.uid
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,7 +170,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             collectionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             collectionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
         ])
-        // Add this configuration for collectionCollectionView
         let layout = UICollectionViewFlowLayout()
         collectionCollectionView.collectionViewLayout = layout
         collectionCollectionView.dataSource = self
@@ -152,6 +182,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         view.addSubview(recoderButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: #selector(recoderButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .black
+        
+        fetchCollections(userId: userId!)
     }
     func fetchRequests(userId: String, dataType: String) {
         let db = Firestore.firestore()
@@ -182,12 +214,43 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
-    @objc func recoderButtonTapped(){
+    func fetchCollections(userId: String) {
+        let db = Firestore.firestore()
+        let userCollectionReference = db.collection("collections").document(userId)
+        
+        userCollectionReference.getDocument { (document, error) in
+            if let error = error {
+                print("Error getting document: \(error.localizedDescription)")
+            } else if let document = document, document.exists {
+                if let collectedProducts = document.data()?["collectedProducts"] as? [[String: Any]] {
+                    let collections = collectedProducts.compactMap { productData -> Collection? in
+                        return self.parseCollectionData(productData: productData)
+                    }
+                    self.collections = collections
+                    self.collectionCollectionView.reloadData()
+                }
+            } else {
+                print("Document does not exist or there was an error")
+            }
+        }
+    }
+    func parseCollectionData(productData: [String: Any]) -> Collection? {
+        guard
+            let productId = productData["productId"] as? String,
+            let name = productData["name"] as? String,
+            let price = productData["price"] as? String,
+            let imageString = productData["imageString"] as? String
+        else {
+            return nil
+        }
+        let collection = Collection(name: name, imageString: imageString , productId: productId)
+        return collection
+    }
+    @objc func recoderButtonTapped() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "RecoderViewController") as! RecoderViewController
         navigationController?.pushViewController(vc, animated: true)
     }
-    
     func parseRequestData(_ data: [String: Any]) -> Request? {
         guard
             let requestID = data["requestID"] as? String,
@@ -202,7 +265,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let items = itemsData.compactMap { productData in
             return parseProductData(productData: productData)
         }
-        
         return Request(
             requestID: requestID,
             buyerID: buyerID,
@@ -211,7 +273,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             status: status
         )
     }
-    
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
               let productId = product["productId"] as? String,
@@ -226,7 +287,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             return nil
         }
         let sellerData = product["seller"] as? [String: Any]
-        //        let itemTypeRawValue = product["type"] as? String
         guard let sellerID = sellerData?["sellerID"] as? String,
               let sellerName = sellerData?["sellerName"] as? String,
               let itemType = productData["type"] as? String
@@ -267,11 +327,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     @objc func groupButtonTapped() {
         animateLineViewTransition(to: groupButton)
         animateViewTransition(to: groupTableView)
-        
     }
     @objc func collectionButtonTapped() {
         animateLineViewTransition(to: collectionButton)
         animateViewTransition(to: collectionCollectionView)
+        fetchCollections(userId: userId ?? "")
     }
     @objc func requestButtonTapped() {
         animateLineViewTransition(to: requestButton)
@@ -283,7 +343,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         animateViewTransition(to: groupTableView)
         fetchRequests(userId: userId ?? "", dataType: "supply")
     }
-    
     func animateLineViewTransition(to button: UIButton) {
         selectedButton?.setTitleColor(.black, for: .normal)
         button.setTitleColor(.blue, for: .normal)
@@ -311,11 +370,19 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 class CollectionCell: UICollectionViewCell {
     let imageView = UIImageView()
     let nameLabel = UILabel()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
         contentView.addSubview(nameLabel)
+        nameLabel.font = UIFont.systemFont(ofSize: 12)
+        nameLabel.textColor = .black
+        nameLabel.textAlignment = .center
+        nameLabel.backgroundColor = .white
+        nameLabel.alpha = 0.8
+        nameLabel.layer.cornerRadius = 5
+        nameLabel.clipsToBounds = true
+        imageView.layer.cornerRadius = 5
+        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -323,7 +390,8 @@ class CollectionCell: UICollectionViewCell {
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 100),
-            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
+            imageView.widthAnchor.constraint(equalToConstant: 100),
+            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -20),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
@@ -331,19 +399,16 @@ class CollectionCell: UICollectionViewCell {
         nameLabel.textAlignment = .center
         nameLabel.numberOfLines = 0
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 class MyRequestCell: UITableViewCell {
-    
     let requestImageView = UIImageView()
     let requestNameLabel = UILabel()
     let requestDescriptionLabel = UILabel()
     let requestDateLabel = UILabel()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(requestImageView)
@@ -374,7 +439,6 @@ class MyRequestCell: UITableViewCell {
         requestDescriptionLabel.numberOfLines = 0
         requestDateLabel.numberOfLines = 0
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

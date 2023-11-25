@@ -25,7 +25,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     let button2 = UIButton()
     let usification = ["product", "place"]
     var currentButtonType: ProductType = .request
-    let db = Firestore.firestore()
     let classCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
