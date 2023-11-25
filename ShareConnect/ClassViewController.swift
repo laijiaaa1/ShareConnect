@@ -23,6 +23,7 @@ class ClassViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "CLASS"
+        navigationController?.navigationBar.isHidden = false
         view.backgroundColor = CustomColors.B1
         view.addSubview(classPlaceButton)
         view.addSubview(classProductButton)

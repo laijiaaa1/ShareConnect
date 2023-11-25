@@ -56,6 +56,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         tabBarController?.tabBar.backgroundColor = CustomColors.B1
         setupUI()
         navigationItem.title = "SHARECONNECT"
+        navigationController?.navigationBar.isHidden = false
         collectionView.delegate = self
         collectionView.dataSource = self
         classCollectionView.delegate = self
