@@ -11,6 +11,8 @@ import Firebase
 import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
+import FirebaseMessaging
+import UserNotifications
 
 struct Order {
     let orderID: String
@@ -19,6 +21,7 @@ struct Order {
     let image: String
     let createdAt: Date
     let cart: [[String: Any]]
+    let isCompleted: Bool
     
     init?(document: QueryDocumentSnapshot) {
         guard let data = document.data() as? [String: Any],
@@ -37,6 +40,11 @@ struct Order {
         self.image = image
         self.createdAt = createdAtTimestamp.dateValue()
         self.cart = cart
+        if let isCompleted = data["isCompleted"] as? Bool {
+                   self.isCompleted = isCompleted
+               } else {
+                   self.isCompleted = false
+               }
     }
 }
 class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -124,22 +132,59 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! RecoderTableViewCell
         cell.order = orderID[indexPath.row]
-        cell.returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)
-        return cell
+        cell.returnButton.setTitle("Return", for: .normal)
+        if rentalButton.isSelected {
+            cell.returnButton.setTitle("Return", for: .normal)
+            cell.returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)
+            cell.returnButton.isEnabled = !orderID[indexPath.row].isCompleted
+           
+        } else if loanButton.isSelected{
+            cell.returnButton.setTitle("Remind", for: .normal)
+            cell.returnButton.addTarget(self, action: #selector(remindButtonTapped), for: .touchUpInside)
+        }
+           return cell
     }
+    @objc func remindButtonTapped() {
+        if let orderID = order?.orderID {
+            scheduleLocalNotification(for: orderID)
+        }
+    }
+
+    // Schedule a local notification for a specific orderID
+    func scheduleLocalNotification(for orderID: String) {
+        let content = UNMutableNotificationContent()
+        content.title = "Reminder"
+        content.body = "Don't forget to return the item for order \(orderID)!"
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)  // Trigger in 5 seconds
+        let request = UNNotificationRequest(identifier: "reminder_\(orderID)", content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: { error in
+            if let error = error {
+            }
+        }
+    )}
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
     @objc func returnButtonTapped() {
+        guard let selectedIndexPath = tableView.indexPathForSelectedRow else {
+            return
+        }
+
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "CommendViewController") as! CommendViewController
-        vc.productName = orderID.compactMap { $0.orderID }[0]
-        vc.productImage = orderID.compactMap { $0.image }[0]
-        vc.productID = orderID.compactMap { $0.orderID }[0]
-        vc.sellerID = orderID.compactMap{ $0.sellerID }[0]
-      navigationController?.pushViewController(vc, animated: true)
-        
+
+        let selectedOrder = orderID[selectedIndexPath.row]
+
+        vc.productName = selectedOrder.orderID
+        vc.productImage = selectedOrder.image
+        vc.productID = selectedOrder.orderID
+        vc.sellerID = selectedOrder.sellerID
+
+        navigationController?.pushViewController(vc, animated: true)
     }
+
 }
 
 class RecoderTableViewCell: UITableViewCell{
@@ -186,21 +231,37 @@ class RecoderTableViewCell: UITableViewCell{
             nameLabel.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -10),
             nameLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
-       
-        returnButton.setTitle("Return", for: .normal)
-        returnButton.setTitleColor(.black, for: .normal)
-        returnButton.backgroundColor = .white
-        returnButton.layer.cornerRadius = 5
-        returnButton.layer.borderWidth = 1
-        returnButton.layer.masksToBounds = true
-        backView.addSubview(returnButton)
-        returnButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            returnButton.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -10),
-            returnButton.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -10),
-            returnButton.widthAnchor.constraint(equalToConstant: 80),
-            returnButton.heightAnchor.constraint(equalToConstant: 30)
-        ])
+        if returnButton.isSelected {
+            returnButton.setTitle("Return", for: .normal)
+            returnButton.setTitleColor(.black, for: .normal)
+            returnButton.backgroundColor = .white
+            returnButton.layer.cornerRadius = 5
+            returnButton.layer.borderWidth = 1
+            returnButton.layer.masksToBounds = true
+            backView.addSubview(returnButton)
+            returnButton.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                returnButton.bottomAnchor.constraint(equalTo: productImageView.bottomAnchor),
+                returnButton.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -10),
+                returnButton.widthAnchor.constraint(equalToConstant: 80),
+                returnButton.heightAnchor.constraint(equalToConstant: 30)
+            ])
+        } else {
+            returnButton.setTitle("Remind", for: .normal)
+            returnButton.setTitleColor(.black, for: .normal)
+            returnButton.backgroundColor = .white
+            returnButton.layer.cornerRadius = 5
+            returnButton.layer.borderWidth = 1
+            returnButton.layer.masksToBounds = true
+            backView.addSubview(returnButton)
+            returnButton.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                returnButton.bottomAnchor.constraint(equalTo: productImageView.bottomAnchor),
+                returnButton.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -10),
+                returnButton.widthAnchor.constraint(equalToConstant: 80),
+                returnButton.heightAnchor.constraint(equalToConstant: 30)
+            ])
+        }
         
     }
 

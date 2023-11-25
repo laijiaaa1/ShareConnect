@@ -33,8 +33,10 @@ class ClassViewController: UIViewController {
         classProductButton.backgroundColor = .black
         classPlaceButton.addTarget(self, action: #selector(classPlaceButtonAction), for: .touchUpInside)
         classProductButton.addTarget(self, action: #selector(classProductButtonAction), for: .touchUpInside)
-        classPlaceButton.setTitle("Product", for: .normal)
-        classProductButton.setTitle("Place", for: .normal)
+        classPlaceButton.setImage(UIImage(named: "place"), for: .normal)
+        classPlaceButton.titleLabel?.text = "PLACE"
+        classProductButton.setImage(UIImage(named: "product"), for: .normal)
+        classProductButton.titleLabel?.text = "PRODUCT"
         classPlaceButton.setTitleColor(.white, for: .normal)
         classProductButton.setTitleColor(.white, for: .normal)
         classPlaceButton.layer.cornerRadius = 15

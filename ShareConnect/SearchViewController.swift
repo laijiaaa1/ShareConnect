@@ -52,6 +52,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     override func viewDidLoad() {
         view.backgroundColor = CustomColors.B1
         super.viewDidLoad()
+        loadSavedCollections()
         tabBarController?.tabBar.backgroundColor = CustomColors.B1
         collectionView.showsVerticalScrollIndicator = false
         setupUI()
@@ -65,6 +66,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         //        fetchRequestsForUser(type: .request)
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+    }
+    func loadSavedCollections() {
+        let savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
+        collectionView.reloadData()
     }
     @objc func refresh() {
         let userID = Auth.auth().currentUser?.uid ?? ""
@@ -503,10 +508,8 @@ class SearchCollectionViewCell: UICollectionViewCell {
               let productPrice = product?.price else {
             return
         }
-        
         let db = Firestore.firestore()
         let userCollectionReference = db.collection("collections").document(currentUserID)
-        
         if isCollected {
             let collectedProductData: [String: Any] = [
                 "productId": productID,
@@ -524,6 +527,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
                 }
             }
             collectionButton.setImage(UIImage(named: "icons9-bookmark-72(@3×)"), for: .normal)
+            addToLocalStorage(productData: collectedProductData)
         } else {
             let removedProductData: [String: Any] = [
                 "productId": productID
@@ -539,9 +543,22 @@ class SearchCollectionViewCell: UICollectionViewCell {
                 }
             }
             collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
+            removeFromLocalStorage(productID: productID)
         }
+        
     }
-    
+    func addToLocalStorage(productData: [String: Any]) {
+        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
+        savedCollections.append(productData)
+        UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
+    }
+
+    // Update local storage when removing from collection
+    func removeFromLocalStorage(productID: String) {
+        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
+        savedCollections.removeAll { $0["productId"] as? String == productID }
+        UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
+    }
     func updateUI() {
         if let product = product {
             nameLabel.text = product.name

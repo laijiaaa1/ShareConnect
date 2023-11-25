@@ -261,7 +261,6 @@ class HistoryCell: UICollectionViewCell {
         //
         //        setupConstraints()
     }
-    
     //    func setupConstraints() {
     //        NSLayoutConstraint.activate([
     //            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 20),

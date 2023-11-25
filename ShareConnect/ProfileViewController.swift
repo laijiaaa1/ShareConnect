@@ -33,7 +33,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         return products.count
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
+        return 120
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyRequestCell", for: indexPath) as! MyRequestCell
@@ -50,6 +50,47 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let imageURL = URL(string: product.imageString)
         cell.requestImageView.kf.setImage(with: imageURL)
         return cell
+    }
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, completionHandler) in
+            let product = self.products[indexPath.row]
+            self.deleteProductFromDatabase(product)
+            self.products.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            completionHandler(true)
+        }
+        deleteAction.image = UIImage(systemName: "trash.fill")
+
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
+    }
+    func deleteProductFromDatabase(_ product: Product) {
+        let db = Firestore.firestore()
+        let productsCollection = db.collection("products")
+        let productId = product.productId
+        productsCollection.whereField("productId", isEqualTo: productId).getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error querying document: \(error.localizedDescription)")
+                return
+            }
+            if let document = querySnapshot?.documents.first {
+                productsCollection.document(document.documentID).delete { error in
+                    if let error = error {
+                        print("Error deleting product document: \(error.localizedDescription)")
+                    } else {
+                        print("Product document deleted successfully.")
+                    }
+                }
+            }
+        }
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedProduct = products[indexPath.row]
+        let detailViewController = DetailViewController()
+        detailViewController.product = selectedProduct
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return collections.count

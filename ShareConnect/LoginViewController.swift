@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseMessaging
 
 class LoginViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
@@ -38,6 +39,10 @@ class LoginViewController: UIViewController {
                         print("Error adding user to Firestore: \(error.localizedDescription)")
                     } else {
                         print("User added to Firestore successfully")
+                        if let buyerID = Auth.auth().currentUser?.uid {
+                            Messaging.messaging().subscribe(toTopic: buyerID)
+                        }
+
                     }
                 }
             }
@@ -59,6 +64,10 @@ class LoginViewController: UIViewController {
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let vc = storyboard.instantiateViewController(withIdentifier: "HomePageViewController")
                     self.navigationController?.pushViewController(vc, animated: true)
+                    if let buyerID = Auth.auth().currentUser?.uid {
+                        Messaging.messaging().subscribe(toTopic: buyerID)
+                    }
+
                 }
             }
         }

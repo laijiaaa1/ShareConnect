@@ -116,7 +116,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             vc.buyerID = sellerID
             vc.sellerID = Auth.auth().currentUser!.uid
             vc.cart = [seller: productArray]
-            self?.navigationController?.pushViewController(vc, animated: false)
+            self?.navigationController?.popViewController(animated: true)
         }
     }
     func fetchRequests(userId: String, dataType: String) {
