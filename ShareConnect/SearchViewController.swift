@@ -25,6 +25,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     let button2 = UIButton()
     let usification = ["product", "place"]
     var currentButtonType: ProductType = .request
+    let db = Firestore.firestore()
     let classCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -48,7 +49,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         //            fetchRequestsForUser(type: .request)
         //        } else if usification[0] == "place" {
         fetchRequestsForUser(type: .request)
-        //        }
     }
     override func viewDidLoad() {
         view.backgroundColor = CustomColors.B1
@@ -192,6 +192,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func button1Action() {
         currentButtonType = .request
+        button1.backgroundColor = .white
+        button2.backgroundColor = .clear
         lineView.center.x = button1.center.x
         //        if usification[0] == "product" {
         fetchRequestsForUser(type: .request)
@@ -200,6 +202,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func button2Action() {
         currentButtonType = .supply
+        button2.backgroundColor = .white
+        button1.backgroundColor = .clear
         lineView.center.x = button2.center.x
         //        if usification[0] == "place" {
         fetchRequestsForUser(type: .supply)
@@ -211,12 +215,15 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         stackView.distribution = .fillEqually
         //        stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        //        stackView.layer.borderWidth = 1
+        //        stackView.layer.cornerRadius = 10
+        //        stackView.layer.masksToBounds = true
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.heightAnchor.constraint(equalToConstant: 50)
+            stackView.heightAnchor.constraint(equalToConstant: 44)
         ])
         button1.setTitle("Request", for: .normal)
         button1.setTitleColor(.black, for: .normal)
@@ -407,6 +414,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
     let dateLabel = UILabel()
     let nameLabel = UILabel()
     let collectionButton = UIButton()
+    var isCollected = false
     var product: Product? {
         didSet {
             print("Request didSet")
@@ -474,7 +482,66 @@ class SearchCollectionViewCell: UICollectionViewCell {
             button.heightAnchor.constraint(equalToConstant: 30),
             button.widthAnchor.constraint(equalToConstant: 100)
         ])
+        contentView.addSubview(collectionButton)
+        collectionButton.translatesAutoresizingMaskIntoConstraints = false
+        collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
+        NSLayoutConstraint.activate([
+            collectionButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            collectionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
+            collectionButton.heightAnchor.constraint(equalToConstant: 30),
+            collectionButton.widthAnchor.constraint(equalToConstant: 30)
+        ])
+        collectionButton.addTarget(self, action: #selector(addCollection), for: .touchUpInside)
     }
+    @objc func addCollection() {
+        isCollected.toggle()
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid,
+              let productID = product?.productId,
+              let productName = product?.name,
+              let productImageString = product?.imageString,
+              let productPrice = product?.price else {
+            return
+        }
+        
+        let db = Firestore.firestore()
+        let userCollectionReference = db.collection("collections").document(currentUserID)
+        
+        if isCollected {
+            let collectedProductData: [String: Any] = [
+                "productId": productID,
+                "name": productName,
+                "imageString": productImageString,
+                "price": productPrice
+            ]
+            userCollectionReference.setData([
+                "collectedProducts": FieldValue.arrayUnion([collectedProductData])
+            ], merge: true) { error in
+                if let error = error {
+                    print("Error updating document: \(error)")
+                } else {
+                    print("Document successfully updated with new collection.")
+                }
+            }
+            collectionButton.setImage(UIImage(named: "icons9-bookmark-72(@3×)"), for: .normal)
+        } else {
+            let removedProductData: [String: Any] = [
+                "productId": productID
+            ]
+            
+            userCollectionReference.updateData([
+                "collectedProducts": FieldValue.arrayRemove([removedProductData])
+            ]) { error in
+                if let error = error {
+                    print("Error updating document: \(error)")
+                } else {
+                    print("Document successfully updated with removed collection.")
+                }
+            }
+            collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
+        }
+    }
+    
     func updateUI() {
         if let product = product {
             nameLabel.text = product.name
