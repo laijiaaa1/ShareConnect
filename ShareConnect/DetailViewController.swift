@@ -32,6 +32,7 @@ class DetailViewController: UIViewController {
     let collectionButton = UIButton()
     let shareButton = UIButton()
     var productID: String?
+    let sellerButton = UIButton()
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
     }
@@ -226,6 +227,25 @@ class DetailViewController: UIViewController {
             backButton.widthAnchor.constraint(equalToConstant: 40)
         ])
         backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
+        view.addSubview(sellerButton)
+        sellerButton.translatesAutoresizingMaskIntoConstraints = false
+        sellerButton.backgroundColor = .orange
+        sellerButton.layer.cornerRadius = 15
+        sellerButton.layer.masksToBounds = true
+        NSLayoutConstraint.activate([
+            sellerButton.centerYAnchor.constraint(equalTo: addCartButton.centerYAnchor),
+            sellerButton.trailingAnchor.constraint(equalTo: addCartButton.leadingAnchor, constant: -20),
+            sellerButton.widthAnchor.constraint(equalToConstant: 30),
+            sellerButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        sellerButton.addTarget(self, action: #selector(sellerInfoShow), for: .touchUpInside)
+    }
+    @objc func sellerInfoShow(){
+       
+        let sellerInfo = SellerInfoViewController()
+        sellerInfo.sellerID = product?.seller.sellerID
+        navigationController?.pushViewController(sellerInfo, animated: true)
+        
     }
     @objc func back() {
         navigationController?.popViewController(animated: true)

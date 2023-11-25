@@ -30,7 +30,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ClassCollectionViewCell.self, forCellWithReuseIdentifier: "classCell")
-        collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
@@ -98,9 +97,15 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                 let productId = cell.product?.productId ?? ""
                 FirestoreService.shared.addBrowsingRecord(name: name, image: image, price: price, type: type.rawValue, productId: productId)
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+                let vc = storyboard.instantiateViewController(withIdentifier: "ProvideViewController") as! ProvideViewController
+                let deVC = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
                 vc.product = cell.product
-                self.navigationController?.pushViewController(vc, animated: true)
+                deVC.product = cell.product
+                if currentButtonType == .request {
+                    self.navigationController?.pushViewController(vc, animated: true)
+                } else if currentButtonType == .supply{
+                    self.navigationController?.pushViewController(deVC, animated: true)
+                }
             }
         }
     }
@@ -128,7 +133,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         if collectionView == collectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
-            
             if currentButtonType == .request {
                 cell.product = allRequests[indexPath.item]
                 cell.button.setTitle("Provide", for: .normal)
@@ -419,6 +423,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = .yellow
         imageView.layer.cornerRadius = 10
+        imageView.layer.masksToBounds = true
         contentView.addSubview(imageView)
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
@@ -441,7 +446,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         priceLabel.font = UIFont.systemFont(ofSize: 12)
         contentView.addSubview(priceLabel)
         NSLayoutConstraint.activate([
-            priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 15),
+            priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
             priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             priceLabel.widthAnchor.constraint(equalToConstant: contentView.frame.width),
             priceLabel.heightAnchor.constraint(equalToConstant: 15)
@@ -452,7 +457,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(dateLabel)
         NSLayoutConstraint.activate([
             dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            dateLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 15),
+            dateLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 5),
             dateLabel.heightAnchor.constraint(equalToConstant: 15)
         ])
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -463,7 +468,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         button.layer.cornerRadius = 10
         contentView.addSubview(button)
         NSLayoutConstraint.activate([
-            button.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 15),
+            button.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 8),
             button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             button.heightAnchor.constraint(equalToConstant: 30),
             button.widthAnchor.constraint(equalToConstant: 100)
@@ -526,7 +531,6 @@ class ClassCollectionViewCell: UICollectionViewCell {
             
             button.setTitle(classification, for: .normal)
             button.setTitleColor(.black, for: .normal)
-            button.backgroundColor = .white
             button.addTarget(self, action: #selector(classificationButtonTapped(_:)), for: .touchUpInside)
             buttonsStackView.addArrangedSubview(button)
         }

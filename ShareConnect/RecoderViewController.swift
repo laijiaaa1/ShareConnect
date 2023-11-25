@@ -136,6 +136,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         vc.productName = orderID.compactMap { $0.orderID }[0]
         vc.productImage = orderID.compactMap { $0.image }[0]
         vc.productID = orderID.compactMap { $0.orderID }[0]
+        vc.sellerID = orderID.compactMap{ $0.sellerID }[0]
       navigationController?.pushViewController(vc, animated: true)
         
     }
@@ -165,6 +166,8 @@ class RecoderTableViewCell: UITableViewCell{
             backView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
         productImageView.image = UIImage(named: "product")
+        productImageView.layer.cornerRadius = 10
+        productImageView.layer.masksToBounds = true
         backView.addSubview(productImageView)
         productImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

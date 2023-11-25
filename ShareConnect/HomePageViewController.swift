@@ -204,7 +204,10 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             collectionView.addSubview(view)
             let historyXpoint = CGFloat(indexPath.item) * 320
             cell.frame = CGRect(x: historyXpoint, y: 0, width: 310, height: 150)
-            let imageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 60, height: 60))
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+            imageView.layer.cornerRadius = 10
+            imageView.layer.borderWidth = 1
+            imageView.layer.masksToBounds = true
             imageView.kf.setImage(with: URL(string: browsingRecord.1))
             view.addSubview(imageView)
             let label = UILabel(frame: CGRect(x: 80, y: 50, width: 150, height: 20))

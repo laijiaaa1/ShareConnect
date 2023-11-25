@@ -12,10 +12,20 @@ import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
 
+struct Commend{
+    var comment: String
+    var rating: Int
+    var image: String
+    var sellerID: String
+    var buyerID: String
+    var productID: String
+    var time: String
+}
 class CommendViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     var productName: String?
     var productImage: String?
     var productID: String?
+    var sellerID: String = ""
     let commentTextView = UITextView()
     let imageView = UIImageView()
     let starRatingView = StarRatingView()
@@ -174,6 +184,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
                         "rating": starRating,
                         "image": imageUrl,
                         "timestamp": Date(),
+                        "sellerID": self.sellerID,
                     ]
 
                     reviewsCollection.document(reviewID).setData(reviewData) { error in
@@ -193,6 +204,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
                 "comment": textComment ?? "",
                 "rating": starRating,
                 "timestamp": Date(),
+                "sellerID": sellerID,
             ]
 
             reviewsCollection.document(reviewID).setData(reviewData) { error in

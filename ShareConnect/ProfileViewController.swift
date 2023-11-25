@@ -118,6 +118,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         ])
         // Group Table View
         view.addSubview(groupTableView)
+        groupTableView.separatorStyle = .none
         groupTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             groupTableView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 10),
@@ -368,6 +369,8 @@ class MyRequestCell: UITableViewCell {
             requestDateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
         ])
         requestNameLabel.numberOfLines = 0
+        requestImageView.layer.cornerRadius = 10
+        requestImageView.layer.masksToBounds = true
         requestDescriptionLabel.numberOfLines = 0
         requestDateLabel.numberOfLines = 0
     }
