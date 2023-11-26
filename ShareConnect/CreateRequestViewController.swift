@@ -20,6 +20,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     let requestSelectSegment = UISegmentedControl()
     let doneButton = UIButton()
     var groupOptions: [String] = []
+    var selectedGroupID: String?
     var selectedGroup: String? {
         didSet {
             updateSelectedGroupUI()
@@ -127,15 +128,19 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 "sellerName": user?.email ?? ""
                             ]
                             for i in 0..<self.requestTableView.numberOfSections {
-                                for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
-                                    let indexPath = IndexPath(row: j, section: i)
-                                    if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
-                                        let key = cell.requestLabel.text ?? ""
-                                        let value = cell.textField.text ?? ""
-                                        productData[key] = value
-                                    }
-                                }
-                            }
+                                   for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
+                                       let indexPath = IndexPath(row: j, section: i)
+                                       if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
+                                           let key = cell.requestLabel.text ?? ""
+                                           let value = cell.textField.text ?? ""
+                                           productData[key] = value
+                                       }
+                                   }
+                               }
+
+                            if let selectedGroupID = self.selectedGroupID {
+                                   productData["groupID"] = selectedGroupID
+                               }
                             let demandProduct = Product(
                                 productId: productData["productId"] as? String ?? "",
                                 name: productData["name"] as? String ?? "",
@@ -199,11 +204,14 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     @objc func requestSelectSegmentTapped() {
         if requestSelectSegment.selectedSegmentIndex == 0 {
             print("public")
+            selectedGroupID = nil
         } else {
             print("group")
             fetchUserGroups()
         }
+        requestTableView.reloadData()
     }
+
     func fetchUserGroups() {
         guard let userId = Auth.auth().currentUser?.uid else {
             print("User not authenticated.")
@@ -225,7 +233,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         for groupOption in groupOptions {
             let action = UIAlertAction(title: groupOption, style: .default) { [weak self] _ in
                 print("Selected group: \(groupOption)")
-                self?.selectedGroup = groupOption
+                self?.selectedGroupID = groupOption
                 self?.updateSelectedGroupUI()
             }
             alertController.addAction(action)
@@ -235,8 +243,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         present(alertController, animated: true, completion: nil)
     }
     func updateSelectedGroupUI() {
-        if let selectedGroup = selectedGroup {
-            groupHeaderLabel.text = "Selected Group: \(selectedGroup)"
+        if let selectedGroupID = selectedGroupID {
+            groupHeaderLabel.text = "Selected Group: \(selectedGroupID)"
             if requestTableView.tableHeaderView == nil {
                 requestTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: requestTableView.bounds.size.width, height: 50))
                 requestTableView.tableHeaderView?.addSubview(groupHeaderLabel)
@@ -257,7 +265,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 8
+        return selectedGroupID != nil ? 9 : 8
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "requestCell", for: indexPath) as? RequestCell ?? RequestCell()
@@ -282,6 +290,12 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 cell.textField.tag = 2
             }
         }
+        if indexPath.row == 8 && selectedGroupID != nil {
+               cell.requestLabel.text = "Group"
+               cell.textField.text = selectedGroupID
+               cell.textField.isEnabled = false
+               cell.addBtn.isHidden = true
+           }
         cell.addBtn.tag = indexPath.row
         return cell
     }

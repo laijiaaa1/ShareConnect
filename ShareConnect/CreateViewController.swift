@@ -9,13 +9,13 @@ import UIKit
 
 class CreateViewController: UIViewController {
     let greenBackColor = UIColor(red: 183/255, green: 234/255, blue: 24/255, alpha: 1.0)
-    let myRequestView = UIImageView()
+    let myRequestView = UIView()
     let myRequestLabel = UILabel()
     let myRequestButton = UIButton()
-    let mySupplyView = UIImageView()
+    let mySupplyView = UIView()
     let mySupplyLabel = UILabel()
     let mySupplyButton = UIButton()
-    let createGroupView = UIImageView()
+    let createGroupView = UIView()
     let createGroupLabel = UILabel()
     let createGroupButton = UIButton()
     override func viewDidLoad() {
@@ -23,22 +23,16 @@ class CreateViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.title = "SHARECONNECT"
         myRequestView.layer.cornerRadius = 50
-        myRequestView.layer.masksToBounds = true
-        myRequestView.contentMode = .scaleAspectFill
-        myRequestView.image = UIImage(named: "request")
+        myRequestView.backgroundColor = .yellow
         myRequestView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(myRequestView)
         mySupplyView.layer.cornerRadius = 50
-        mySupplyView.image = UIImage(named: "supply")
+        mySupplyView.backgroundColor = .yellow
         mySupplyView.translatesAutoresizingMaskIntoConstraints = false
-        mySupplyView.layer.masksToBounds = true
-        mySupplyView.contentMode = .scaleAspectFill
         view.addSubview(mySupplyView)
         createGroupView.layer.cornerRadius = 50
-        createGroupView.image = UIImage(named: "group")
+        createGroupView.backgroundColor = .yellow
         createGroupView.translatesAutoresizingMaskIntoConstraints = false
-        createGroupView.layer.masksToBounds = true
-        createGroupView.contentMode = .scaleAspectFill
         view.addSubview(createGroupView)
         myRequestButton.setTitle("My request", for: .normal)
         myRequestButton.backgroundColor = greenBackColor
