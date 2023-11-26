@@ -78,6 +78,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     let tableView = UITableView()
     var groups: [Group] = []
     var group: Group?
+    let searchTextField = UITextField()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
@@ -88,6 +89,32 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         view.backgroundColor = CustomColors.B1
         tableView.frame = view.bounds
         fetchGroupData()
+        view.backgroundColor = CustomColors.B1
+        searchTextField.layer.borderWidth = 1
+        searchTextField.layer.cornerRadius = 22
+        searchTextField.layer.masksToBounds = true
+        searchTextField.frame = CGRect(x: 30, y: 100, width: 330, height: 44)
+        let leftView = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+        let imageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 24, height: 24))
+        imageView.image = UIImage(named: "icons8-search-90(@3×)")
+        leftView.addSubview(imageView)
+        searchTextField.leftView = leftView
+        searchTextField.leftViewMode = .always
+        let rightView = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+        let rightImageView = UIImageView(frame: CGRect(x: 10, y: 12, width: 18, height: 18))
+        rightImageView.image = UIImage(named: "icons8-filter-48(@3×)")
+        rightView.addSubview(rightImageView)
+        searchTextField.rightView = rightView
+        searchTextField.rightViewMode = .always
+        searchTextField.backgroundColor = .white
+        view.addSubview(searchTextField)
+        searchTextField.addTarget(self, action: #selector(searchTextFieldDidChange), for: .editingChanged)
+    }
+    @objc func searchTextFieldDidChange(){
+        searchGroupsByName(searchString: searchTextField.text ?? "", completion: { (groups) in
+            self.groups = groups
+            self.tableView.reloadData()
+        })
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return groups.count
@@ -102,14 +129,14 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
             guard let self = self, let userId = Auth.auth().currentUser?.uid else {
                 return
             }
-
+            
             if !group.members.contains(userId) {
                 var updatedGroup = group
                 updatedGroup.addMember(userId: userId)
                 self.groups[indexPath.row] = updatedGroup
-
+                
                 self.tableView.reloadRows(at: [indexPath], with: .none)
-
+                
                 // Use the document ID directly
                 self.updateGroupInFirestore(groupId: updatedGroup.documentId, updatedGroup: updatedGroup)
                 self.updateUserInFirestore(userId: userId, updatedGroup: updatedGroup)
@@ -117,7 +144,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 300
     }
@@ -130,7 +157,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func fetchGroupData() {
         let groupsRef = Firestore.firestore().collection("groups")
         let query = groupsRef.whereField("isPublic", isEqualTo: true)
-
+        
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error fetching public groups: \(error.localizedDescription)")
@@ -147,20 +174,20 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     private func updateGroupInFirestore(groupId: String, updatedGroup: Group) {
-            let groupsRef = Firestore.firestore().collection("groups")
-
-            let updatedData: [String: Any] = [
-                "members": updatedGroup.members
-            ]
-
-            groupsRef.document(groupId).updateData(updatedData) { error in
-                if let error = error {
-                    print("Error updating group in Firestore: \(error.localizedDescription)")
-                } else {
-                    print("Group updated successfully in Firestore.")
-                }
+        let groupsRef = Firestore.firestore().collection("groups")
+        
+        let updatedData: [String: Any] = [
+            "members": updatedGroup.members
+        ]
+        
+        groupsRef.document(groupId).updateData(updatedData) { error in
+            if let error = error {
+                print("Error updating group in Firestore: \(error.localizedDescription)")
+            } else {
+                print("Group updated successfully in Firestore.")
             }
         }
+    }
     private func updateUserInFirestore(userId: String, updatedGroup: Group) {
         let userRef = Firestore.firestore().collection("users").document(userId)
         let groupId = "groupId"
@@ -179,10 +206,10 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 "groupIsPublic": updatedGroup.isPublic,
                 "groupMembers": updatedGroup.members,
                 "groupCreated": updatedGroup.created,
-                "groupInvitationCode": updatedGroup.invitationCode ?? "" 
+                "groupInvitationCode": updatedGroup.invitationCode ?? ""
             ]
         ]
-
+        
         userRef.updateData(["groups": userGroupsData], completion: { error in
             if let error = error {
                 print("Error updating user in Firestore: \(error.localizedDescription)")
@@ -191,6 +218,71 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         })
     }
+    func searchGroupsByName(searchString: String, completion: @escaping ([Group]) -> Void) {
+        let db = Firestore.firestore()
+        let groupsCollection = db.collection("groups")
+        let query = groupsCollection
+            .whereField("name", isGreaterThanOrEqualTo: searchString)
+            .whereField("name", isLessThan: searchString + "\u{f8ff}")
+
+        query.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error searching groups: \(error.localizedDescription)")
+                completion([])
+            } else {
+                var searchResults: [Group] = []
+
+                for document in querySnapshot!.documents {
+                    let data = document.data()
+
+                    if let group = self.parseGroupData(data: data, documentId: document.documentID) {
+                        searchResults.append(group)
+                    }
+                }
+
+                completion(searchResults)
+            }
+        }
+    }
+
+    func parseGroupData(data: [String: Any], documentId: String) -> Group? {
+        guard
+            let name = data["name"] as? String,
+            let description = data["description"] as? String,
+            let sort = data["sort"] as? String,
+            let startTime = data["startTime"] as? String,
+            let endTime = data["endTime"] as? String,
+            let require = data["require"] as? String,
+            let numberOfPeople = data["numberOfPeople"] as? Int,
+            let owner = data["owner"] as? String,
+            let isPublic = data["isPublic"] as? Bool,
+            let members = data["members"] as? [String],
+            let image = data["image"] as? String,
+            let createdTimestamp = data["created"] as? Timestamp
+        else {
+            return nil
+        }
+
+        var group = Group(
+            documentId: documentId,
+            name: name,
+            description: description,
+            sort: sort,
+            startTime: startTime,
+            endTime: endTime,
+            require: require,
+            numberOfPeople: numberOfPeople,
+            owner: owner,
+            isPublic: isPublic,
+            members: members,
+            image: image,
+            created: createdTimestamp.dateValue()
+        )
+        group.invitationCode = data["invitationCode"] as? String
+
+        return group
+    }
+
 
 }
     class GroupTableViewCell: UITableViewCell{
