@@ -30,25 +30,47 @@ struct Collection{
 }
 class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return products.count
+       if selectedButton == groupButton  {
+            return groups.count
+       } else {
+           return products.count
+       }
+        return 0
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyRequestCell", for: indexPath) as! MyRequestCell
-        guard indexPath.row < products.count else {
-            cell.requestNameLabel.text = "N/A"
-            cell.requestDescriptionLabel.text = "N/A"
-            cell.requestDateLabel.text = "N/A"
+        if selectedButton == groupButton {
+            guard indexPath.row < groups.count else {
+                cell.requestNameLabel.text = "N/A"
+                cell.requestDescriptionLabel.text = "N/A"
+                cell.requestDateLabel.text = "N/A"
+                return cell
+            }
+            let group = groups[indexPath.row]
+            cell.requestNameLabel.text = group.name
+            cell.requestDescriptionLabel.text = group.description
+            cell.requestDateLabel.text = group.startTime
+            let imageURL = URL(string: group.image)
+            cell.requestImageView.kf.setImage(with: imageURL)
+            return cell
+        } else {
+            guard indexPath.row < products.count else {
+                cell.requestNameLabel.text = "N/A"
+                cell.requestDescriptionLabel.text = "N/A"
+                cell.requestDateLabel.text = "N/A"
+                return cell
+            }
+            let product = products[indexPath.row]
+            cell.requestNameLabel.text = product.name
+            cell.requestDescriptionLabel.text = product.sort
+            cell.requestDateLabel.text = product.startTime
+            let imageURL = URL(string: product.imageString)
+            cell.requestImageView.kf.setImage(with: imageURL)
             return cell
         }
-        let product = products[indexPath.row]
-        cell.requestNameLabel.text = product.name
-        cell.requestDescriptionLabel.text = product.sort
-        cell.requestDateLabel.text = product.startTime
-        let imageURL = URL(string: product.imageString)
-        cell.requestImageView.kf.setImage(with: imageURL)
         return cell
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -87,10 +109,17 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedProduct = products[indexPath.row]
-        let detailViewController = DetailViewController()
-        detailViewController.product = selectedProduct
-        navigationController?.pushViewController(detailViewController, animated: true)
+        if selectedButton == groupButton {
+            let selectedGroup = groups[indexPath.row]
+            let subGroupViewController = SubGroupViewController()
+            subGroupViewController.group = selectedGroup
+            navigationController?.pushViewController(subGroupViewController, animated: true)
+        } else {
+            let selectedProduct = products[indexPath.row]
+            let detailViewController = DetailViewController()
+            detailViewController.product = selectedProduct
+            navigationController?.pushViewController(detailViewController, animated: true)
+        }
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return collections.count
@@ -117,7 +146,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     
     var requests: [Request] = []
     var products: [Product] = []
-    //    var groups: [Group] = []
+        var groups: [Group] = []
     var collections: [Collection] = []
     var supplies: [Supply] = []
     let headerImage = UIImageView()
@@ -137,6 +166,10 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var selectedButton: UIButton?
     var selectedCollection: Collection?
     let userId = Auth.auth().currentUser?.uid
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchGroups(userId: userId ?? "")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = CustomColors.B1
@@ -227,6 +260,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         navigationItem.rightBarButtonItem?.tintColor = .black
         
         fetchCollections(userId: userId!)
+        fetchGroups(userId: userId!)
     }
     func fetchRequests(userId: String, dataType: String) {
         let db = Firestore.firestore()
@@ -277,6 +311,66 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
+    func fetchGroups(userId: String) {
+        let db = Firestore.firestore()
+        let productsGroup = db.collection("groups").whereField("members", arrayContains: userId)
+        productsGroup.getDocuments { [weak self] (querySnapshot, error) in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("Error getting documents: \(error.localizedDescription)")
+            } else {
+                self.groups.removeAll()
+
+                for document in querySnapshot!.documents {
+                    let data = document.data()
+
+                    if let group = self.parseGroupData(data: data, documentId: document.documentID) {
+                        self.groups.append(group)
+                    }
+                }
+                self.groupTableView.reloadData()
+            }
+        }
+    }
+    func parseGroupData(data: [String: Any], documentId: String) -> Group? {
+        guard
+            let name = data["name"] as? String,
+            let description = data["description"] as? String,
+            let sort = data["sort"] as? String,
+            let startTime = data["startTime"] as? String,
+            let endTime = data["endTime"] as? String,
+            let require = data["require"] as? String,
+            let numberOfPeople = data["numberOfPeople"] as? Int,
+            let owner = data["owner"] as? String,
+            let isPublic = data["isPublic"] as? Bool,
+            let members = data["members"] as? [String],
+            let image = data["image"] as? String,
+            let createdTimestamp = data["created"] as? Timestamp
+        else {
+            return nil
+        }
+
+        var group = Group(
+            documentId: documentId,
+            name: name,
+            description: description,
+            sort: sort,
+            startTime: startTime,
+            endTime: endTime,
+            require: require,
+            numberOfPeople: numberOfPeople,
+            owner: owner,
+            isPublic: isPublic,
+            members: members,
+            image: image,
+            created: createdTimestamp.dateValue()
+        )
+        group.invitationCode = data["invitationCode"] as? String
+
+        return group
+    }
+
     func parseCollectionData(productData: [String: Any]) -> Collection? {
         guard
             let productId = productData["productId"] as? String,
@@ -370,6 +464,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     @objc func groupButtonTapped() {
         animateLineViewTransition(to: groupButton)
         animateViewTransition(to: groupTableView)
+        fetchGroups(userId: userId ?? "")
     }
     @objc func collectionButtonTapped() {
         animateLineViewTransition(to: collectionButton)
@@ -467,7 +562,7 @@ class MyRequestCell: UITableViewCell {
             requestImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             requestImageView.heightAnchor.constraint(equalToConstant: 80),
             requestImageView.widthAnchor.constraint(equalToConstant: 80),
-            requestNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40),
+            requestNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
             requestNameLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),
             requestDescriptionLabel.topAnchor.constraint(equalTo: requestNameLabel.bottomAnchor, constant: 10),
             requestDescriptionLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),
