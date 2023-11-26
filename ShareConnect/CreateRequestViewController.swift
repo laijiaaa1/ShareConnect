@@ -19,8 +19,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     let uploadButton = UIButton()
     let requestSelectSegment = UISegmentedControl()
     let doneButton = UIButton()
-    var groupOptions: [String] = []
+    var groupOptions: [String: Any] = [:]
     var selectedGroupID: String?
+    var selectedGroupName: String?
     var selectedGroup: String? {
         didSet {
             updateSelectedGroupUI()
@@ -116,7 +117,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 if let error = error {
                     print("Error uploading image: \(error)")
                 } else {
-                    storageRef.downloadURL { (url, error) in
+                    storageRef.downloadURL { [self] (url, error) in
                         if let error = error {
                             print("Error getting download URL: \(error)")
                         } else if let downloadURL = url {
@@ -137,10 +138,11 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                        }
                                    }
                                }
-
-                            if let selectedGroupID = self.selectedGroupID {
-                                   productData["groupID"] = selectedGroupID
-                               }
+                            if let selectedGroupID = self.selectedGroupID,
+                                   let selectedGroupName = self.selectedGroup {
+                                    productData["groupID"] = selectedGroupID
+                                    productData["groupName"] = selectedGroupName
+                                }
                             let demandProduct = Product(
                                 productId: productData["productId"] as? String ?? "",
                                 name: productData["name"] as? String ?? "",
@@ -158,7 +160,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 ),
                                 itemType: .request
                             )
-                            db.collection("products").addDocument(data: [
+                            let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
+
+                            db.collection(collectionName).addDocument(data: [
                                 "type": ProductType.request.rawValue,
                                 "product": productData
                             ]) { error in
@@ -213,38 +217,56 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     }
 
     func fetchUserGroups() {
-        guard let userId = Auth.auth().currentUser?.uid else {
+        guard let user = Auth.auth().currentUser else {
             print("User not authenticated.")
             return
         }
+
         let db = Firestore.firestore()
-        db.collection("users").document(userId).collection("groups").getDocuments { [weak self] (querySnapshot, error) in
+        db.collection("users").document(user.uid).getDocument { [weak self] (document, error) in
             guard let self = self else { return }
-            if let error = error {
-                print("Error fetching user groups: \(error)")
+
+            if let document = document, document.exists {
+                let data = document.data()
+
+                if let groups = data?["groups"] as? [String: Any] {
+                    self.groupOptions = groups
+                    self.showGroupOptions()
+                } else {
+                    print("Groups field is not of expected type [String: Any]")
+                }
             } else {
-                self.groupOptions = querySnapshot?.documents.map { $0.documentID } ?? []
-                self.showGroupOptions()
+                print("Document does not exist")
             }
         }
     }
     func showGroupOptions() {
         let alertController = UIAlertController(title: "Select Group", message: nil, preferredStyle: .actionSheet)
-        for groupOption in groupOptions {
-            let action = UIAlertAction(title: groupOption, style: .default) { [weak self] _ in
-                print("Selected group: \(groupOption)")
-                self?.selectedGroupID = groupOption
-                self?.updateSelectedGroupUI()
+
+        for (groupId, groupInfo) in groupOptions {
+            if let groups = groupInfo as? [String: Any],
+               let groupId = groups["groupId"] as? String,
+                let groupName = groups["groupName"] as? String {
+                let action = UIAlertAction(title: groupName, style: .default) { [weak self] _ in
+                    print("Selected group: \(groupName)")
+                    self?.selectedGroupID = groupId
+                    self?.selectedGroup = groupName
+                    self?.updateSelectedGroupUI()
+                }
+                alertController.addAction(action)
             }
-            alertController.addAction(action)
         }
+
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
+
         present(alertController, animated: true, completion: nil)
     }
+
+
     func updateSelectedGroupUI() {
-        if let selectedGroupID = selectedGroupID {
-            groupHeaderLabel.text = "Selected Group: \(selectedGroupID)"
+        if let selectedGroupID = selectedGroupID,let selectedGroupName = selectedGroup {
+            groupHeaderLabel.text = "Selected Group: \(selectedGroupName)"
             if requestTableView.tableHeaderView == nil {
                 requestTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: requestTableView.bounds.size.width, height: 50))
                 requestTableView.tableHeaderView?.addSubview(groupHeaderLabel)

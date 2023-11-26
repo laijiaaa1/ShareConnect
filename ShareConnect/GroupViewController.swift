@@ -112,6 +112,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
                 // Use the document ID directly
                 self.updateGroupInFirestore(groupId: updatedGroup.documentId, updatedGroup: updatedGroup)
+                self.updateUserInFirestore(userId: userId, updatedGroup: updatedGroup)
             }
         }
         return cell
@@ -144,7 +145,6 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
             let updatedData: [String: Any] = [
                 "members": updatedGroup.members
-                // ... other properties you might want to update ...
             ]
 
             groupsRef.document(groupId).updateData(updatedData) { error in
@@ -155,6 +155,36 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 }
             }
         }
+    private func updateUserInFirestore(userId: String, updatedGroup: Group) {
+        let userRef = Firestore.firestore().collection("users").document(userId)
+        let groupId = "groupId"
+        let userGroupsData: [String: Any] = [
+            groupId: [
+                "groupId": updatedGroup.documentId,
+                "groupName": updatedGroup.name,
+                "groupImage": updatedGroup.image,
+                "groupDescription": updatedGroup.description,
+                "groupSort": updatedGroup.sort,
+                "groupOwner": updatedGroup.owner,
+                "groupStartTime": updatedGroup.startTime,
+                "groupEndTime": updatedGroup.endTime,
+                "groupRequire": updatedGroup.require,
+                "groupNumberOfPeople": updatedGroup.numberOfPeople,
+                "groupIsPublic": updatedGroup.isPublic,
+                "groupMembers": updatedGroup.members,
+                "groupCreated": updatedGroup.created,
+                "groupInvitationCode": updatedGroup.invitationCode ?? "" 
+            ]
+        ]
+
+        userRef.updateData(["groups": userGroupsData], completion: { error in
+            if let error = error {
+                print("Error updating user in Firestore: \(error.localizedDescription)")
+            } else {
+                print("User updated successfully in Firestore.")
+            }
+        })
+    }
 
 }
     class GroupTableViewCell: UITableViewCell{
