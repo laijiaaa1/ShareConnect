@@ -121,6 +121,12 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 300
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let group = groups[indexPath.row]
+        let subGroupViewController = SubGroupViewController()
+        subGroupViewController.group = group
+        navigationController?.pushViewController(subGroupViewController, animated: true)
+    }
     func fetchGroupData() {
         let groupsRef = Firestore.firestore().collection("groups")
         let query = groupsRef.whereField("isPublic", isEqualTo: true)

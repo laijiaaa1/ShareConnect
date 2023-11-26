@@ -230,7 +230,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 let data = document.data()
 
                 if let groups = data?["groups"] as? [String: Any] {
-                    self.groupOptions = groups
+                   
+                    var groupsSelect = groups
+                    self.groupOptions = groupsSelect
                     self.showGroupOptions()
                 } else {
                     print("Groups field is not of expected type [String: Any]")

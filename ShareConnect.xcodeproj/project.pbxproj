@@ -13,6 +13,7 @@
 		3401F6892B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F6882B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift */; };
 		3401F68E2B1192200092E564 /* CommendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F68D2B1192200092E564 /* CommendViewController.swift */; };
 		3401F6902B11BE1B0092E564 /* SellerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F68F2B11BE1B0092E564 /* SellerInfo.swift */; };
+		3401F6932B13627A0092E564 /* SubGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F6922B13627A0092E564 /* SubGroupViewController.swift */; };
 		3410D9662B07125600D32744 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9652B07125600D32744 /* GroupViewController.swift */; };
 		3410D9682B07129800D32744 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9672B07129800D32744 /* DetailViewController.swift */; };
 		3410D96A2B07665700D32744 /* SelectedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9692B07665700D32744 /* SelectedViewController.swift */; };
@@ -52,6 +53,7 @@
 		3401F68D2B1192200092E564 /* CommendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommendViewController.swift; sourceTree = "<group>"; };
 		3401F68F2B11BE1B0092E564 /* SellerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellerInfo.swift; sourceTree = "<group>"; };
 		3401F6912B123E370092E564 /* ShareConnect.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareConnect.entitlements; sourceTree = "<group>"; };
+		3401F6922B13627A0092E564 /* SubGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubGroupViewController.swift; sourceTree = "<group>"; };
 		3410D9652B07125600D32744 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
 		3410D9672B07129800D32744 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		3410D9692B07665700D32744 /* SelectedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedViewController.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				341E9B8D2B03629800997FE9 /* SceneDelegate.swift */,
 				341E9B8F2B03629800997FE9 /* HomePageViewController.swift */,
 				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
+				3401F6922B13627A0092E564 /* SubGroupViewController.swift */,
 				3401F6822B0F17050092E564 /* ProvideViewController.swift */,
 				346DE7C62B05AB5C008D411A /* CreateViewController.swift */,
 				34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */,
@@ -341,6 +344,7 @@
 				3401F6902B11BE1B0092E564 /* SellerInfo.swift in Sources */,
 				3410D97D2B09BA0400D32744 /* ChatViewController.swift in Sources */,
 				341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */,
+				3401F6932B13627A0092E564 /* SubGroupViewController.swift in Sources */,
 				3401F68E2B1192200092E564 /* CommendViewController.swift in Sources */,
 				3401F6872B0F4B010092E564 /* RecoderViewController.swift in Sources */,
 				3410D96A2B07665700D32744 /* SelectedViewController.swift in Sources */,

@@ -160,8 +160,40 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "380"
             endingLineNumber = "380"
-            landmarkName = "product"
-            landmarkType = "24">
+            landmarkName = "fetchDataForSort(classification:type:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "7892FE3C-5B79-4BBF-900A-F72737A0057F - b3f991bb31f66913"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.SearchViewController.fetchDataForSort(classification: Swift.String, type: ShareConnect.ProductType) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/SearchViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "380"
+                  endingLineNumber = "380"
+                  offsetFromSymbolStart = "1544">
+               </Location>
+               <Location
+                  uuid = "7892FE3C-5B79-4BBF-900A-F72737A0057F - b3f991bb31f66913"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.SearchViewController.fetchDataForSort(classification: Swift.String, type: ShareConnect.ProductType) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/SearchViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "380"
+                  endingLineNumber = "380"
+                  offsetFromSymbolStart = "1600">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -416,8 +448,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "536"
             endingLineNumber = "536"
-            landmarkName = "currentButtonType"
-            landmarkType = "24">
+            landmarkName = "addCollection()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -432,7 +464,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "520"
             endingLineNumber = "520"
-            landmarkName = "updateUI()"
+            landmarkName = "addCollection()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -558,8 +590,8 @@
             filePath = "ShareConnect/GroupViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
             landmarkName = "fetchGroupData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -574,8 +606,8 @@
             filePath = "ShareConnect/GroupViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
             landmarkName = "fetchGroupData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -663,22 +695,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2C24672F-1BB6-4E1D-8C63-E3F9CE76E6AB"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ShareConnect/CreateRequestViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "246"
-            endingLineNumber = "246"
-            landmarkName = "showGroupOptions()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "4FCF5FB1-CB71-4095-9FCB-36FB1937A597"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -686,13 +702,13 @@
             filePath = "ShareConnect/CreateRequestViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "268"
-            endingLineNumber = "268"
+            startingLineNumber = "270"
+            endingLineNumber = "270"
             landmarkName = "updateSelectedGroupUI()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "4FCF5FB1-CB71-4095-9FCB-36FB1937A597 - a62c21657a73e15d"
+                  uuid = "4FCF5FB1-CB71-4095-9FCB-36FB1937A597 - a62c21657a73e1d9"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -702,12 +718,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/CreateRequestViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "266"
-                  endingLineNumber = "266"
+                  startingLineNumber = "270"
+                  endingLineNumber = "270"
                   offsetFromSymbolStart = "92">
                </Location>
                <Location
-                  uuid = "4FCF5FB1-CB71-4095-9FCB-36FB1937A597 - a62c21657a73e15d"
+                  uuid = "4FCF5FB1-CB71-4095-9FCB-36FB1937A597 - a62c21657a73e1d9"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -717,12 +733,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/CreateRequestViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "266"
-                  endingLineNumber = "266"
+                  startingLineNumber = "270"
+                  endingLineNumber = "270"
                   offsetFromSymbolStart = "156">
                </Location>
                <Location
-                  uuid = "4FCF5FB1-CB71-4095-9FCB-36FB1937A597 - a62c21657a73e15d"
+                  uuid = "4FCF5FB1-CB71-4095-9FCB-36FB1937A597 - a62c21657a73e1d9"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -732,11 +748,139 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/CreateRequestViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "266"
-                  endingLineNumber = "266"
+                  startingLineNumber = "270"
+                  endingLineNumber = "270"
                   offsetFromSymbolStart = "252">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "37D44950-4F7A-4DA3-8F02-6ED61F1CC4E9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/SubGroupViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "fetchRequestsForUser(type:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BE9312F1-C4F8-4A4C-91F5-AA1629B7BCB6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/SubGroupViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "fetchRequestsForUser(type:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9DF609ED-86D0-4665-9FC8-C7F9BAA69F56"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/SubGroupViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "fetchRequestsForUser(type:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "916B6999-C8AC-4D76-A5A8-FAE209EA1965"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/SubGroupViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "fetchRequestsForUser(type:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DC7E5928-873C-45EE-A298-728E2F165B9A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/SubGroupViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "fetchRequestsForUser(type:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "DC7E5928-873C-45EE-A298-728E2F165B9A - f195583d496e8276"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.SubGroupViewController.fetchRequestsForUser(type: ShareConnect.ProductType) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/SubGroupViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44"
+                  offsetFromSymbolStart = "1644">
+               </Location>
+               <Location
+                  uuid = "DC7E5928-873C-45EE-A298-728E2F165B9A - f195583d496e8276"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.SubGroupViewController.fetchRequestsForUser(type: ShareConnect.ProductType) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/SubGroupViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44"
+                  offsetFromSymbolStart = "1896">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2B83EC89-0512-4F5B-9495-C58739C1834A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/SubGroupViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "fetchRequestsForUser(type:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
