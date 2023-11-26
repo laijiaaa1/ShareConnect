@@ -526,8 +526,8 @@
             filePath = "ShareConnect/GroupViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
+            startingLineNumber = "155"
+            endingLineNumber = "155"
             landmarkName = "fetchGroupData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -542,8 +542,8 @@
             filePath = "ShareConnect/GroupViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "fetchGroupData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -574,8 +574,8 @@
             filePath = "ShareConnect/GroupViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
+            startingLineNumber = "121"
+            endingLineNumber = "121"
             landmarkName = "tableView(_:numberOfRowsInSection:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -931,7 +931,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "D37E9723-641E-45E8-A000-B24647F088C1 - 83b7b0bd89666310"
+                  uuid = "D37E9723-641E-45E8-A000-B24647F088C1 - 83b7b0bd89666287"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -941,12 +941,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ProfileViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "327"
-                  endingLineNumber = "327"
+                  startingLineNumber = "338"
+                  endingLineNumber = "338"
                   offsetFromSymbolStart = "348">
                </Location>
                <Location
-                  uuid = "D37E9723-641E-45E8-A000-B24647F088C1 - 83b7b0bd89666310"
+                  uuid = "D37E9723-641E-45E8-A000-B24647F088C1 - 83b7b0bd89666287"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -956,8 +956,8 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ProfileViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "327"
-                  endingLineNumber = "327"
+                  startingLineNumber = "338"
+                  endingLineNumber = "338"
                   offsetFromSymbolStart = "564">
                </Location>
             </Locations>
@@ -992,6 +992,22 @@
             startingLineNumber = "33"
             endingLineNumber = "33"
             landmarkName = "tableView(_:numberOfRowsInSection:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2E6E2A9A-2AF8-4A4A-9BA7-CDDF253A6463"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/GroupViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "350"
+            endingLineNumber = "350"
+            landmarkName = "showInvitationCodeAlert(group:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -79,6 +79,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var groups: [Group] = []
     var group: Group?
     let searchTextField = UITextField()
+    let currentUser = Auth.auth().currentUser?.uid
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
@@ -125,23 +126,6 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.groupNameLabel.text = group.name
         cell.groupMemberNumberLabel.text = group.members.count.description
         cell.groupImage.kf.setImage(with: URL(string: group.image))
-        cell.addGroupHandler = { [weak self] in
-            guard let self = self, let userId = Auth.auth().currentUser?.uid else {
-                return
-            }
-            
-            if !group.members.contains(userId) {
-                var updatedGroup = group
-                updatedGroup.addMember(userId: userId)
-                self.groups[indexPath.row] = updatedGroup
-                
-                self.tableView.reloadRows(at: [indexPath], with: .none)
-                
-                // Use the document ID directly
-                self.updateGroupInFirestore(groupId: updatedGroup.documentId, updatedGroup: updatedGroup)
-                self.updateUserInFirestore(userId: userId, updatedGroup: updatedGroup)
-            }
-        }
         return cell
     }
     
@@ -149,11 +133,24 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return 300
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let group = groups[indexPath.row]
-        let subGroupViewController = SubGroupViewController()
-        subGroupViewController.group = group
-        navigationController?.pushViewController(subGroupViewController, animated: true)
+        var group = groups[indexPath.row]
+        if group.isPublic {
+            let subGroupViewController = SubGroupViewController()
+            subGroupViewController.group = group
+            navigationController?.pushViewController(subGroupViewController, animated: true)
+        } else {
+            showInvitationCodeAlert(group: group) { isCodeCorrect in
+                if isCodeCorrect {
+                    let subGroupViewController = SubGroupViewController()
+                    subGroupViewController.group = group
+                    self.navigationController?.pushViewController(subGroupViewController, animated: true)
+                } else {
+                    print("Incorrect invitation code")
+                }
+            }
+        }
     }
+
     func fetchGroupData() {
         let groupsRef = Firestore.firestore().collection("groups")
         let query = groupsRef.whereField("isPublic", isEqualTo: true)
@@ -287,6 +284,8 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
 }
     class GroupTableViewCell: UITableViewCell{
         var addGroupHandler: (() -> Void)?
+        var group: Group?
+        var showInvitationCodeAlert: ((Group, @escaping (Bool) -> Void) -> Void)?
         let groupImage = UIImageView()
         let groupButton = UIButton()
         let groupNameLabel = UILabel()
@@ -331,4 +330,39 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
             fatalError("init(coder:) has not been implemented")
         }
     }
+extension GroupViewController {
+    func showInvitationCodeAlert(group: Group, completion: @escaping (Bool) -> Void) {
+        var mutableGroup = group
+        let alertController = UIAlertController(title: "Enter Invitation Code", message: nil, preferredStyle: .alert)
 
+        alertController.addTextField { textField in
+            textField.placeholder = "Invitation Code"
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            completion(false)
+        }
+
+        let joinAction = UIAlertAction(title: "Join", style: .default) { _ in
+            if let invitationCode = alertController.textFields?.first?.text {
+                if invitationCode == mutableGroup.invitationCode {
+                    completion(true)
+                    mutableGroup.addMember(userId: self.currentUser!)
+                    if let index = self.groups.firstIndex(where: { $0.documentId == mutableGroup.documentId }) {
+                        self.groups[index] = mutableGroup
+                    }
+                } else {
+                    print("Invalid invitation code")
+                    completion(false)
+                }
+            } else {
+                completion(false)
+            }
+        }
+
+        alertController.addAction(cancelAction)
+        alertController.addAction(joinAction)
+
+        present(alertController, animated: true, completion: nil)
+    }
+}
