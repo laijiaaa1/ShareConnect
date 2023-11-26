@@ -151,6 +151,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     
     @objc func buttonClick(sender: UIButton) {
+        let groupViewController = GroupViewController()
+        navigationController?.pushViewController(groupViewController, animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //        if collectionView == hotCollection {

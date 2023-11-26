@@ -154,7 +154,7 @@ class CreateGroupViewController: CreateRequestViewController {
                 "startTime": findCellWithTag(1)?.textField.text ?? "",
                 "endTime": findCellWithTag(2)?.textField.text ?? "",
                 "require": findCellWithTag(5)?.textField.text ?? "",
-                "numberOfPeople": findCellWithTag(6)?.textField.text ?? "",
+               "numberOfPeople": Int(findCellWithTag(6)?.textField.text ?? "") ?? 1,
                 "owner": user.uid,
                 "isPublic": isGroupPublic,
                 "members": [user.uid],
