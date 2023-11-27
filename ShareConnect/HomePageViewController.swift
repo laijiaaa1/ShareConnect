@@ -20,11 +20,12 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     let placeView = UIView()
     let courseView = UIView()
     let foodView = UIView()
-    let hotItems = [("Camping", "icons8-camp-64"),
-                    ("Hiking", "icons8-camp-64"),
-                    ("Fishing", "icons8-camp-64"),
-                    ("Picnic", "icons8-camp-64"),
-                    ("Travel", "icons8-camp-64")]
+    let hotItems = [("", "icons8-camp-64"),
+                    ("", "icons8-camp-64"),
+                    ("", "icons8-camp-64"),
+                    ("", "icons8-camp-64"),
+                    ("", "icons8-camp-64")]
+    var groups: [Group] = []
     let browsingHistory = UILabel()
     //    var browsingHistoryItems = [(String, String)]() {
     //        didSet{
@@ -41,7 +42,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     var browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     let db = Firestore.firestore()
     var searchTimer: Timer?
-
+    
     override func viewWillAppear(_ animated: Bool) {
         browsingHistoryCollection.reloadData()
     }
@@ -141,6 +142,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         browsingHistoryCollection.register(HistoryCell.self, forCellWithReuseIdentifier: "cell")
         searchTextField.delegate = self
         textFieldShouldReturn(searchTextField)
+        fetchGroupData()
     }
     @objc func chatListButtonClick(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -171,11 +173,12 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         navigationController?.pushViewController(groupViewController, animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //        if collectionView == hotCollection {
-        //            return hotItems.count
-        //        } else {
-        return browsingHistoryItems.count
-        //        }
+        if collectionView == hotCollection {
+            return groups.count
+        } else if collectionView == browsingHistoryCollection {
+            return browsingHistoryItems.count
+        }
+        return 0
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         //        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? HistoryCell ?? HistoryCell()
@@ -196,61 +199,74 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         cell.layer.masksToBounds = true
         cell.layer.borderWidth = 1
         if collectionView == hotCollection {
-            let xpoint = CGFloat(indexPath.item) * 160
-            cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
-            let imageView = UIImageView(frame: CGRect(x: 25, y: 20, width: 100, height: 100))
-            imageView.image = UIImage(named: hotItems[indexPath.row].1)
-            cell.addSubview(imageView)
-            let label = UILabel(frame: CGRect(x: 0, y: 120, width: 150, height: 20))
-            label.text = hotItems[indexPath.row].0
-            label.font = UIFont(name: "GeezaPro-Bold", size: 15)
-            label.textAlignment = .center
-            cell.addSubview(label)
-            let imageButton = UIButton(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
-            imageButton.tag = indexPath.row
-            imageButton.addTarget(self, action: #selector(imageButtonClick), for: .touchUpInside)
-            cell.addSubview(imageButton)
+            if indexPath.row < groups.count {
+                let xpoint = CGFloat(indexPath.item) * 160
+                cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
+                let imageView = UIImageView(frame: CGRect(x: 25, y: 20, width: 100, height: 100))
+                imageView.contentMode = .scaleAspectFit
+                imageView.kf.setImage(with: URL(string: groups[indexPath.row].image))
+                cell.addSubview(imageView)
+                let label = UILabel(frame: CGRect(x: 0, y: 120, width: 150, height: 20))
+                label.text = groups[indexPath.row].name
+                label.font = UIFont(name: "GeezaPro-Bold", size: 15)
+                label.textAlignment = .center
+                cell.addSubview(label)
+                let imageButton = UIButton(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
+                imageButton.tag = indexPath.row
+                imageButton.addTarget(self, action: #selector(imageButtonClick), for: .touchUpInside)
+                cell.addSubview(imageButton)
+                return cell
+            }
         } else {
-            let browsingRecord = browsingHistoryItems[indexPath.row]
-            let xpoint = CGFloat(indexPath.item) * 320
-            cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
-            var view = UIView()
-            let viewPoint = CGFloat(indexPath.item) * 320
-            view.frame = CGRect(x: 20+viewPoint, y: 35, width: 80, height: 80)
-            view.layer.cornerRadius = 10
-            view.layer.borderWidth = 1
-            collectionView.addSubview(view)
-            let historyXpoint = CGFloat(indexPath.item) * 320
-            cell.frame = CGRect(x: historyXpoint, y: 0, width: 310, height: 150)
-            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
-            imageView.layer.cornerRadius = 10
-            imageView.layer.borderWidth = 1
-            imageView.layer.masksToBounds = true
-            imageView.kf.setImage(with: URL(string: browsingRecord.1))
-            view.addSubview(imageView)
-            let label = UILabel(frame: CGRect(x: 80, y: 50, width: 150, height: 20))
-            label.text = browsingRecord.0
-            label.font = UIFont(name: "GeezaPro-Bold", size: 15)
-            label.textAlignment = .center
-            label.backgroundColor = .white
-            cell.addSubview(label)
-            let imageButton = UIButton(frame: CGRect(x: 230, y: 80, width: 60, height: 30))
-            imageButton.setTitle("Detail", for: .normal)
-            imageButton.setTitleColor(.black, for: .normal)
-            imageButton.layer.cornerRadius = 10
-            imageButton.layer.borderWidth = 1
-            imageButton.titleLabel?.font = UIFont(name: "GeezaPro-Bold", size: 15)
-            imageButton.tag = indexPath.row
-            imageButton.addTarget(self, action: #selector(imageButtonClick), for: .touchUpInside)
-            cell.addSubview(imageButton)
+            if indexPath.row < browsingHistoryItems.count {
+                let browsingRecord = browsingHistoryItems[indexPath.row]
+                let xpoint = CGFloat(indexPath.item) * 320
+                cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
+                var view = UIView()
+                let viewPoint = CGFloat(indexPath.item) * 320
+                view.frame = CGRect(x: 20+viewPoint, y: 35, width: 80, height: 80)
+                view.layer.cornerRadius = 10
+                view.layer.borderWidth = 1
+                collectionView.addSubview(view)
+                let historyXpoint = CGFloat(indexPath.item) * 320
+                cell.frame = CGRect(x: historyXpoint, y: 0, width: 310, height: 150)
+                let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+                imageView.layer.cornerRadius = 10
+                imageView.layer.borderWidth = 1
+                imageView.layer.masksToBounds = true
+                imageView.kf.setImage(with: URL(string: browsingRecord.1))
+                view.addSubview(imageView)
+                let label = UILabel(frame: CGRect(x: 80, y: 50, width: 150, height: 20))
+                label.text = browsingRecord.0
+                label.font = UIFont(name: "GeezaPro-Bold", size: 15)
+                label.textAlignment = .center
+                label.backgroundColor = .white
+                cell.addSubview(label)
+                let imageButton = UIButton(frame: CGRect(x: 230, y: 80, width: 60, height: 30))
+                imageButton.setTitle("Detail", for: .normal)
+                imageButton.setTitleColor(.black, for: .normal)
+                imageButton.layer.cornerRadius = 10
+                imageButton.layer.borderWidth = 1
+                imageButton.titleLabel?.font = UIFont(name: "GeezaPro-Bold", size: 15)
+                imageButton.tag = indexPath.row
+                imageButton.addTarget(self, action: #selector(imageButtonClick), for: .touchUpInside)
+                cell.addSubview(imageButton)
+                return cell
+            }
         }
         return cell
     }
     @objc func imageButtonClick(sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-        vc.productID = browsingHistoryItems[sender.tag].2
-        navigationController?.pushViewController(vc, animated: true)
+        if sender.superview?.superview == hotCollection {
+            let vc = SubGroupViewController()
+            vc.group = groups[sender.tag]
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+            vc.productID = browsingHistoryItems[sender.tag].2
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
     func searchProductByName(searchString: String, completion: @escaping ([Product]) -> Void) {
         let db = Firestore.firestore()
@@ -265,12 +281,12 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 return
             } else {
                 var searchResults: [Product] = []
-              for document in snapshot!.documents {
-                  let data = document.data()
-                if let product = self.parseProductData(productData: data) {
-                  searchResults.append(product)
+                for document in snapshot!.documents {
+                    let data = document.data()
+                    if let product = self.parseProductData(productData: data) {
+                        searchResults.append(product)
+                    }
                 }
-              }
                 completion(searchResults)
             }
         }
@@ -317,52 +333,30 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         )
         return newProduct
     }
+    
+    func fetchGroupData() {
+        let groupsRef = Firestore.firestore().collection("groups").getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error fetching public groups: \(error.localizedDescription)")
+            } else {
+                self.groups.removeAll()
+                for document in querySnapshot!.documents {
+                    let data = document.data()
+                    if let group = Group(data: data, documentId: document.documentID) {
+                        self.groups.append(group)
+                    }
+                }
+                self.groups.sort(by: { $0.members.count > $1.members.count })
+                self.hotCollection.reloadData()
+            }
+        }
+    }
 }
 
 class HistoryCell: UICollectionViewCell {
-    //    let imageView = UIImageView()
-    //    let label = UILabel()
-    //    let imageButton = UIButton()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        //        backgroundColor = .white
-        //        layer.cornerRadius = 10
-        //        layer.masksToBounds = true
-        //        layer.borderWidth = 1
-        //
-        //        imageView.translatesAutoresizingMaskIntoConstraints = false
-        //        addSubview(imageView)
-        //
-        //        label.font = UIFont(name: "GeezaPro-Bold", size: 15)
-        //        label.textAlignment = .center
-        //        label.translatesAutoresizingMaskIntoConstraints = false
-        //        addSubview(label)
-        //
-        //        imageButton.translatesAutoresizingMaskIntoConstraints = false
-        //        addSubview(imageButton)
-        //
-        //        setupConstraints()
     }
-    //    func setupConstraints() {
-    //        NSLayoutConstraint.activate([
-    //            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-    //            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25),
-    //            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25),
-    //            imageView.heightAnchor.constraint(equalToConstant: 100),
-    //
-    //            label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5),
-    //            label.leadingAnchor.constraint(equalTo: leadingAnchor),
-    //            label.trailingAnchor.constraint(equalTo: trailingAnchor),
-    //            label.heightAnchor.constraint(equalToConstant: 20),
-    //
-    //            imageButton.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 5),
-    //            imageButton.leadingAnchor.constraint(equalTo: leadingAnchor),
-    //            imageButton.trailingAnchor.constraint(equalTo: trailingAnchor),
-    //            imageButton.heightAnchor.constraint(equalToConstant: 30)
-    //        ])
-    //    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -371,9 +365,7 @@ extension HomePageViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let searchString = textField.text, !searchString.isEmpty {
             searchProductByName(searchString: searchString) { [weak self] products in
-                
                 let searchResultsViewController = SearchResultsViewController()
-    
                 searchResultsViewController.searchResults = products
                 self?.navigationController?.pushViewController(searchResultsViewController, animated: true)
             }
