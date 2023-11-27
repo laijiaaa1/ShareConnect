@@ -73,7 +73,7 @@ class ClassViewController: UIViewController {
             classPlaceButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             classPlaceButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             classPlaceButton.widthAnchor.constraint(equalTo: view.widthAnchor),
-            classPlaceButton.heightAnchor.constraint(equalToConstant: 280),
+            classPlaceButton.heightAnchor.constraint(equalToConstant: 300),
             classProductButton.topAnchor.constraint(equalTo: classPlaceButton.bottomAnchor, constant: 30),
             classProductButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -35),
             classProductButton.widthAnchor.constraint(equalTo: view.widthAnchor),
