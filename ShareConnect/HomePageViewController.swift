@@ -152,6 +152,18 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     @objc func buttonClick(sender: UIButton) {
         let groupViewController = GroupViewController()
+        switch sender.tag {
+        case 0:
+            groupViewController.sort = "product"
+        case 1:
+            groupViewController.sort = "place"
+        case 2:
+            groupViewController.sort = "course"
+        case 3:
+            groupViewController.sort = "food"
+        default:
+            groupViewController.sort = ""
+        }
         navigationController?.pushViewController(groupViewController, animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

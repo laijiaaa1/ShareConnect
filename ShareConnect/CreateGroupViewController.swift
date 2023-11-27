@@ -170,7 +170,6 @@ class CreateGroupViewController: CreateRequestViewController {
                    print("Error creating group: \(error.localizedDescription)")
                } else {
                    print("Group created and saved to Firestore.")
-                   // Handle success, e.g., navigate to the group detail page
                }
            }
        }

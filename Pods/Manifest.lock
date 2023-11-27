@@ -776,7 +776,6 @@ PODS:
     - Libuv-gRPC (= 0.0.10)
   - gRPC-Core/Interface (1.44.0)
   - GTMSessionFetcher/Core (3.1.1)
-  - JGProgressHUD (2.2)
   - Kingfisher (7.10.0)
   - leveldb-library (1.22.2)
   - Libuv-gRPC (0.0.10):
@@ -803,7 +802,6 @@ DEPENDENCIES:
   - FirebaseAuth
   - FirebaseMessaging
   - FirebaseStorage
-  - JGProgressHUD
   - Kingfisher
   - MJRefresh
   - SwiftLint
@@ -832,7 +830,6 @@ SPEC REPOS:
     - "gRPC-C++"
     - gRPC-Core
     - GTMSessionFetcher
-    - JGProgressHUD
     - Kingfisher
     - leveldb-library
     - Libuv-gRPC
@@ -865,7 +862,6 @@ SPEC CHECKSUMS:
   "gRPC-C++": 9675f953ace2b3de7c506039d77be1f2e77a8db2
   gRPC-Core: 943e491cb0d45598b0b0eb9e910c88080369290b
   GTMSessionFetcher: e8647203b65cee28c5f73d0f473d096653945e72
-  JGProgressHUD: d83d7a981b85d11205e19ff8ad5bb9c40571c847
   Kingfisher: a18f05d3b6d37d8650ee4a3e61d57a28fc6207f6
   leveldb-library: f03246171cce0484482ec291f88b6d563699ee06
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
@@ -875,6 +871,6 @@ SPEC CHECKSUMS:
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   SwiftLint: c1de071d9d08c8aba837545f6254315bc900e211
 
-PODFILE CHECKSUM: fa6898afa75d4081ba695f243b683dd23df14d4f
+PODFILE CHECKSUM: 0d9d39921336379c820c66f10dc5dc09b9e73ac9
 
 COCOAPODS: 1.13.0

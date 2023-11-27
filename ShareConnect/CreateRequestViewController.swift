@@ -10,7 +10,6 @@ import Firebase
 import FirebaseFirestore
 import FirebaseAuth
 import FirebaseCore
-import JGProgressHUD
 import FirebaseStorage
 import DatePicker
 

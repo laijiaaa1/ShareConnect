@@ -17,17 +17,14 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = CustomColors.B1
-        // Do any additional setup after loading the view.
     }
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         guard let email = emailTextField.text, let password = passwordTextField.text else {
-            // Handle invalid input
             return
         }
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 print("Error creating user: \(error.localizedDescription)")
-                // Handle registration error
             } else {
                 guard let uid = Auth.auth().currentUser?.uid else {
                     return

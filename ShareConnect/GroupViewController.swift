@@ -80,6 +80,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var group: Group?
     let searchTextField = UITextField()
     let currentUser = Auth.auth().currentUser?.uid
+    var sort: String?
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
@@ -89,7 +90,15 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         view.backgroundColor = CustomColors.B1
         tableView.frame = view.bounds
-        fetchGroupData()
+        if sort == "product" {
+            fetchGroupData(sort: "product")
+        } else if sort == "place" {
+            fetchGroupData(sort: "place")
+        } else if sort == "course" {
+            fetchGroupData(sort: "course")
+        } else if sort == "food" {
+            fetchGroupData(sort: "food")
+        }
         view.backgroundColor = CustomColors.B1
         searchTextField.layer.borderWidth = 1
         searchTextField.layer.cornerRadius = 22
@@ -110,6 +119,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         searchTextField.backgroundColor = .white
         view.addSubview(searchTextField)
         searchTextField.addTarget(self, action: #selector(searchTextFieldDidChange), for: .editingChanged)
+
     }
     @objc func searchTextFieldDidChange(){
         searchGroupsByName(searchString: searchTextField.text ?? "", completion: { (groups) in
@@ -122,6 +132,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupTableViewCell", for: indexPath) as! GroupTableViewCell
+       
         let group = groups[indexPath.row]
         cell.groupNameLabel.text = group.name
         cell.groupMemberNumberLabel.text = group.members.count.description
@@ -130,7 +141,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300
+        return 200
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var group = groups[indexPath.row]
@@ -151,9 +162,10 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
 
-    func fetchGroupData() {
+    func fetchGroupData(sort: String) {
+        let sort = sort
         let groupsRef = Firestore.firestore().collection("groups")
-        let query = groupsRef.whereField("isPublic", isEqualTo: true)
+        let query = groupsRef.whereField("isPublic", isEqualTo: true).whereField("sort", isEqualTo: sort)
         
         query.getDocuments { (querySnapshot, error) in
             if let error = error {

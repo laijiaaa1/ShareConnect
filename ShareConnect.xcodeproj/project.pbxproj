@@ -501,6 +501,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShareConnect/ShareConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K53C9AZMMU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareConnect/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -530,6 +531,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShareConnect/ShareConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K53C9AZMMU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareConnect/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
