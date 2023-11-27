@@ -89,7 +89,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.register(GroupTableViewCell.self, forCellReuseIdentifier: "GroupTableViewCell")
         
         view.backgroundColor = CustomColors.B1
-        tableView.frame = view.bounds
+      
         if sort == "product" {
             fetchGroupData(sort: "product")
         } else if sort == "place" {
@@ -99,7 +99,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         } else if sort == "food" {
             fetchGroupData(sort: "food")
         }
-        view.backgroundColor = CustomColors.B1
+        tableView.backgroundColor = CustomColors.B1
         searchTextField.layer.borderWidth = 1
         searchTextField.layer.cornerRadius = 22
         searchTextField.layer.masksToBounds = true
@@ -119,7 +119,15 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         searchTextField.backgroundColor = .white
         view.addSubview(searchTextField)
         searchTextField.addTarget(self, action: #selector(searchTextFieldDidChange), for: .editingChanged)
-
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 10),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30)
+        ])
+        tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
     }
     @objc func searchTextFieldDidChange(){
         searchGroupsByName(searchString: searchTextField.text ?? "", completion: { (groups) in
@@ -132,16 +140,16 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupTableViewCell", for: indexPath) as! GroupTableViewCell
-       
         let group = groups[indexPath.row]
+        cell.backgroundColor = CustomColors.B1
         cell.groupNameLabel.text = group.name
-        cell.groupMemberNumberLabel.text = group.members.count.description
+        cell.groupMemberNumberLabel.text = "Members: + \(group.members.count.description)"
         cell.groupImage.kf.setImage(with: URL(string: group.image))
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+        return 250
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var group = groups[indexPath.row]
@@ -302,36 +310,65 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let groupButton = UIButton()
         let groupNameLabel = UILabel()
         let groupMemberNumberLabel = UILabel()
+        let groupMemberNumberImage = UIImageView()
+        let backView = UIView()
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             super.init(style: style, reuseIdentifier: reuseIdentifier)
-            groupImage.backgroundColor = .yellow
+            groupImage.layer.cornerRadius = 10
+            groupImage.layer.masksToBounds = true
+            groupImage.layer.borderWidth = 1
             groupNameLabel.text = "Camping Group"
             groupMemberNumberLabel.text = "member：1"
-            groupButton.setTitle("+", for: .normal)
+            groupMemberNumberImage.backgroundColor = .yellow
+            groupMemberNumberImage.layer.cornerRadius = 10
+            groupMemberNumberImage.layer.borderWidth = 1
+            groupMemberNumberImage.layer.masksToBounds = true
+            groupButton.setTitle("+            ", for: .normal)
+            groupButton.contentHorizontalAlignment = .right
             groupButton.addTarget(self, action: #selector(addGroup), for: .touchUpInside)
             groupButton.setTitleColor(.black, for: .normal)
-            contentView.addSubview(groupImage)
-            contentView.addSubview(groupNameLabel)
-            contentView.addSubview(groupMemberNumberLabel)
-            contentView.addSubview(groupButton)
+            groupButton.backgroundColor = .white
+            groupButton.layer.cornerRadius = 20
+            groupButton.layer.borderWidth = 1
+            groupButton.layer.masksToBounds = true
+            backView.backgroundColor = .white
+            backView.layer.cornerRadius = 10
+            backView.layer.masksToBounds = true
+            backView.layer.borderWidth = 1
+            contentView.addSubview(backView)
+            backView.addSubview(groupImage)
+            backView.addSubview(groupNameLabel)
+            backView.addSubview(groupMemberNumberLabel)
+            backView.addSubview(groupButton)
+            backView.addSubview(groupMemberNumberImage)
+            backView.translatesAutoresizingMaskIntoConstraints = false
             groupImage.translatesAutoresizingMaskIntoConstraints = false
             groupNameLabel.translatesAutoresizingMaskIntoConstraints = false
             groupMemberNumberLabel.translatesAutoresizingMaskIntoConstraints = false
             groupButton.translatesAutoresizingMaskIntoConstraints = false
+            groupMemberNumberImage.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                groupImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40),
-                groupImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-                groupImage.heightAnchor.constraint(equalToConstant: 100),
-                groupImage.widthAnchor.constraint(equalToConstant: 100),
-                groupNameLabel.topAnchor.constraint(equalTo: groupImage.bottomAnchor, constant: 20),
-                groupNameLabel.leadingAnchor.constraint(equalTo: groupImage.leadingAnchor, constant: 20),
-                groupMemberNumberLabel.topAnchor.constraint(equalTo: groupNameLabel.bottomAnchor, constant: 20),
-                groupMemberNumberLabel.leadingAnchor.constraint(equalTo: groupImage.trailingAnchor, constant: 20),
-                groupButton.topAnchor.constraint(equalTo: groupMemberNumberLabel.bottomAnchor, constant: 40),
-                groupButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-                groupButton.heightAnchor.constraint(equalToConstant: 40),
-                groupButton.widthAnchor.constraint(equalToConstant: 40),
-                
+                backView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+                backView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+                backView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+                backView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+                groupImage.topAnchor.constraint(equalTo: backView.topAnchor),
+                groupImage.leadingAnchor.constraint(equalTo: backView.leadingAnchor),
+                groupImage.trailingAnchor.constraint(equalTo: backView.trailingAnchor),
+                groupImage.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -80),
+                groupNameLabel.topAnchor.constraint(equalTo: groupImage.bottomAnchor, constant: 15),
+                groupNameLabel.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
+                groupMemberNumberImage.topAnchor.constraint(equalTo: groupNameLabel.bottomAnchor, constant: 15),
+                groupMemberNumberImage.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
+                groupMemberNumberImage.widthAnchor.constraint(equalToConstant: 20),
+                groupMemberNumberImage.heightAnchor.constraint(equalToConstant: 20),
+                groupMemberNumberLabel.topAnchor.constraint(equalTo: groupNameLabel.bottomAnchor, constant: 15),
+                groupMemberNumberLabel.leadingAnchor.constraint(equalTo: groupMemberNumberImage.trailingAnchor, constant: 20),
+                groupButton.topAnchor.constraint(equalTo: groupImage.bottomAnchor, constant: 15),
+                groupButton.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20),
+                groupButton.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -20),
+                groupButton.widthAnchor.constraint(equalToConstant: 80),
+                groupButton.heightAnchor.constraint(equalToConstant: 40)
             ])
         }
         @objc func addGroup(){

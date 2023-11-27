@@ -40,6 +40,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     let hotCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     var browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     let db = Firestore.firestore()
+    var searchTimer: Timer?
+
     override func viewWillAppear(_ animated: Bool) {
         browsingHistoryCollection.reloadData()
     }
@@ -137,6 +139,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         chatListButton.addTarget(self, action: #selector(chatListButtonClick), for: .touchUpInside)
         view.addSubview(chatListButton)
         browsingHistoryCollection.register(HistoryCell.self, forCellWithReuseIdentifier: "cell")
+        searchTextField.delegate = self
+        textFieldShouldReturn(searchTextField)
     }
     @objc func chatListButtonClick(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -248,6 +252,71 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         vc.productID = browsingHistoryItems[sender.tag].2
         navigationController?.pushViewController(vc, animated: true)
     }
+    func searchProductByName(searchString: String, completion: @escaping ([Product]) -> Void) {
+        let db = Firestore.firestore()
+        let groupsCollection = db.collection("products")
+        let query = groupsCollection
+            .whereField("product.Name", isGreaterThanOrEqualTo: searchString)
+            .whereField("product.Name", isLessThan: searchString + "\u{f8ff}")
+        query.getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Error getting documents: \(error)")
+                completion([])
+                return
+            } else {
+                var searchResults: [Product] = []
+              for document in snapshot!.documents {
+                  let data = document.data()
+                if let product = self.parseProductData(productData: data) {
+                  searchResults.append(product)
+                }
+              }
+                completion(searchResults)
+            }
+        }
+    }
+    func parseProductData(productData: [String: Any]) -> Product? {
+        guard let product = productData["product"] as? [String: Any],
+              let productId = product["productId"] as? String,
+              let name = product["Name"] as? String,
+              let price = product["Price"] as? String,
+              let imageString = product["image"] as? String,
+              let startTimeString = product["Start Time"] as? String,
+              let startTime = product["Start Time"] as? String,
+              let endTimeString = product["End Time"] as? String,
+              let endTime = product["End Time"] as? String else {
+            print("Error: Missing required fields in product data")
+            return nil
+        }
+        let sellerData = product["seller"] as? [String: Any]
+        guard let sellerID = sellerData?["sellerID"] as? String,
+              let sellerName = sellerData?["sellerName"] as? String,
+              let itemType = productData["type"] as? String
+        else {
+            print("Error: Failed to parse seller or itemType")
+            return nil
+        }
+        let description = product["Description"] as? String ?? ""
+        let sort = product["Sort"] as? String ?? ""
+        let quantity = product["Quantity"] as? Int ?? 0
+        let use = product["Use"] as? String ?? ""
+        let seller = Seller(sellerID: sellerID, sellerName: sellerName)
+        let newProduct = Product(
+            productId: productId,
+            name: name,
+            price: price,
+            startTime: startTime,
+            imageString: imageString,
+            description: description,
+            sort: sort,
+            quantity: quantity,
+            use: use,
+            endTime: endTime,
+            seller: seller,
+            itemType: ProductType(rawValue: itemType)!
+        )
+        return newProduct
+    }
 }
 
 class HistoryCell: UICollectionViewCell {
@@ -296,5 +365,20 @@ class HistoryCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+extension HomePageViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if let searchString = textField.text, !searchString.isEmpty {
+            searchProductByName(searchString: searchString) { [weak self] products in
+                
+                let searchResultsViewController = SearchResultsViewController()
+    
+                searchResultsViewController.searchResults = products
+                self?.navigationController?.pushViewController(searchResultsViewController, animated: true)
+            }
+        }
+        textField.resignFirstResponder()
+        return true
     }
 }
