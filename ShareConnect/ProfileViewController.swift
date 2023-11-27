@@ -168,6 +168,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     let userId = Auth.auth().currentUser?.uid
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = false
         fetchGroups(userId: userId ?? "")
     }
     override func viewDidLoad() {

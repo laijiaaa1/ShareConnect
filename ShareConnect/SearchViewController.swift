@@ -197,9 +197,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func button1Action() {
         currentButtonType = .request
-        button1.backgroundColor = .white
-        button2.backgroundColor = .clear
         lineView.center.x = button1.center.x
+        button1.setTitleColor(.black, for: .normal)
+        button2.setTitleColor(.lightGray, for: .normal)
+       
         //        if usification[0] == "product" {
         fetchRequestsForUser(type: .request)
         //        }
@@ -207,9 +208,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func button2Action() {
         currentButtonType = .supply
-        button2.backgroundColor = .white
-        button1.backgroundColor = .clear
         lineView.center.x = button2.center.x
+        button1.setTitleColor(.lightGray, for: .normal)
+        button2.setTitleColor(.black, for: .normal)
+       
         //        if usification[0] == "place" {
         fetchRequestsForUser(type: .supply)
         //        }
@@ -232,11 +234,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         ])
         button1.setTitle("Request", for: .normal)
         button1.setTitleColor(.black, for: .normal)
-        button1.layer.borderWidth = 1
+//        button1.layer.borderWidth = 1
         button1.addTarget(self, action: #selector(button1Action), for: .touchUpInside)
         button2.setTitle("Available", for: .normal)
         button2.setTitleColor(.black, for: .normal)
-        button2.layer.borderWidth = 1
+//        button2.layer.borderWidth = 1
         button2.addTarget(self, action: #selector(button2Action), for: .touchUpInside)
         stackView.addArrangedSubview(button1)
         stackView.addArrangedSubview(button2)

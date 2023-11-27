@@ -20,13 +20,35 @@ class ClassViewController: UIViewController {
     var allSupplies: [Product] = []
     var classification = ["place", "product"]
     var collectionView: UICollectionView!
+    let alphaView = UIView()
+    let placeLabel = UILabel()
+    let productLabel = UILabel()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "CLASS"
         navigationController?.navigationBar.isHidden = false
         view.backgroundColor = CustomColors.B1
+//        view.addSubview(alphaView)
         view.addSubview(classPlaceButton)
         view.addSubview(classProductButton)
+       
+        view.addSubview(placeLabel)
+        view.addSubview(productLabel)
+        
+        
+//        alphaView.backgroundColor = .black
+//        alphaView.alpha = 0.5
+        placeLabel.frame.size = CGSize(width: 100, height: 50)
+        productLabel.frame.size = CGSize(width: 100, height: 50)
+        placeLabel.text = "PLACE"
+        productLabel.text = "PRODUCT"
+        placeLabel.textColor = .white
+        productLabel.textColor = .white
+        placeLabel.font = UIFont.systemFont(ofSize: 30)
+        productLabel.font = UIFont.systemFont(ofSize: 30)
+        placeLabel.textAlignment = .center
+        productLabel.textAlignment = .center
+        alphaView.translatesAutoresizingMaskIntoConstraints = false
         classPlaceButton.translatesAutoresizingMaskIntoConstraints = false
         classProductButton.translatesAutoresizingMaskIntoConstraints = false
         classPlaceButton.backgroundColor = .black
@@ -39,18 +61,37 @@ class ClassViewController: UIViewController {
         classProductButton.titleLabel?.text = "PRODUCT"
         classPlaceButton.setTitleColor(.white, for: .normal)
         classProductButton.setTitleColor(.white, for: .normal)
-        classPlaceButton.layer.cornerRadius = 15
-        classProductButton.layer.cornerRadius = 15
+        classPlaceButton.layer.cornerRadius = 150
+        classProductButton.layer.cornerRadius = 150
+        classPlaceButton.layer.masksToBounds = true
+        classProductButton.layer.masksToBounds = true
         NSLayoutConstraint.activate([
-            classPlaceButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            classPlaceButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
-            classPlaceButton.widthAnchor.constraint(equalToConstant: 200),
-            classPlaceButton.heightAnchor.constraint(equalToConstant: 100),
-            classProductButton.topAnchor.constraint(equalTo: classPlaceButton.bottomAnchor, constant: 20),
-            classProductButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100),
-            classProductButton.widthAnchor.constraint(equalToConstant: 200),
-            classProductButton.heightAnchor.constraint(equalToConstant: 100),
+//            alphaView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+//            alphaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            alphaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            alphaView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            classPlaceButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            classPlaceButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            classPlaceButton.widthAnchor.constraint(equalTo: view.widthAnchor),
+            classPlaceButton.heightAnchor.constraint(equalToConstant: 280),
+            classProductButton.topAnchor.constraint(equalTo: classPlaceButton.bottomAnchor, constant: 30),
+            classProductButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -35),
+            classProductButton.widthAnchor.constraint(equalTo: view.widthAnchor),
+            classProductButton.heightAnchor.constraint(equalToConstant: 300),
         ])
+        placeLabel.translatesAutoresizingMaskIntoConstraints = false
+        productLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            placeLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
+            placeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
+            placeLabel.widthAnchor.constraint(equalTo: view.widthAnchor),
+            placeLabel.heightAnchor.constraint(equalToConstant: 350),
+            productLabel.topAnchor.constraint(equalTo: placeLabel.bottomAnchor),
+            productLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            productLabel.widthAnchor.constraint(equalTo: view.widthAnchor),
+            productLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+       
     }
     
     @objc func classPlaceButtonAction() {

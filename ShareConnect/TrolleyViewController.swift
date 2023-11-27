@@ -29,6 +29,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     var chatRoomID: String!
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
+        navigationController?.navigationBar.isHidden = false
     }
     override func viewDidLoad() {
         super.viewDidLoad()

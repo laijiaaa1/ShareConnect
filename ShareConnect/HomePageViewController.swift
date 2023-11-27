@@ -27,11 +27,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                     ("", "icons8-camp-64")]
     var groups: [Group] = []
     let browsingHistory = UILabel()
-    //    var browsingHistoryItems = [(String, String)]() {
-    //        didSet{
-    //            browsingHistoryCollection.reloadData()
-    //        }
-    //    }
     var browsingHistoryItems = [
         ("", "icons8-camp-64", ""),
         ("", "icons8-camp-64", ""),
@@ -181,18 +176,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         return 0
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        //        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? HistoryCell ?? HistoryCell()
-        //        guard indexPath.row < browsingHistoryItems.count else { return cell }
-        //        if let imageURL = URL(string: browsingHistoryItems[indexPath.row].1) {
-        //            cell.imageView.kf.setImage(with: imageURL)
-        //        } else {
-        //            // Handle the case where the URL is nil, perhaps by setting a placeholder image
-        //            cell.imageView.image = UIImage(named: "wait")
-        //        }
-        //
-        //        cell.label.text = browsingHistoryItems[indexPath.row].0
-        //
-        //        return cell
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         cell.backgroundColor = .white
         cell.layer.cornerRadius = 10
@@ -202,13 +185,23 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             if indexPath.row < groups.count {
                 let xpoint = CGFloat(indexPath.item) * 160
                 cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
-                let imageView = UIImageView(frame: CGRect(x: 25, y: 20, width: 100, height: 100))
-                imageView.contentMode = .scaleAspectFit
+                let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
+                imageView.contentMode = .scaleToFill
                 imageView.kf.setImage(with: URL(string: groups[indexPath.row].image))
                 cell.addSubview(imageView)
-                let label = UILabel(frame: CGRect(x: 0, y: 120, width: 150, height: 20))
+//                let backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
+//                backgroundView.backgroundColor = .white
+//                backgroundView.alpha = 0.3
+//                cell.addSubview(backgroundView)
+                
+                let label = UILabel(frame: CGRect(x: 0, y: 100, width: 150, height: 30))
                 label.text = groups[indexPath.row].name
                 label.font = UIFont(name: "GeezaPro-Bold", size: 15)
+                label.textColor = .black
+                label.backgroundColor = .white
+                label.alpha = 0.5
+                label.layer.cornerRadius = 10
+                label.layer.masksToBounds = true
                 label.textAlignment = .center
                 cell.addSubview(label)
                 let imageButton = UIButton(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
@@ -224,19 +217,19 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
                 var view = UIView()
                 let viewPoint = CGFloat(indexPath.item) * 320
-                view.frame = CGRect(x: 20+viewPoint, y: 35, width: 80, height: 80)
+                view.frame = CGRect(x: 20+viewPoint, y: 28, width: 100, height: 100)
                 view.layer.cornerRadius = 10
                 view.layer.borderWidth = 1
                 collectionView.addSubview(view)
                 let historyXpoint = CGFloat(indexPath.item) * 320
                 cell.frame = CGRect(x: historyXpoint, y: 0, width: 310, height: 150)
-                let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+                let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
                 imageView.layer.cornerRadius = 10
                 imageView.layer.borderWidth = 1
                 imageView.layer.masksToBounds = true
                 imageView.kf.setImage(with: URL(string: browsingRecord.1))
                 view.addSubview(imageView)
-                let label = UILabel(frame: CGRect(x: 80, y: 50, width: 150, height: 20))
+                let label = UILabel(frame: CGRect(x: 100, y: 50, width: 150, height: 20))
                 label.text = browsingRecord.0
                 label.font = UIFont(name: "GeezaPro-Bold", size: 15)
                 label.textAlignment = .center
