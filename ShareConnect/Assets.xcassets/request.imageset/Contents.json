@@ -1,0 +1,21 @@
+{
+  "images" : [
+    {
+      "filename" : "Default_Christmas_in_the_elf_winter_forest_snowflakes_and_sp_2_cc3fe4b4-160f-474c-a1dc-8d7689196f4e_1.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

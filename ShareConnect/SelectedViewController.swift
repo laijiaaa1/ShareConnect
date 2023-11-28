@@ -7,6 +7,10 @@
 
 import UIKit
 import Kingfisher
+import Firebase
+import FirebaseAuth
+import FirebaseStorage
+import FirebaseFirestore
 
 class SelectedViewController: UIViewController {
     var product: Product?
@@ -41,7 +45,7 @@ class SelectedViewController: UIViewController {
         }
     }
     @objc func closeButtonTapped() {
-        dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
     @objc func trolleyButtonTapped() {
         guard let product = product else {
@@ -49,21 +53,25 @@ class SelectedViewController: UIViewController {
             return
         }
         let cart: [Seller: [Product]] = [product.seller: [product]]
-        saveCartToUserDefaults(cart)
+        saveCartToFirestore(cart)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-    func saveCartToUserDefaults(_ cart: [Seller: [Product]]) {
-        // Convert the cart to a format that can be saved in UserDefaults
-        let cartData = cart.map { (seller, products) in
-            let encodedSeller = try? JSONEncoder().encode(seller)
-            let encodedProducts = try? JSONEncoder().encode(products)
-            return ["seller": encodedSeller, "products": encodedProducts]
+    func saveCartToFirestore(_ cart: [Seller: [Product]]) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
         }
-        // Save the cart data to UserDefaults
-        UserDefaults.standard.set(cartData, forKey: "carts")
+        
+        let cartCollection = Firestore.firestore().collection("carts")
+        let userCartDocument = cartCollection.document(currentUserID)
+        let cartData = cart.map { (seller, products) in
+            let encodedProducts = try? JSONEncoder().encode(products)
+            return ["sellerID": seller.sellerID, "products": encodedProducts]
+        }
+        userCartDocument.setData(["buyerID": currentUserID, "cart": cartData])
     }
+    
     func setup() {
         //        if let request = request, let imageURL = URL(string: request.imageString) {
         //            backImage.kf.setImage(with: imageURL)
@@ -221,7 +229,7 @@ class SelectedViewController: UIViewController {
             trolleyButton.topAnchor.constraint(equalTo: quantity.bottomAnchor, constant: 50),
             trolleyButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             trolleyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            trolleyButton.heightAnchor.constraint(equalToConstant: 60)
+            trolleyButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         trolleyButton.addTarget(self, action: #selector(trolleyButtonTapped), for: .touchUpInside)
         closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)

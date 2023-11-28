@@ -16,27 +16,29 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     func didSelectSeller(sellerID: String) {
         print("Selected seller: \(sellerID)")
     }
-    
     var selectedSellerID: String?
     var cart: [Seller: [Product]] = [:] {
         didSet {
-            saveCartToUserDefaults()
+            saveCartToFirestore(cart)
             tableView.reloadData()
         }
     }
+    var orderIDs: [Order] = []
     let tableView = UITableView()
     let refreshControl = UIRefreshControl()
     var chatRoomID: String!
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
+        navigationController?.navigationBar.isHidden = false
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
-
+        
         navigationItem.title = "Trolley"
         view.backgroundColor = CustomColors.B1
+        tableView.backgroundColor = CustomColors.B1
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TrolleyCell.self, forCellReuseIdentifier: "TrolleyCell")
@@ -62,17 +64,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             checkoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        if let savedCartData = UserDefaults.standard.array(forKey: "carts") as? [[String: Data]] {
-            cart = savedCartData.reduce(into: [Seller: [Product]]()) { result, dict in
-                guard let encodedSeller = dict["seller"],
-                      let encodedProducts = dict["products"],
-                      let seller = try? JSONDecoder().decode(Seller.self, from: encodedSeller),
-                      let products = try? JSONDecoder().decode([Product].self, from: encodedProducts) else {
-                    return
-                }
-                result[seller] = products
-            }
-        }
+        loadCartFromFirestore()
     }
     @objc func refresh() {
         tableView.reloadData()
@@ -87,10 +79,52 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             cart[seller] = [product]
         }
     }
-    func saveCartToUserDefaults() {
-        let encodedCart = try? JSONEncoder().encode(cart)
-        UserDefaults.standard.set(encodedCart, forKey: "cart")
+    
+    func saveCartToFirestore(_ cart: [Seller: [Product]]) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let cartCollection = Firestore.firestore().collection("carts")
+        let userCartDocument = cartCollection.document(currentUserID)
+        
+        let cartData = cart.map { (seller, products) in
+            let encodedProducts = try? JSONEncoder().encode(products)
+            return ["sellerID": seller.sellerID, "products": encodedProducts]
+        }
+        userCartDocument.setData(["buyerID": currentUserID, "cart": cartData])
     }
+    
+    func loadCartFromFirestore() {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let cartCollection = Firestore.firestore().collection("carts")
+        let userCartDocument = cartCollection.document(currentUserID)
+        
+        userCartDocument.getDocument { [weak self] (document, error) in
+            guard let self = self, let document = document, document.exists,
+                  let buyerID = document.data()?["buyerID"] as? String,
+                  let cartData = document.data()?["cart"] as? [[String: Any]] else {
+                return
+            }
+            let cart = cartData.reduce(into: [Seller: [Product]]()) { result, dict in
+                guard let sellerID = dict["sellerID"] as? String,
+                      let encodedProducts = dict["products"] as? Data,
+                      let products = try? JSONDecoder().decode([Product].self, from: encodedProducts) else {
+                    return
+                }
+                
+                let seller = Seller(sellerID: sellerID, sellerName: "Seller")
+                result[seller] = products
+            }
+            
+            self.cart = cart
+            
+            self.tableView.reloadData()
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
         let seller = Array(cart.keys)[indexPath.section]
@@ -105,7 +139,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     func numberOfSections(in tableView: UITableView) -> Int {
         return cart.keys.count
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
@@ -163,40 +197,91 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             print("Seller ID is nil.")
             return
         }
-
-        createChatRoom(with: sellerID) { [weak self] chatRoomID in
+        self.createChatRoom(with: sellerID) { [weak self] chatRoomID in
             guard let self = self else { return }
-
+            
             let checkoutVC = ChatViewController()
             checkoutVC.cart = self.cart
             checkoutVC.sellerID = sellerID
+            checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
             checkoutVC.chatRoomID = chatRoomID
-            checkoutVC.createOrGetChatRoomDocument()
-//            checkoutVC.startListeningForChatMessages()
             self.navigationController?.pushViewController(checkoutVC, animated: true)
         }
+        createOrderRecord { [weak self] orderID in
+            guard let self = self else { return }
+            let orderConfirmationVC = RecoderViewController()
+            orderConfirmationVC.orderID = self.orderIDs
+            
+            self.clearShoppingCart()
+        }
     }
-
+    
+    func createOrderRecord(completion: @escaping (String) -> Void) {
+        guard let currentUserID = Auth.auth().currentUser?.uid, let sellerID = selectedSellerID else {
+            print("User ID or Seller ID is nil.")
+            return
+        }
+        
+        let ordersCollection = Firestore.firestore().collection("orders")
+        
+        var newOrderRef: DocumentReference?
+        
+        newOrderRef = ordersCollection.addDocument(data: [
+            "buyerID": currentUserID,
+            "sellerID": sellerID,
+            "image": cart.first.map { $0.value.first?.imageString },
+            "createdAt": FieldValue.serverTimestamp(),
+            "cart": encodeCart(),
+        ]) { error in
+            if let error = error {
+                print("Error creating order record: \(error.localizedDescription)")
+                return
+            }
+            completion(newOrderRef?.documentID ?? "")
+        }
+        
+        if let newOrderRef = newOrderRef {
+            let messagesCollection = newOrderRef.collection("messages")
+            let initialMessage = "Order placed!"
+            messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
+        }
+    }
+    func clearShoppingCart() {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let cartCollection = Firestore.firestore().collection("carts")
+        let userCartDocument = cartCollection.document(currentUserID)
+        
+        userCartDocument.delete { error in
+            if let error = error {
+                print("Error clearing shopping cart: \(error.localizedDescription)")
+            }
+        }
+        cart = [:]
+        tableView.reloadData()
+    }
+    
     func createChatRoom(with sellerID: String?, completion: @escaping (String) -> Void) {
-       
         let chatRoomCollection = Firestore.firestore().collection("chatRooms")
         let newChatRoomRef = chatRoomCollection.addDocument(data: [
-                    "buyerID": Auth.auth().currentUser?.uid ?? "",
-                    "sellerID": sellerID ?? "",
-                    "createdAt": FieldValue.serverTimestamp(),
-                    "cart": encodeCart(),
-                ])
-            chatRoomID = newChatRoomRef.documentID
-            let messagesCollection = newChatRoomRef.collection("messages")
-
-            let initialMessage = "Hello!"
-            messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
-
-            completion(chatRoomID)
+            "buyerID": Auth.auth().currentUser?.uid ?? "",
+            "sellerID": sellerID ?? "",
+            "createdAt": FieldValue.serverTimestamp(),
+            "cart": encodeCart(),
+        ])
+        chatRoomID = newChatRoomRef.documentID
+        let messagesCollection = newChatRoomRef.collection("messages")
+        
+        let initialMessage = "Hello!"
+        messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
+        
+        completion(chatRoomID)
     }
     func encodeCart() -> [[String: Any]] {
         var encodedCart: [[String: Any]] = []
-
+        
         for (seller, products) in cart {
             let encodedProducts = products.map { product in
                 [
@@ -204,18 +289,18 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
                     "Price": product.price,
                 ]
             }
-
+            
             let encodedSeller: [String: Any] = [
                 "sellerID": seller.sellerID,
                 "sellerName": seller.sellerName,
             ]
-
+            
             encodedCart.append([
                 "seller": encodedSeller,
                 "products": encodedProducts,
             ])
         }
-
+        
         return encodedCart
     }
     func getSellerID() -> String? {

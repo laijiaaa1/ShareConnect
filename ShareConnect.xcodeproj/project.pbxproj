@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3401F6832B0F17050092E564 /* ProvideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F6822B0F17050092E564 /* ProvideViewController.swift */; };
+		3401F6852B0F1C6A0092E564 /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F6842B0F1C6A0092E564 /* ChatManager.swift */; };
+		3401F6872B0F4B010092E564 /* RecoderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F6862B0F4B010092E564 /* RecoderViewController.swift */; };
+		3401F6892B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F6882B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift */; };
+		3401F68E2B1192200092E564 /* CommendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F68D2B1192200092E564 /* CommendViewController.swift */; };
+		3401F6902B11BE1B0092E564 /* SellerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F68F2B11BE1B0092E564 /* SellerInfo.swift */; };
+		3401F6932B13627A0092E564 /* SubGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3401F6922B13627A0092E564 /* SubGroupViewController.swift */; };
 		3410D9662B07125600D32744 /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9652B07125600D32744 /* GroupViewController.swift */; };
 		3410D9682B07129800D32744 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9672B07129800D32744 /* DetailViewController.swift */; };
 		3410D96A2B07665700D32744 /* SelectedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3410D9692B07665700D32744 /* SelectedViewController.swift */; };
@@ -27,6 +34,8 @@
 		341E9B952B03629900997FE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 341E9B942B03629900997FE9 /* Assets.xcassets */; };
 		341E9B982B03629900997FE9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 341E9B962B03629900997FE9 /* LaunchScreen.storyboard */; };
 		341E9BA22B0367B000997FE9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341E9BA12B0367B000997FE9 /* GoogleService-Info.plist */; };
+		34408F1C2B0EE73B005F8E03 /* ClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */; };
+		346687A62B14657800723302 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A52B14657800723302 /* SearchResultsViewController.swift */; };
 		346DE7C72B05AB5C008D411A /* CreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7C62B05AB5C008D411A /* CreateViewController.swift */; };
 		346DE7C92B05AE4D008D411A /* CreateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */; };
 		346DE7CB2B05FE48008D411A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7CA2B05FE48008D411A /* SearchViewController.swift */; };
@@ -38,6 +47,14 @@
 
 /* Begin PBXFileReference section */
 		19192464EEB9831E46A38D35 /* Pods_ShareConnect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShareConnect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3401F6822B0F17050092E564 /* ProvideViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvideViewController.swift; sourceTree = "<group>"; };
+		3401F6842B0F1C6A0092E564 /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
+		3401F6862B0F4B010092E564 /* RecoderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoderViewController.swift; sourceTree = "<group>"; };
+		3401F6882B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSupplyCreateViewController.swift; sourceTree = "<group>"; };
+		3401F68D2B1192200092E564 /* CommendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommendViewController.swift; sourceTree = "<group>"; };
+		3401F68F2B11BE1B0092E564 /* SellerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellerInfo.swift; sourceTree = "<group>"; };
+		3401F6912B123E370092E564 /* ShareConnect.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareConnect.entitlements; sourceTree = "<group>"; };
+		3401F6922B13627A0092E564 /* SubGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubGroupViewController.swift; sourceTree = "<group>"; };
 		3410D9652B07125600D32744 /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
 		3410D9672B07129800D32744 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		3410D9692B07665700D32744 /* SelectedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedViewController.swift; sourceTree = "<group>"; };
@@ -60,6 +77,8 @@
 		341E9B972B03629900997FE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		341E9B992B03629900997FE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		341E9BA12B0367B000997FE9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassViewController.swift; sourceTree = "<group>"; };
+		346687A52B14657800723302 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		346DE7C62B05AB5C008D411A /* CreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewController.swift; sourceTree = "<group>"; };
 		346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRequestViewController.swift; sourceTree = "<group>"; };
 		346DE7CA2B05FE48008D411A /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -87,6 +106,7 @@
 			children = (
 				3410D9762B08B3C800D32744 /* FirebaseManager.swift */,
 				3410D9842B0B5EAE00D32744 /* FirestoreService.swift */,
+				3401F6842B0F1C6A0092E564 /* ChatManager.swift */,
 				3410D9782B08ECBB00D32744 /* CartManager.swift */,
 				3410D97E2B09C05600D32744 /* WebSocketManager.swift */,
 				3410D9702B0888E800D32744 /* Data.swift */,
@@ -116,21 +136,30 @@
 		341E9B8A2B03629800997FE9 /* ShareConnect */ = {
 			isa = PBXGroup;
 			children = (
+				3401F6912B123E370092E564 /* ShareConnect.entitlements */,
 				3410D9752B08B39900D32744 /* Module */,
 				341E9B8B2B03629800997FE9 /* AppDelegate.swift */,
 				341E9B8D2B03629800997FE9 /* SceneDelegate.swift */,
 				341E9B8F2B03629800997FE9 /* HomePageViewController.swift */,
 				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
+				3401F6922B13627A0092E564 /* SubGroupViewController.swift */,
+				3401F6822B0F17050092E564 /* ProvideViewController.swift */,
 				346DE7C62B05AB5C008D411A /* CreateViewController.swift */,
+				34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */,
 				3410D9652B07125600D32744 /* GroupViewController.swift */,
 				3410D9672B07129800D32744 /* DetailViewController.swift */,
+				3401F68F2B11BE1B0092E564 /* SellerInfo.swift */,
 				3410D97A2B0916C700D32744 /* ProfileViewController.swift */,
+				3401F6862B0F4B010092E564 /* RecoderViewController.swift */,
+				3401F68D2B1192200092E564 /* CommendViewController.swift */,
 				3410D9692B07665700D32744 /* SelectedViewController.swift */,
 				3410D96B2B08747200D32744 /* TrolleyViewController.swift */,
 				3410D97C2B09BA0400D32744 /* ChatViewController.swift */,
 				3410D9862B0C42C600D32744 /* ChatListViewController.swift */,
 				346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */,
+				346687A52B14657800723302 /* SearchResultsViewController.swift */,
 				346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */,
+				3401F6882B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift */,
 				346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */,
 				346DE7CD2B063616008D411A /* LoginViewController.swift */,
 				341E9B912B03629800997FE9 /* Main.storyboard */,
@@ -178,6 +207,8 @@
 			dependencies = (
 			);
 			name = ShareConnect;
+			packageProductDependencies = (
+			);
 			productName = ShareConnect;
 			productReference = 341E9B882B03629800997FE9 /* ShareConnect.app */;
 			productType = "com.apple.product-type.application";
@@ -206,6 +237,8 @@
 				Base,
 			);
 			mainGroup = 341E9B7F2B03629800997FE9;
+			packageReferences = (
+			);
 			productRefGroup = 341E9B892B03629800997FE9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -293,13 +326,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3401F6852B0F1C6A0092E564 /* ChatManager.swift in Sources */,
 				3410D9792B08ECBB00D32744 /* CartManager.swift in Sources */,
 				3410D9682B07129800D32744 /* DetailViewController.swift in Sources */,
 				346DE7CE2B063616008D411A /* LoginViewController.swift in Sources */,
 				3410D96C2B08747200D32744 /* TrolleyViewController.swift in Sources */,
+				3401F6892B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift in Sources */,
 				346DE7CB2B05FE48008D411A /* SearchViewController.swift in Sources */,
 				346DE7C72B05AB5C008D411A /* CreateViewController.swift in Sources */,
+				3401F6832B0F17050092E564 /* ProvideViewController.swift in Sources */,
+				34408F1C2B0EE73B005F8E03 /* ClassViewController.swift in Sources */,
 				3410D97B2B0916C700D32744 /* ProfileViewController.swift in Sources */,
+				346687A62B14657800723302 /* SearchResultsViewController.swift in Sources */,
 				3410D9852B0B5EAE00D32744 /* FirestoreService.swift in Sources */,
 				3410D9732B08890300D32744 /* Setting.swift in Sources */,
 				341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */,
@@ -307,8 +345,12 @@
 				3410D9662B07125600D32744 /* GroupViewController.swift in Sources */,
 				3410D9712B0888E800D32744 /* Data.swift in Sources */,
 				3410D97F2B09C05600D32744 /* WebSocketManager.swift in Sources */,
+				3401F6902B11BE1B0092E564 /* SellerInfo.swift in Sources */,
 				3410D97D2B09BA0400D32744 /* ChatViewController.swift in Sources */,
 				341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */,
+				3401F6932B13627A0092E564 /* SubGroupViewController.swift in Sources */,
+				3401F68E2B1192200092E564 /* CommendViewController.swift in Sources */,
+				3401F6872B0F4B010092E564 /* RecoderViewController.swift in Sources */,
 				3410D96A2B07665700D32744 /* SelectedViewController.swift in Sources */,
 				346DE7D22B065DB1008D411A /* CreateGroupViewController.swift in Sources */,
 				3410D9772B08B3C800D32744 /* FirebaseManager.swift in Sources */,
@@ -460,8 +502,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ShareConnect/ShareConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K53C9AZMMU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareConnect/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -488,8 +532,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ShareConnect/ShareConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K53C9AZMMU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareConnect/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
