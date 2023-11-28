@@ -10,7 +10,6 @@ import Firebase
 import FirebaseFirestore
 import FirebaseAuth
 import FirebaseCore
-import JGProgressHUD
 import FirebaseStorage
 import DatePicker
 
@@ -19,7 +18,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     let uploadButton = UIButton()
     let requestSelectSegment = UISegmentedControl()
     let doneButton = UIButton()
-    var groupOptions: [String] = []
+    var groupOptions: [String: Any] = [:]
+    var selectedGroupID: String?
+    var selectedGroupName: String?
     var selectedGroup: String? {
         didSet {
             updateSelectedGroupUI()
@@ -44,13 +45,14 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         super.viewDidLoad()
         view.backgroundColor = CustomColors.B1
         navigationItem.title = "Create request"
-        uploadButton.backgroundColor = .yellow
+        uploadButton.backgroundColor = .clear
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(uploadButton)
         uploadButton.setTitle("+", for: .normal)
         uploadButton.setTitleColor(.black, for: .normal)
         uploadButton.titleLabel?.font = UIFont.systemFont(ofSize: 40)
         uploadButton.layer.cornerRadius = 10
+        uploadButton.layer.borderWidth = 1
         uploadButton.layer.borderColor = UIColor.black.cgColor
         uploadButton.layer.masksToBounds = true
         uploadButton.addTarget(self, action: #selector(uploadButtonTapped), for: .touchUpInside)
@@ -88,18 +90,18 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         ])
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(doneButton)
-        doneButton.backgroundColor = .yellow
+        doneButton.backgroundColor = .black
         doneButton.setTitle("Done", for: .normal)
-        doneButton.setTitleColor(.black, for: .normal)
+        doneButton.setTitleColor(.white, for: .normal)
         doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         doneButton.layer.cornerRadius = 10
         doneButton.layer.masksToBounds = true
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         NSLayoutConstraint.activate([
-            doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60),
             doneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             doneButton.widthAnchor.constraint(equalToConstant: 320),
-            doneButton.heightAnchor.constraint(equalToConstant: 60)
+            doneButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     @objc func doneButtonTapped() {
@@ -107,52 +109,59 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         let storage = Storage.storage()
         let user = Auth.auth().currentUser
         let imageName = UUID().uuidString
-                let productId = UUID().uuidString
+        let productId = UUID().uuidString
         let storageRef = storage.reference().child("images/\(imageName).jpg")
         if let imageURL = uploadButton.backgroundImage(for: .normal), let imageData = imageURL.jpegData(compressionQuality: 0.1) {
             storageRef.putData(imageData, metadata: nil) { (metadata, error) in
                 if let error = error {
                     print("Error uploading image: \(error)")
                 } else {
-                    storageRef.downloadURL { (url, error) in
+                    storageRef.downloadURL { [self] (url, error) in
                         if let error = error {
                             print("Error getting download URL: \(error)")
                         } else if let downloadURL = url {
                             var productData: [String: Any] = [:]
-                                                        productData["productId"] = productId
+                            productData["productId"] = productId
                             productData["image"] = downloadURL.absoluteString
                             productData["seller"] = [
                                 "sellerID": user?.uid ?? "",
                                 "sellerName": user?.email ?? ""
                             ]
                             for i in 0..<self.requestTableView.numberOfSections {
-                                for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
-                                    let indexPath = IndexPath(row: j, section: i)
-                                    if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
-                                        let key = cell.requestLabel.text ?? ""
-                                        let value = cell.textField.text ?? ""
-                                        productData[key] = value
-                                    }
+                                   for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
+                                       let indexPath = IndexPath(row: j, section: i)
+                                       if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
+                                           let key = cell.requestLabel.text ?? ""
+                                           let value = cell.textField.text ?? ""
+                                           productData[key] = value
+                                       }
+                                   }
+                               }
+                            if let selectedGroupID = self.selectedGroupID,
+                                   let selectedGroupName = self.selectedGroup {
+                                    productData["groupID"] = selectedGroupID
+                                    productData["groupName"] = selectedGroupName
                                 }
-                            }
                             let demandProduct = Product(
                                 productId: productData["productId"] as? String ?? "",
                                 name: productData["name"] as? String ?? "",
                                 price: productData["price"] as? String ?? "",
                                 startTime: productData["endTime"] as? String ?? "",
                                 imageString: productData["image"] as? String ?? "",
-                                description: productData["description"] as? String,
-                                sort: productData["sort"] as? String,
-                                quantity: productData["quantity"] as? String,
-                                use: productData["use"] as? String,
-                                endTime: productData["endTime"] as? String,
+                                description: productData["description"] as? String ?? "",
+                                sort: productData["sort"] as? String ?? "",
+                                quantity: productData["quantity"] as? Int ?? 1,
+                                use: productData["use"] as? String ?? "",
+                                endTime: productData["endTime"] as? String ?? "",
                                 seller: Seller(
                                     sellerID: user?.uid ?? "",
                                     sellerName: user?.email ?? ""
                                 ),
                                 itemType: .request
                             )
-                            db.collection("products").addDocument(data: [
+                            let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
+
+                            db.collection(collectionName).addDocument(data: [
                                 "type": ProductType.request.rawValue,
                                 "product": productData
                             ]) { error in
@@ -198,44 +207,67 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     @objc func requestSelectSegmentTapped() {
         if requestSelectSegment.selectedSegmentIndex == 0 {
             print("public")
+            selectedGroupID = nil
         } else {
             print("group")
             fetchUserGroups()
         }
+        requestTableView.reloadData()
     }
+
     func fetchUserGroups() {
-        guard let userId = Auth.auth().currentUser?.uid else {
+        guard let user = Auth.auth().currentUser else {
             print("User not authenticated.")
             return
         }
+
         let db = Firestore.firestore()
-        db.collection("users").document(userId).collection("groups").getDocuments { [weak self] (querySnapshot, error) in
+        db.collection("users").document(user.uid).getDocument { [weak self] (document, error) in
             guard let self = self else { return }
-            if let error = error {
-                print("Error fetching user groups: \(error)")
+
+            if let document = document, document.exists {
+                let data = document.data()
+
+                if let groups = data?["groups"] as? [String: Any] {
+                   
+                    var groupsSelect = groups
+                    self.groupOptions = groupsSelect
+                    self.showGroupOptions()
+                } else {
+                    print("Groups field is not of expected type [String: Any]")
+                }
             } else {
-                self.groupOptions = querySnapshot?.documents.map { $0.documentID } ?? []
-                self.showGroupOptions()
+                print("Document does not exist")
             }
         }
     }
     func showGroupOptions() {
         let alertController = UIAlertController(title: "Select Group", message: nil, preferredStyle: .actionSheet)
-        for groupOption in groupOptions {
-            let action = UIAlertAction(title: groupOption, style: .default) { [weak self] _ in
-                print("Selected group: \(groupOption)")
-                self?.selectedGroup = groupOption
-                self?.updateSelectedGroupUI()
+
+        for (groupId, groupInfo) in groupOptions {
+            if let groups = groupInfo as? [String: Any],
+               let groupId = groups["groupId"] as? String,
+                let groupName = groups["groupName"] as? String {
+                let action = UIAlertAction(title: groupName, style: .default) { [weak self] _ in
+                    print("Selected group: \(groupName)")
+                    self?.selectedGroupID = groupId
+                    self?.selectedGroup = groupName
+                    self?.updateSelectedGroupUI()
+                }
+                alertController.addAction(action)
             }
-            alertController.addAction(action)
         }
+
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
+
         present(alertController, animated: true, completion: nil)
     }
+
+
     func updateSelectedGroupUI() {
-        if let selectedGroup = selectedGroup {
-            groupHeaderLabel.text = "Selected Group: \(selectedGroup)"
+        if let selectedGroupID = selectedGroupID,let selectedGroupName = selectedGroup {
+            groupHeaderLabel.text = "Selected Group: \(selectedGroupName)"
             if requestTableView.tableHeaderView == nil {
                 requestTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: requestTableView.bounds.size.width, height: 50))
                 requestTableView.tableHeaderView?.addSubview(groupHeaderLabel)
@@ -256,7 +288,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 8
+        return selectedGroupID != nil ? 9 : 8
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "requestCell", for: indexPath) as? RequestCell ?? RequestCell()
@@ -281,6 +313,12 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 cell.textField.tag = 2
             }
         }
+        if indexPath.row == 8 && selectedGroupID != nil {
+               cell.requestLabel.text = "Group"
+               cell.textField.text = selectedGroupID
+               cell.textField.isEnabled = false
+               cell.addBtn.isHidden = true
+           }
         cell.addBtn.tag = indexPath.row
         return cell
     }

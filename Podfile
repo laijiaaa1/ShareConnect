@@ -11,11 +11,9 @@ target 'ShareConnect' do
   pod 'Firebase/Core', '~> 10.9.0'
   pod 'Firebase/Firestore', '~> 10.9.0'
   pod 'SwiftLint'
-  pod 'JGProgressHUD'
  pod 'FirebaseStorage' 
  pod 'MJRefresh'
  pod 'Kingfisher'
  pod 'DatePicker', '~> 1.3.0'
- pod 'Starscream'
-
+ pod 'FirebaseMessaging'
 end
