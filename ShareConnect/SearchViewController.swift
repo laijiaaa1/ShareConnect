@@ -44,6 +44,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         return collectionView
     }()
     override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
+        navigationController?.navigationBar.isHidden = false
                 if usification == "product" {
                     fetchRequestsForUser(type: .request, usification: "product")
                 } else if usification == "place" {
@@ -58,7 +60,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.showsVerticalScrollIndicator = false
         setupUI()
         navigationItem.title = "SHARECONNECT"
-        navigationController?.navigationBar.isHidden = false
         collectionView.delegate = self
         collectionView.dataSource = self
         classCollectionView.delegate = self
@@ -166,41 +167,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         return UICollectionViewCell()
     }
-//    @objc func provideButtonAction() {
-//        // Check if a cell is selected
-//        guard let indexPath = selectedIndexPath else {
-//            print("No item selected.")
-//            return
-//        }
-//
-//        // Access the selected item from the appropriate array (allRequests or allSupplies)
-//        let selectedProduct: Product
-//        if currentButtonType == .request {
-//            selectedProduct = allRequests[indexPath.item]
-//        } else if currentButtonType == .supply {
-//            selectedProduct = allSupplies[indexPath.item]
-//        } else {
-//            print("Unknown product type.")
-//            return
-//        }
-//
-//        // Now, you can pass the selected product to the ProvideViewController
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc = storyboard.instantiateViewController(withIdentifier: "ProvideViewController") as! ProvideViewController
-//
-//        // Pass the selected product data to the next view controller
-//        vc.product = selectedProduct
-//
-//        // Navigate to the next view controller
-//        self.navigationController?.pushViewController(vc, animated: false)
-//    }
-//
-//    @objc func addButtonAction(){
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc = storyboard.instantiateViewController(withIdentifier: "SelectedViewController") as! SelectedViewController
-//        //        CartManager.shared.addToCart(product: allSupplies[0])
-//        self.navigationController?.pushViewController(vc, animated: false)
-//    }
     func didSelectClassification(_ classification: String, forType type: ProductType) {
         if usification == "product"{
         fetchDataForSort(classification: classification, type: type, usification: "product")
@@ -240,11 +206,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     func setupUI() {
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-        //        stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        //        stackView.layer.borderWidth = 1
-        //        stackView.layer.cornerRadius = 10
-        //        stackView.layer.masksToBounds = true
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -254,11 +216,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         ])
         button1.setTitle("Request", for: .normal)
         button1.setTitleColor(.black, for: .normal)
-//        button1.layer.borderWidth = 1
         button1.addTarget(self, action: #selector(button1Action), for: .touchUpInside)
         button2.setTitle("Available", for: .normal)
         button2.setTitleColor(.black, for: .normal)
-//        button2.layer.borderWidth = 1
         button2.addTarget(self, action: #selector(button2Action), for: .touchUpInside)
         stackView.addArrangedSubview(button1)
         stackView.addArrangedSubview(button2)
@@ -272,7 +232,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2),
             lineView.heightAnchor.constraint(equalToConstant: 2)
         ])
-        //        classCollectionView.register(ClassCollectionViewCell.self, forCellWithReuseIdentifier: "classCell")
         classCollectionView.backgroundColor = CustomColors.B1
         classCollectionView.translatesAutoresizingMaskIntoConstraints = false
         classCollectionView.showsHorizontalScrollIndicator = false

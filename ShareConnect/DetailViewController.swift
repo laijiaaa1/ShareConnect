@@ -8,6 +8,10 @@
 import UIKit
 import Kingfisher
 import DatePicker
+import Firebase
+import FirebaseFirestore
+import FirebaseAuth
+import FirebaseStorage
 
 class DetailViewController: UIViewController {
     var product: Product?
@@ -33,6 +37,8 @@ class DetailViewController: UIViewController {
     let shareButton = UIButton()
     var productID: String?
     let sellerButton = UIButton()
+    let contentDescriptionView = UIScrollView()
+    var isCollected = false
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
     }
@@ -47,6 +53,7 @@ class DetailViewController: UIViewController {
             price.text = product.price
             productID = product.productId
         }
+        loadSavedCollections()
     }
     func setupView() {
         view.addSubview(titleLabel)
@@ -97,6 +104,7 @@ class DetailViewController: UIViewController {
             addCartButton.widthAnchor.constraint(equalToConstant: 30)
         ])
         view.addSubview(chatButton)
+        chatButton.addTarget(self, action: #selector(goChatPage), for: .touchUpInside)
         chatButton.setImage(UIImage(named: "icons8-chat-72(@3×)"), for: .normal)
         chatButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -114,6 +122,7 @@ class DetailViewController: UIViewController {
             collectionButton.heightAnchor.constraint(equalToConstant: 30),
             collectionButton.widthAnchor.constraint(equalToConstant: 30)
         ])
+        collectionButton.addTarget(self, action: #selector(addCollection), for: .touchUpInside)
         view.addSubview(shareButton)
         shareButton.setImage(UIImage(named: "icons8-share-72(@3×)"), for: .normal)
         shareButton.translatesAutoresizingMaskIntoConstraints = false
@@ -169,6 +178,7 @@ class DetailViewController: UIViewController {
         ])
         descriptionView.addSubview(descriptionLabel)
         descriptionLabel.text = "Product details"
+        descriptionLabel.numberOfLines = 0
         descriptionLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         descriptionLabel.textColor = .black
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -229,7 +239,7 @@ class DetailViewController: UIViewController {
         backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
         view.addSubview(sellerButton)
         sellerButton.translatesAutoresizingMaskIntoConstraints = false
-        sellerButton.backgroundColor = .orange
+        sellerButton.backgroundColor = .black
         sellerButton.layer.cornerRadius = 15
         sellerButton.layer.masksToBounds = true
         NSLayoutConstraint.activate([
@@ -256,6 +266,73 @@ class DetailViewController: UIViewController {
         let activityVC = UIActivityViewController(activityItems: [productDetail], applicationActivities: nil)
         present(activityVC, animated: true, completion: nil)
     }
+    @objc func goChatPage(){
+        let chatVC = ChatViewController()
+        chatVC.sellerID = product?.seller.sellerID
+        chatVC.buyerID = Auth.auth().currentUser?.uid
+        navigationController?.pushViewController(chatVC, animated: true)
+    }
+    @objc func addCollection() {
+        isCollected.toggle()
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid,
+              let productID = product?.productId,
+              let productName = product?.name,
+              let productImageString = product?.imageString,
+              let productPrice = product?.price else {
+            return
+        }
+        let db = Firestore.firestore()
+        let userCollectionReference = db.collection("collections").document(currentUserID)
+        if isCollected {
+            let collectedProductData: [String: Any] = [
+                "productId": productID,
+                "name": productName,
+                "imageString": productImageString,
+                "price": productPrice
+            ]
+            userCollectionReference.setData([
+                "collectedProducts": FieldValue.arrayUnion([collectedProductData])
+            ], merge: true) { error in
+                if let error = error {
+                    print("Error updating document: \(error)")
+                } else {
+                    print("Document successfully updated with new collection.")
+                }
+            }
+            collectionButton.setImage(UIImage(named: "icons9-bookmark-72(@3×)"), for: .normal)
+            addToLocalStorage(productData: collectedProductData)
+        } else {
+            let removedProductData: [String: Any] = [
+                "productId": productID
+            ]
+            
+            userCollectionReference.updateData([
+                "collectedProducts": FieldValue.arrayRemove([removedProductData])
+            ]) { error in
+                if let error = error {
+                    print("Error updating document: \(error)")
+                } else {
+                    print("Document successfully updated with removed collection.")
+                }
+            }
+            collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
+            removeFromLocalStorage(productID: productID)
+        }
+        
+    }
+    func addToLocalStorage(productData: [String: Any]) {
+        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
+        savedCollections.append(productData)
+        UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
+    }
+
+    // Update local storage when removing from collection
+    func removeFromLocalStorage(productID: String) {
+        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
+        savedCollections.removeAll { $0["productId"] as? String == productID }
+        UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
+    }
     func showDatePicker() {
         let minDate = DatePickerHelper.shared.dateFrom(day: 18, month: 08, year: 1990)!
         let maxDate = DatePickerHelper.shared.dateFrom(day: 18, month: 08, year: 2030)!
@@ -270,6 +347,10 @@ class DetailViewController: UIViewController {
             }
         }
         datePicker.show(in: self, on: self.view)
+    }
+    func loadSavedCollections() {
+        let savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
+        collectionButton.reloadInputViews()
     }
     @objc func dateImageTapped() {
         showDatePicker()
@@ -290,59 +371,81 @@ class DetailViewController: UIViewController {
         }
     }
     @objc func descriptionButtonTapped() {
-        let expandedHeight: CGFloat = 200
-        let collapsedHeight: CGFloat = 70
-        if descriptionView.frame.height == collapsedHeight {
-            UIView.animate(withDuration: 0.5) {
-                self.descriptionView.frame.size.height = expandedHeight
+        UIView.animate(withDuration: 0.5) {
+            self.contentDescriptionView.frame.origin.y = 600
+            self.descriptionButton.isSelected.toggle()
+            if self.descriptionButton.isSelected {
+                self.view.addSubview(self.contentDescriptionView)
+                self.contentDescriptionView.backgroundColor = .white
+                self.contentDescriptionView.layer.cornerRadius = 10
+                self.contentDescriptionView.translatesAutoresizingMaskIntoConstraints = false
+                self.contentDescriptionView.transform = CGAffineTransform(translationX: 30, y: 560)
+                
+                NSLayoutConstraint.activate([
+                    self.contentDescriptionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 600),
+                    self.contentDescriptionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+                    self.contentDescriptionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
+                    self.contentDescriptionView.heightAnchor.constraint(equalToConstant: 150)
+                ])
+                UIView.animate(withDuration: 0.5) {
+                    self.contentDescriptionView.transform = .identity
+                }
                 self.addDescriptionLabel()
-            }
-        } else {
-            UIView.animate(withDuration: 0.5) {
-                self.descriptionView.frame.size.height = collapsedHeight
+            } else {
                 self.removeDescriptionLabel()
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.contentDescriptionView.transform = CGAffineTransform(translationX: 0, y: -self.contentDescriptionView.frame.height)
+                }) { _ in
+                    self.contentDescriptionView.removeFromSuperview()
+                }
             }
         }
     }
+
     func addDescriptionLabel() {
         if descriptionLabel2.superview == nil {
-            descriptionView.addSubview(descriptionLabel2)
-            descriptionLabel2.text = "\(product?.description)\n \(product?.sort)\n \(product?.use)\n \(product?.endTime)"
+            contentDescriptionView.addSubview(descriptionLabel2)
+            contentDescriptionView.isScrollEnabled = true
+            
+            descriptionLabel2.numberOfLines = 0
+            contentDescriptionView.showsVerticalScrollIndicator = true
+            contentDescriptionView.showsHorizontalScrollIndicator = true
+            
+            descriptionLabel2.text = "\(product?.description ?? "")\n \(product?.sort ?? "")\n \(product?.use ?? "")\n \(product?.endTime ?? "")"
             descriptionLabel2.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                descriptionLabel2.topAnchor.constraint(equalTo: descriptionView.topAnchor, constant: 10),
-                descriptionLabel2.leadingAnchor.constraint(equalTo: descriptionView.leadingAnchor, constant: 30),
-                descriptionLabel2.trailingAnchor.constraint(equalTo: descriptionView.trailingAnchor, constant: -30),
-                descriptionLabel2.bottomAnchor.constraint(equalTo: descriptionView.bottomAnchor, constant: -10)
+                descriptionLabel2.topAnchor.constraint(equalTo: contentDescriptionView.topAnchor, constant: 10),
+                descriptionLabel2.leadingAnchor.constraint(equalTo: contentDescriptionView.leadingAnchor, constant: 30),
+                descriptionLabel2.trailingAnchor.constraint(equalTo: contentDescriptionView.trailingAnchor, constant: -30),
             ])
-            descriptionView.addSubview(sort)
+            contentDescriptionView.addSubview(sort)
             sort.text = product?.sort
             sort.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 sort.topAnchor.constraint(equalTo: descriptionLabel2.bottomAnchor, constant: 10),
-                sort.leadingAnchor.constraint(equalTo: descriptionView.leadingAnchor, constant: 30),
-                sort.trailingAnchor.constraint(equalTo: descriptionView.trailingAnchor, constant: -30),
+                sort.leadingAnchor.constraint(equalTo: contentDescriptionView.leadingAnchor, constant: 30),
+                sort.trailingAnchor.constraint(equalTo: contentDescriptionView.trailingAnchor, constant: -30),
                 sort.heightAnchor.constraint(equalToConstant: 20)
             ])
-            descriptionView.addSubview(quantity)
+            contentDescriptionView.addSubview(quantity)
             quantity.text = product?.quantity.codingKey.stringValue
             quantity.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 quantity.topAnchor.constraint(equalTo: sort.bottomAnchor, constant: 10),
-                quantity.leadingAnchor.constraint(equalTo: descriptionView.leadingAnchor, constant: 30),
-                quantity.trailingAnchor.constraint(equalTo: descriptionView.trailingAnchor, constant: -30),
+                quantity.leadingAnchor.constraint(equalTo: contentDescriptionView.leadingAnchor, constant: 30),
+                quantity.trailingAnchor.constraint(equalTo: contentDescriptionView.trailingAnchor, constant: -30),
                 quantity.heightAnchor.constraint(equalToConstant: 20)
             ])
-            descriptionView.addSubview(use)
+            contentDescriptionView.addSubview(use)
             use.text = product?.use
             use.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 use.topAnchor.constraint(equalTo: quantity.bottomAnchor, constant: 10),
-                use.leadingAnchor.constraint(equalTo: descriptionView.leadingAnchor, constant: 30),
-                use.trailingAnchor.constraint(equalTo: descriptionView.trailingAnchor, constant: -30),
+                use.leadingAnchor.constraint(equalTo: contentDescriptionView.leadingAnchor, constant: 30),
+                use.trailingAnchor.constraint(equalTo: contentDescriptionView.trailingAnchor, constant: -30),
                 use.heightAnchor.constraint(equalToConstant: 20)
             ])
-            self.view.layoutIfNeeded()
+//            self.view.layoutIfNeeded()
         } else {
             removeDescriptionLabel()
         }
@@ -352,6 +455,7 @@ class DetailViewController: UIViewController {
         sort.removeFromSuperview()
         quantity.removeFromSuperview()
         use.removeFromSuperview()
-        self.view.layoutIfNeeded()
+        contentDescriptionView.removeFromSuperview()
+//        self.view.layoutIfNeeded()
     }
 }
