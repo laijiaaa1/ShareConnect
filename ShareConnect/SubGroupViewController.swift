@@ -19,7 +19,8 @@ class SubGroupViewController: SearchViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    override func fetchRequestsForUser(type: ProductType) {
+    override func fetchRequestsForUser(type: ProductType, usification: String ) {
+        usification == "request" ? (currentButtonType = .request) : (currentButtonType = .supply)
         guard let groupId = group?.documentId else {
             print("Group ID is nil.")
             return

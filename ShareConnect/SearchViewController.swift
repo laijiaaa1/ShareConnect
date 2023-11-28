@@ -23,7 +23,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     let lineView = UIView()
     let button1 = UIButton()
     let button2 = UIButton()
-    let usification = ["product", "place"]
+    var usification: String?
     var currentButtonType: ProductType = .request
     let classCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -44,10 +44,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         return collectionView
     }()
     override func viewWillAppear(_ animated: Bool) {
-        //        if usification[0] == "product" {
-        //            fetchRequestsForUser(type: .request)
-        //        } else if usification[0] == "place" {
-        fetchRequestsForUser(type: .request)
+                if usification == "product" {
+                    fetchRequestsForUser(type: .request, usification: "product")
+                } else if usification == "place" {
+                    fetchRequestsForUser(type: .request, usification: "place")
+                }
     }
     override func viewDidLoad() {
         view.backgroundColor = CustomColors.B1
@@ -63,7 +64,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         classCollectionView.delegate = self
         classCollectionView.dataSource = self
         let userID = Auth.auth().currentUser?.uid ?? ""
-        //        fetchRequestsForUser(type: .request)
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
     }
@@ -73,18 +73,18 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func refresh() {
         let userID = Auth.auth().currentUser?.uid ?? ""
-        if currentButtonType == .request {
-            //            if usification[0] == "product" {
-            fetchRequestsForUser(type: .request)
-            //            } else if usification[0] == "place" {
-            //                fetchRequestsForUser(type: .request)
-            //            }
-        } else if currentButtonType == .supply {
-            //            if usification[0] == "product" {
-            fetchRequestsForUser(type: .supply)
-            //            } else if usification[0] == "place" {
-            //                fetchRequestsForUser(type: .supply)
-            //            }
+        if usification == "product" {
+            if currentButtonType == .request {
+                fetchRequestsForUser(type: .request, usification: "product")
+            } else if currentButtonType == .supply {
+                fetchRequestsForUser(type: .supply, usification: "product")
+            }
+        } else if usification == "place"{
+            if currentButtonType == .request {
+                fetchRequestsForUser(type: .request, usification: "place")
+            } else if currentButtonType == .supply {
+                fetchRequestsForUser(type: .supply, usification: "place")
+            }
         }
         collectionView.reloadData()
     }
@@ -120,12 +120,21 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             return 1
         }
         if collectionView == collectionView{
-            if currentButtonType == .request {
-                return allRequests.count
-            } else if currentButtonType == .supply {
-                return allSupplies.count
+            if usification == "product" {
+                if currentButtonType == .request {
+                    return allRequests.count
+                } else if currentButtonType == .supply {
+                    return allSupplies.count
+                }
+                return 0
+            } else if 
+                usification == "place"{
+                if currentButtonType == .request {
+                    return allRequests.count
+                } else if currentButtonType == .supply {
+                    return allSupplies.count
+                }
             }
-            return 0
         }
         return 0
     }
@@ -139,15 +148,20 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         if collectionView == collectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
-            if currentButtonType == .request {
-                cell.product = allRequests[indexPath.item]
-//                cell.button.setTitle("Provide", for: .normal)
-//                cell.button.addTarget(self, action: #selector(provideButtonAction), for: .touchUpInside)
-            } else if currentButtonType == .supply {
-                cell.product = allSupplies[indexPath.item]
-//                cell.button.setTitle("+", for: .normal)
-//                cell.button.addTarget(self, action: #selector(addButtonAction), for: .touchUpInside)
+            if usification == "product" {
+                if currentButtonType == .request {
+                    cell.product = allRequests[indexPath.item]
+                } else if currentButtonType == .supply {
+                    cell.product = allSupplies[indexPath.item]
+                }
+            } else if usification == "place" {
+                if currentButtonType == .request {
+                    cell.product = allRequests[indexPath.item]
+                } else if currentButtonType == .supply {
+                    cell.product = allSupplies[indexPath.item]
+                }
             }
+          
             return cell
         }
         return UICollectionViewCell()
@@ -188,7 +202,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
 //        self.navigationController?.pushViewController(vc, animated: false)
 //    }
     func didSelectClassification(_ classification: String, forType type: ProductType) {
-        fetchDataForSort(classification: classification, type: type)
+        if usification == "product"{
+        fetchDataForSort(classification: classification, type: type, usification: "product")
+    }else if usification == "place"{
+            fetchDataForSort(classification: classification, type: type, usification: "place")
+        }
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellWidth = collectionView.frame.width / 2
@@ -200,10 +218,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         lineView.center.x = button1.center.x
         button1.setTitleColor(.black, for: .normal)
         button2.setTitleColor(.lightGray, for: .normal)
-       
-        //        if usification[0] == "product" {
-        fetchRequestsForUser(type: .request)
-        //        }
+        if usification == "product"{
+            fetchRequestsForUser(type: .request, usification: "product")
+        }else {
+            fetchRequestsForUser(type: .request, usification: "place")
+        }
         collectionView.reloadData()
     }
     @objc func button2Action() {
@@ -211,10 +230,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         lineView.center.x = button2.center.x
         button1.setTitleColor(.lightGray, for: .normal)
         button2.setTitleColor(.black, for: .normal)
-       
-        //        if usification[0] == "place" {
-        fetchRequestsForUser(type: .supply)
-        //        }
+        if usification == "place"{
+            fetchRequestsForUser(type: .supply, usification: "place")
+        }else {
+            fetchRequestsForUser(type: .supply, usification: "product")
+        }
         collectionView.reloadData()
     }
     func setupUI() {
@@ -279,9 +299,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         ])
         scrollView.contentSize = CGSize(width: view.frame.width, height: collectionView.frame.height)
     }
-    func fetchRequestsForUser(type: ProductType) {
+    func fetchRequestsForUser(type: ProductType, usification: String) {
         let db = Firestore.firestore()
-        let productsCollection = db.collection("products")
+        let productsCollection = db.collection("products").whereField("product.Use", isEqualTo: usification)
         productsCollection.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error)")
@@ -366,9 +386,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         )
         return newProduct
     }
-    func fetchDataForSort(classification: String, type: ProductType) {
+    func fetchDataForSort(classification: String, type: ProductType, usification: String) {
         let db = Firestore.firestore()
-        let productsCollection = db.collection("products")
+        let productsCollection = db.collection("products").whereField("product.Use", isEqualTo: usification)
         productsCollection.getDocuments { (querySnapshot, error) in
             if self.currentButtonType == .request {
                 self.allRequests.removeAll()

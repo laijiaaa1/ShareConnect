@@ -136,6 +136,7 @@ enum ProductType: String, Codable {
     case request
     case supply
 }
+
 extension ProductType {
     init?(rawValue: String) {
         switch rawValue {

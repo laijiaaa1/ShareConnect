@@ -97,12 +97,14 @@ class ClassViewController: UIViewController {
     @objc func classPlaceButtonAction() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "SearchViewController") as! SearchViewController
+        vc.usification = "place"
         navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func classProductButtonAction() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "SearchViewController") as! SearchViewController
+        vc.usification = "product"
         navigationController?.pushViewController(vc, animated: true)
     }
 }
