@@ -67,6 +67,13 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let userID = Auth.auth().currentUser?.uid ?? ""
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        if usification == "product" {
+            fetchRequestsForUser(type: .request, usification: "product")
+            fetchRequestsForUser(type: .supply, usification: "product")
+        } else if usification == "place" {
+            fetchRequestsForUser(type: .request, usification: "place")
+            fetchRequestsForUser(type: .supply, usification: "place")
+        }
     }
     func loadSavedCollections() {
         let savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
@@ -181,28 +188,42 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func button1Action() {
         currentButtonType = .request
-        lineView.center.x = button1.center.x
+        
+        UIView.animate(withDuration: 0.3) {
+            self.lineView.center.x = self.button1.center.x
+        }
+        
         button1.setTitleColor(.black, for: .normal)
         button2.setTitleColor(.lightGray, for: .normal)
-        if usification == "product"{
+        
+        if usification == "product" {
             fetchRequestsForUser(type: .request, usification: "product")
-        }else {
+        } else {
             fetchRequestsForUser(type: .request, usification: "place")
         }
+        
         collectionView.reloadData()
     }
+
     @objc func button2Action() {
         currentButtonType = .supply
-        lineView.center.x = button2.center.x
+        
+        UIView.animate(withDuration: 0.3) {
+            self.lineView.center.x = self.button2.center.x
+        }
+        
         button1.setTitleColor(.lightGray, for: .normal)
         button2.setTitleColor(.black, for: .normal)
-        if usification == "place"{
+        
+        if usification == "place" {
             fetchRequestsForUser(type: .supply, usification: "place")
-        }else {
+        } else {
             fetchRequestsForUser(type: .supply, usification: "product")
         }
+        
         collectionView.reloadData()
     }
+
     func setupUI() {
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
@@ -224,7 +245,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         stackView.addArrangedSubview(button2)
         lineView.backgroundColor = .black
         lineView.translatesAutoresizingMaskIntoConstraints = false
-        lineView.center.x = button1.center.x
+//        lineView.center.x = button1.center.x
         view.addSubview(lineView)
         NSLayoutConstraint.activate([
             lineView.topAnchor.constraint(equalTo: stackView.bottomAnchor),
@@ -607,7 +628,6 @@ class ClassCollectionViewCell: UICollectionViewCell {
             print("Tapped Classification: \(classificationText)")
             if let delegate = delegate, let currentButtonType = currentButtonType {
                 delegate.didSelectClassification(classificationText, forType: currentButtonType)
-                
             }
         }
     }
