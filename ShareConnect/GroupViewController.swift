@@ -312,6 +312,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let groupMemberNumberLabel = UILabel()
         let groupMemberNumberImage = UIImageView()
         let backView = UIView()
+        let currrentUser = Auth.auth().currentUser?.uid
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             groupImage.layer.cornerRadius = 10
@@ -374,7 +375,6 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         @objc func addGroup(){
             addGroupHandler?()
         }
-        
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }

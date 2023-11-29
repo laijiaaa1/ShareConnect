@@ -264,6 +264,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         fetchGroups(userId: userId!)
     }
     func fetchRequests(userId: String, dataType: String) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
         let db = Firestore.firestore()
         let productsCollection = db.collection("products")
         var query: Query
@@ -293,6 +296,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     func fetchCollections(userId: String) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
         let db = Firestore.firestore()
         let userCollectionReference = db.collection("collections").document(userId)
         
@@ -313,6 +319,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     func fetchGroups(userId: String) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
         let db = Firestore.firestore()
         let productsGroup = db.collection("groups").whereField("members", arrayContains: userId)
         productsGroup.getDocuments { [weak self] (querySnapshot, error) in
