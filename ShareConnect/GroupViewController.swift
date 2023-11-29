@@ -128,6 +128,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         ])
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+       
     }
     @objc func searchTextFieldDidChange(){
         searchGroupsByName(searchString: searchTextField.text ?? "", completion: { (groups) in
@@ -145,6 +146,23 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.groupNameLabel.text = group.name
         cell.groupMemberNumberLabel.text = "Members: + \(group.members.count.description)"
         cell.groupImage.kf.setImage(with: URL(string: group.image))
+        cell.addGroupHandler = {
+            //add memeber
+            if !group.members.contains(self.currentUser ?? "") {
+                Firestore.firestore().collection("groups").document(group.documentId).updateData(["members": FieldValue.arrayUnion([self.currentUser ?? ""])])
+                Firestore.firestore().collection("users").document(self.currentUser ?? "").updateData(["groups": FieldValue.arrayUnion([group.documentId])])
+                cell.groupMemberNumberLabel.text = "Members: + \(group.members.count.description)"
+            }
+        }
+        if ((group.members.contains(currentUser ?? "")) == true){
+            cell.groupButton.setTitle("Joined", for: .normal)
+            cell.groupButton.backgroundColor = .lightGray
+            cell.groupButton.layer.borderWidth = 0
+            cell.groupButton.alpha = 0.5
+            cell.groupButton.isEnabled = false
+        } else {
+            groupButton.setTitle("        +", for: .normal)
+        }
         return cell
     }
     
@@ -324,8 +342,8 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
             groupMemberNumberImage.layer.cornerRadius = 10
             groupMemberNumberImage.layer.borderWidth = 1
             groupMemberNumberImage.layer.masksToBounds = true
-            groupButton.setTitle("+            ", for: .normal)
-            groupButton.contentHorizontalAlignment = .right
+            groupButton.setTitle("        +", for: .normal)
+            groupButton.contentHorizontalAlignment = .center
             groupButton.addTarget(self, action: #selector(addGroup), for: .touchUpInside)
             groupButton.setTitleColor(.black, for: .normal)
             groupButton.backgroundColor = .white
@@ -375,6 +393,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         @objc func addGroup(){
             addGroupHandler?()
         }
+        
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }

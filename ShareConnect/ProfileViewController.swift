@@ -75,11 +75,19 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, completionHandler) in
-            let product = self.products[indexPath.row]
-            self.deleteProductFromDatabase(product)
-            self.products.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            completionHandler(true)
+            if self.selectedButton == self.groupButton {
+                let group = self.groups[indexPath.row]
+                self.deleteGroupFromDatabase(group)
+                self.groups.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                completionHandler(true)
+            } else {
+                let product = self.products[indexPath.row]
+                self.deleteProductFromDatabase(product)
+                self.products.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                completionHandler(true)
+            }
         }
         deleteAction.image = UIImage(systemName: "trash.fill")
 
@@ -89,23 +97,32 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func deleteProductFromDatabase(_ product: Product) {
         let db = Firestore.firestore()
-        let productsCollection = db.collection("products")
-        let productId = product.productId
-        productsCollection.whereField("productId", isEqualTo: productId).getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error querying document: \(error.localizedDescription)")
-                return
-            }
-            if let document = querySnapshot?.documents.first {
-                productsCollection.document(document.documentID).delete { error in
-                    if let error = error {
-                        print("Error deleting product document: \(error.localizedDescription)")
-                    } else {
-                        print("Product document deleted successfully.")
-                    }
-                }
-            }
+        //delete document
+        db.collection("products").document(product.productId).delete()
+    }
+    //long press to delete collection
+    @objc func longPressToDeleteCollection(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            let point = sender.location(in: collectionCollectionView)
+            guard let indexPath = collectionCollectionView.indexPathForItem(at: point) else { return }
+            let collection = collections[indexPath.row]
+            deleteCollectionFromDatabase(collection)
+            collections.remove(at: indexPath.row)
+            collectionCollectionView.deleteItems(at: [indexPath])
         }
+    }
+   
+    func deleteGroupFromDatabase(_ group: Group) {
+        let db = Firestore.firestore()
+        if group.owner == userId {
+            db.collection("groups").document(group.documentId).delete()
+        } else {
+            db.collection("groups").document(group.documentId).updateData(["member": FieldValue.arrayRemove([userId])])
+        }
+    }
+    func deleteCollectionFromDatabase(_ collection: Collection) {
+        let db = Firestore.firestore()
+        db.collection("collections").document(collection.productId).delete()
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -142,6 +159,17 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let detailViewController = DetailViewController()
         detailViewController.product?.productId = selectedCollection.productId
         navigationController?.pushViewController(detailViewController, animated: true)
+    }
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let collection = collections[indexPath.row]
+        let deleteAction = UIAction(title: "Delete", image: UIImage(systemName: "trash.fill")) { (_) in
+            self.deleteCollectionFromDatabase(collection)
+            self.collections.remove(at: indexPath.row)
+            self.collectionCollectionView.deleteItems(at: [indexPath])
+        }
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (_) -> UIMenu? in
+            return UIMenu(title: "Delete", image: nil, identifier: nil, options: [], children: [deleteAction])
+        }
     }
     
     var requests: [Request] = []
@@ -262,6 +290,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         fetchCollections(userId: userId!)
         fetchGroups(userId: userId!)
+        fetchRequests(userId: userId!, dataType: "request")
+        fetchRequests(userId: userId!, dataType: "supply")
     }
     func fetchRequests(userId: String, dataType: String) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
@@ -492,11 +522,48 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         fetchRequests(userId: userId ?? "", dataType: "supply")
     }
     func animateLineViewTransition(to button: UIButton) {
-        selectedButton?.setTitleColor(.black, for: .normal)
-        button.setTitleColor(.blue, for: .normal)
-        selectedButton = button
-        UIView.animate(withDuration: 0.3) {
-            self.lineView.frame.origin.x = button.frame.origin.x
+        button.isSelected.toggle()
+        if button.isSelected {
+            selectedButton?.setTitleColor(.black, for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.backgroundColor = .black
+            selectedButton = button
+            UIView.animate(withDuration: 0.3) {
+                self.lineView.frame.origin.x = button.frame.origin.x
+            }
+            //other button turn to white
+            if button == groupButton {
+                collectionButton.setTitleColor(.black, for: .normal)
+                collectionButton.backgroundColor = .white
+                requestButton.setTitleColor(.black, for: .normal)
+                requestButton.backgroundColor = .white
+                supplyButton.setTitleColor(.black, for: .normal)
+                supplyButton.backgroundColor = .white
+            }else if button == collectionButton {
+                groupButton.setTitleColor(.black, for: .normal)
+                groupButton.backgroundColor = .white
+                requestButton.setTitleColor(.black, for: .normal)
+                requestButton.backgroundColor = .white
+                supplyButton.setTitleColor(.black, for: .normal)
+                supplyButton.backgroundColor = .white
+            }else if button == requestButton {
+                groupButton.setTitleColor(.black, for: .normal)
+                groupButton.backgroundColor = .white
+                collectionButton.setTitleColor(.black, for: .normal)
+                collectionButton.backgroundColor = .white
+                supplyButton.setTitleColor(.black, for: .normal)
+                supplyButton.backgroundColor = .white
+            }else if button == supplyButton {
+                groupButton.setTitleColor(.black, for: .normal)
+                groupButton.backgroundColor = .white
+                collectionButton.setTitleColor(.black, for: .normal)
+                collectionButton.backgroundColor = .white
+                requestButton.setTitleColor(.black, for: .normal)
+                requestButton.backgroundColor = .white
+            }
+        }else if !button.isSelected{
+            button.setTitleColor(.black, for: .normal)
+            button.backgroundColor = .white
         }
     }
     func animateViewTransition(to newView: UIView) {
