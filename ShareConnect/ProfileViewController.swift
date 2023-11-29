@@ -122,7 +122,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func deleteCollectionFromDatabase(_ collection: Collection) {
         let db = Firestore.firestore()
-        db.collection("collections").document(collection.productId).delete()
+        db.collection("collections").document(Auth.auth().currentUser!.uid).updateData(["collectedProducts": FieldValue.arrayRemove([collection.productId])])
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -145,7 +145,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as! CollectionCell
         cell.layer.cornerRadius = 10
         cell.backgroundColor = .lightGray
-        cell.nameLabel.text = collections[indexPath.row].name
+        cell.nameLabel.text = collections[indexPath.item].name
         cell.imageView.kf.setImage(with: URL(string: collections[indexPath.row].imageString))
         return cell
     }
@@ -155,16 +155,16 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         return CGSize(width: cellWidth, height: cellHigh)
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedCollection = collections[indexPath.row]
+        let selectedCollection = collections[indexPath.item]
         let detailViewController = DetailViewController()
         detailViewController.product?.productId = selectedCollection.productId
         navigationController?.pushViewController(detailViewController, animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let collection = collections[indexPath.row]
+        let collection = collections[indexPath.item]
         let deleteAction = UIAction(title: "Delete", image: UIImage(systemName: "trash.fill")) { (_) in
             self.deleteCollectionFromDatabase(collection)
-            self.collections.remove(at: indexPath.row)
+            self.collections.remove(at: indexPath.item)
             self.collectionCollectionView.deleteItems(at: [indexPath])
         }
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (_) -> UIMenu? in

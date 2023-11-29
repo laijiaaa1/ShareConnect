@@ -20,6 +20,7 @@ struct Product: Codable, Equatable {
     var endTime: String
     var seller: Seller
     var itemType: ProductType
+    var isCollected: Bool = false
     
     enum CodingKeys: String, CodingKey {
         case productId, name, price, startTime, imageString, description, sort, quantity, use, endTime, seller, itemType

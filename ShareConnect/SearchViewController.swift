@@ -169,7 +169,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                     cell.product = allSupplies[indexPath.item]
                 }
             }
-          
+            cell.isCollected = cell.product?.isCollected ?? false
             return cell
         }
         return UICollectionViewCell()
@@ -476,19 +476,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
             dateLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 5),
             dateLabel.heightAnchor.constraint(equalToConstant: 15)
         ])
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.setTitleColor(.black, for: .normal)
-//        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-//        button.backgroundColor = .white
-//        button.layer.borderWidth = 1
-//        button.layer.cornerRadius = 10
-//        contentView.addSubview(button)
-//        NSLayoutConstraint.activate([
-//            button.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 8),
-//            button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-//            button.heightAnchor.constraint(equalToConstant: 30),
-//            button.widthAnchor.constraint(equalToConstant: 100)
-//        ])
         contentView.addSubview(collectionButton)
         collectionButton.translatesAutoresizingMaskIntoConstraints = false
         collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
@@ -502,7 +489,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }
     @objc func addCollection() {
         isCollected.toggle()
-        
+
         guard let currentUserID = Auth.auth().currentUser?.uid,
               let productID = product?.productId,
               let productName = product?.name,
@@ -510,31 +497,31 @@ class SearchCollectionViewCell: UICollectionViewCell {
               let productPrice = product?.price else {
             return
         }
+
         let db = Firestore.firestore()
         let userCollectionReference = db.collection("collections").document(currentUserID)
+
+        let productData: [String: Any] = [
+            "productId": productID,
+            "name": productName,
+            "imageString": productImageString,
+            "price": productPrice
+        ]
+        product?.isCollected = isCollected
+
         if isCollected {
-            let collectedProductData: [String: Any] = [
-                "productId": productID,
-                "name": productName,
-                "imageString": productImageString,
-                "price": productPrice
-            ]
-            userCollectionReference.setData([
-                "collectedProducts": FieldValue.arrayUnion([collectedProductData])
-            ], merge: true) { error in
+            userCollectionReference.updateData([
+                "collectedProducts": FieldValue.arrayUnion([productData])
+            ]) { error in
                 if let error = error {
                     print("Error updating document: \(error)")
                 } else {
                     print("Document successfully updated with new collection.")
+                    self.collectionButton.setImage(UIImage(named: "icons9-bookmark-72(@3×)"), for: .normal)
                 }
             }
-            collectionButton.setImage(UIImage(named: "icons9-bookmark-72(@3×)"), for: .normal)
-            addToLocalStorage(productData: collectedProductData)
         } else {
-            let removedProductData: [String: Any] = [
-                "productId": productID
-            ]
-            
+            let removedProductData: [String: Any] = ["productId": productID]
             userCollectionReference.updateData([
                 "collectedProducts": FieldValue.arrayRemove([removedProductData])
             ]) { error in
@@ -542,30 +529,30 @@ class SearchCollectionViewCell: UICollectionViewCell {
                     print("Error updating document: \(error)")
                 } else {
                     print("Document successfully updated with removed collection.")
+                    self.collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
                 }
             }
-            collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
-            removeFromLocalStorage(productID: productID)
         }
-        
     }
-    func addToLocalStorage(productData: [String: Any]) {
-        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
-        savedCollections.append(productData)
-        UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
-    }
-
-    // Update local storage when removing from collection
-    func removeFromLocalStorage(productID: String) {
-        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
-        savedCollections.removeAll { $0["productId"] as? String == productID }
-        UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
-    }
+//
+//    func addToLocalStorage(productData: [String: Any]) {
+//        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
+//        savedCollections.append(productData)
+//        UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
+//    }
+//
+//    // Update local storage when removing from collection
+//    func removeFromLocalStorage(productID: String) {
+//        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
+//        savedCollections.removeAll { $0["productId"] as? String == productID }
+//        UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
+//    }
     func updateUI() {
         if let product = product {
             nameLabel.text = product.name
             priceLabel.text = "$\(product.price)"
             dateLabel.text = product.startTime.description
+            isCollected = product.isCollected
             if let url = URL(string: product.imageString) {
                 imageView.kf.setImage(with: url)
             }
@@ -603,8 +590,6 @@ class ClassCollectionViewCell: UICollectionViewCell {
             buttonsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             buttonsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             buttonsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
-            //            buttonsStackView.heightAnchor.constraint(equalToConstant: 300),
-            //            buttonsStackView.widthAnchor.constraint(equalToConstant: 700)
         ])
     }
     func updateUI() {
