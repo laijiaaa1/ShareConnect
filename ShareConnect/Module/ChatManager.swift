@@ -77,7 +77,7 @@ class ChatManager {
                    let isMe = data["isMe"] as? Bool,
                    let timestamp = data["timestamp"] as? Timestamp,
                    let name = data["name"] as? String,
-                   let profileImageUrl = data["profileImageUrl"] as? String {
+                   let profileImageUrl = data["profileImageUrl"] as? String{
                     let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name)
                     chatMessages.append(chatMessage)
                 }

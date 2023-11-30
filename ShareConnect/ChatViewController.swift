@@ -15,6 +15,10 @@ struct User {
     let email: String
     let profileImageUrl: String
 }
+protocol ChatDelegate: AnyObject {
+    func didReceiveNewMessage(_ message: ChatMessage)
+    func didSelectChatRoom(_ chatRoomID: String)
+}
 
 class ChatViewController: UIViewController {
     var cart: [Seller: [Product]]?
@@ -32,6 +36,7 @@ class ChatViewController: UIViewController {
     var chatRoomMessageListener: ListenerRegistration!
     var seller: Seller?
     var currentUser: User?
+    weak var chatListDelegate: ChatDelegate?
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
     }
@@ -46,14 +51,14 @@ class ChatViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
         setupUI()
         tableView.separatorStyle = .none
-        if let sellerID = sellerID {
-            createOrGetChatRoomDocument()
-        }
+//        if let sellerID = sellerID {
+//            createOrGetChatRoomDocument()
+//        }
         if let cart = cart {
             convertCartToString(cart)
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
-        
+        chatListDelegate?.didSelectChatRoom(chatRoomID)
     }
     func fetchUserData() {
            guard let userID = Auth.auth().currentUser?.uid else {
@@ -78,8 +83,6 @@ class ChatViewController: UIViewController {
                       let email = userData?["email"] as? String,
                       let profileImageUrl = userData?["profileImageUrl"] as? String {
                        self.currentUser = User(uid: uid, name: name, email: email, profileImageUrl: profileImageUrl)
-
-                       // After fetching user data, start listening for chat messages
                        self.createOrGetChatRoomDocument()
                    }
                } else {
@@ -90,6 +93,7 @@ class ChatViewController: UIViewController {
     @objc func addButtonTapped() {
         let vc = ChatSupplyCreateViewController()
         navigationController?.pushViewController(vc, animated: true)
+        
     }
     func createOrGetChatRoomDocument() {
         guard let buyerID = buyerID, let sellerID = sellerID else {
@@ -107,12 +111,14 @@ class ChatViewController: UIViewController {
 
             if let document = documentSnapshot, document.exists {
                 self?.chatRoomDocument = document.reference
+                self?.chatRoomID = chatRoomID
             } else {
-                chatRoomsCollection.document(sellerID).setData(["createdAt": FieldValue.serverTimestamp()])
-                self?.chatRoomDocument = chatRoomsCollection.document(sellerID)
+                chatRoomsCollection.document(chatRoomID).setData(["createdAt": FieldValue.serverTimestamp()])
+                self?.chatRoomDocument = chatRoomsCollection.document(chatRoomID)
+                self?.chatRoomID = chatRoomID
             }
             self?.startListeningForChatMessages()
-            self?.sendMessageToFirestore(self!.cartString, isMe: false)
+            self?.sendMessageToFirestore(self!.cartString, isMe: true)
         }
     }
 
@@ -150,8 +156,6 @@ class ChatViewController: UIViewController {
                     self.chatMessages.append(chatMessage)
                 }
             }
-
-            // Sort messages based on timestamp
             self.chatMessages.sort { $0.timestamp.dateValue() < $1.timestamp.dateValue() }
 
             self.tableView.reloadData()
@@ -182,6 +186,7 @@ class ChatViewController: UIViewController {
                self?.tableView.reloadData()
            }
        }
+
     private func setupUI() {
         view.backgroundColor = CustomColors.B1
         tableView.dataSource = self
@@ -237,7 +242,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
                cell.image.kf.setImage(with: imageURL)
            }
 
-           cell.nameLabel.text = chatMessage.isMe ? "Me" : currentUser?.name ?? "Unknown User"
+           cell.nameLabel.text = chatMessage.isMe ? currentUser?.name ?? "Unknown User" : currentUser?.name ?? "Unknown User"
 
            let formatter = DateFormatter()
            formatter.dateFormat = "HH:mm"
@@ -272,7 +277,8 @@ class ChatMessageCell: UITableViewCell {
         contentView.addSubview(timestampLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(image)
-        
+        image.layer.cornerRadius = 20
+        image.layer.masksToBounds = true
         label.translatesAutoresizingMaskIntoConstraints = false
         timestampLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false

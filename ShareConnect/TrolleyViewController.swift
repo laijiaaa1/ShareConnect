@@ -201,7 +201,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
 //            guard let self = self else { return }
 //            
             let checkoutVC = ChatViewController()
-            checkoutVC.fetchUserData()
+//            checkoutVC.fetchUserData()
             checkoutVC.cart = self.cart
             checkoutVC.sellerID = sellerID
             checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
