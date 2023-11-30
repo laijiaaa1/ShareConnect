@@ -25,7 +25,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     
     var chatItems = [ChatItem]()
     var firestore = Firestore.firestore()
-
+    var processedUserIDs = Set<String>()
     let tableView = UITableView()
 
     override func viewDidLoad() {
@@ -42,24 +42,28 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.register(ChatListCell.self, forCellReuseIdentifier: "ChatListCell")
         view.addSubview(tableView)
     }
-
     func fetchChatData() {
-        firestore.collection("chatRooms").getDocuments { [weak self] (snapshot, error) in
-            guard let self = self else { return }
+           firestore.collection("chatRooms").getDocuments { [weak self] (snapshot, error) in
+               guard let self = self else { return }
 
-            if let error = error {
-                print("Error getting chat rooms: \(error.localizedDescription)")
-                return
-            }
+               if let error = error {
+                   print("Error getting chat rooms: \(error.localizedDescription)")
+                   return
+               }
 
-            if let documents = snapshot?.documents {
-                for document in documents {
-                    let userID = document.documentID
-                    self.fetchLatestMessage(for: userID)
-                }
-            }
-        }
-    }
+               if let documents = snapshot?.documents {
+                   for document in documents {
+                       let userID = document.documentID
+                       self.chatItems.append(ChatItem(name: userID, time: "", message: "", profileImageUrl: "", unreadCount: 0))
+                   }
+
+                   // Now that you have unique documentIDs, fetch the latest message for each
+                   for chatItem in self.chatItems {
+                       self.fetchLatestMessage(for: chatItem.name)
+                   }
+               }
+           }
+       }
 
     func fetchLatestMessage(for userID: String) {
         firestore.collection("chatRooms").document(userID).collection("messages").order(by: "timestamp", descending: true).limit(to: 1).getDocuments { [weak self] (snapshot, error) in
