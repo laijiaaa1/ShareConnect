@@ -197,21 +197,21 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             print("Seller ID is nil.")
             return
         }
-        self.createChatRoom(with: sellerID) { [weak self] chatRoomID in
-            guard let self = self else { return }
-            
+//        self.createChatRoom(with: sellerID) { [weak self] chatRoomID in
+//            guard let self = self else { return }
+//            
             let checkoutVC = ChatViewController()
+            checkoutVC.fetchUserData()
             checkoutVC.cart = self.cart
             checkoutVC.sellerID = sellerID
             checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
             checkoutVC.chatRoomID = chatRoomID
             self.navigationController?.pushViewController(checkoutVC, animated: true)
-        }
+//        }
         createOrderRecord { [weak self] orderID in
             guard let self = self else { return }
             let orderConfirmationVC = RecoderViewController()
             orderConfirmationVC.orderID = self.orderIDs
-            
             self.clearShoppingCart()
         }
     }

@@ -7,6 +7,14 @@
 
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
+
+struct User {
+    let uid: String
+    let name: String
+    let email: String
+    let profileImageUrl: String
+}
 
 class ChatViewController: UIViewController {
     var cart: [Seller: [Product]]?
@@ -22,6 +30,8 @@ class ChatViewController: UIViewController {
     var chatRoomListener: ListenerRegistration!
     var chatRoomID: String!
     var chatRoomMessageListener: ListenerRegistration!
+    var seller: Seller?
+    var currentUser: User?
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
     }
@@ -31,6 +41,7 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         firestore = Firestore.firestore()
+        fetchUserData()
         navigationItem.title = "CHATROOM"
         navigationController?.navigationBar.isHidden = false
         setupUI()
@@ -42,7 +53,40 @@ class ChatViewController: UIViewController {
             convertCartToString(cart)
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
+        
     }
+    func fetchUserData() {
+           guard let userID = Auth.auth().currentUser?.uid else {
+               print("User not authenticated.")
+               return
+           }
+
+           let userCollection = Firestore.firestore().collection("users")
+
+           userCollection.document(userID).getDocument { [weak self] (documentSnapshot, error) in
+               guard let self = self else { return }
+
+               if let error = error {
+                   print("Error fetching user data: \(error.localizedDescription)")
+                   return
+               }
+
+               if let document = documentSnapshot, document.exists {
+                   let userData = document.data()
+                   if let uid = document.documentID as? String,
+                      let name = userData?["name"] as? String,
+                      let email = userData?["email"] as? String,
+                      let profileImageUrl = userData?["profileImageUrl"] as? String {
+                       self.currentUser = User(uid: uid, name: name, email: email, profileImageUrl: profileImageUrl)
+
+                       // After fetching user data, start listening for chat messages
+                       self.createOrGetChatRoomDocument()
+                   }
+               } else {
+                   print("User document does not exist.")
+               }
+           }
+       }
     @objc func addButtonTapped() {
         let vc = ChatSupplyCreateViewController()
         navigationController?.pushViewController(vc, animated: true)
@@ -98,37 +142,46 @@ class ChatViewController: UIViewController {
             for document in documents {
                 let data = document.data()
                 if let text = data["text"] as? String,
-                   let isMe = data["isMe"] as? Bool {
-                    let chatMessage = ChatMessage(text: text, isMe: isMe)
+                   let isMe = data["isMe"] as? Bool,
+                   let timestamp = data["timestamp"] as? Timestamp,
+                   let name = data["name"] as? String,
+                   let profileImageUrl = data["profileImageUrl"] as? String {
+                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name)
                     self.chatMessages.append(chatMessage)
                 }
             }
+
+            // Sort messages based on timestamp
+            self.chatMessages.sort { $0.timestamp.dateValue() < $1.timestamp.dateValue() }
 
             self.tableView.reloadData()
         }
     }
 
     func sendMessageToFirestore(_ message: String, isMe: Bool) {
-        guard let chatRoomDocument = chatRoomDocument else {
-            print("Chat room document is nil.")
-            return
-        }
-
-        let messagesCollection = chatRoomDocument.collection("messages")
-
-        messagesCollection.addDocument(data: [
-            "text": message,
-            "isMe": isMe,
-            "timestamp": FieldValue.serverTimestamp()
-        ]) { [weak self] (error) in
-            if let error = error {
-                print("Error sending message: \(error.localizedDescription)")
-                return
-            }
-
-            self?.tableView.reloadData()
-        }
-    }
+           guard let chatRoomDocument = chatRoomDocument else {
+               print("Chat room document is nil.")
+               return
+           }
+           
+           let messagesCollection = chatRoomDocument.collection("messages")
+           
+           messagesCollection.addDocument(data: [
+               "text": message,
+               "isMe": isMe,
+               "timestamp": FieldValue.serverTimestamp(),
+               "name": currentUser?.name,
+               "profileImageUrl": currentUser?.profileImageUrl
+               // Add other fields as needed
+           ]) { [weak self] (error) in
+               if let error = error {
+                   print("Error sending message: \(error.localizedDescription)")
+                   return
+               }
+               
+               self?.tableView.reloadData()
+           }
+       }
     private func setupUI() {
         view.backgroundColor = CustomColors.B1
         tableView.dataSource = self
@@ -172,45 +225,83 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         return chatMessages.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! ChatMessageCell
-        let chatMessage = chatMessages[indexPath.row]
-        cell.label.textAlignment = chatMessage.isMe ? .right : .left
-        cell.label.text = chatMessage.text
-        //          cell.backgroundColor = chatMessage.isMe ? .lightGray : .white
-        cell.backgroundColor = CustomColors.B1
-        cell.label.textColor = chatMessage.isMe ? .black : .black
-        cell.label.numberOfLines = 0
-        return cell
-    }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300
-    }
+           let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatMessageCell
+           let chatMessage = chatMessages[indexPath.row]
+
+           cell.label.text = chatMessage.text
+           cell.label.textAlignment = chatMessage.isMe ? .right : .left
+           cell.label.textColor = chatMessage.isMe ? .black : .black
+           cell.label.numberOfLines = 0
+
+           if let imageURL = URL(string: chatMessage.profileImageUrl) {
+               cell.image.kf.setImage(with: imageURL)
+           }
+
+           cell.nameLabel.text = chatMessage.isMe ? "Me" : currentUser?.name ?? "Unknown User"
+
+           let formatter = DateFormatter()
+           formatter.dateFormat = "HH:mm"
+           cell.timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
+           cell.timestampLabel.textColor = .gray
+           cell.timestampLabel.textAlignment = chatMessage.isMe ? .right : .left
+
+           return cell
+       }
+       
+       func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+           return UITableView.automaticDimension
+       }
 }
 class ChatMessageCell: UITableViewCell {
-    let label = UILabel()
+    var label = UILabel()
+    var timestampLabel = UILabel()
+    var nameLabel = UILabel()
+    var image = UIImageView()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(label)
-        label.frame = contentView.bounds
-        label.numberOfLines = 0
-        label.backgroundColor = UIColor(named: "G1")
-        label.layer.cornerRadius = 20
-        label.layer.masksToBounds = true
-        label.textAlignment = .left
-        label.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: contentView.topAnchor),
-            label.widthAnchor.constraint(equalToConstant: 200),
-            label.heightAnchor.constraint(equalToConstant: 200),
-            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-        ])
+        setupUI()
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupUI() {
+        contentView.addSubview(label)
+        contentView.addSubview(timestampLabel)
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(image)
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        image.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            
+            timestampLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 10),
+            timestampLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            
+            nameLabel.topAnchor.constraint(equalTo: timestampLabel.bottomAnchor, constant: 10),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            
+            image.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
+            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            image.widthAnchor.constraint(equalToConstant: 40),
+            image.heightAnchor.constraint(equalToConstant: 40),
+        ])
     }
 }
 
 struct ChatMessage {
     let text: String
     let isMe: Bool
+    let timestamp: Timestamp
+    let profileImageUrl: String
+    let name: String
 }

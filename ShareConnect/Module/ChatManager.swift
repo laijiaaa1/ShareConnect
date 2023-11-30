@@ -10,11 +10,15 @@ import FirebaseFirestore
 
 class ChatManager {
     var cartString = ""
-    static let shared = ChatManager()
-    private var firestore = Firestore.firestore()
-    
-    private init() {}
-    
+       static let shared = ChatManager()
+       private var firestore = Firestore.firestore()
+       private var seller: Seller? // Add a property to store the seller
+       
+       private init() {}
+       
+       func setSeller(_ seller: Seller) {
+           self.seller = seller
+       }
     func createOrGetChatRoomDocument(buyerID: String, sellerID: String, completion: @escaping (DocumentReference?, Error?) -> Void) {
         let chatRoomID = "\(buyerID)_\(sellerID)"
         let chatRoomsCollection = firestore.collection("chatRooms")
@@ -70,8 +74,11 @@ class ChatManager {
             for document in documents {
                 let data = document.data()
                 if let text = data["text"] as? String,
-                   let isMe = data["isMe"] as? Bool {
-                    let chatMessage = ChatMessage(text: text, isMe: isMe)
+                   let isMe = data["isMe"] as? Bool,
+                   let timestamp = data["timestamp"] as? Timestamp,
+                   let name = data["name"] as? String,
+                   let profileImageUrl = data["profileImageUrl"] as? String {
+                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name)
                     chatMessages.append(chatMessage)
                 }
             }
@@ -86,7 +93,8 @@ class ChatManager {
         messagesCollection.addDocument(data: [
             "text": message,
             "isMe": isMe,
-            "timestamp": FieldValue.serverTimestamp()
+            "timestamp": FieldValue.serverTimestamp(),
+            "name": isMe ? "Buyer" : seller?.sellerName ?? "",
         ]) { error in
             completion(error)
         }
