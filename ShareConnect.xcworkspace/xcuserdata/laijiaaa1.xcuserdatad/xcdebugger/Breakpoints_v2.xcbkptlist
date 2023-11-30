@@ -93,8 +93,8 @@
             filePath = "ShareConnect/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
             landmarkName = "fetchRequests(userId:dataType:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -109,8 +109,8 @@
             filePath = "ShareConnect/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "372"
-            endingLineNumber = "372"
+            startingLineNumber = "401"
+            endingLineNumber = "401"
             landmarkName = "fetchGroups(userId:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -125,8 +125,8 @@
             filePath = "ShareConnect/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "318"
-            endingLineNumber = "318"
+            startingLineNumber = "347"
+            endingLineNumber = "347"
             landmarkName = "fetchRequests(userId:dataType:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -482,8 +482,8 @@
             filePath = "ShareConnect/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "435"
-            endingLineNumber = "435"
+            startingLineNumber = "464"
+            endingLineNumber = "464"
             landmarkName = "parseRequestData(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -498,8 +498,8 @@
             filePath = "ShareConnect/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "349"
-            endingLineNumber = "349"
+            startingLineNumber = "378"
+            endingLineNumber = "378"
             landmarkName = "fetchCollections(userId:)"
             landmarkType = "7">
          </BreakpointContent>

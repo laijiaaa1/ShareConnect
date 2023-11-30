@@ -40,6 +40,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     override func viewWillAppear(_ animated: Bool) {
         browsingHistoryCollection.reloadData()
+        navigationController?.navigationBar.isHidden = false
+        tabBarController?.tabBar.isHidden = false
     }
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -194,6 +194,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var selectedButton: UIButton?
     var selectedCollection: Collection?
     let userId = Auth.auth().currentUser?.uid
+    let profileImageView = UIImageView()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
@@ -203,11 +204,23 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         view.backgroundColor = CustomColors.B1
         tabBarController?.tabBar.backgroundColor = CustomColors.B1
+        view.addSubview(profileImageView)
+        profileImageView.layer.cornerRadius = 50
+        profileImageView.clipsToBounds = true
+        profileImageView.translatesAutoresizingMaskIntoConstraints = false
+         NSLayoutConstraint.activate([
+            profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            profileImageView.widthAnchor.constraint(equalToConstant: 100),
+            profileImageView.heightAnchor.constraint(equalToConstant: 100)
+        ])
         view.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.text = "Luna"
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        nameLabel.textAlignment = .center
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            nameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 10),
             nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         // 4 buttons stack view
@@ -287,11 +300,27 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         view.addSubview(recoderButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: #selector(recoderButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .black
-        
+        fetchUserData(userId: userId!)
         fetchCollections(userId: userId!)
         fetchGroups(userId: userId!)
         fetchRequests(userId: userId!, dataType: "request")
         fetchRequests(userId: userId!, dataType: "supply")
+    }
+    func fetchUserData(userId: String) {
+        let db = Firestore.firestore()
+        let userCollection = db.collection("users")
+        userCollection.document(userId).getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                let name = data?["name"] as? String ?? ""
+                let email = data?["email"] as? String ?? ""
+                let profileImageUrl = data?["profileImageUrl"] as? String ?? ""
+                self.nameLabel.text = name
+                self.profileImageView.kf.setImage(with: URL(string: profileImageUrl))
+            } else {
+                print("Document does not exist")
+            }
+        }
     }
     func fetchRequests(userId: String, dataType: String) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {

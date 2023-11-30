@@ -36,6 +36,7 @@
 		341E9BA22B0367B000997FE9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341E9BA12B0367B000997FE9 /* GoogleService-Info.plist */; };
 		34408F1C2B0EE73B005F8E03 /* ClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */; };
 		346687A62B14657800723302 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A52B14657800723302 /* SearchResultsViewController.swift */; };
+		346687A82B182C8800723302 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A72B182C8800723302 /* RegistrationViewController.swift */; };
 		346DE7C72B05AB5C008D411A /* CreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7C62B05AB5C008D411A /* CreateViewController.swift */; };
 		346DE7C92B05AE4D008D411A /* CreateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */; };
 		346DE7CB2B05FE48008D411A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7CA2B05FE48008D411A /* SearchViewController.swift */; };
@@ -79,6 +80,7 @@
 		341E9BA12B0367B000997FE9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassViewController.swift; sourceTree = "<group>"; };
 		346687A52B14657800723302 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
+		346687A72B182C8800723302 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		346DE7C62B05AB5C008D411A /* CreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewController.swift; sourceTree = "<group>"; };
 		346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRequestViewController.swift; sourceTree = "<group>"; };
 		346DE7CA2B05FE48008D411A /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				3401F6882B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift */,
 				346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */,
 				346DE7CD2B063616008D411A /* LoginViewController.swift */,
+				346687A72B182C8800723302 /* RegistrationViewController.swift */,
 				341E9B912B03629800997FE9 /* Main.storyboard */,
 				341E9B942B03629900997FE9 /* Assets.xcassets */,
 				341E9B962B03629900997FE9 /* LaunchScreen.storyboard */,
@@ -354,6 +357,7 @@
 				3410D96A2B07665700D32744 /* SelectedViewController.swift in Sources */,
 				346DE7D22B065DB1008D411A /* CreateGroupViewController.swift in Sources */,
 				3410D9772B08B3C800D32744 /* FirebaseManager.swift in Sources */,
+				346687A82B182C8800723302 /* RegistrationViewController.swift in Sources */,
 				346DE7C92B05AE4D008D411A /* CreateRequestViewController.swift in Sources */,
 				346DE7D02B065DA2008D411A /* CreateSupplyViewController.swift in Sources */,
 				341E9B8E2B03629800997FE9 /* SceneDelegate.swift in Sources */,

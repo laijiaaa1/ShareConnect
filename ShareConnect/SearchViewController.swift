@@ -503,10 +503,8 @@ class SearchCollectionViewCell: UICollectionViewCell {
 
         userCollectionReference.getDocument { (document, error) in
             if let document = document, document.exists {
-                // Document exists, update the collection
                 updateCollection()
             } else {
-                // Document doesn't exist, create a new document and then update the collection
                 userCollectionReference.setData(["collectedProducts": []]) { error in
                     if let error = error {
                         print("Error creating document: \(error)")
@@ -584,6 +582,7 @@ class ClassCollectionViewCell: UICollectionViewCell {
     let buttonsStackView = UIStackView()
     let textLabel = UILabel()
     let productClassification = ["Camping", "Tableware", "Activity props", "Party", "Electronics", "Others"]
+    let placeClassification = ["Meeting", "Workshop", "Sports", "Activity", "Photography", "Others"]
     var allRequests: [Product] = []
     var allSupplies: [Product] = []
     var currentButtonType: ProductType? {
@@ -617,7 +616,6 @@ class ClassCollectionViewCell: UICollectionViewCell {
             buttonsStackView.removeArrangedSubview(subview)
             subview.removeFromSuperview()
         }
-        
         for classification in productClassification {
             let button = UIButton()
             
