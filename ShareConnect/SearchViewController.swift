@@ -501,39 +501,59 @@ class SearchCollectionViewCell: UICollectionViewCell {
         let db = Firestore.firestore()
         let userCollectionReference = db.collection("collections").document(currentUserID)
 
-        let productData: [String: Any] = [
-            "productId": productID,
-            "name": productName,
-            "imageString": productImageString,
-            "price": productPrice
-        ]
-        product?.isCollected = isCollected
-
-        if isCollected {
-            userCollectionReference.updateData([
-                "collectedProducts": FieldValue.arrayUnion([productData])
-            ]) { error in
-                if let error = error {
-                    print("Error updating document: \(error)")
-                } else {
-                    print("Document successfully updated with new collection.")
-                    self.collectionButton.setImage(UIImage(named: "icons9-bookmark-72(@3×)"), for: .normal)
+        userCollectionReference.getDocument { (document, error) in
+            if let document = document, document.exists {
+                // Document exists, update the collection
+                updateCollection()
+            } else {
+                // Document doesn't exist, create a new document and then update the collection
+                userCollectionReference.setData(["collectedProducts": []]) { error in
+                    if let error = error {
+                        print("Error creating document: \(error)")
+                    } else {
+                        print("Document successfully created.")
+                        updateCollection()
+                    }
                 }
             }
-        } else {
-            let removedProductData: [String: Any] = ["productId": productID]
-            userCollectionReference.updateData([
-                "collectedProducts": FieldValue.arrayRemove([removedProductData])
-            ]) { error in
-                if let error = error {
-                    print("Error updating document: \(error)")
-                } else {
-                    print("Document successfully updated with removed collection.")
-                    self.collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
+        }
+
+        func updateCollection() {
+            let productData: [String: Any] = [
+                "productId": productID,
+                "name": productName,
+                "imageString": productImageString,
+                "price": productPrice
+            ]
+            product?.isCollected = isCollected
+
+            if isCollected {
+                userCollectionReference.updateData([
+                    "collectedProducts": FieldValue.arrayUnion([productData])
+                ]) { error in
+                    if let error = error {
+                        print("Error updating document: \(error)")
+                    } else {
+                        print("Document successfully updated with new collection.")
+                        self.collectionButton.setImage(UIImage(named: "icons9-bookmark-72(@3×)"), for: .normal)
+                    }
+                }
+            } else {
+                let removedProductData: [String: Any] = ["productId": productID]
+                userCollectionReference.updateData([
+                    "collectedProducts": FieldValue.arrayRemove([removedProductData])
+                ]) { error in
+                    if let error = error {
+                        print("Error updating document: \(error)")
+                    } else {
+                        print("Document successfully updated with removed collection.")
+                        self.collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
+                    }
                 }
             }
         }
     }
+
 //
 //    func addToLocalStorage(productData: [String: Any]) {
 //        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
