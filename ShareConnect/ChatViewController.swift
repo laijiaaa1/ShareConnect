@@ -100,8 +100,6 @@ class ChatViewController: UIViewController {
             print("Seller ID is nil.")
             return
         }
-
-        // Generate a random chatRoomID
         let chatRoomID = UUID().uuidString
 
         let chatRoomsCollection = firestore.collection("chatRooms")
@@ -127,17 +125,19 @@ class ChatViewController: UIViewController {
 
                 self?.chatRoomDocument = chatRoomsCollection.document(chatRoomID)
                 self?.chatRoomID = chatRoomID
-                let chatListVC = ChatListViewController()
-                chatListVC.chatRoomID = chatRoomID
-                chatListVC.chatRoomDocument = self?.chatRoomDocument
+               
             }
-
+//            let chatListVC = ChatListViewController()
+//            chatListVC.chatRoomID = chatRoomID
+//            chatListVC.chatRoomDocument = self?.chatRoomDocument
+//            chatListVC.sellerID = buyerID
             // Start listening for chat messages
             self?.startListeningForChatMessages()
 
             // Send initial message to Firestore
             self?.sendMessageToFirestore(self!.cartString, isMe: true)
         }
+        
     }
 
     func updateUserChatRoomData(_ collection: CollectionReference, buyerID: String, chatRoomID: String) {
@@ -177,9 +177,10 @@ class ChatViewController: UIViewController {
                    let timestamp = data["timestamp"] as? Timestamp,
                    let name = data["name"] as? String,
                    let profileImageUrl = data["profileImageUrl"] as? String,
-                   let buyer = data["buyer"] as? String,
+                   let buyerID = data["buyer"] as? String,
+                   let sellerID = data["seller"] as? String,
                 let chatRoomID = data["chatRoomID"] as? String{
-                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID)
+                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID)
                     self.chatMessages.append(chatMessage)
                 }
             }
@@ -204,7 +205,8 @@ class ChatViewController: UIViewController {
                "name": currentUser?.name,
                "profileImageUrl": currentUser?.profileImageUrl,
                "buyer": currentUser?.uid,
-               "chatRoomID": buyerID
+               "seller": buyerID,
+               "chatRoomID": chatRoomID
                // Add other fields as needed
            ]) { [weak self] (error) in
                if let error = error {
@@ -340,4 +342,6 @@ struct ChatMessage {
     let profileImageUrl: String
     let name: String
     let chatRoomID: String
+    let sellerID: String
+    let buyerID: String
 }

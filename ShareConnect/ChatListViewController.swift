@@ -16,6 +16,8 @@ struct ChatItem {
     var profileImageUrl: String
     var unreadCount: Int
     var chatRoomID: String
+    var sellerID: String
+    var buyerID: String
 }
 
 class ChatListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChatDelegate {
@@ -29,7 +31,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     var firestore = Firestore.firestore()
     var processedUserIDs = Set<String>()
     let tableView = UITableView()
-    var sellerID = ""
+    var sellerID: String?
     var chatRoomID: String?
     var chatRoomDocument: DocumentReference?
     var userFetchID = Auth.auth().currentUser!.uid
@@ -39,7 +41,6 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         fetchChatData()
         tabBarController?.tabBar.isHidden = true
     }
-
     func setupUI() {
         navigationItem.title = "Chat List"
         tableView.frame = view.bounds
@@ -62,11 +63,8 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                            print("No chatRoomIDs found for the user.")
                            return
                        }
-                // For each chatRoomID in the user's chatRoom array, create a ChatItem
                 for chatRoomID in chatRoomIDs {
-                    self.chatItems.append(ChatItem(name: document.documentID, time: "", message: "", profileImageUrl: "", unreadCount: 0, chatRoomID: chatRoomID))
-
-                    // Fetch latest messages for each chat item
+                    self.chatItems.append(ChatItem(name: document.documentID, time: "", message: "", profileImageUrl: "", unreadCount: 0, chatRoomID: chatRoomID, sellerID: sellerID ?? "", buyerID: ""))
                     self.fetchLatestMessage(for: document.documentID, chatRoomID: chatRoomID)
                 }
             }
@@ -90,14 +88,16 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                    let name = data["name"] as? String,
                    let timestampString = data["timestamp"] as? Timestamp,
                    let profileImageUrl = data["profileImageUrl"] as? String,
-                   let chatRoomID = data["chatRoomID"] as? String {
+                   let chatRoomID = data["chatRoomID"] as? String,
+                let sellerID = data["seller"] as? String,
+                let buyerID = data["buyer"] as? String{
                     let timestamp = timestampString.dateValue()
                     let message = ChatMessage(text: text,
                                               isMe: isMe,
                                               timestamp: timestampString,
                                               profileImageUrl: profileImageUrl,
                                               name: name,
-                                              chatRoomID: chatRoomID)
+                                              chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID)
                     self.didReceiveNewMessage(message)
                 }
             }
@@ -114,7 +114,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                                     time: message.timestamp.description,
                                     message: message.text,
                                     profileImageUrl: message.profileImageUrl,
-                                    unreadCount: 1, chatRoomID: message.chatRoomID)
+                                    unreadCount: 1, chatRoomID: message.chatRoomID, sellerID: message.sellerID, buyerID: message.buyerID)
             chatItems.append(chatItem)
         }
 
@@ -144,6 +144,9 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chatItem = chatItems[indexPath.row]
         let chatViewController = ChatViewController()
+        chatViewController.chatRoomDocument = chatRoomDocument
+        chatViewController.buyerID = chatItem.sellerID
+        chatViewController.sellerID = chatItem.buyerID
         chatViewController.chatRoomID = chatItem.chatRoomID
         fetchRoom(chatRoomID: chatItem.chatRoomID)
         navigationController?.pushViewController(chatViewController, animated: true)
@@ -160,8 +163,8 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
             if !querySnapshot!.documents.isEmpty {
                 // The "messages" subcollection has documents
                 let chatViewController = ChatViewController()
-                chatViewController.buyerID = chatRoomID
-                chatViewController.sellerID = Auth.auth().currentUser?.uid
+                chatViewController.buyerID = Auth.auth().currentUser?.uid
+                chatViewController.sellerID = sellerID
                 chatViewController.chatRoomDocument = querySnapshot?.documents.first?.reference
                 chatViewController.chatRoomID = chatRoomID
                 chatViewController.fetchUserData()

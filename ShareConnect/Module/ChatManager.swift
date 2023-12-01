@@ -78,8 +78,10 @@ class ChatManager {
                    let timestamp = data["timestamp"] as? Timestamp,
                    let name = data["name"] as? String,
                    let profileImageUrl = data["profileImageUrl"] as? String,
-                   let chatRoomID = data["chatRoomID"] as? String{
-                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID)
+                   let chatRoomID = data["chatRoomID"] as? String,
+                let sellerID = data["seller"] as? String,
+                let buyerID = data["buyer"] as? String {
+                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID)
                     chatMessages.append(chatMessage)
                 }
             }
