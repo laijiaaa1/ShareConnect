@@ -125,7 +125,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                             productData["image"] = downloadURL.absoluteString
                             productData["seller"] = [
                                 "sellerID": user?.uid ?? "",
-                                "sellerName": user?.email ?? ""
+                                "sellerName": user?.email ?? "",
+                                
                             ]
                             for i in 0..<self.requestTableView.numberOfSections {
                                    for j in 0..<self.requestTableView.numberOfRows(inSection: i) {

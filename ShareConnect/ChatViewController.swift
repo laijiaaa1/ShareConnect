@@ -100,7 +100,7 @@ class ChatViewController: UIViewController {
             print("Seller ID is nil.")
             return
         }
-        let chatRoomID = "\(buyerID)_\(sellerID)"
+        let chatRoomID = "\(buyerID)"
         let chatRoomsCollection = firestore.collection("chatRooms")
 
         chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
@@ -151,8 +151,10 @@ class ChatViewController: UIViewController {
                    let isMe = data["isMe"] as? Bool,
                    let timestamp = data["timestamp"] as? Timestamp,
                    let name = data["name"] as? String,
-                   let profileImageUrl = data["profileImageUrl"] as? String {
-                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name)
+                   let profileImageUrl = data["profileImageUrl"] as? String,
+                   let buyer = data["buyer"] as? String,
+                let chatRoomID = data["chatRoomID"] as? String{
+                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID)
                     self.chatMessages.append(chatMessage)
                 }
             }
@@ -175,7 +177,9 @@ class ChatViewController: UIViewController {
                "isMe": isMe,
                "timestamp": FieldValue.serverTimestamp(),
                "name": currentUser?.name,
-               "profileImageUrl": currentUser?.profileImageUrl
+               "profileImageUrl": currentUser?.profileImageUrl,
+               "buyer": currentUser?.uid,
+               "chatRoomID": buyerID
                // Add other fields as needed
            ]) { [weak self] (error) in
                if let error = error {
@@ -310,4 +314,5 @@ struct ChatMessage {
     let timestamp: Timestamp
     let profileImageUrl: String
     let name: String
+    let chatRoomID: String
 }

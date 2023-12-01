@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 struct ChatItem {
     var name: String
@@ -14,6 +15,7 @@ struct ChatItem {
     var message: String
     var profileImageUrl: String
     var unreadCount: Int
+    var chatRoomID: String
 }
 
 class ChatListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChatDelegate {
@@ -27,11 +29,15 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     var firestore = Firestore.firestore()
     var processedUserIDs = Set<String>()
     let tableView = UITableView()
+    var sellerID = ""
+    var chatRoomID: String?
+    var chatRoomDocument: DocumentReference?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         fetchChatData()
+        tabBarController?.tabBar.isHidden = true
     }
 
     func setupUI() {
@@ -54,10 +60,8 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                if let documents = snapshot?.documents {
                    for document in documents {
                        let userID = document.documentID
-                       self.chatItems.append(ChatItem(name: userID, time: "", message: "", profileImageUrl: "", unreadCount: 0))
+                       self.chatItems.append(ChatItem(name: userID, time: "", message: "", profileImageUrl: "", unreadCount: 0, chatRoomID: document.documentID))
                    }
-
-                   // Now that you have unique documentIDs, fetch the latest message for each
                    for chatItem in self.chatItems {
                        self.fetchLatestMessage(for: chatItem.name)
                    }
@@ -81,12 +85,13 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                    let isMe = data["isMe"] as? Bool,
                    let name = data["name"] as? String,
                    let timestampString = data["timestamp"] as? Timestamp,
-                   let profileImageUrl = data["profileImageUrl"] as? String {
+                   let profileImageUrl = data["profileImageUrl"] as? String,
+                let chatRoomID = data["chatRoomID"] as? String{
                     let timestamp = timestampString.dateValue()
                     let message = ChatMessage(text: text,
                                               isMe: isMe,
                                               timestamp: timestampString,
-                                              profileImageUrl: profileImageUrl, name: name)
+                                              profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID)
                     self.didReceiveNewMessage(message)
                 }
             }
@@ -103,7 +108,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                                     time: message.timestamp.description,
                                     message: message.text,
                                     profileImageUrl: message.profileImageUrl,
-                                    unreadCount: 1)
+                                    unreadCount: 1, chatRoomID: message.chatRoomID)
             chatItems.append(chatItem)
         }
 
@@ -130,6 +135,38 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let chatItem = chatItems[indexPath.row]
+        let chatViewController = ChatViewController()
+        chatViewController.buyerID = chatItem.chatRoomID
+        fetchRoom(chatRoomID: chatItem.chatRoomID)
+        navigationController?.pushViewController(chatViewController, animated: true)
+    }
+    func fetchRoom(chatRoomID: String) {
+        firestore.collection("chatRooms").document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("Error getting chat room document: \(error.localizedDescription)")
+                return
+            }
+
+            if let document = documentSnapshot, document.exists {
+                self.chatRoomDocument = document.reference
+
+                let chatViewController = ChatViewController()
+                chatViewController.buyerID = chatRoomID
+                chatViewController.sellerID = Auth.auth().currentUser?.uid
+                chatViewController.chatRoomDocument = self.chatRoomDocument
+                chatViewController.chatRoomID = chatRoomID
+                chatViewController.createOrGetChatRoomDocument()
+                self.navigationController?.pushViewController(chatViewController, animated: true)
+            } else {
+                print("Chat room document does not exist")
+            }
+        }
+    }
+
 }
 
 class ChatListCell: UITableViewCell {

@@ -199,7 +199,9 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
 //        self.createChatRoom(with: sellerID) { [weak self] chatRoomID in
 //            guard let self = self else { return }
-//            
+          let chatList = ChatListViewController()
+        chatList.sellerID = sellerID
+//        chatList.sellerName = "seller"
             let checkoutVC = ChatViewController()
 //            checkoutVC.fetchUserData()
             checkoutVC.cart = self.cart
@@ -240,11 +242,11 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             completion(newOrderRef?.documentID ?? "")
         }
         
-        if let newOrderRef = newOrderRef {
-            let messagesCollection = newOrderRef.collection("messages")
-            let initialMessage = "Order placed!"
-            messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
-        }
+//        if let newOrderRef = newOrderRef {
+//            let messagesCollection = newOrderRef.collection("messages")
+//            let initialMessage = "Order placed!"
+//            messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
+//        }
     }
     func clearShoppingCart() {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
@@ -263,22 +265,22 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.reloadData()
     }
     
-    func createChatRoom(with sellerID: String?, completion: @escaping (String) -> Void) {
-        let chatRoomCollection = Firestore.firestore().collection("chatRooms")
-        let newChatRoomRef = chatRoomCollection.addDocument(data: [
-            "buyerID": Auth.auth().currentUser?.uid ?? "",
-            "sellerID": sellerID ?? "",
-            "createdAt": FieldValue.serverTimestamp(),
-            "cart": encodeCart(),
-        ])
-        chatRoomID = newChatRoomRef.documentID
-        let messagesCollection = newChatRoomRef.collection("messages")
-        
-        let initialMessage = "Hello!"
-        messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
-        
-        completion(chatRoomID)
-    }
+//    func createChatRoom(with sellerID: String?, completion: @escaping (String) -> Void) {
+//        let chatRoomCollection = Firestore.firestore().collection("chatRooms")
+//        let newChatRoomRef = chatRoomCollection.addDocument(data: [
+//            "buyerID": Auth.auth().currentUser?.uid ?? "",
+//            "sellerID": sellerID ?? "",
+//            "createdAt": FieldValue.serverTimestamp(),
+//            "cart": encodeCart(),
+//        ])
+//        chatRoomID = newChatRoomRef.documentID
+//        let messagesCollection = newChatRoomRef.collection("messages")
+//        
+//        let initialMessage = "Hello!"
+//        messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
+//        
+//        completion(chatRoomID)
+//    }
     func encodeCart() -> [[String: Any]] {
         var encodedCart: [[String: Any]] = []
         
