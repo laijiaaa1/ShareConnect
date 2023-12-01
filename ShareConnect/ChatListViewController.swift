@@ -17,7 +17,6 @@ struct ChatItem {
     var unreadCount: Int
     var chatRoomID: String
     var sellerID: String
-    var buyerID: String
 }
 
 class ChatListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChatDelegate {
@@ -52,57 +51,78 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     func fetchChatData() {
         firestore.collection("users").document(userFetchID).getDocument { [weak self] (documentSnapshot, error) in
             guard let self = self else { return }
-
+            
             if let error = error {
                 print("Error getting user documents: \(error.localizedDescription)")
                 return
             }
-
+            
             if let document = documentSnapshot, document.exists {
-                       guard let chatRoomIDs = document["chatRoom"] as? [String] else {
-                           print("No chatRoomIDs found for the user.")
-                           return
-                       }
+                guard let chatRoomIDs = document["chatRoom"] as? [String] else {
+                    print("No chatRoomIDs found for the user.")
+                    return
+                }
+                // Inside your fetchChatData() method
                 for chatRoomID in chatRoomIDs {
-                    self.chatItems.append(ChatItem(name: document.documentID, time: "", message: "", profileImageUrl: "", unreadCount: 0, chatRoomID: chatRoomID, sellerID: sellerID ?? "", buyerID: ""))
-                    self.fetchLatestMessage(for: document.documentID, chatRoomID: chatRoomID)
+                    fetchLatestMessage(for: document.documentID, chatRoomID: chatRoomID) { message in
+                        let chatItem = ChatItem(
+                            name: document.documentID,
+                            time: message.timestamp.description,
+                            message: message.text,
+                            profileImageUrl: message.profileImageUrl,
+                            unreadCount: 0,
+                            chatRoomID: chatRoomID,
+                            sellerID: message.sellerID
+                        )
+                        self.chatItems.append(chatItem)
+                        self.tableView.reloadData()
+                    }
                 }
             }
         }
     }
+    
+    // Modify the fetchLatestMessage method to include a completion handler
+  func fetchLatestMessage(for userID: String, chatRoomID: String, completion: @escaping (ChatMessage) -> Void) {
+      firestore.collection("chatRooms").document(chatRoomID).collection("messages").order(by: "timestamp", descending: true).limit(to: 1).getDocuments { [weak self] (snapshot, error) in
+          guard let self = self else { return }
 
-    func fetchLatestMessage(for userID: String, chatRoomID: String) {
-        firestore.collection("chatRooms").document(chatRoomID).collection("messages").order(by: "timestamp", descending: true).limit(to: 1).getDocuments { [weak self] (snapshot, error) in
-            guard let self = self else { return }
+          if let error = error {
+              print("Error getting latest message: \(error.localizedDescription)")
+              return
+          }
 
-            if let error = error {
-                print("Error getting latest message: \(error.localizedDescription)")
-                return
-            }
+          guard let document = snapshot?.documents.first else {
+              print("No document found for chat room \(chatRoomID)")
+              return
+          }
 
-            if let document = snapshot?.documents.first {
-                let data = document.data()
+          let data = document.data()
 
-                if let text = data["text"] as? String,
-                   let isMe = data["isMe"] as? Bool,
-                   let name = data["name"] as? String,
-                   let timestampString = data["timestamp"] as? Timestamp,
-                   let profileImageUrl = data["profileImageUrl"] as? String,
-                   let chatRoomID = data["chatRoomID"] as? String,
+          guard let text = data["text"] as? String,
+                let isMe = data["isMe"] as? Bool,
+                let name = data["name"] as? String,
+                let timestampString = data["timestamp"] as? Timestamp,
+                let profileImageUrl = data["profileImageUrl"] as? String,
+                let chatRoomID = data["chatRoomID"] as? String,
                 let sellerID = data["seller"] as? String,
-                let buyerID = data["buyer"] as? String{
-                    let timestamp = timestampString.dateValue()
-                    let message = ChatMessage(text: text,
-                                              isMe: isMe,
-                                              timestamp: timestampString,
-                                              profileImageUrl: profileImageUrl,
-                                              name: name,
-                                              chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID)
-                    self.didReceiveNewMessage(message)
-                }
-            }
-        }
-    }
+                let buyerID = data["buyer"] as? String else {
+              print("Incomplete data in the message document for chat room \(chatRoomID)")
+              return
+          }
+
+          let timestamp = timestampString.dateValue()
+          let message = ChatMessage(text: text,
+                                    isMe: isMe,
+                                    timestamp: timestampString,
+                                    profileImageUrl: profileImageUrl,
+                                    name: name,
+                                    chatRoomID: chatRoomID,
+                                    sellerID: sellerID,
+                                    buyerID: buyerID)
+          completion(message)
+      }
+  }
 
     func didReceiveNewMessage(_ message: ChatMessage) {
         if let existingChatIndex = chatItems.firstIndex(where: { $0.name == message.name }) {
@@ -114,19 +134,19 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                                     time: message.timestamp.description,
                                     message: message.text,
                                     profileImageUrl: message.profileImageUrl,
-                                    unreadCount: 1, chatRoomID: message.chatRoomID, sellerID: message.sellerID, buyerID: message.buyerID)
+                                    unreadCount: 1, chatRoomID: message.chatRoomID, sellerID: message.buyerID)
             chatItems.append(chatItem)
         }
-
+        
         tableView.reloadData()
     }
-
+    
     // MARK: - UITableView Data Source and Delegate Methods
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatItems.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatListCell", for: indexPath) as? ChatListCell ?? ChatListCell()
         let chatItem = chatItems[indexPath.row]
@@ -137,20 +157,22 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         cell.unreadLabel.text = "\(chatItem.unreadCount)"
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
+    // Update didSelectRowAt method
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chatItem = chatItems[indexPath.row]
         let chatViewController = ChatViewController()
-        chatViewController.chatRoomDocument = chatRoomDocument
-        chatViewController.buyerID = chatItem.sellerID
-        chatViewController.sellerID = chatItem.buyerID
+        chatViewController.chatRoomDocument = firestore.collection("chatRooms").document(chatItem.chatRoomID)
+        chatViewController.buyerID = Auth.auth().currentUser?.uid
+        chatViewController.sellerID = chatItem.sellerID
         chatViewController.chatRoomID = chatItem.chatRoomID
-        fetchRoom(chatRoomID: chatItem.chatRoomID)
         navigationController?.pushViewController(chatViewController, animated: true)
     }
+
+    // Update fetchRoom method
     func fetchRoom(chatRoomID: String) {
         firestore.collection("chatRooms").document(chatRoomID).collection("messages").getDocuments { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
@@ -160,13 +182,12 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                 return
             }
 
-            if !querySnapshot!.documents.isEmpty {
-                // The "messages" subcollection has documents
+            if let firstDocument = querySnapshot?.documents.first {
                 let chatViewController = ChatViewController()
-                chatViewController.buyerID = Auth.auth().currentUser?.uid
-                chatViewController.sellerID = sellerID
-                chatViewController.chatRoomDocument = querySnapshot?.documents.first?.reference
+                chatViewController.chatRoomDocument = firstDocument.reference
                 chatViewController.chatRoomID = chatRoomID
+                chatViewController.buyerID = Auth.auth().currentUser?.uid
+                chatViewController.sellerID = firstDocument.get("seller") as? String
                 chatViewController.fetchUserData()
                 self.navigationController?.pushViewController(chatViewController, animated: true)
             } else {
@@ -174,7 +195,6 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
     }
-
 
 }
 
@@ -184,13 +204,13 @@ class ChatListCell: UITableViewCell {
     let messageLabel = UILabel()
     let avatarImageView = UIImageView()
     let unreadLabel = UILabel()
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         nameLabel.text = "name"
         nameLabel.frame = CGRect(x: 10, y: 10, width: 100, height: 20)
         contentView.addSubview(nameLabel)
-
+        
         timeLabel.text = "time"
         contentView.addSubview(timeLabel)
         timeLabel.textAlignment = .right
@@ -203,7 +223,7 @@ class ChatListCell: UITableViewCell {
             timeLabel.widthAnchor.constraint(equalToConstant: 100),
             timeLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
-
+        
         messageLabel.text = "message"
         contentView.addSubview(messageLabel)
         messageLabel.textColor = .gray
@@ -215,7 +235,7 @@ class ChatListCell: UITableViewCell {
             messageLabel.widthAnchor.constraint(equalToConstant: 200),
             messageLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
-
+        
         contentView.addSubview(avatarImageView)
         avatarImageView.image = UIImage(named: "wait")
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -227,7 +247,7 @@ class ChatListCell: UITableViewCell {
             avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50)
         ])
-
+        
         contentView.addSubview(unreadLabel)
         unreadLabel.text = "1"
         unreadLabel.textColor = .white
@@ -244,7 +264,7 @@ class ChatListCell: UITableViewCell {
             unreadLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50)
         ])
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
