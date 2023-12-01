@@ -46,12 +46,12 @@ class ChatManager {
                     return
                 }
             }
-            self.sendMessageToFirestore(chatRoomDocument: chatRoomsCollection.document(chatRoomID), message: "Hello", isMe: true) { error in
-                if let error = error {
-                    print("Error sending message: \(error.localizedDescription)")
-                    return
-                }
-            }
+//            self.sendMessageToFirestore(chatRoomDocument: chatRoomsCollection.document(chatRoomID), message: "Hello", isMe: true) { error in
+//                if let error = error {
+//                    print("Error sending message: \(error.localizedDescription)")
+//                    return
+//                }
+//            }
         }
     }
     

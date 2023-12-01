@@ -100,8 +100,12 @@ class ChatViewController: UIViewController {
             print("Seller ID is nil.")
             return
         }
-        let chatRoomID = "\(buyerID)"
+
+        // Generate a random chatRoomID
+        let chatRoomID = UUID().uuidString
+
         let chatRoomsCollection = firestore.collection("chatRooms")
+        let usersCollection = firestore.collection("users")
 
         chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
             if let error = error {
@@ -110,16 +114,37 @@ class ChatViewController: UIViewController {
             }
 
             if let document = documentSnapshot, document.exists {
+                // Chat room document already exists
                 self?.chatRoomDocument = document.reference
                 self?.chatRoomID = chatRoomID
             } else {
+                // Create a new chat room document
                 chatRoomsCollection.document(chatRoomID).setData(["createdAt": FieldValue.serverTimestamp()])
+
+                // Update the users collection with the chat room information
+                self?.updateUserChatRoomData(usersCollection, buyerID: buyerID, chatRoomID: chatRoomID)
+                self?.updateUserChatRoomData(usersCollection, buyerID: sellerID, chatRoomID: chatRoomID)
+
                 self?.chatRoomDocument = chatRoomsCollection.document(chatRoomID)
                 self?.chatRoomID = chatRoomID
+                let chatListVC = ChatListViewController()
+                chatListVC.chatRoomID = chatRoomID
+                chatListVC.chatRoomDocument = self?.chatRoomDocument
             }
+
+            // Start listening for chat messages
             self?.startListeningForChatMessages()
+
+            // Send initial message to Firestore
             self?.sendMessageToFirestore(self!.cartString, isMe: true)
         }
+    }
+
+    func updateUserChatRoomData(_ collection: CollectionReference, buyerID: String, chatRoomID: String) {
+        // Update the users collection to add chatRoomID to the 'chatRoom' array
+        collection.document(buyerID).updateData([
+            "chatRoom": FieldValue.arrayUnion([chatRoomID])
+        ])
     }
 
     func startListeningForChatMessages() {
