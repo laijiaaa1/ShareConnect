@@ -666,6 +666,7 @@ class MyRequestCell: UITableViewCell {
         contentView.layer.cornerRadius = 10
         contentView.clipsToBounds = true
         contentView.layer.borderWidth = 1
+//        contentView.layer.borderColor = UIColor.lightGray.cgColor
         contentView.backgroundColor = CustomColors.B1
         requestImageView.translatesAutoresizingMaskIntoConstraints = false
         requestNameLabel.translatesAutoresizingMaskIntoConstraints = false

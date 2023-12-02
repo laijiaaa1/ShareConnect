@@ -39,6 +39,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         setupUI()
         fetchChatData()
         tabBarController?.tabBar.isHidden = true
+        navigationController?.navigationBar.tintColor = .black
     }
     func setupUI() {
         navigationItem.title = "Chat List"

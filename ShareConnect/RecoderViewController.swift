@@ -200,7 +200,12 @@ class RecoderTableViewCell: UITableViewCell{
     let backView = UIView()
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backView.backgroundColor = .white
+        backView.backgroundColor = CustomColors.B1
+        contentView.layer.cornerRadius = 10
+        contentView.layer.masksToBounds = true
+        contentView.layer.borderWidth = 1
+//        contentView.layer.borderColor = UIColor.lightGray.cgColor
+        contentView.backgroundColor = CustomColors.B1
         backView.layer.cornerRadius = 10
         backView.layer.masksToBounds = true
         contentView.addSubview(backView)
