@@ -562,8 +562,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
             landmarkName = "startListeningForChatMessages()"
             landmarkType = "7">
             <Locations>
@@ -655,8 +655,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
             landmarkName = "startListeningForChatMessages()"
             landmarkType = "7">
             <Locations>
@@ -718,8 +718,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
             landmarkName = "fetchUserData()"
             landmarkType = "7">
             <Locations>
@@ -967,8 +967,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
             landmarkName = "createOrGetChatRoomDocument()"
             landmarkType = "7">
             <Locations>
@@ -1030,8 +1030,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
             landmarkName = "createOrGetChatRoomDocument()"
             landmarkType = "7">
             <Locations>
@@ -1578,8 +1578,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "83"
             endingLineNumber = "83"
-            landmarkName = "ChatListViewController"
-            landmarkType = "3">
+            landmarkName = "fetchLatestMessage(for:chatRoomID:completion:)"
+            landmarkType = "7">
             <Locations>
                <Location
                   uuid = "6EBAE83C-A008-415E-BBC1-EF6B76664978 - f14b0b98ee8eb8ef"
@@ -1717,8 +1717,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
+            startingLineNumber = "175"
+            endingLineNumber = "175"
             landmarkName = "startListeningForChatMessages()"
             landmarkType = "7">
             <Locations>
@@ -2089,10 +2089,10 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "327"
-            endingLineNumber = "327"
+            startingLineNumber = "369"
+            endingLineNumber = "369"
             landmarkName = "tableView(_:cellForRowAt:)"
-            landmarkType = "7">
+            landmarkType = "9">
             <Locations>
                <Location
                   uuid = "2DBD008B-9E8C-4D4C-BCF8-761ED1872E7F - 242741ca8000d0fd"
@@ -2152,10 +2152,10 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "330"
-            endingLineNumber = "330"
+            startingLineNumber = "372"
+            endingLineNumber = "372"
             landmarkName = "tableView(_:cellForRowAt:)"
-            landmarkType = "7">
+            landmarkType = "9">
             <Locations>
                <Location
                   uuid = "91FF8A13-6713-4F97-A600-7C224AB9E9A8 - 242741ca8000d002"
@@ -2215,8 +2215,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "196"
-            endingLineNumber = "196"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
             landmarkName = "setupUI()"
             landmarkType = "7">
             <Locations>
@@ -2263,8 +2263,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "232"
-            endingLineNumber = "232"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
             landmarkName = "imageButtonTapped()"
             landmarkType = "7">
             <Locations>
@@ -2311,8 +2311,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
             landmarkName = "startListeningForChatMessages()"
             landmarkType = "7">
          </BreakpointContent>

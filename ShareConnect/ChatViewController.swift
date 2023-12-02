@@ -10,6 +10,8 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseStorage
 import Kingfisher
+import MapKit
+import CoreLocation
 
 struct User {
     let uid: String
@@ -22,7 +24,7 @@ protocol ChatDelegate: AnyObject {
     func didSelectChatRoom(_ chatRoomID: String)
 }
 
-class ChatViewController: UIViewController {
+class ChatViewController: UIViewController, MKMapViewDelegate {
     var cart: [Seller: [Product]]?
     var sellerID: String?
     var buyerID: String?
@@ -48,6 +50,9 @@ class ChatViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    private var locationManager: CLLocationManager?
+    var currentLocation: CLLocationCoordinate2D?
+    
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
     }
@@ -70,6 +75,11 @@ class ChatViewController: UIViewController {
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
         chatListDelegate?.didSelectChatRoom(chatRoomID)
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.requestWhenInUseAuthorization()
+        locationManager?.startUpdatingLocation()
+        
     }
     func fetchUserData() {
         guard let userID = Auth.auth().currentUser?.uid else {
@@ -226,6 +236,17 @@ class ChatViewController: UIViewController {
         sendButton.frame = CGRect(x: view.bounds.width - 140, y: view.bounds.height - 80, width: 60, height: 40)
         sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
         view.addSubview(sendButton)
+        let locationButton = UIButton(type: .system)
+        locationButton.setTitle("Send Location", for: .normal)
+        locationButton.setTitleColor(.black, for: .normal)
+        locationButton.frame = CGRect(x: view.bounds.width - 210, y: view.bounds.height - 120, width: 150, height: 40)
+        locationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
+        view.addSubview(locationButton)
+    }
+    @objc func locationButtonTapped() {
+        let mapViewController = MapSelectionViewController()
+        mapViewController.delegate = self
+        present(mapViewController, animated: true, completion: nil)
     }
     
     @objc func imageButtonTapped() {
@@ -233,18 +254,21 @@ class ChatViewController: UIViewController {
     }
     @objc func sendButtonTapped() {
         guard let message = messageTextField.text else { return }
+        
         if let selectedImage = selectedImage {
             uploadFixedImage(selectedImage) { [weak self] (imageURL) in
-                self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL)
+                self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL, location: self?.currentLocation)
             }
         } else {
-            sendMessageToFirestore(message, isMe: true)
+            sendMessageToFirestore(message, isMe: true, location: currentLocation)
         }
         
         messageTextField.text = ""
         selectedImage = nil
         imageView.image = nil
+        currentLocation = nil
     }
+    
     func uploadFixedImage(_ image: UIImage, completion: @escaping (String) -> Void) {
         guard let resizedImage = image.resized(toSize: CGSize(width: 50, height: 50)) else {
             print("Error resizing image.")
@@ -278,7 +302,7 @@ class ChatViewController: UIViewController {
             }
         }
     }
-    func sendMessageToFirestore(_ message: String, isMe: Bool, imageURL: String? = nil) {
+    func sendMessageToFirestore(_ message: String, isMe: Bool, imageURL: String? = nil, location: CLLocationCoordinate2D? = nil) {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
             return
@@ -286,17 +310,24 @@ class ChatViewController: UIViewController {
         
         let messagesCollection = chatRoomDocument.collection("messages")
         
-        messagesCollection.addDocument(data: [
+        var messageData: [String: Any] = [
             "text": message,
             "isMe": isMe,
             "timestamp": FieldValue.serverTimestamp(),
-            "name": currentUser?.name,
-            "profileImageUrl": currentUser?.profileImageUrl,
-            "buyer": currentUser?.uid,
-            "seller": buyerID,
-            "chatRoomID": chatRoomID,
+            "name": currentUser?.name ?? "",
+            "profileImageUrl": currentUser?.profileImageUrl ?? "",
+            "buyer": currentUser?.uid ?? "",
+            "seller": buyerID ?? "",
+            "chatRoomID": chatRoomID ?? "",
             "imageURL": imageURL ?? "",
-        ]) { [weak self] (error) in
+        ]
+        
+        if let location = location {
+            let geoPoint = GeoPoint(latitude: location.latitude, longitude: location.longitude)
+            messageData["location"] = geoPoint
+            messageData["isLocation"] = true
+        }
+        messagesCollection.addDocument(data: messageData) { [weak self] (error) in
             if let error = error {
                 print("Error sending message: \(error.localizedDescription)")
                 return
@@ -305,6 +336,17 @@ class ChatViewController: UIViewController {
             self?.tableView.reloadData()
         }
     }
+    
+    func sendLocationToFirestore(_ coordinate: CLLocationCoordinate2D) {
+        guard let chatRoomDocument = chatRoomDocument else {
+            print("Chat room document is nil.")
+            return
+        }
+        
+        let location = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        sendMessageToFirestore("Location Shared", isMe: true, location: coordinate)
+    }
+    
     
     func convertCartToString(_ cart: [Seller: [Product]]) -> String {
         for (seller, products) in cart {
@@ -454,5 +496,174 @@ class ChatMessageCell: UITableViewCell {
         }
     }
 }
+extension ChatViewController: MapSelectionDelegate {
+    func didSelectLocation(_ coordinate: CLLocationCoordinate2D) {
+        sendLocationToFirestore(coordinate)
+    }
+}
 
+extension ChatViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last?.coordinate else { return }
+        
+        // 更新 currentLocation
+        currentLocation = location
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location error: \(error.localizedDescription)")
+    }
+}
 
+class MapSelectionViewController: UIViewController, MKMapViewDelegate {
+    
+    weak var delegate: MapSelectionDelegate?
+    var mapView: MKMapView!
+    var locationManager: CLLocationManager!
+    var searchController: UISearchController!
+    var confirmButton: UIButton!
+    var selectedCoordinate: CLLocationCoordinate2D?
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        mapView = MKMapView(frame: view.bounds)
+        mapView.delegate = self
+        view.addSubview(mapView)
+        // Initialize location manager
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
+        // Initialize search controller
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+        view.addSubview(searchController.searchBar)
+        view.bringSubviewToFront(searchController.searchBar)
+        
+        //add constraints for the search bar
+        searchController.searchBar.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            searchController.searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchController.searchBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            searchController.searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+        
+        // Initialize confirm button
+        confirmButton = UIButton(type: .system)
+        confirmButton.setTitle("Confirm Location", for: .normal)
+        confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        view.addSubview(confirmButton)
+        
+        // Add constraints for the confirm button
+        confirmButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            confirmButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            confirmButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+        let initialLocation = CLLocationCoordinate2D(latitude: 25.0422, longitude: 121.5354)  // 台北市的座標
+        let regionRadius: CLLocationDistance = 1000
+        let coordinateRegion = MKCoordinateRegion(
+            center: initialLocation,
+            latitudinalMeters: regionRadius,
+            longitudinalMeters: regionRadius
+        )
+        mapView.setRegion(coordinateRegion, animated: true)
+        
+    }
+    @objc func confirmButtonTapped() {
+        if let selectedCoordinate = selectedCoordinate {
+            delegate?.didSelectLocation(selectedCoordinate)
+            dismiss(animated: true, completion: nil)
+        } else {
+            print("No location selected.")
+        }
+    }
+
+}
+protocol MapSelectionDelegate: AnyObject {
+    func didSelectLocation(_ coordinate: CLLocationCoordinate2D)
+}
+
+extension MapSelectionViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last?.coordinate else { return }
+
+        print("Updated Location: \(location.latitude), \(location.longitude)")
+        
+        // Optionally, you can update the map view to center on the user's location
+        let region = MKCoordinateRegion(center: location, latitudinalMeters: 1000, longitudinalMeters: 1000)
+        mapView.setRegion(region, animated: true)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location error: \(error.localizedDescription)")
+    }
+}
+
+extension MapSelectionViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
+            // Clear existing search results or handle empty search text
+            mapView.removeAnnotations(mapView.annotations)
+            return
+        }
+        
+        // Create a local search request
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = searchText
+        request.region = mapView.region
+        
+        // Perform the local search
+        let localSearch = MKLocalSearch(request: request)
+        localSearch.start { [weak self] (response, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Local search error: \(error.localizedDescription)")
+                return
+            }
+            
+            // Clear existing annotations
+            self.mapView.removeAnnotations(self.mapView.annotations)
+            
+            // Add annotations for the search results
+            for item in response?.mapItems ?? [] {
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = item.placemark.coordinate
+                annotation.title = item.name
+                self.mapView.addAnnotation(annotation)
+            }
+        }
+    }
+}
+
+extension MapSelectionViewController {
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+          guard let annotation = view.annotation else {
+              return
+          }
+
+          // Update the selected coordinate
+          selectedCoordinate = annotation.coordinate
+      }
+
+    
+    // Optionally, you can customize the annotation view here
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "CustomAnnotation"
+        
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        return annotationView
+    }
+}
