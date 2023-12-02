@@ -12,23 +12,19 @@ class ChatManager {
     var cartString = ""
        static let shared = ChatManager()
        private var firestore = Firestore.firestore()
-       private var seller: Seller? // Add a property to store the seller
-       
+       private var seller: Seller?
        private init() {}
-       
        func setSeller(_ seller: Seller) {
            self.seller = seller
        }
     func createOrGetChatRoomDocument(buyerID: String, sellerID: String, completion: @escaping (DocumentReference?, Error?) -> Void) {
         let chatRoomID = "\(buyerID)_\(sellerID)"
         let chatRoomsCollection = firestore.collection("chatRooms")
-        
         chatRoomsCollection.document(chatRoomID).getDocument { (documentSnapshot, error) in
             if let error = error {
                 completion(nil, error)
                 return
             }
-            
             if let document = documentSnapshot, document.exists {
                 completion(document.reference, nil)
             } else {
@@ -70,7 +66,6 @@ class ChatManager {
             }
             
             var chatMessages = [ChatMessage]()
-            
             for document in documents {
                 let data = document.data()
                 if let text = data["text"] as? String,
@@ -78,14 +73,14 @@ class ChatManager {
                    let timestamp = data["timestamp"] as? Timestamp,
                    let name = data["name"] as? String,
                    let profileImageUrl = data["profileImageUrl"] as? String,
-                   let chatRoomID = data["chatRoomID"] as? String,
-                let sellerID = data["seller"] as? String,
-                let buyerID = data["buyer"] as? String {
-                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID)
+                   let buyerID = data["buyer"] as? String,
+                   let sellerID = data["seller"] as? String,
+                let chatRoomID = data["chatRoomID"] as? String,
+                let imageURL = data["imageURL"] as? String{
+                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL)
                     chatMessages.append(chatMessage)
                 }
             }
-            
             completion(chatMessages, nil)
         }
     }

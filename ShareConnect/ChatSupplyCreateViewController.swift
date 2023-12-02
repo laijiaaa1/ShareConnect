@@ -21,7 +21,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
     var products: [Product] = []
     var supplies: [Supply] = []
     let refreshControl = UIRefreshControl()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "My Supply"
@@ -92,12 +91,10 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             print("Invalid indexPath.")
             return
         }
-        
         let selectedProduct = products[indexPath.row]
         let seller = selectedProduct.seller
         let sellerID = seller.sellerID
         let productArray = [selectedProduct]
-        
         chatManager.createOrGetChatRoomDocument(buyerID: Auth.auth().currentUser!.uid, sellerID: sellerID) { [weak self] (documentReference, error) in
             if let error = error {
                 print("Error creating chat room document: \(error.localizedDescription)")
@@ -108,7 +105,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
                 return
             }
             self?.chatRoomDocument = documentReference
-            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
             vc.chatRoomDocument = documentReference

@@ -7,7 +7,6 @@ import FirebaseStorage
 import MJRefresh
 import Kingfisher
 
-
 class SearchResultsViewController: SearchViewController{
     var searchResults: [Product] = []
     var products: [Product] = []

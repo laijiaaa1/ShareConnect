@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct Product: Codable, Equatable {
     var productId: String
@@ -222,3 +223,14 @@ enum SupplyStatus: String, Codable {
     }
 }
 
+struct ChatMessage {
+    let text: String
+    let isMe: Bool
+    let timestamp: Timestamp
+    let profileImageUrl: String
+    let name: String
+    let chatRoomID: String
+    let sellerID: String
+    let buyerID: String
+    let imageURL: String?
+}

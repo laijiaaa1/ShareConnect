@@ -8,6 +8,8 @@
 import UIKit
 import FirebaseFirestore
 import FirebaseAuth
+import FirebaseStorage
+import Kingfisher
 
 struct User {
     let uid: String
@@ -37,6 +39,15 @@ class ChatViewController: UIViewController {
     var seller: Seller?
     var currentUser: User?
     weak var chatListDelegate: ChatDelegate?
+    var imagePicker: UIImagePickerController?
+    var selectedImage: UIImage?
+    var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
     }
@@ -50,10 +61,10 @@ class ChatViewController: UIViewController {
         navigationItem.title = "CHATROOM"
         navigationController?.navigationBar.isHidden = false
         setupUI()
+        imagePicker = UIImagePickerController()
+        imagePicker?.delegate = self
+        imagePicker?.allowsEditing = true
         tableView.separatorStyle = .none
-//        if let sellerID = sellerID {
-//            createOrGetChatRoomDocument()
-//        }
         if let cart = cart {
             convertCartToString(cart)
         }
@@ -61,35 +72,35 @@ class ChatViewController: UIViewController {
         chatListDelegate?.didSelectChatRoom(chatRoomID)
     }
     func fetchUserData() {
-           guard let userID = Auth.auth().currentUser?.uid else {
-               print("User not authenticated.")
-               return
-           }
-
-           let userCollection = Firestore.firestore().collection("users")
-
-           userCollection.document(userID).getDocument { [weak self] (documentSnapshot, error) in
-               guard let self = self else { return }
-
-               if let error = error {
-                   print("Error fetching user data: \(error.localizedDescription)")
-                   return
-               }
-
-               if let document = documentSnapshot, document.exists {
-                   let userData = document.data()
-                   if let uid = document.documentID as? String,
-                      let name = userData?["name"] as? String,
-                      let email = userData?["email"] as? String,
-                      let profileImageUrl = userData?["profileImageUrl"] as? String {
-                       self.currentUser = User(uid: uid, name: name, email: email, profileImageUrl: profileImageUrl)
-                       self.createOrGetChatRoomDocument()
-                   }
-               } else {
-                   print("User document does not exist.")
-               }
-           }
-       }
+        guard let userID = Auth.auth().currentUser?.uid else {
+            print("User not authenticated.")
+            return
+        }
+        
+        let userCollection = Firestore.firestore().collection("users")
+        
+        userCollection.document(userID).getDocument { [weak self] (documentSnapshot, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching user data: \(error.localizedDescription)")
+                return
+            }
+            
+            if let document = documentSnapshot, document.exists {
+                let userData = document.data()
+                if let uid = document.documentID as? String,
+                   let name = userData?["name"] as? String,
+                   let email = userData?["email"] as? String,
+                   let profileImageUrl = userData?["profileImageUrl"] as? String {
+                    self.currentUser = User(uid: uid, name: name, email: email, profileImageUrl: profileImageUrl)
+                    self.createOrGetChatRoomDocument()
+                }
+            } else {
+                print("User document does not exist.")
+            }
+        }
+    }
     @objc func addButtonTapped() {
         let vc = ChatSupplyCreateViewController()
         navigationController?.pushViewController(vc, animated: true)
@@ -101,75 +112,68 @@ class ChatViewController: UIViewController {
             return
         }
         let chatRoomID = UUID().uuidString
-
+        
         let chatRoomsCollection = firestore.collection("chatRooms")
         let usersCollection = firestore.collection("users")
-
+        
         chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
             if let error = error {
                 print("Error getting chat room document: \(error.localizedDescription)")
                 return
             }
-
+            
             if let document = documentSnapshot, document.exists {
-                // Chat room document already exists
                 self?.chatRoomDocument = document.reference
                 self?.chatRoomID = chatRoomID
             } else {
-                // Create a new chat room document
                 chatRoomsCollection.document(chatRoomID).setData(["createdAt": FieldValue.serverTimestamp()])
-
-                // Update the users collection with the chat room information
                 self?.updateUserChatRoomData(usersCollection, buyerID: buyerID, chatRoomID: chatRoomID)
                 self?.updateUserChatRoomData(usersCollection, buyerID: sellerID, chatRoomID: chatRoomID)
-
+                
                 self?.chatRoomDocument = chatRoomsCollection.document(chatRoomID)
                 self?.chatRoomID = chatRoomID
-               
+                
             }
-//            let chatListVC = ChatListViewController()
-//            chatListVC.chatRoomID = chatRoomID
-//            chatListVC.chatRoomDocument = self?.chatRoomDocument
-//            chatListVC.sellerID = buyerID
+            //            let chatListVC = ChatListViewController()
+            //            chatListVC.chatRoomID = chatRoomID
+            //            chatListVC.chatRoomDocument = self?.chatRoomDocument
+            //            chatListVC.sellerID = buyerID
             // Start listening for chat messages
             self?.startListeningForChatMessages()
-
-            // Send initial message to Firestore
             self?.sendMessageToFirestore(self!.cartString, isMe: true)
         }
         
     }
-
+    
     func updateUserChatRoomData(_ collection: CollectionReference, buyerID: String, chatRoomID: String) {
-        // Update the users collection to add chatRoomID to the 'chatRoom' array
         collection.document(buyerID).updateData([
             "chatRoom": FieldValue.arrayUnion([chatRoomID])
         ])
     }
-
+    
     func startListeningForChatMessages() {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
             return
         }
-
+        
         let messagesCollection = chatRoomDocument.collection("messages")
-
+        
         chatRoomMessageListener = messagesCollection.addSnapshotListener { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
-
+            
             if let error = error {
                 print("Error listening for chat messages: \(error.localizedDescription)")
                 return
             }
-
+            
             guard let documents = querySnapshot?.documents else {
                 print("No documents in the chat messages collection.")
                 return
             }
-
+            
             self.chatMessages.removeAll()
-
+            
             for document in documents {
                 let data = document.data()
                 if let text = data["text"] as? String,
@@ -179,45 +183,16 @@ class ChatViewController: UIViewController {
                    let profileImageUrl = data["profileImageUrl"] as? String,
                    let buyerID = data["buyer"] as? String,
                    let sellerID = data["seller"] as? String,
-                let chatRoomID = data["chatRoomID"] as? String{
-                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID)
+                   let chatRoomID = data["chatRoomID"] as? String,
+                   let imageURL = data["imageURL"] as? String{
+                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL)
                     self.chatMessages.append(chatMessage)
                 }
             }
             self.chatMessages.sort { $0.timestamp.dateValue() < $1.timestamp.dateValue() }
-
             self.tableView.reloadData()
         }
     }
-
-    func sendMessageToFirestore(_ message: String, isMe: Bool) {
-           guard let chatRoomDocument = chatRoomDocument else {
-               print("Chat room document is nil.")
-               return
-           }
-           
-           let messagesCollection = chatRoomDocument.collection("messages")
-           
-           messagesCollection.addDocument(data: [
-               "text": message,
-               "isMe": isMe,
-               "timestamp": FieldValue.serverTimestamp(),
-               "name": currentUser?.name,
-               "profileImageUrl": currentUser?.profileImageUrl,
-               "buyer": currentUser?.uid,
-               "seller": buyerID,
-               "chatRoomID": chatRoomID
-               // Add other fields as needed
-           ]) { [weak self] (error) in
-               if let error = error {
-                   print("Error sending message: \(error.localizedDescription)")
-                   return
-               }
-               
-               self?.tableView.reloadData()
-           }
-       }
-
     private func setupUI() {
         view.backgroundColor = CustomColors.B1
         tableView.dataSource = self
@@ -229,19 +204,108 @@ class ChatViewController: UIViewController {
         messageTextField.placeholder = "Type your message here..."
         messageTextField.borderStyle = .roundedRect
         messageTextField.backgroundColor = .white
-        messageTextField.frame = CGRect(x: 20, y: view.bounds.height - 80, width: view.bounds.width - 120, height: 40)
+        messageTextField.frame = CGRect(x: 20, y: view.bounds.height - 80, width: view.bounds.width - 240, height: 40)
         view.addSubview(messageTextField)
+        
+        let imageButton = UIButton(type: .system)
+        imageButton.setTitle("Image", for: .normal)
+        imageButton.setTitleColor(.black, for: .normal)
+        imageButton.frame = CGRect(x: view.bounds.width - 210, y: view.bounds.height - 80, width: 60, height: 40)
+        imageButton.addTarget(self, action: #selector(imageButtonTapped), for: .touchUpInside)
+        view.addSubview(imageButton)
+        view.addSubview(imageView)
+        
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: view.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: tableView.topAnchor),
+        ])
         sendButton.setTitle("Send", for: .normal)
         sendButton.setTitleColor(.black, for: .normal)
-        sendButton.frame = CGRect(x: view.bounds.width - 90, y: view.bounds.height - 80, width: 60, height: 40)
+        sendButton.frame = CGRect(x: view.bounds.width - 140, y: view.bounds.height - 80, width: 60, height: 40)
         sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
         view.addSubview(sendButton)
     }
+    
+    @objc func imageButtonTapped() {
+        present(imagePicker!, animated: true, completion: nil)
+    }
     @objc func sendButtonTapped() {
         guard let message = messageTextField.text else { return }
-        sendMessageToFirestore(message, isMe: true)
+        if let selectedImage = selectedImage {
+            uploadFixedImage(selectedImage) { [weak self] (imageURL) in
+                self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL)
+            }
+        } else {
+            sendMessageToFirestore(message, isMe: true)
+        }
+        
         messageTextField.text = ""
+        selectedImage = nil
+        imageView.image = nil
     }
+    func uploadFixedImage(_ image: UIImage, completion: @escaping (String) -> Void) {
+        guard let resizedImage = image.resized(toSize: CGSize(width: 50, height: 50)) else {
+            print("Error resizing image.")
+            completion("")
+            return
+        }
+        guard let imageData = resizedImage.jpegData(compressionQuality: 0.8) else {
+            print("Error converting image to data.")
+            completion("")
+            return
+        }
+        
+        let imageName = UUID().uuidString
+        let storageRef = Storage.storage().reference().child("images/\(imageName).jpg")
+        
+        storageRef.putData(imageData, metadata: nil) { (metadata, error) in
+            guard let _ = metadata else {
+                print("Error uploading image: \(error?.localizedDescription ?? "")")
+                completion("")
+                return
+            }
+            
+            storageRef.downloadURL { (url, error) in
+                guard let downloadURL = url else {
+                    print("Error getting download URL: \(error?.localizedDescription ?? "")")
+                    completion("")
+                    return
+                }
+                
+                completion(downloadURL.absoluteString)
+            }
+        }
+    }
+    func sendMessageToFirestore(_ message: String, isMe: Bool, imageURL: String? = nil) {
+        guard let chatRoomDocument = chatRoomDocument else {
+            print("Chat room document is nil.")
+            return
+        }
+        
+        let messagesCollection = chatRoomDocument.collection("messages")
+        
+        messagesCollection.addDocument(data: [
+            "text": message,
+            "isMe": isMe,
+            "timestamp": FieldValue.serverTimestamp(),
+            "name": currentUser?.name,
+            "profileImageUrl": currentUser?.profileImageUrl,
+            "buyer": currentUser?.uid,
+            "seller": buyerID,
+            "chatRoomID": chatRoomID,
+            "imageURL": imageURL ?? "",
+        ]) { [weak self] (error) in
+            if let error = error {
+                print("Error sending message: \(error.localizedDescription)")
+                return
+            }
+            
+            self?.tableView.reloadData()
+        }
+    }
+    
     func convertCartToString(_ cart: [Seller: [Product]]) -> String {
         for (seller, products) in cart {
             cartString.append("Seller: \(seller.sellerName)\n")
@@ -261,29 +325,31 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         return chatMessages.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-           let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatMessageCell
-           let chatMessage = chatMessages[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatMessageCell
+        let chatMessage = chatMessages[indexPath.row]
         cell.backgroundColor = CustomColors.B1
-           cell.label.text = chatMessage.text
-           cell.label.textAlignment = chatMessage.isMe ? .right : .left
-           cell.label.textColor = chatMessage.isMe ? .black : .black
-           cell.label.numberOfLines = 0
-
-           if let imageURL = URL(string: chatMessage.profileImageUrl) {
-               cell.image.kf.setImage(with: imageURL)
-           }
-
-           cell.nameLabel.text = chatMessage.isMe ? currentUser?.name ?? "Unknown User" : currentUser?.name ?? "Unknown User"
-
-           let formatter = DateFormatter()
-           formatter.dateFormat = "HH:mm"
-           cell.timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
-           cell.timestampLabel.textColor = .gray
-           cell.timestampLabel.textAlignment = chatMessage.isMe ? .right : .left
-
-           return cell
-       }
-       
+        cell.label.text = chatMessage.text
+        cell.label.textAlignment = chatMessage.isMe ? .right : .left
+        cell.label.textColor = chatMessage.isMe ? .black : .black
+        cell.label.numberOfLines = 0
+        
+        if let imageURL = URL(string: chatMessage.profileImageUrl) {
+            cell.image.kf.setImage(with: imageURL)
+        }
+        if let imageURLpost = URL(string: chatMessage.imageURL ?? "") {
+            cell.imageURLpost.kf.setImage(with: imageURLpost)
+        }
+        cell.nameLabel.text = chatMessage.isMe ? currentUser?.name ?? "Unknown User" : currentUser?.name ?? "Unknown User"
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        cell.timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
+        cell.timestampLabel.textColor = .gray
+        cell.timestampLabel.textAlignment = chatMessage.isMe ? .right : .left
+        
+        return cell
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let minHeight: CGFloat = 60
         let dynamicHeight = calculateDynamicHeight(for: indexPath)
@@ -296,39 +362,57 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         let size = content.boundingRect(with: boundingBox, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSAttributedString.Key.font: font], context: nil)
         return ceil(size.height) + 20
     }
-
-
+    
+    
+}
+extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        if let editedImage = info[.editedImage] as? UIImage {
+            selectedImage = editedImage
+            imageView.image = editedImage
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            selectedImage = originalImage
+            imageView.image = originalImage
+        }
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
 }
 class ChatMessageCell: UITableViewCell {
     var label = UILabel()
     var timestampLabel = UILabel()
     var nameLabel = UILabel()
     var image = UIImageView()
-
+    var imageURLpost = UIImageView()
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private func setupUI() {
         contentView.addSubview(label)
         contentView.addSubview(timestampLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(image)
+        contentView.addSubview(imageURLpost)
         contentView.backgroundColor = CustomColors.B1
         contentView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         NSLayoutConstraint.activate([
             contentView.topAnchor.constraint(equalTo: topAnchor),
             contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.6),
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
         ])
-
+        
         image.layer.cornerRadius = 15
         timestampLabel.font = UIFont.systemFont(ofSize: 12)
         nameLabel.font = UIFont.systemFont(ofSize: 12)
@@ -338,35 +422,37 @@ class ChatMessageCell: UITableViewCell {
         timestampLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         image.translatesAutoresizingMaskIntoConstraints = false
-
+        imageURLpost.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-
+            
             timestampLabel.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
             timestampLabel.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: 10),
-
+            
             nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 10),
-
+            
             image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 10),
             image.widthAnchor.constraint(equalToConstant: 30),
             image.heightAnchor.constraint(equalToConstant: 30),
+            
+            imageURLpost.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            imageURLpost.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+            imageURLpost.widthAnchor.constraint(equalToConstant: 80),
+            imageURLpost.heightAnchor.constraint(equalToConstant: 80)
+            
         ])
+    }
+    func configure(with chatMessage: ChatMessage) {
+        label.text = chatMessage.text
+        if let imageURL = URL(string: chatMessage.imageURL ?? "") {
+            image.kf.setImage(with: imageURL)
+        }
     }
 }
 
 
-struct ChatMessage {
-    let text: String
-    let isMe: Bool
-    let timestamp: Timestamp
-    let profileImageUrl: String
-    let name: String
-    let chatRoomID: String
-    let sellerID: String
-    let buyerID: String
-}

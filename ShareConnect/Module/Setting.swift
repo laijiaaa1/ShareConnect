@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension DateFormatter {
     static let iso8601Full: DateFormatter = {
@@ -24,4 +25,12 @@ extension DateFormatter {
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
         return formatter
     }()
+}
+extension UIImage {
+    func resized(toSize size: CGSize) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: size))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
 }
