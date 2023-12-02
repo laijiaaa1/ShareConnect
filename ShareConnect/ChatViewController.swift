@@ -13,12 +13,6 @@ import Kingfisher
 import MapKit
 import CoreLocation
 
-struct User {
-    let uid: String
-    let name: String
-    let email: String
-    let profileImageUrl: String
-}
 protocol ChatDelegate: AnyObject {
     func didReceiveNewMessage(_ message: ChatMessage)
     func didSelectChatRoom(_ chatRoomID: String)
@@ -86,17 +80,13 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             print("User not authenticated.")
             return
         }
-        
         let userCollection = Firestore.firestore().collection("users")
-        
         userCollection.document(userID).getDocument { [weak self] (documentSnapshot, error) in
             guard let self = self else { return }
-            
             if let error = error {
                 print("Error fetching user data: \(error.localizedDescription)")
                 return
             }
-            
             if let document = documentSnapshot, document.exists {
                 let userData = document.data()
                 if let uid = document.documentID as? String,
@@ -160,15 +150,12 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             "chatRoom": FieldValue.arrayUnion([chatRoomID])
         ])
     }
-    
     func startListeningForChatMessages() {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
             return
         }
-        
         let messagesCollection = chatRoomDocument.collection("messages")
-        
         chatRoomMessageListener = messagesCollection.addSnapshotListener { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
             
@@ -248,7 +235,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         mapViewController.delegate = self
         present(mapViewController, animated: true, completion: nil)
     }
-    
     @objc func imageButtonTapped() {
         present(imagePicker!, animated: true, completion: nil)
     }
@@ -262,13 +248,11 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         } else {
             sendMessageToFirestore(message, isMe: true, location: currentLocation)
         }
-        
         messageTextField.text = ""
         selectedImage = nil
         imageView.image = nil
         currentLocation = nil
     }
-    
     func uploadFixedImage(_ image: UIImage, completion: @escaping (String) -> Void) {
         guard let resizedImage = image.resized(toSize: CGSize(width: 50, height: 50)) else {
             print("Error resizing image.")
@@ -280,7 +264,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             completion("")
             return
         }
-        
         let imageName = UUID().uuidString
         let storageRef = Storage.storage().reference().child("images/\(imageName).jpg")
         
@@ -290,14 +273,12 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
                 completion("")
                 return
             }
-            
             storageRef.downloadURL { (url, error) in
                 guard let downloadURL = url else {
                     print("Error getting download URL: \(error?.localizedDescription ?? "")")
                     completion("")
                     return
                 }
-                
                 completion(downloadURL.absoluteString)
             }
         }
@@ -309,7 +290,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         }
         
         let messagesCollection = chatRoomDocument.collection("messages")
-        
         var messageData: [String: Any] = [
             "text": message,
             "isMe": isMe,
@@ -323,20 +303,25 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         ]
         
         if let location = location {
-            let geoPoint = GeoPoint(latitude: location.latitude, longitude: location.longitude)
-            messageData["location"] = geoPoint
-            messageData["isLocation"] = true
-        }
-        messagesCollection.addDocument(data: messageData) { [weak self] (error) in
-            if let error = error {
-                print("Error sending message: \(error.localizedDescription)")
-                return
-            }
-            
-            self?.tableView.reloadData()
+              let geoPoint = GeoPoint(latitude: location.latitude, longitude: location.longitude)
+              messageData["location"] = geoPoint
+              messageData["isLocation"] = true
+
+              // Create a map link using Apple Maps URL scheme
+              let mapLink = "https://maps.apple.com/?q=\(location.latitude),\(location.longitude)"
+              messageData["mapLink"] = mapLink
+          }
+
+          messagesCollection.addDocument(data: messageData) { [weak self] (error) in
+              if let error = error {
+                  print("Error sending message: \(error.localizedDescription)")
+                  return
+              }
+
+              self?.tableView.reloadData()
+          
         }
     }
-    
     func sendLocationToFirestore(_ coordinate: CLLocationCoordinate2D) {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
@@ -344,10 +329,8 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         }
         
         let location = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        sendMessageToFirestore("Location Shared", isMe: true, location: coordinate)
+        sendMessageToFirestore("\(location)", isMe: true, location: coordinate)
     }
-    
-    
     func convertCartToString(_ cart: [Seller: [Product]]) -> String {
         for (seller, products) in cart {
             cartString.append("Seller: \(seller.sellerName)\n")
@@ -361,7 +344,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         return cartString
     }
 }
-
 extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatMessages.count
@@ -391,7 +373,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         
         return cell
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let minHeight: CGFloat = 60
         let dynamicHeight = calculateDynamicHeight(for: indexPath)
@@ -404,8 +385,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         let size = content.boundingRect(with: boundingBox, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSAttributedString.Key.font: font], context: nil)
         return ceil(size.height) + 20
     }
-    
-    
 }
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
@@ -416,10 +395,8 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
             selectedImage = originalImage
             imageView.image = originalImage
         }
-        
         dismiss(animated: true, completion: nil)
     }
-    
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
@@ -434,11 +411,9 @@ class ChatMessageCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     private func setupUI() {
         contentView.addSubview(label)
         contentView.addSubview(timestampLabel)
@@ -447,7 +422,6 @@ class ChatMessageCell: UITableViewCell {
         contentView.addSubview(imageURLpost)
         contentView.backgroundColor = CustomColors.B1
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        
         NSLayoutConstraint.activate([
             contentView.topAnchor.constraint(equalTo: topAnchor),
             contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -470,18 +444,14 @@ class ChatMessageCell: UITableViewCell {
             label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            
             timestampLabel.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
             timestampLabel.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: 10),
-            
             nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 10),
-            
             image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 10),
             image.widthAnchor.constraint(equalToConstant: 30),
             image.heightAnchor.constraint(equalToConstant: 30),
-            
             imageURLpost.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             imageURLpost.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             imageURLpost.widthAnchor.constraint(equalToConstant: 80),
@@ -505,165 +475,10 @@ extension ChatViewController: MapSelectionDelegate {
 extension ChatViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last?.coordinate else { return }
-        
-        // 更新 currentLocation
         currentLocation = location
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location error: \(error.localizedDescription)")
-    }
-}
-
-class MapSelectionViewController: UIViewController, MKMapViewDelegate {
-    
-    weak var delegate: MapSelectionDelegate?
-    var mapView: MKMapView!
-    var locationManager: CLLocationManager!
-    var searchController: UISearchController!
-    var confirmButton: UIButton!
-    var selectedCoordinate: CLLocationCoordinate2D?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        mapView = MKMapView(frame: view.bounds)
-        mapView.delegate = self
-        view.addSubview(mapView)
-        // Initialize location manager
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-        
-        // Initialize search controller
-        searchController = UISearchController(searchResultsController: nil)
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        navigationItem.searchController = searchController
-        definesPresentationContext = true
-        view.addSubview(searchController.searchBar)
-        view.bringSubviewToFront(searchController.searchBar)
-        
-        //add constraints for the search bar
-        searchController.searchBar.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            searchController.searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            searchController.searchBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            searchController.searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
-        ])
-        
-        // Initialize confirm button
-        confirmButton = UIButton(type: .system)
-        confirmButton.setTitle("Confirm Location", for: .normal)
-        confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
-        view.addSubview(confirmButton)
-        
-        // Add constraints for the confirm button
-        confirmButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            confirmButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            confirmButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
-        let initialLocation = CLLocationCoordinate2D(latitude: 25.0422, longitude: 121.5354)  // 台北市的座標
-        let regionRadius: CLLocationDistance = 1000
-        let coordinateRegion = MKCoordinateRegion(
-            center: initialLocation,
-            latitudinalMeters: regionRadius,
-            longitudinalMeters: regionRadius
-        )
-        mapView.setRegion(coordinateRegion, animated: true)
-        
-    }
-    @objc func confirmButtonTapped() {
-        if let selectedCoordinate = selectedCoordinate {
-            delegate?.didSelectLocation(selectedCoordinate)
-            dismiss(animated: true, completion: nil)
-        } else {
-            print("No location selected.")
-        }
-    }
-
-}
-protocol MapSelectionDelegate: AnyObject {
-    func didSelectLocation(_ coordinate: CLLocationCoordinate2D)
-}
-
-extension MapSelectionViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last?.coordinate else { return }
-
-        print("Updated Location: \(location.latitude), \(location.longitude)")
-        
-        // Optionally, you can update the map view to center on the user's location
-        let region = MKCoordinateRegion(center: location, latitudinalMeters: 1000, longitudinalMeters: 1000)
-        mapView.setRegion(region, animated: true)
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location error: \(error.localizedDescription)")
-    }
-}
-
-extension MapSelectionViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
-            // Clear existing search results or handle empty search text
-            mapView.removeAnnotations(mapView.annotations)
-            return
-        }
-        
-        // Create a local search request
-        let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = searchText
-        request.region = mapView.region
-        
-        // Perform the local search
-        let localSearch = MKLocalSearch(request: request)
-        localSearch.start { [weak self] (response, error) in
-            guard let self = self else { return }
-            
-            if let error = error {
-                print("Local search error: \(error.localizedDescription)")
-                return
-            }
-            
-            // Clear existing annotations
-            self.mapView.removeAnnotations(self.mapView.annotations)
-            
-            // Add annotations for the search results
-            for item in response?.mapItems ?? [] {
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = item.placemark.coordinate
-                annotation.title = item.name
-                self.mapView.addAnnotation(annotation)
-            }
-        }
-    }
-}
-
-extension MapSelectionViewController {
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-          guard let annotation = view.annotation else {
-              return
-          }
-
-          // Update the selected coordinate
-          selectedCoordinate = annotation.coordinate
-      }
-
-    
-    // Optionally, you can customize the annotation view here
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let identifier = "CustomAnnotation"
-        
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-        if annotationView == nil {
-            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.canShowCallout = true
-        } else {
-            annotationView?.annotation = annotation
-        }
-        
-        return annotationView
     }
 }

@@ -37,6 +37,7 @@
 		34408F1C2B0EE73B005F8E03 /* ClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */; };
 		346687A62B14657800723302 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A52B14657800723302 /* SearchResultsViewController.swift */; };
 		346687A82B182C8800723302 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A72B182C8800723302 /* RegistrationViewController.swift */; };
+		346687AA2B1AF94F00723302 /* ChatMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A92B1AF94F00723302 /* ChatMapViewController.swift */; };
 		346DE7C72B05AB5C008D411A /* CreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7C62B05AB5C008D411A /* CreateViewController.swift */; };
 		346DE7C92B05AE4D008D411A /* CreateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */; };
 		346DE7CB2B05FE48008D411A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7CA2B05FE48008D411A /* SearchViewController.swift */; };
@@ -81,6 +82,7 @@
 		34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassViewController.swift; sourceTree = "<group>"; };
 		346687A52B14657800723302 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		346687A72B182C8800723302 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
+		346687A92B1AF94F00723302 /* ChatMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMapViewController.swift; sourceTree = "<group>"; };
 		346DE7C62B05AB5C008D411A /* CreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewController.swift; sourceTree = "<group>"; };
 		346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRequestViewController.swift; sourceTree = "<group>"; };
 		346DE7CA2B05FE48008D411A /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				3410D9692B07665700D32744 /* SelectedViewController.swift */,
 				3410D96B2B08747200D32744 /* TrolleyViewController.swift */,
 				3410D97C2B09BA0400D32744 /* ChatViewController.swift */,
+				346687A92B1AF94F00723302 /* ChatMapViewController.swift */,
 				3410D9862B0C42C600D32744 /* ChatListViewController.swift */,
 				346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */,
 				346687A52B14657800723302 /* SearchResultsViewController.swift */,
@@ -339,6 +342,7 @@
 				346687A62B14657800723302 /* SearchResultsViewController.swift in Sources */,
 				3410D9852B0B5EAE00D32744 /* FirestoreService.swift in Sources */,
 				3410D9732B08890300D32744 /* Setting.swift in Sources */,
+				346687AA2B1AF94F00723302 /* ChatMapViewController.swift in Sources */,
 				341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */,
 				3410D9872B0C42C600D32744 /* ChatListViewController.swift in Sources */,
 				3410D9662B07125600D32744 /* GroupViewController.swift in Sources */,

@@ -234,3 +234,9 @@ struct ChatMessage {
     let buyerID: String
     let imageURL: String?
 }
+struct User {
+    let uid: String
+    let name: String
+    let email: String
+    let profileImageUrl: String
+}

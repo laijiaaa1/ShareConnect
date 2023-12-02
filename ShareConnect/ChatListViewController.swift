@@ -112,8 +112,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                                       chatRoomID: chatRoomID,
                                       sellerID: sellerID,
                                       buyerID: buyerID,
-                                      imageURL: imageURL
-            )
+                                      imageURL: imageURL)
             completion(message)
         }
     }
