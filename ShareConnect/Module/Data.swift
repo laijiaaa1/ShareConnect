@@ -233,6 +233,8 @@ struct ChatMessage {
     let sellerID: String
     let buyerID: String
     let imageURL: String?
+    var isLocation: Bool?
+    var mapLink: String?
 }
 struct User {
     let uid: String

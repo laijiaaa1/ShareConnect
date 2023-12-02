@@ -309,7 +309,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
 
               // Create a map link using Apple Maps URL scheme
               let mapLink = "https://maps.apple.com/?q=\(location.latitude),\(location.longitude)"
-              messageData["mapLink"] = mapLink
+              messageData["text"] = mapLink
           }
 
           messagesCollection.addDocument(data: messageData) { [weak self] (error) in
@@ -460,12 +460,19 @@ class ChatMessageCell: UITableViewCell {
         ])
     }
     func configure(with chatMessage: ChatMessage) {
-        label.text = chatMessage.text
+        if let isLocation = chatMessage.isLocation, isLocation, let mapLink = chatMessage.mapLink {
+            label.text = mapLink
+        } else {
+            label.text = chatMessage.text
+        }
+
         if let imageURL = URL(string: chatMessage.imageURL ?? "") {
             image.kf.setImage(with: imageURL)
         }
     }
+
 }
+
 extension ChatViewController: MapSelectionDelegate {
     func didSelectLocation(_ coordinate: CLLocationCoordinate2D) {
         sendLocationToFirestore(coordinate)
