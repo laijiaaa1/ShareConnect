@@ -17,6 +17,7 @@ struct ChatItem {
     var unreadCount: Int
     var chatRoomID: String
     var sellerID: String
+    var buyerID: String
 }
 
 class ChatListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChatDelegate {
@@ -72,7 +73,8 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                             profileImageUrl: message.profileImageUrl,
                             unreadCount: 0,
                             chatRoomID: chatRoomID,
-                            sellerID: message.sellerID
+                            sellerID: message.sellerID,
+                            buyerID: message.buyerID
                         )
                         self.chatItems.append(chatItem)
                         self.tableView.reloadData()
@@ -134,7 +136,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                                     time: message.timestamp.description,
                                     message: message.text,
                                     profileImageUrl: message.profileImageUrl,
-                                    unreadCount: 1, chatRoomID: message.chatRoomID, sellerID: message.buyerID)
+                                    unreadCount: 1, chatRoomID: message.chatRoomID, sellerID: message.buyerID, buyerID: message.sellerID)
             chatItems.append(chatItem)
         }
         
@@ -161,18 +163,15 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
-    // Update didSelectRowAt method
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chatItem = chatItems[indexPath.row]
         let chatViewController = ChatViewController()
-        chatViewController.chatRoomDocument = firestore.collection("chatRooms").document(chatItem.chatRoomID)
-        chatViewController.buyerID = Auth.auth().currentUser?.uid
+        chatViewController.chatRoomDocument = firestore.collection("chatRooms").document(chatItem.chatRoomID).collection("messages").document()
+        chatViewController.buyerID = chatItem.buyerID
         chatViewController.sellerID = chatItem.sellerID
         chatViewController.chatRoomID = chatItem.chatRoomID
         navigationController?.pushViewController(chatViewController, animated: true)
     }
-
-    // Update fetchRoom method
     func fetchRoom(chatRoomID: String) {
         firestore.collection("chatRooms").document(chatRoomID).collection("messages").getDocuments { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
