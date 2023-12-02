@@ -224,7 +224,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         nameLabel.font = UIFont.boldSystemFont(ofSize: 20)
         nameLabel.textAlignment = .center
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 10),
+            nameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: -10),
             nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         // 4 buttons stack view
