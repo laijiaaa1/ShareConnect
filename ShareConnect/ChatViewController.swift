@@ -263,7 +263,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatMessageCell
            let chatMessage = chatMessages[indexPath.row]
-
+        cell.backgroundColor = CustomColors.B1
            cell.label.text = chatMessage.text
            cell.label.textAlignment = chatMessage.isMe ? .right : .left
            cell.label.textColor = chatMessage.isMe ? .black : .black
@@ -284,56 +284,81 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
            return cell
        }
        
-       func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-           return UITableView.automaticDimension
-       }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let minHeight: CGFloat = 60
+        let dynamicHeight = calculateDynamicHeight(for: indexPath)
+        return max(dynamicHeight, minHeight)
+    }
+    private func calculateDynamicHeight(for indexPath: IndexPath) -> CGFloat {
+        let content = chatMessages[indexPath.row].text
+        let font = UIFont.systemFont(ofSize: 17)
+        let boundingBox = CGSize(width: tableView.bounds.width - 40, height: .greatestFiniteMagnitude)
+        let size = content.boundingRect(with: boundingBox, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSAttributedString.Key.font: font], context: nil)
+        return ceil(size.height) + 20
+    }
+
+
 }
 class ChatMessageCell: UITableViewCell {
     var label = UILabel()
     var timestampLabel = UILabel()
     var nameLabel = UILabel()
     var image = UIImageView()
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setupUI() {
         contentView.addSubview(label)
         contentView.addSubview(timestampLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(image)
-        image.layer.cornerRadius = 20
+        contentView.backgroundColor = CustomColors.B1
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.6),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
+        ])
+
+        image.layer.cornerRadius = 15
+        timestampLabel.font = UIFont.systemFont(ofSize: 12)
+        nameLabel.font = UIFont.systemFont(ofSize: 12)
+        label.numberOfLines = 0
         image.layer.masksToBounds = true
         label.translatesAutoresizingMaskIntoConstraints = false
         timestampLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         image.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            
-            timestampLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 10),
-            timestampLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            
-            nameLabel.topAnchor.constraint(equalTo: timestampLabel.bottomAnchor, constant: 10),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            
-            image.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            image.widthAnchor.constraint(equalToConstant: 40),
-            image.heightAnchor.constraint(equalToConstant: 40),
+            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+
+            timestampLabel.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+            timestampLabel.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: 10),
+
+            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 10),
+
+            image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 10),
+            image.widthAnchor.constraint(equalToConstant: 30),
+            image.heightAnchor.constraint(equalToConstant: 30),
         ])
     }
 }
+
 
 struct ChatMessage {
     let text: String
