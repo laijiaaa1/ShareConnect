@@ -240,19 +240,20 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
     }
     @objc func sendButtonTapped() {
         guard let message = messageTextField.text else { return }
-        
+
         if let selectedImage = selectedImage {
             uploadFixedImage(selectedImage) { [weak self] (imageURL) in
                 self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL, location: self?.currentLocation)
+                self?.selectedImage = nil
+                self?.imageView.image = nil
             }
         } else {
             sendMessageToFirestore(message, isMe: true, location: currentLocation)
         }
         messageTextField.text = ""
-        selectedImage = nil
-        imageView.image = nil
         currentLocation = nil
     }
+
     func uploadFixedImage(_ image: UIImage, completion: @escaping (String) -> Void) {
         guard let resizedImage = image.resized(toSize: CGSize(width: 50, height: 50)) else {
             print("Error resizing image.")
@@ -352,6 +353,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatMessageCell
         let chatMessage = chatMessages[indexPath.row]
         cell.backgroundColor = CustomColors.B1
+        cell.configure(with: chatMessage)
         cell.label.text = chatMessage.text
         cell.label.textAlignment = chatMessage.isMe ? .right : .left
         cell.label.textColor = chatMessage.isMe ? .black : .black
@@ -407,6 +409,7 @@ class ChatMessageCell: UITableViewCell {
     var nameLabel = UILabel()
     var image = UIImageView()
     var imageURLpost = UIImageView()
+    var chatMessage: ChatMessage?
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -460,17 +463,32 @@ class ChatMessageCell: UITableViewCell {
         ])
     }
     func configure(with chatMessage: ChatMessage) {
-        if let isLocation = chatMessage.isLocation, isLocation, let mapLink = chatMessage.mapLink {
-            label.text = mapLink
-        } else {
-            label.text = chatMessage.text
-        }
+           self.chatMessage = chatMessage  // 设置 chatMessage 属性
+           
+        if chatMessage.isLocation ?? true, !chatMessage.text.isEmpty {
+               // 显示地图链接，并将其设置为可点击的链接
+               label.text = "📍 Location"
+               label.textColor = .blue
+               label.isUserInteractionEnabled = true
+               let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openMap(_:)))
+               label.addGestureRecognizer(tapGesture)
+           } else {
+               // 显示普通文本消息
+               label.text = chatMessage.text
+               label.textColor = .black
+               label.isUserInteractionEnabled = false
+           }
 
-        if let imageURL = URL(string: chatMessage.imageURL ?? "") {
-            image.kf.setImage(with: imageURL)
-        }
-    }
+           if let imageURL = URL(string: chatMessage.imageURL ?? "") {
+               image.kf.setImage(with: imageURL)
+           }
+       }
 
+       @objc func openMap(_ gesture: UITapGestureRecognizer) {
+           // 处理打开地图链接的逻辑
+           guard let mapLink = chatMessage?.text, let url = URL(string: mapLink) else { return }
+           UIApplication.shared.open(url, options: [:], completionHandler: nil)
+       }
 }
 
 extension ChatViewController: MapSelectionDelegate {
