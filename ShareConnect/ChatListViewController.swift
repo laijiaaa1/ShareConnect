@@ -57,7 +57,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                 return
             }
             if let document = documentSnapshot, document.exists {
-                guard let chatRoomIDs = document["chatRoom"] as? [String] else {
+                guard let chatRoomIDs = document["chatRooms"] as? [String] else {
                     print("No chatRoomIDs found for the user.")
                     return
                 }

@@ -105,43 +105,100 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         let vc = ChatSupplyCreateViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
+    // Add a property to keep track of existing chat rooms
+    var existingChatRooms: [String: Bool] = [:]
+
+    // ...
+
+    // Modify the createOrGetChatRoomDocument method
     func createOrGetChatRoomDocument() {
         guard let buyerID = buyerID, let sellerID = sellerID else {
-            print("Seller ID is nil.")
+            print("Buyer ID or Seller ID is nil.")
             return
         }
-        let chatRoomID = UUID().uuidString
+
         let chatRoomsCollection = firestore.collection("chatRooms")
         let usersCollection = firestore.collection("users")
-        chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
-            if let error = error {
-                print("Error getting chat room document: \(error.localizedDescription)")
-                return
+
+        // Check both combinations of buyer-to-seller and seller-to-buyer
+        let chatRoomID1 = "\(buyerID)_\(sellerID)"
+        let chatRoomID2 = "\(sellerID)_\(buyerID)"
+
+        if existingChatRooms[chatRoomID1] == true || existingChatRooms[chatRoomID2] == true {
+            // User is already part of the chat room, no need to create a new one
+            self.chatRoomID = existingChatRooms[chatRoomID1] == true ? chatRoomID1 : chatRoomID2
+            chatRoomsCollection.document(self.chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
+                if let error = error {
+                    print("Error getting chat room document: \(error.localizedDescription)")
+                    return
+                }
+
+                if let document = documentSnapshot, document.exists {
+                    self?.chatRoomDocument = document.reference
+                    self?.startListeningForChatMessages()
+                    self?.sendMessageToFirestore(self!.cartString, isMe: true)
+                    // add field array for users, add buyer and seller
+                    self?.updateUserChatRoomData(usersCollection, userID: buyerID, chatRoomID: self!.chatRoomID)
+                    self?.updateUserChatRoomData(usersCollection, userID: sellerID, chatRoomID: self!.chatRoomID)
+                } else {
+                    print("Error: Existing chat room ID does not correspond to an existing chat room.")
+                }
             }
-            if let document = documentSnapshot, document.exists {
-                self?.chatRoomDocument = document.reference
-                self?.chatRoomID = chatRoomID
-            } else {
-                chatRoomsCollection.document(chatRoomID).setData(["createdAt": FieldValue.serverTimestamp()])
-                self?.updateUserChatRoomData(usersCollection, buyerID: buyerID, chatRoomID: chatRoomID)
-                self?.updateUserChatRoomData(usersCollection, buyerID: sellerID, chatRoomID: chatRoomID)
-                self?.chatRoomDocument = chatRoomsCollection.document(chatRoomID)
-                self?.chatRoomID = chatRoomID
-            }
-            //            let chatListVC = ChatListViewController()
-            //            chatListVC.chatRoomID = chatRoomID
-            //            chatListVC.chatRoomDocument = self?.chatRoomDocument
-            //            chatListVC.sellerID = buyerID
-            // Start listening for chat messages
-            self?.startListeningForChatMessages()
-            self?.sendMessageToFirestore(self!.cartString, isMe: true)
+        } else {
+            let newChatRoomID = "\(buyerID)_\(sellerID)"
+            chatRoomsCollection.document(newChatRoomID).setData(["createdAt": FieldValue.serverTimestamp()])
+            self.updateUserChatRoomData(usersCollection, userID: buyerID, chatRoomID: newChatRoomID)
+            self.updateUserChatRoomData(usersCollection, userID: sellerID, chatRoomID: newChatRoomID)
+            self.chatRoomDocument = chatRoomsCollection.document(newChatRoomID)
+            self.startListeningForChatMessages()
+            self.sendMessageToFirestore(self.cartString, isMe: true)
+            existingChatRooms[newChatRoomID] = true
         }
     }
-    func updateUserChatRoomData(_ collection: CollectionReference, buyerID: String, chatRoomID: String) {
-        collection.document(buyerID).updateData([
-            "chatRoom": FieldValue.arrayUnion([chatRoomID])
-        ])
+    func didSelectChatRoom(_ chatRoomID: String) {
+        self.chatRoomID = chatRoomID
+        createOrGetChatRoomDocument()
     }
+
+
+    private func updateUserChatRoomData(_ collection: CollectionReference, userID: String, chatRoomID: String) {
+        // If the user has a chat room, add the chat room to the user's chat room array.
+        // If not, create a new array with the chat room.
+        collection.document(userID).getDocument { (documentSnapshot, error) in
+            if let error = error {
+                print("Error getting user document: \(error.localizedDescription)")
+                return
+            }
+            
+            if let document = documentSnapshot, document.exists {
+                var userData = document.data() ?? [:]
+                
+                if var chatRooms = userData["chatRooms"] as? [String] {
+                    // User already has chat rooms, add the new chat room
+                    chatRooms.append(chatRoomID)
+                    userData["chatRooms"] = chatRooms
+                } else {
+                    // User doesn't have chat rooms, create a new array with the chat room
+                    userData["chatRooms"] = [chatRoomID]
+                }
+                
+                // Update the user document with the modified data
+                collection.document(userID).setData(userData) { error in
+                    if let error = error {
+                        print("Error updating user document: \(error.localizedDescription)")
+                    } else {
+                        print("User document updated successfully.")
+                    }
+                }
+            } else {
+                print("Error: User document does not exist.")
+            }
+        }
+    }
+
+
+
+
     func startListeningForChatMessages() {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
