@@ -18,6 +18,7 @@ class CreateGroupViewController: CreateRequestViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.tintColor = .black
     }
     @objc override func requestSelectSegmentTapped() {
         if requestSelectSegment.selectedSegmentIndex == 0 {

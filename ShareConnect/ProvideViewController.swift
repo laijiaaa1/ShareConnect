@@ -147,7 +147,7 @@ class ProvideViewController: SelectedViewController {
         ])
         addButton.setTitle("+", for: .normal)
         addButton.setTitleColor(.black, for: .normal)
-        addButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
+        addButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 16)
         addButton.backgroundColor = .white
         addButton.layer.cornerRadius = 10
         addButton.layer.masksToBounds = true

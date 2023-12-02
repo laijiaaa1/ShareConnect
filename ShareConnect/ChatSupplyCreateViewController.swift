@@ -24,6 +24,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "My Supply"
+        navigationController?.navigationBar.tintColor = .black
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self

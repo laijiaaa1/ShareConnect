@@ -36,6 +36,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
+        navigationController?.navigationBar.tintColor = .black
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -93,7 +94,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         doneButton.backgroundColor = .black
         doneButton.setTitle("Done", for: .normal)
         doneButton.setTitleColor(.white, for: .normal)
-        doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         doneButton.layer.cornerRadius = 10
         doneButton.layer.masksToBounds = true
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)

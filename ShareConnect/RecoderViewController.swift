@@ -56,6 +56,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
     let tableView = UITableView()
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.tintColor = .black
         view.backgroundColor = CustomColors.B1
         navigationItem.title = "RECODER"
         rentalButton.setTitle("Rental Items", for: .normal)
@@ -222,7 +223,7 @@ class RecoderTableViewCell: UITableViewCell{
             productImageView.heightAnchor.constraint(equalToConstant: 80)
         ])
         nameLabel.text = "Product Name"
-        nameLabel.font = UIFont.systemFont(ofSize: 15)
+        nameLabel.font = UIFont.systemFont(ofSize: 16)
         backView.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -249,6 +250,7 @@ class RecoderTableViewCell: UITableViewCell{
         } else {
             returnButton.setTitle("Remind", for: .normal)
             returnButton.setTitleColor(.black, for: .normal)
+            returnButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
             returnButton.backgroundColor = .white
             returnButton.layer.cornerRadius = 5
             returnButton.layer.borderWidth = 1

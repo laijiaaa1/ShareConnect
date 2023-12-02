@@ -87,7 +87,7 @@ class DetailViewController: UIViewController {
         ])
         view.addSubview(price)
         price.text = "800 / Day"
-        price.font = UIFont(name: "PingFangTC-Semibold", size: 15)
+        price.font = UIFont(name: "PingFangTC-Semibold", size: 16)
         price.textColor = .black
         price.translatesAutoresizingMaskIntoConstraints = false
         price.centerYAnchor.constraint(equalTo: priceImage.centerYAnchor).isActive = true

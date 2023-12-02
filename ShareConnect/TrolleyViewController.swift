@@ -36,7 +36,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
         
-        navigationItem.title = "Trolley"
+        navigationItem.title = "TROLLEY"
         view.backgroundColor = CustomColors.B1
         tableView.backgroundColor = CustomColors.B1
         tableView.delegate = self
@@ -52,6 +52,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         ])
         let checkoutButton = UIButton(type: .system)
         checkoutButton.setTitle("CONFIRM ORDER", for: .normal)
+        checkoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         checkoutButton.setTitleColor(.white, for: .normal)
         checkoutButton.backgroundColor = .black
         checkoutButton.layer.cornerRadius = 10

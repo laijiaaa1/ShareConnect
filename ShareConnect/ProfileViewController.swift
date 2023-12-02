@@ -205,6 +205,10 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         view.backgroundColor = CustomColors.B1
         tabBarController?.tabBar.backgroundColor = CustomColors.B1
         view.addSubview(profileImageView)
+        collectionCollectionView.backgroundColor = CustomColors.B1
+        requestTableView.backgroundColor = CustomColors.B1
+        supplyTableView.backgroundColor = CustomColors.B1
+        groupTableView.backgroundColor = CustomColors.B1
         profileImageView.layer.cornerRadius = 50
         profileImageView.clipsToBounds = true
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -243,7 +247,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let labels = [groupButton, collectionButton, requestButton, supplyButton]
         labels.forEach { (label) in
             label.backgroundColor = .white
-            label.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+            label.titleLabel?.font = UIFont.systemFont(ofSize: 16)
             label.setTitleColor(.black, for: .normal)
         }
         groupButton.setTitle("Group", for: .normal)
@@ -659,6 +663,10 @@ class MyRequestCell: UITableViewCell {
         contentView.addSubview(requestNameLabel)
         contentView.addSubview(requestDescriptionLabel)
         contentView.addSubview(requestDateLabel)
+        contentView.layer.cornerRadius = 10
+        contentView.clipsToBounds = true
+        contentView.layer.borderWidth = 1
+        contentView.backgroundColor = CustomColors.B1
         requestImageView.translatesAutoresizingMaskIntoConstraints = false
         requestNameLabel.translatesAutoresizingMaskIntoConstraints = false
         requestDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false

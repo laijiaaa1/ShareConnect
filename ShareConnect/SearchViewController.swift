@@ -46,6 +46,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.tintColor = .black
                 if usification == "product" {
                     fetchRequestsForUser(type: .request, usification: "product")
                 } else if usification == "place" {
@@ -620,6 +621,7 @@ class ClassCollectionViewCell: UICollectionViewCell {
             let button = UIButton()
             
             button.setTitle(classification, for: .normal)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
             button.setTitleColor(.black, for: .normal)
             button.addTarget(self, action: #selector(classificationButtonTapped(_:)), for: .touchUpInside)
             buttonsStackView.addArrangedSubview(button)

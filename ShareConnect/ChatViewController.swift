@@ -49,6 +49,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
+        navigationController?.navigationBar.tintColor = .black
     }
     override func viewDidDisappear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
@@ -73,7 +74,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         locationManager?.delegate = self
         locationManager?.requestWhenInUseAuthorization()
         locationManager?.startUpdatingLocation()
-        
     }
     func fetchUserData() {
         guard let userID = Auth.auth().currentUser?.uid else {
@@ -104,7 +104,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
     @objc func addButtonTapped() {
         let vc = ChatSupplyCreateViewController()
         navigationController?.pushViewController(vc, animated: true)
-        
     }
     func createOrGetChatRoomDocument() {
         guard let buyerID = buyerID, let sellerID = sellerID else {
@@ -112,16 +111,13 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             return
         }
         let chatRoomID = UUID().uuidString
-        
         let chatRoomsCollection = firestore.collection("chatRooms")
         let usersCollection = firestore.collection("users")
-        
         chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
             if let error = error {
                 print("Error getting chat room document: \(error.localizedDescription)")
                 return
             }
-            
             if let document = documentSnapshot, document.exists {
                 self?.chatRoomDocument = document.reference
                 self?.chatRoomID = chatRoomID
@@ -129,10 +125,8 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
                 chatRoomsCollection.document(chatRoomID).setData(["createdAt": FieldValue.serverTimestamp()])
                 self?.updateUserChatRoomData(usersCollection, buyerID: buyerID, chatRoomID: chatRoomID)
                 self?.updateUserChatRoomData(usersCollection, buyerID: sellerID, chatRoomID: chatRoomID)
-                
                 self?.chatRoomDocument = chatRoomsCollection.document(chatRoomID)
                 self?.chatRoomID = chatRoomID
-                
             }
             //            let chatListVC = ChatListViewController()
             //            chatListVC.chatRoomID = chatRoomID
@@ -142,9 +136,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             self?.startListeningForChatMessages()
             self?.sendMessageToFirestore(self!.cartString, isMe: true)
         }
-        
     }
-    
     func updateUserChatRoomData(_ collection: CollectionReference, buyerID: String, chatRoomID: String) {
         collection.document(buyerID).updateData([
             "chatRoom": FieldValue.arrayUnion([chatRoomID])
@@ -158,19 +150,15 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         let messagesCollection = chatRoomDocument.collection("messages")
         chatRoomMessageListener = messagesCollection.addSnapshotListener { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
-            
             if let error = error {
                 print("Error listening for chat messages: \(error.localizedDescription)")
                 return
             }
-            
             guard let documents = querySnapshot?.documents else {
                 print("No documents in the chat messages collection.")
                 return
             }
-            
             self.chatMessages.removeAll()
-            
             for document in documents {
                 let data = document.data()
                 if let text = data["text"] as? String,
@@ -201,32 +189,33 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         messageTextField.placeholder = "Type your message here..."
         messageTextField.borderStyle = .roundedRect
         messageTextField.backgroundColor = .white
-        messageTextField.frame = CGRect(x: 20, y: view.bounds.height - 80, width: view.bounds.width - 240, height: 40)
+        messageTextField.frame = CGRect(x: 100, y: view.bounds.height - 80, width: view.bounds.width - 140, height: 40)
         view.addSubview(messageTextField)
-        
         let imageButton = UIButton(type: .system)
-        imageButton.setTitle("Image", for: .normal)
+        imageButton.setImage(UIImage(named: "icons8-unsplash-30(@1×)"), for: .normal)
+        imageButton.tintColor = .black
         imageButton.setTitleColor(.black, for: .normal)
-        imageButton.frame = CGRect(x: view.bounds.width - 210, y: view.bounds.height - 80, width: 60, height: 40)
+        imageButton.frame = CGRect(x: 50, y: view.bounds.height - 80, width: 50, height: 50)
         imageButton.addTarget(self, action: #selector(imageButtonTapped), for: .touchUpInside)
         view.addSubview(imageButton)
         view.addSubview(imageView)
-        
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: view.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             imageView.bottomAnchor.constraint(equalTo: tableView.topAnchor),
         ])
-        sendButton.setTitle("Send", for: .normal)
+        sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
+        sendButton.tintColor = .black
         sendButton.setTitleColor(.black, for: .normal)
-        sendButton.frame = CGRect(x: view.bounds.width - 140, y: view.bounds.height - 80, width: 60, height: 40)
+        sendButton.frame = CGRect(x: view.bounds.width - 50, y: view.bounds.height - 80, width: 50, height: 50)
         sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
         view.addSubview(sendButton)
         let locationButton = UIButton(type: .system)
-        locationButton.setTitle("Send Location", for: .normal)
+        locationButton.setImage(UIImage(named: "icons8-map-24(@1×)"), for: .normal)
+        locationButton.tintColor = .black
         locationButton.setTitleColor(.black, for: .normal)
-        locationButton.frame = CGRect(x: view.bounds.width - 210, y: view.bounds.height - 120, width: 150, height: 40)
+        locationButton.frame = CGRect(x: 10, y: view.bounds.height - 80, width: 50, height: 50)
         locationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
         view.addSubview(locationButton)
     }
@@ -252,22 +241,21 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         }
         messageTextField.text = ""
         currentLocation = nil
+        selectedImage = nil
+        imageView.image = nil
     }
 
     func uploadFixedImage(_ image: UIImage, completion: @escaping (String) -> Void) {
         guard let resizedImage = image.resized(toSize: CGSize(width: 50, height: 50)) else {
-            print("Error resizing image.")
             completion("")
             return
         }
         guard let imageData = resizedImage.jpegData(compressionQuality: 0.8) else {
-            print("Error converting image to data.")
             completion("")
             return
         }
         let imageName = UUID().uuidString
         let storageRef = Storage.storage().reference().child("images/\(imageName).jpg")
-        
         storageRef.putData(imageData, metadata: nil) { (metadata, error) in
             guard let _ = metadata else {
                 print("Error uploading image: \(error?.localizedDescription ?? "")")
@@ -289,7 +277,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             print("Chat room document is nil.")
             return
         }
-        
         let messagesCollection = chatRoomDocument.collection("messages")
         var messageData: [String: Any] = [
             "text": message,
@@ -307,20 +294,15 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
               let geoPoint = GeoPoint(latitude: location.latitude, longitude: location.longitude)
               messageData["location"] = geoPoint
               messageData["isLocation"] = true
-
-              // Create a map link using Apple Maps URL scheme
               let mapLink = "https://maps.apple.com/?q=\(location.latitude),\(location.longitude)"
               messageData["text"] = mapLink
           }
-
           messagesCollection.addDocument(data: messageData) { [weak self] (error) in
               if let error = error {
                   print("Error sending message: \(error.localizedDescription)")
                   return
               }
-
               self?.tableView.reloadData()
-          
         }
     }
     func sendLocationToFirestore(_ coordinate: CLLocationCoordinate2D) {
@@ -328,7 +310,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             print("Chat room document is nil.")
             return
         }
-        
         let location = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
         sendMessageToFirestore("\(location)", isMe: true, location: coordinate)
     }
@@ -358,21 +339,18 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         cell.label.textAlignment = chatMessage.isMe ? .right : .left
         cell.label.textColor = chatMessage.isMe ? .black : .black
         cell.label.numberOfLines = 0
-        
         if let imageURL = URL(string: chatMessage.profileImageUrl) {
             cell.image.kf.setImage(with: imageURL)
         }
         if let imageURLpost = URL(string: chatMessage.imageURL ?? "") {
             cell.imageURLpost.kf.setImage(with: imageURLpost)
         }
-        cell.nameLabel.text = chatMessage.isMe ? currentUser?.name ?? "Unknown User" : currentUser?.name ?? "Unknown User"
-        
+        cell.nameLabel.text = chatMessage.isMe ? currentUser?.name ?? "User" : currentUser?.name ?? "User"
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         cell.timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
         cell.timestampLabel.textColor = .gray
         cell.timestampLabel.textAlignment = chatMessage.isMe ? .right : .left
-        
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -385,7 +363,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         let font = UIFont.systemFont(ofSize: 17)
         let boundingBox = CGSize(width: tableView.bounds.width - 40, height: .greatestFiniteMagnitude)
         let size = content.boundingRect(with: boundingBox, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSAttributedString.Key.font: font], context: nil)
-        return ceil(size.height) + 20
+        return ceil(size.height) + 25
     }
 }
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -463,34 +441,27 @@ class ChatMessageCell: UITableViewCell {
         ])
     }
     func configure(with chatMessage: ChatMessage) {
-           self.chatMessage = chatMessage  // 设置 chatMessage 属性
-           
+           self.chatMessage = chatMessage
         if chatMessage.isLocation ?? true, !chatMessage.text.isEmpty {
-               // 显示地图链接，并将其设置为可点击的链接
                label.text = "📍 Location"
                label.textColor = .blue
                label.isUserInteractionEnabled = true
                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openMap(_:)))
                label.addGestureRecognizer(tapGesture)
            } else {
-               // 显示普通文本消息
                label.text = chatMessage.text
                label.textColor = .black
                label.isUserInteractionEnabled = false
            }
-
            if let imageURL = URL(string: chatMessage.imageURL ?? "") {
                image.kf.setImage(with: imageURL)
            }
        }
-
        @objc func openMap(_ gesture: UITapGestureRecognizer) {
-           // 处理打开地图链接的逻辑
            guard let mapLink = chatMessage?.text, let url = URL(string: mapLink) else { return }
            UIApplication.shared.open(url, options: [:], completionHandler: nil)
        }
 }
-
 extension ChatViewController: MapSelectionDelegate {
     func didSelectLocation(_ coordinate: CLLocationCoordinate2D) {
         sendLocationToFirestore(coordinate)
@@ -502,7 +473,6 @@ extension ChatViewController: CLLocationManagerDelegate {
         guard let location = locations.last?.coordinate else { return }
         currentLocation = location
     }
-    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location error: \(error.localizedDescription)")
     }
