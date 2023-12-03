@@ -14,11 +14,19 @@ import FirebaseStorage
 class SettingProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.tintColor = .black
+        view.backgroundColor = CustomColors.B1
+        let outImage = UIImageView()
+        outImage.image = UIImage(named: "icons8-logout-90")
+        view.addSubview(outImage)
+        outImage.translatesAutoresizingMaskIntoConstraints = false
         let logoutButton = UIButton(type: .system)
         logoutButton.setTitle("登出", for: .normal)
+        logoutButton.tintColor = UIColor(red: 85/255, green: 85/255, blue: 85/255, alpha: 1.0)
         logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         let deleteAccountButton = UIButton(type: .system)
         deleteAccountButton.setTitle("刪除帳號", for: .normal)
+        deleteAccountButton.tintColor = UIColor(red: 85/255, green: 85/255, blue: 85/255, alpha: 1.0)
         deleteAccountButton.addTarget(self, action: #selector(deleteAccountButtonTapped), for: .touchUpInside)
         view.addSubview(logoutButton)
         view.addSubview(deleteAccountButton)
@@ -27,6 +35,10 @@ class SettingProfileViewController: UIViewController {
         NSLayoutConstraint.activate([
             logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoutButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
+            outImage.centerYAnchor.constraint(equalTo: logoutButton.centerYAnchor),
+            outImage.widthAnchor.constraint(equalToConstant: 40),
+            outImage.heightAnchor.constraint(equalToConstant: 40),
+            outImage.leadingAnchor.constraint(equalTo: logoutButton.trailingAnchor, constant: 10),
             deleteAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             deleteAccountButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 50),
         ])

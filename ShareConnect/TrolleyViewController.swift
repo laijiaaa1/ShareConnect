@@ -35,7 +35,6 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
-        
         navigationItem.title = "TROLLEY"
         view.backgroundColor = CustomColors.B1
         tableView.backgroundColor = CustomColors.B1
@@ -116,7 +115,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
                     return
                 }
                 
-                let seller = Seller(sellerID: sellerID, sellerName: "Seller")
+                let seller = Seller(sellerID: sellerID, sellerName: "Seller:\(sellerID)")
                 result[seller] = products
             }
             

@@ -148,10 +148,14 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         fetchRequests(userId: userId!, dataType: "supply")
         view.addSubview(settingProfileButton)
         settingProfileButton.translatesAutoresizingMaskIntoConstraints = false
-        settingProfileButton.setImage(UIImage(systemName: "gear"), for: .normal)
+        settingProfileButton.setImage(UIImage(named: "icons8-setting-96(@3×)"), for: .normal)
         settingProfileButton.tintColor = .black
         settingProfileButton.addTarget(self, action: #selector(settingProfileButtonTapped), for: .touchUpInside)
-        settingProfileButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        settingProfileButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            settingProfileButton.widthAnchor.constraint(equalToConstant: 30),
+            settingProfileButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: settingProfileButton)
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

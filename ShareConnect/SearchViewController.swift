@@ -189,42 +189,32 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func button1Action() {
         currentButtonType = .request
-        
         UIView.animate(withDuration: 0.3) {
             self.lineView.center.x = self.button1.center.x
         }
-        
         button1.setTitleColor(.black, for: .normal)
         button2.setTitleColor(.lightGray, for: .normal)
-        
         if usification == "product" {
             fetchRequestsForUser(type: .request, usification: "product")
         } else {
             fetchRequestsForUser(type: .request, usification: "place")
         }
-        
         collectionView.reloadData()
     }
-
     @objc func button2Action() {
         currentButtonType = .supply
-        
         UIView.animate(withDuration: 0.3) {
             self.lineView.center.x = self.button2.center.x
         }
-        
         button1.setTitleColor(.lightGray, for: .normal)
         button2.setTitleColor(.black, for: .normal)
-        
         if usification == "place" {
             fetchRequestsForUser(type: .supply, usification: "place")
         } else {
             fetchRequestsForUser(type: .supply, usification: "product")
         }
-        
         collectionView.reloadData()
     }
-
     func setupUI() {
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
@@ -246,7 +236,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         stackView.addArrangedSubview(button2)
         lineView.backgroundColor = .black
         lineView.translatesAutoresizingMaskIntoConstraints = false
-//        lineView.center.x = button1.center.x
         view.addSubview(lineView)
         NSLayoutConstraint.activate([
             lineView.topAnchor.constraint(equalTo: stackView.bottomAnchor),
@@ -413,7 +402,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
     }
 }
-
 class SearchCollectionViewCell: UICollectionViewCell {
     let underView = UIView()
     let imageView = UIImageView()
@@ -498,7 +486,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
               let productPrice = product?.price else {
             return
         }
-
         let db = Firestore.firestore()
         let userCollectionReference = db.collection("collections").document(currentUserID)
 
@@ -516,7 +503,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
                 }
             }
         }
-
         func updateCollection() {
             let productData: [String: Any] = [
                 "productId": productID,
@@ -525,7 +511,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
                 "price": productPrice
             ]
             product?.isCollected = isCollected
-
             if isCollected {
                 userCollectionReference.updateData([
                     "collectedProducts": FieldValue.arrayUnion([productData])
@@ -619,7 +604,6 @@ class ClassCollectionViewCell: UICollectionViewCell {
         }
         for classification in productClassification {
             let button = UIButton()
-            
             button.setTitle(classification, for: .normal)
             button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
             button.setTitleColor(.black, for: .normal)

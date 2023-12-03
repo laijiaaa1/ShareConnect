@@ -134,8 +134,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                             productData["image"] = downloadURL.absoluteString
                             productData["seller"] = [
                                 "sellerID": user?.uid ?? "",
-                                "sellerName": user?.email ?? "",
-                                
+                                "sellerName": user?.email ?? ""
                             ]
                             for i in 0..<self.requestTableView.numberOfSections {
                                    for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
@@ -154,15 +153,15 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 }
                             let demandProduct = Product(
                                 productId: productData["productId"] as? String ?? "",
-                                name: productData["name"] as? String ?? "",
-                                price: productData["price"] as? String ?? "",
-                                startTime: productData["endTime"] as? String ?? "",
+                                name: productData["Name"] as? String ?? "",
+                                price: productData["Price"] as? String ?? "",
+                                startTime: productData["End Time"] as? String ?? "",
                                 imageString: productData["image"] as? String ?? "",
-                                description: productData["description"] as? String ?? "",
-                                sort: productData["sort"] as? String ?? "",
-                                quantity: productData["quantity"] as? Int ?? 1,
-                                use: productData["use"] as? String ?? "",
-                                endTime: productData["endTime"] as? String ?? "",
+                                description: productData["Description"] as? String ?? "",
+                                sort: productData["Sort"] as? String ?? "",
+                                quantity: productData["Quantity"] as? Int ?? 1,
+                                use: productData["Use"] as? String ?? "",
+                                endTime: productData["End Time"] as? String ?? "",
                                 seller: Seller(
                                     sellerID: user?.uid ?? "",
                                     sellerName: user?.email ?? ""

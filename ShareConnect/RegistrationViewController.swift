@@ -48,8 +48,8 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         let button = UIButton()
         button.setTitle("Register", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .blue
-        button.layer.cornerRadius = 8
+        button.backgroundColor = UIColor(red: 85/255, green: 85/255, blue: 85/255, alpha: 1.0)
+        button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -64,31 +64,36 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         profileImageView.addGestureRecognizer(imageTapGesture)
     }
     func setupUI() {
+        view.backgroundColor = CustomColors.B1
         view.addSubview(emailTextField)
         view.addSubview(passwordTextField)
         view.addSubview(nameTextField)
         view.addSubview(profileImageView)
         view.addSubview(registerButton)
+        profileImageView.image = UIImage(named: "icons8-user-48(@3×)")
+        profileImageView.layer.cornerRadius = 60
+        profileImageView.layer.masksToBounds = true
+        profileImageView.tintColor = .gray
         NSLayoutConstraint.activate([
-            emailTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            emailTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
+            emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             emailTextField.heightAnchor.constraint(equalToConstant: 40),
             passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 20),
-            passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             passwordTextField.heightAnchor.constraint(equalToConstant: 40),
             nameTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 20),
-            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             nameTextField.heightAnchor.constraint(equalToConstant: 40),
-            profileImageView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 20),
+            profileImageView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 40),
             profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             profileImageView.widthAnchor.constraint(equalToConstant: 120),
             profileImageView.heightAnchor.constraint(equalToConstant: 120),
-            registerButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 20),
-            registerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            registerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            registerButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 60),
+            registerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            registerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             registerButton.heightAnchor.constraint(equalToConstant: 40),
         ])
     }
