@@ -16,7 +16,7 @@ struct Product: Codable, Equatable {
     var imageString: String
     var description: String
     var sort: String
-    var quantity: Int
+    var quantity: Int = 1
     var use: String
     var endTime: String
     var seller: Seller
@@ -191,9 +191,7 @@ enum RequestStatus: String, Codable {
     }
 }
 
-protocol TrolleyCellDelegate: AnyObject {
-    func didSelectSeller(sellerID: String)
-}
+
 
 struct UserData: Codable, Hashable {
     var userID: String

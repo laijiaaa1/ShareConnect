@@ -42,29 +42,20 @@ class ChatManager {
                     return
                 }
             }
-//            self.sendMessageToFirestore(chatRoomDocument: chatRoomsCollection.document(chatRoomID), message: "Hello", isMe: true) { error in
-//                if let error = error {
-//                    print("Error sending message: \(error.localizedDescription)")
-//                    return
-//                }
-//            }
         }
     }
     
     func startListeningForChatMessages(chatRoomDocument: DocumentReference, completion: @escaping ([ChatMessage], Error?) -> Void) -> ListenerRegistration {
         let messagesCollection = chatRoomDocument.collection("messages")
-        
         return messagesCollection.addSnapshotListener { (querySnapshot, error) in
             if let error = error {
                 completion([], error)
                 return
             }
-            
             guard let documents = querySnapshot?.documents else {
                 completion([], nil)
                 return
             }
-            
             var chatMessages = [ChatMessage]()
             for document in documents {
                 let data = document.data()
@@ -84,10 +75,8 @@ class ChatManager {
             completion(chatMessages, nil)
         }
     }
-    
     func sendMessageToFirestore(chatRoomDocument: DocumentReference, message: String, isMe: Bool, completion: @escaping (Error?) -> Void) {
         let messagesCollection = chatRoomDocument.collection("messages")
-        
         messagesCollection.addDocument(data: [
             "text": message,
             "isMe": isMe,

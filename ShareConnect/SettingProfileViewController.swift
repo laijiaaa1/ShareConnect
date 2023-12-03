@@ -35,10 +35,10 @@ class SettingProfileViewController: UIViewController {
         NSLayoutConstraint.activate([
             logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoutButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
-            outImage.centerYAnchor.constraint(equalTo: logoutButton.centerYAnchor),
+            outImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             outImage.widthAnchor.constraint(equalToConstant: 40),
             outImage.heightAnchor.constraint(equalToConstant: 40),
-            outImage.leadingAnchor.constraint(equalTo: logoutButton.trailingAnchor, constant: 10),
+            outImage.bottomAnchor.constraint(equalTo: logoutButton.topAnchor, constant: -30),
             deleteAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             deleteAccountButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 50),
         ])

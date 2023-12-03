@@ -62,7 +62,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                     return
                 }
                 for chatRoomID in chatRoomIDs {
-                    fetchLatestMessage(for: document.documentID, chatRoomID: chatRoomID) { message in
+                    self.fetchLatestMessage(for: document.documentID, chatRoomID: chatRoomID) { message in
                         let chatItem = ChatItem(
                             name: document.documentID,
                             time: message.timestamp.description,

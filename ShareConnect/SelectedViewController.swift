@@ -26,12 +26,17 @@ class SelectedViewController: UIViewController {
     let itemLabel = UILabel()
     let itemView = UIView()
     let itemInfo = UILabel()
-    let quantity = UILabel()
+    var quantity = UILabel()
     let numberLabel = UILabel()
     let addButton = UIButton()
     let minusButton = UIButton()
     let trolleyButton = UIButton()
     let closeButton = UIButton()
+    var selectedQuantity: Int = 1 {
+            didSet {
+                numberLabel.text = "\(selectedQuantity)"
+            }
+        }
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -48,21 +53,33 @@ class SelectedViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     @objc func trolleyButtonTapped() {
-        guard let product = product else {
+        guard var product = product else {
             print("Product is nil")
             return
         }
-        let cart: [Seller: [Product]] = [product.seller: [product]]
+        if var sellerProducts = cart[product.seller] {
+            if let existingProductIndex = sellerProducts.firstIndex(where: { $0.productId == product.productId }) {
+                sellerProducts[existingProductIndex].quantity += selectedQuantity
+            } else {
+                product.quantity = selectedQuantity
+                sellerProducts.append(product)
+            }
+            cart[product.seller] = sellerProducts
+        } else {
+            product.quantity = selectedQuantity
+            cart[product.seller] = [product]
+        }
         saveCartToFirestore(cart)
+        print("Product added to cart: \(product.name) - Quantity: \(selectedQuantity)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController ?? TrolleyViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        if let trolleyViewController = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController {
+            navigationController?.pushViewController(trolleyViewController, animated: true)
+        }
     }
     func saveCartToFirestore(_ cart: [Seller: [Product]]) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             return
         }
-        
         let cartCollection = Firestore.firestore().collection("carts")
         let userCartDocument = cartCollection.document(currentUserID)
         let cartData = cart.map { (seller, products) in
@@ -71,10 +88,7 @@ class SelectedViewController: UIViewController {
         }
         userCartDocument.setData(["buyerID": currentUserID, "cart": cartData])
     }
-    
     func setup() {
-        //        if let request = request, let imageURL = URL(string: request.imageString) {
-        //            backImage.kf.setImage(with: imageURL)
         backImage.frame = CGRect(x: 0, y: 0, width: view.frame.width , height: view.frame.height / 2)
         backImage.layer.cornerRadius = 15
         backImage.layer.masksToBounds = true
@@ -87,22 +101,11 @@ class SelectedViewController: UIViewController {
         infoView.layer.cornerRadius = 15
         infoView.layer.masksToBounds = true
         view.addSubview(infoView)
-        //        nameLabel.text = request?.name
-        //        backImage.addSubview(nameLabel)
-        //        nameLabel.textColor = CustomColors.B1
-        //        nameLabel.backgroundColor = .clear
-        //        nameLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        //        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        //        NSLayoutConstraint.activate([
-        //            nameLabel.topAnchor.constraint(equalTo: backImage.topAnchor, constant: 70),
-        //            nameLabel.leadingAnchor.constraint(equalTo: backImage.leadingAnchor, constant: 30)
-        //        ])
         priceView.frame = CGRect(x: 40, y: 70, width: 30, height: 30)
         priceView.image = UIImage(named: "price")
         infoView.addSubview(priceView)
         priceLabel.frame = CGRect(x: 90, y: 70, width: 130, height: 30)
         priceLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        //        priceLabel.text = request?.price
         infoView.addSubview(priceLabel)
         availabilityView.backgroundColor = .white
         availabilityView.layer.cornerRadius = 10
@@ -125,7 +128,6 @@ class SelectedViewController: UIViewController {
             dateImage.leadingAnchor.constraint(equalTo: availabilityView.leadingAnchor, constant: 10)
         ])
         availabilityView.addSubview(availability)
-        //        availability.text = "\(request!.startTime)"
         availability.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         availability.textColor = .black
         availability.translatesAutoresizingMaskIntoConstraints = false
@@ -153,7 +155,6 @@ class SelectedViewController: UIViewController {
             itemView.heightAnchor.constraint(equalToConstant: 70)
         ])
         itemView.addSubview(itemInfo)
-        //        itemInfo.text = request?.name
         itemInfo.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         itemInfo.textColor = .black
         itemInfo.translatesAutoresizingMaskIntoConstraints = false
@@ -194,6 +195,7 @@ class SelectedViewController: UIViewController {
         addButton.layer.masksToBounds = true
         addButton.layer.borderWidth = 1
         infoView.addSubview(addButton)
+        addButton.addTarget(self, action: #selector(add), for: .touchUpInside)
         addButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             addButton.centerYAnchor.constraint(equalTo: quantity.centerYAnchor),
@@ -203,6 +205,7 @@ class SelectedViewController: UIViewController {
         ])
         minusButton.setTitle("-", for: .normal)
         minusButton.setTitleColor(.black, for: .normal)
+        minusButton.addTarget(self, action: #selector(minus), for: .touchUpInside)
         minusButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         minusButton.backgroundColor = .white
         minusButton.layer.cornerRadius = 10
@@ -246,5 +249,11 @@ class SelectedViewController: UIViewController {
             closeButton.widthAnchor.constraint(equalToConstant: 60)
         ])
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+    }
+    @objc func add(){
+        selectedQuantity += 1
+    }
+    @objc func minus(){
+        selectedQuantity = max(1, selectedQuantity - 1)
     }
 }

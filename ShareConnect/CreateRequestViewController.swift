@@ -343,6 +343,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         cell.addBtn.tag = indexPath.row
         return cell
     }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 50
+    }
     @objc func timePickerChanged(sender: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
