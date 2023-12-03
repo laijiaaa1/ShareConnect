@@ -17,7 +17,6 @@ protocol ChatDelegate: AnyObject {
     func didReceiveNewMessage(_ message: ChatMessage)
     func didSelectChatRoom(_ chatRoomID: String)
 }
-
 class ChatViewController: UIViewController, MKMapViewDelegate {
     var cart: [Seller: [Product]]?
     var sellerID: String?
@@ -46,7 +45,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
     }()
     private var locationManager: CLLocationManager?
     var currentLocation: CLLocationCoordinate2D?
-    
+    var existingChatRooms: [String: Bool] = [:]
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.tintColor = .black
@@ -105,39 +104,27 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         let vc = ChatSupplyCreateViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-    // Add a property to keep track of existing chat rooms
-    var existingChatRooms: [String: Bool] = [:]
-
-    // ...
-
-    // Modify the createOrGetChatRoomDocument method
     func createOrGetChatRoomDocument() {
         guard let buyerID = buyerID, let sellerID = sellerID else {
             print("Buyer ID or Seller ID is nil.")
             return
         }
-
         let chatRoomsCollection = firestore.collection("chatRooms")
         let usersCollection = firestore.collection("users")
-
-        // Check both combinations of buyer-to-seller and seller-to-buyer
         let chatRoomID1 = "\(buyerID)_\(sellerID)"
         let chatRoomID2 = "\(sellerID)_\(buyerID)"
 
         if existingChatRooms[chatRoomID1] == true || existingChatRooms[chatRoomID2] == true {
-            // User is already part of the chat room, no need to create a new one
             self.chatRoomID = existingChatRooms[chatRoomID1] == true ? chatRoomID1 : chatRoomID2
             chatRoomsCollection.document(self.chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
                 if let error = error {
                     print("Error getting chat room document: \(error.localizedDescription)")
                     return
                 }
-
                 if let document = documentSnapshot, document.exists {
                     self?.chatRoomDocument = document.reference
                     self?.startListeningForChatMessages()
                     self?.sendMessageToFirestore(self!.cartString, isMe: true)
-                    // add field array for users, add buyer and seller
                     self?.updateUserChatRoomData(usersCollection, userID: buyerID, chatRoomID: self!.chatRoomID)
                     self?.updateUserChatRoomData(usersCollection, userID: sellerID, chatRoomID: self!.chatRoomID)
                 } else {
@@ -162,27 +149,20 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
 
 
     private func updateUserChatRoomData(_ collection: CollectionReference, userID: String, chatRoomID: String) {
-        // If the user has a chat room, add the chat room to the user's chat room array.
-        // If not, create a new array with the chat room.
         collection.document(userID).getDocument { (documentSnapshot, error) in
             if let error = error {
                 print("Error getting user document: \(error.localizedDescription)")
                 return
             }
-            
             if let document = documentSnapshot, document.exists {
                 var userData = document.data() ?? [:]
                 
                 if var chatRooms = userData["chatRooms"] as? [String] {
-                    // User already has chat rooms, add the new chat room
                     chatRooms.append(chatRoomID)
                     userData["chatRooms"] = chatRooms
                 } else {
-                    // User doesn't have chat rooms, create a new array with the chat room
                     userData["chatRooms"] = [chatRoomID]
                 }
-                
-                // Update the user document with the modified data
                 collection.document(userID).setData(userData) { error in
                     if let error = error {
                         print("Error updating user document: \(error.localizedDescription)")
@@ -195,10 +175,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-
-
-
-
     func startListeningForChatMessages() {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
@@ -505,13 +481,12 @@ class ChatMessageCell: UITableViewCell {
                label.isUserInteractionEnabled = true
                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openMap(_:)))
                label.addGestureRecognizer(tapGesture)
+           } else if let imageURL = URL(string: chatMessage.imageURL ?? "") {
+               image.kf.setImage(with: imageURL)
            } else {
                label.text = chatMessage.text
                label.textColor = .black
                label.isUserInteractionEnabled = false
-           }
-           if let imageURL = URL(string: chatMessage.imageURL ?? "") {
-               image.kf.setImage(with: imageURL)
            }
        }
        @objc func openMap(_ gesture: UITapGestureRecognizer) {
