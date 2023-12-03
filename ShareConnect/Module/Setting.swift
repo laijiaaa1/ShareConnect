@@ -20,7 +20,7 @@ extension DateFormatter {
 extension DateFormatter {
     static let customDateFormat: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM月 dd, yyyy"
+        formatter.dateFormat = "MMMM dd, yyyy"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
         return formatter

@@ -360,12 +360,17 @@ class DetailViewController: UIViewController {
         let vc = storyboard.instantiateViewController(withIdentifier: "SelectedViewController") as! SelectedViewController
         if let imageURL = URL(string: product?.imageString ?? ""),
            let startTimeString = availability.text {
-            if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
-                vc.product = product
-                self.navigationController?.pushViewController(vc, animated: true)
-            } else {
-                print("Failed to convert startTimeString to Date")
+            print("startTimeString:", startTimeString)
+            let dateFormats = ["MM月 dd, yyyy", "yyyy-MM-dd", "your-other-date-format"]
+
+            for format in dateFormats {
+                if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
+                    vc.product = product
+                    self.navigationController?.pushViewController(vc, animated: true)
+                    break
+                }
             }
+
         } else {
             print("Failed to get availability or create image URL")
         }

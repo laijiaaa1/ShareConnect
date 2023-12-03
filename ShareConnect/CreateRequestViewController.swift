@@ -13,19 +13,18 @@ import FirebaseCore
 import FirebaseStorage
 import DatePicker
 
-class CreateRequestViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
+class CreateRequestViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
     let requestTableView = UITableView()
     let uploadButton = UIButton()
     let requestSelectSegment = UISegmentedControl()
     let doneButton = UIButton()
-    var groupOptions: [String: Any] = [:]
+    var groupOptions: [(String, String)] = []
+
+    var sortPicker: UIPickerView?
+    var usePicker: UIPickerView?
     var selectedGroupID: String?
     var selectedGroupName: String?
-    var selectedGroup: String? {
-        didSet {
-            updateSelectedGroupUI()
-        }
-    }
+    var selectedGroup: String?
     private lazy var groupHeaderLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -106,6 +105,10 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             doneButton.widthAnchor.constraint(equalToConstant: 320),
             doneButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+        sortPicker = UIPickerView()
+              usePicker = UIPickerView()
+              sortPicker?.delegate = self
+              usePicker?.delegate = self
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -221,48 +224,59 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         }
         requestTableView.reloadData()
     }
-
     func fetchUserGroups() {
         guard let user = Auth.auth().currentUser else {
             print("User not authenticated.")
             return
         }
-
         let db = Firestore.firestore()
         db.collection("users").document(user.uid).getDocument { [weak self] (document, error) in
             guard let self = self else { return }
 
             if let document = document, document.exists {
                 let data = document.data()
+                if let groupIDs = data?["groups"] as? [String] {
+                    var groupOptions: [(String, String)] = []
 
-                if let groups = data?["groups"] as? [String: Any] {
-                   
-                    var groupsSelect = groups
-                    self.groupOptions = groupsSelect
-                    self.showGroupOptions()
+                    let dispatchGroup = DispatchGroup()
+
+                    for groupID in groupIDs {
+                        dispatchGroup.enter()
+                        db.collection("groups").document(groupID).getDocument { (groupDocument, groupError) in
+                            defer {
+                                dispatchGroup.leave()
+                            }
+
+                            if let groupDocument = groupDocument, groupDocument.exists {
+                                let groupData = groupDocument.data()
+                                if let groupName = groupData?["name"] as? String {
+                                    groupOptions.append((groupID, groupName))
+                                }
+                            } else {
+                                print("Group document does not exist for groupID: \(groupID)")
+                            }
+                        }
+                    }
+                    dispatchGroup.notify(queue: .main) {
+                        self.groupOptions = groupOptions
+                        self.showGroupOptions()
+                    }
                 } else {
-                    print("Groups field is not of expected type [String: Any]")
+                    print("Groups field is not of the expected type [String]")
                 }
             } else {
-                print("Document does not exist")
+                print("User document does not exist")
             }
         }
     }
     func showGroupOptions() {
         let alertController = UIAlertController(title: "Select Group", message: nil, preferredStyle: .actionSheet)
 
-        for (groupId, groupInfo) in groupOptions {
-            if let groups = groupInfo as? [String: Any],
-               let groupId = groups["groupId"] as? String,
-                let groupName = groups["groupName"] as? String {
-                let action = UIAlertAction(title: groupName, style: .default) { [weak self] _ in
-                    print("Selected group: \(groupName)")
-                    self?.selectedGroupID = groupId
-                    self?.selectedGroup = groupName
-                    self?.updateSelectedGroupUI()
-                }
-                alertController.addAction(action)
+        for (groupId, groupName) in groupOptions {
+            let action = UIAlertAction(title: groupName, style: .default) { [weak self] _ in
+                self?.updateSelectedGroupUI(groupId: groupId, groupName: groupName)
             }
+            alertController.addAction(action)
         }
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -270,11 +284,12 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
 
         present(alertController, animated: true, completion: nil)
     }
+    func updateSelectedGroupUI(groupId: String, groupName: String) {
+        selectedGroupID = groupId
+        selectedGroup = groupName
 
-
-    func updateSelectedGroupUI() {
-        if let selectedGroupID = selectedGroupID,let selectedGroupName = selectedGroup {
-            groupHeaderLabel.text = "Selected Group: \(selectedGroupName)"
+        if let selectedGroupID = selectedGroupID, let selectedGroup = selectedGroup {
+            groupHeaderLabel.text = "Selected Group: \(selectedGroup)"
             if requestTableView.tableHeaderView == nil {
                 requestTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: requestTableView.bounds.size.width, height: 50))
                 requestTableView.tableHeaderView?.addSubview(groupHeaderLabel)
@@ -294,6 +309,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             requestTableView.tableHeaderView = nil
         }
     }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return selectedGroupID != nil ? 9 : 8
     }
@@ -302,6 +318,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         cell.requestLabel.text = "name"
         cell.addBtn.setBackgroundImage(UIImage(systemName: "plus"), for: .normal)
         cell.addBtn.tintColor = .black
+        cell.textField.delegate = self
+
         let requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Quantity", "Use", "Price"]
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
@@ -312,20 +330,17 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             timePicker.datePickerMode = .dateAndTime
             timePicker.preferredDatePickerStyle = .wheels
             timePicker.addTarget(self, action: #selector(timePickerChanged), for: .valueChanged)
-            if indexPath.row == 3 {
-                cell.textField.inputView = timePicker
-                cell.textField.tag = 1
-            } else if indexPath.row == 4 {
-                cell.textField.inputView = timePicker
-                cell.textField.tag = 2
-            }
+            timePicker.tag = indexPath.row
+            cell.textField.tag = indexPath.row
+            cell.textField.inputView = timePicker
         }
+
         if indexPath.row == 8 && selectedGroupID != nil {
-               cell.requestLabel.text = "Group"
-               cell.textField.text = selectedGroupID
-               cell.textField.isEnabled = false
-               cell.addBtn.isHidden = true
-           }
+            cell.requestLabel.text = "Group"
+            cell.textField.text = selectedGroupName
+            cell.textField.isEnabled = false
+            cell.addBtn.isHidden = true
+        }
         cell.addBtn.tag = indexPath.row
         return cell
     }
@@ -334,15 +349,14 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
         let timeString = formatter.string(from: sender.date)
         print(timeString)
-        if let startCell = findCellWithTag(1) {
+
+        if sender.tag == 3, let startCell = findCellWithTag(3) {
             startCell.textField.text = timeString
-            startCell.textField.resignFirstResponder()
-        }
-        if let endCell = findCellWithTag(2) {
+        } else if sender.tag == 4, let endCell = findCellWithTag(4) {
             endCell.textField.text = timeString
-            endCell.textField.resignFirstResponder()
         }
     }
+
     func findCellWithTag(_ tag: Int) -> RequestCell? {
         for i in 0..<requestTableView.numberOfSections {
             for j in 0..<requestTableView.numberOfRows(inSection: i) {
