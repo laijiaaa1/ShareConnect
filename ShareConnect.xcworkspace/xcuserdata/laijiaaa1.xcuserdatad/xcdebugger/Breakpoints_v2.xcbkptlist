@@ -176,6 +176,21 @@
                   endingLineNumber = "405"
                   offsetFromSymbolStart = "1920">
                </Location>
+               <Location
+                  uuid = "E001A2D3-1410-4F50-9668-1BABA132A709 - ed8cc9db35f55e50"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ProfileViewController.fetchGroups(userId: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ProfileViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "405"
+                  endingLineNumber = "405"
+                  offsetFromSymbolStart = "2032">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -223,6 +238,21 @@
                   startingLineNumber = "351"
                   endingLineNumber = "351"
                   offsetFromSymbolStart = "1252">
+               </Location>
+               <Location
+                  uuid = "4799595B-1A03-4939-AA93-B994AA89AC22 - 42ed40d74fd022b2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ProfileViewController.fetchRequests(userId: Swift.String, dataType: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ProfileViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "351"
+                  endingLineNumber = "351"
+                  offsetFromSymbolStart = "1272">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -439,6 +469,21 @@
                   startingLineNumber = "151"
                   endingLineNumber = "151"
                   offsetFromSymbolStart = "108">
+               </Location>
+               <Location
+                  uuid = "66A88154-B26D-489B-AAE5-89B1BF240D40 - 16fd0067616236e3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.GroupViewController.tableView(_: __C.UITableView, cellForRowAt: Foundation.IndexPath) -&gt; __C.UITableViewCell"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/GroupViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "2400">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -661,6 +706,21 @@
                   endingLineNumber = "382"
                   offsetFromSymbolStart = "2220">
                </Location>
+               <Location
+                  uuid = "DFB29073-4952-4772-8C0E-75E10171C044 - 376fde153f645681"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ProfileViewController.fetchCollections(userId: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ProfileViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "382"
+                  endingLineNumber = "382"
+                  offsetFromSymbolStart = "2264">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -832,6 +892,21 @@
                   endingLineNumber = "133"
                   offsetFromSymbolStart = "1384">
                </Location>
+               <Location
+                  uuid = "574A00FA-43DC-4096-8A0F-2E816D045A0D - 60ac888dd52b3605"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatListViewController.didReceiveNewMessage(ShareConnect.ChatMessage) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "133"
+                  endingLineNumber = "133"
+                  offsetFromSymbolStart = "1404">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -954,6 +1029,21 @@
                   startingLineNumber = "149"
                   endingLineNumber = "149"
                   offsetFromSymbolStart = "1220">
+               </Location>
+               <Location
+                  uuid = "D5A6D902-C975-4892-BB85-4BE2DC9AEE87 - a9d29c511280e651"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatListViewController.tableView(_: __C.UITableView, cellForRowAt: Foundation.IndexPath) -&gt; __C.UITableViewCell"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "1260">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1108,6 +1198,21 @@
                   endingLineNumber = "124"
                   offsetFromSymbolStart = "604">
                </Location>
+               <Location
+                  uuid = "E9FBC1CB-6DF0-46FD-8FC1-E11D010AE464 - 60ac888dd52b3752"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatListViewController.didReceiveNewMessage(ShareConnect.ChatMessage) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124"
+                  offsetFromSymbolStart = "624">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -1246,6 +1351,21 @@
                   endingLineNumber = "125"
                   offsetFromSymbolStart = "816">
                </Location>
+               <Location
+                  uuid = "B12784FA-DA6F-4565-9659-AA0B29718A76 - 60ac888dd52b373d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatListViewController.didReceiveNewMessage(ShareConnect.ChatMessage) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "125"
+                  endingLineNumber = "125"
+                  offsetFromSymbolStart = "836">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -1368,6 +1488,21 @@
                   startingLineNumber = "67"
                   endingLineNumber = "67"
                   offsetFromSymbolStart = "96">
+               </Location>
+               <Location
+                  uuid = "DB4846B1-A545-48C8-BAB6-339B067A708E - b5187ba74315ee24"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatListViewController.fetchChatData() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "65"
+                  endingLineNumber = "65"
+                  offsetFromSymbolStart = "1848">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1618,6 +1753,21 @@
                   endingLineNumber = "95"
                   offsetFromSymbolStart = "1796">
                </Location>
+               <Location
+                  uuid = "57DCC1E2-DD7B-44C1-B190-59465BD78A4F - f14b0b98ee8ebf40"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatListViewController.fetchLatestMessage(for: Swift.String, chatRoomID: Swift.String, completion: (ShareConnect.ChatMessage) -&gt; ()) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "95"
+                  endingLineNumber = "95"
+                  offsetFromSymbolStart = "1856">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -1755,6 +1905,21 @@
                   startingLineNumber = "84"
                   endingLineNumber = "84"
                   offsetFromSymbolStart = "352">
+               </Location>
+               <Location
+                  uuid = "6EBAE83C-A008-415E-BBC1-EF6B76664978 - f14b0b98ee8eb835"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatListViewController.fetchLatestMessage(for: Swift.String, chatRoomID: Swift.String, completion: (ShareConnect.ChatMessage) -&gt; ()) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
+                  offsetFromSymbolStart = "392">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1972,6 +2137,21 @@
                   endingLineNumber = "177"
                   offsetFromSymbolStart = "1708">
                </Location>
+               <Location
+                  uuid = "40DB843D-F316-4E14-8F3B-8A2603755C14 - dcc08051619f2a60"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatListViewController.fetchRoom(chatRoomID: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "177"
+                  endingLineNumber = "177"
+                  offsetFromSymbolStart = "1728">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -2094,6 +2274,21 @@
                   startingLineNumber = "160"
                   endingLineNumber = "160"
                   offsetFromSymbolStart = "972">
+               </Location>
+               <Location
+                  uuid = "50A47A25-19A5-419D-AF3B-479BE746489D - a09efddff3d22f26"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatListViewController.tableView(_: __C.UITableView, didSelectRowAt: Foundation.IndexPath) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "160"
+                  endingLineNumber = "160"
+                  offsetFromSymbolStart = "992">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -2218,23 +2413,22 @@
                   endingLineNumber = "159"
                   offsetFromSymbolStart = "928">
                </Location>
+               <Location
+                  uuid = "020EBA03-9DF0-4F26-8161-2607B574123A - a09efddff3d22f47"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatListViewController.tableView(_: __C.UITableView, didSelectRowAt: Foundation.IndexPath) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "159"
+                  endingLineNumber = "159"
+                  offsetFromSymbolStart = "948">
+               </Location>
             </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "EF258090-C233-4EC7-BB93-FD030C116970"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ShareConnect/ChatViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "285"
-            endingLineNumber = "285"
-            landmarkName = "imageButtonTapped()"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2247,10 +2441,72 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
-            landmarkName = "updateUserChatRoomData(_:userID:chatRoomID:)"
+            startingLineNumber = "250"
+            endingLineNumber = "250"
+            landmarkName = "setupUI()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "59EAC0B1-EC61-4C29-B474-B778B6BBBBCF - 22ac81fd071409df"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.startListeningForChatMessages() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "238"
+                  endingLineNumber = "238"
+                  offsetFromSymbolStart = "5132">
+               </Location>
+               <Location
+                  uuid = "59EAC0B1-EC61-4C29-B474-B778B6BBBBCF - 151dfa53ad9351fc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.updateUserChatRoomData(_: __C.FIRCollectionReference, userID: Swift.String, chatRoomID: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "238"
+                  endingLineNumber = "238"
+                  offsetFromSymbolStart = "1616">
+               </Location>
+               <Location
+                  uuid = "59EAC0B1-EC61-4C29-B474-B778B6BBBBCF - fc7a0805bac03bbf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatViewController.setupUI() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "250"
+                  endingLineNumber = "250"
+                  offsetFromSymbolStart = "680">
+               </Location>
+               <Location
+                  uuid = "59EAC0B1-EC61-4C29-B474-B778B6BBBBCF - fc7a0805bac03bbf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatViewController.setupUI() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "250"
+                  endingLineNumber = "250"
+                  offsetFromSymbolStart = "596">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2263,10 +2519,87 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "updateUserChatRoomData(_:userID:chatRoomID:)"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
+            landmarkName = "setupUI()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9F010283-D41D-45CB-B175-5C62E7D737AA - fc7a0805bac03aa7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatViewController.setupUI() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "242"
+                  endingLineNumber = "242"
+                  offsetFromSymbolStart = "104">
+               </Location>
+               <Location
+                  uuid = "9F010283-D41D-45CB-B175-5C62E7D737AA - 151dfa53ad935178"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.updateUserChatRoomData(_: __C.FIRCollectionReference, userID: Swift.String, chatRoomID: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "242"
+                  endingLineNumber = "242"
+                  offsetFromSymbolStart = "1740">
+               </Location>
+               <Location
+                  uuid = "9F010283-D41D-45CB-B175-5C62E7D737AA - 9eb55a41993b4bf7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.updateUserChatRoomData(_: __C.FIRCollectionReference, userID: Swift.String, chatRoomID: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "243"
+                  endingLineNumber = "243"
+                  offsetFromSymbolStart = "60">
+               </Location>
+               <Location
+                  uuid = "9F010283-D41D-45CB-B175-5C62E7D737AA - fc7a0805bac03833"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatViewController.setupUI() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "254"
+                  endingLineNumber = "254"
+                  offsetFromSymbolStart = "1680">
+               </Location>
+               <Location
+                  uuid = "9F010283-D41D-45CB-B175-5C62E7D737AA - fc7a0805bac03833"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatViewController.setupUI() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "254"
+                  endingLineNumber = "254"
+                  offsetFromSymbolStart = "1624">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2279,28 +2612,28 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
-            landmarkName = "createOrGetChatRoomDocument()"
-            landmarkType = "7">
+            startingLineNumber = "201"
+            endingLineNumber = "201"
+            landmarkName = "ChatViewController"
+            landmarkType = "3">
             <Locations>
                <Location
-                  uuid = "8E96530E-EB2D-494C-B760-2F81120FE92B - 508747591374433f"
+                  uuid = "8E96530E-EB2D-494C-B760-2F81120FE92B - 9eb55a41993b4100"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.ChatViewController.createOrGetChatRoomDocument() -&gt; ()"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.updateUserChatRoomData(_: __C.FIRCollectionReference, userID: Swift.String, chatRoomID: Swift.String) -&gt; ()"
                   moduleName = "ShareConnect"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "124"
-                  endingLineNumber = "124"
-                  offsetFromSymbolStart = "844">
+                  startingLineNumber = "190"
+                  endingLineNumber = "190"
+                  offsetFromSymbolStart = "60">
                </Location>
                <Location
-                  uuid = "8E96530E-EB2D-494C-B760-2F81120FE92B - 508747591374433f"
+                  uuid = "8E96530E-EB2D-494C-B760-2F81120FE92B - 508747591377b8b1"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -2310,9 +2643,39 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "124"
-                  endingLineNumber = "124"
+                  startingLineNumber = "190"
+                  endingLineNumber = "190"
                   offsetFromSymbolStart = "748">
+               </Location>
+               <Location
+                  uuid = "8E96530E-EB2D-494C-B760-2F81120FE92B - 151dfa53ad935a31"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.updateUserChatRoomData(_: __C.FIRCollectionReference, userID: Swift.String, chatRoomID: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "201"
+                  endingLineNumber = "201"
+                  offsetFromSymbolStart = "2172">
+               </Location>
+               <Location
+                  uuid = "8E96530E-EB2D-494C-B760-2F81120FE92B - 151dfa53ad935a31"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.updateUserChatRoomData(_: __C.FIRCollectionReference, userID: Swift.String, chatRoomID: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "201"
+                  endingLineNumber = "201"
+                  offsetFromSymbolStart = "2192">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -2327,10 +2690,72 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
-            landmarkName = "didSelectChatRoom(_:)"
+            startingLineNumber = "233"
+            endingLineNumber = "233"
+            landmarkName = "startListeningForChatMessages()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E037F469-64B9-4421-8489-BA24278C90A7 - 22ac81fd071407af"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.startListeningForChatMessages() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "222"
+                  endingLineNumber = "222"
+                  offsetFromSymbolStart = "1392">
+               </Location>
+               <Location
+                  uuid = "E037F469-64B9-4421-8489-BA24278C90A7 - 3b1f935a29d58e7a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatViewController.didSelectChatRoom(Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "222"
+                  endingLineNumber = "222"
+                  offsetFromSymbolStart = "64">
+               </Location>
+               <Location
+                  uuid = "E037F469-64B9-4421-8489-BA24278C90A7 - 22ac81fd07140632"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.startListeningForChatMessages() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "233"
+                  endingLineNumber = "233"
+                  offsetFromSymbolStart = "3608">
+               </Location>
+               <Location
+                  uuid = "E037F469-64B9-4421-8489-BA24278C90A7 - 22ac81fd07140632"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.startListeningForChatMessages() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "233"
+                  endingLineNumber = "233"
+                  offsetFromSymbolStart = "3636">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2343,10 +2768,72 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
-            landmarkName = "createOrGetChatRoomDocument()"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
+            landmarkName = "startListeningForChatMessages()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "6E23788C-933A-494D-B202-C03D85383798 - 22ac81fd07140423"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.startListeningForChatMessages() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "218"
+                  endingLineNumber = "218"
+                  offsetFromSymbolStart = "1132">
+               </Location>
+               <Location
+                  uuid = "6E23788C-933A-494D-B202-C03D85383798 - 508747591377bf1d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatViewController.createOrGetChatRoomDocument() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "218"
+                  endingLineNumber = "218"
+                  offsetFromSymbolStart = "3900">
+               </Location>
+               <Location
+                  uuid = "6E23788C-933A-494D-B202-C03D85383798 - 22ac81fd071406b6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.startListeningForChatMessages() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "229"
+                  endingLineNumber = "229"
+                  offsetFromSymbolStart = "2316">
+               </Location>
+               <Location
+                  uuid = "6E23788C-933A-494D-B202-C03D85383798 - 22ac81fd071406b6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.startListeningForChatMessages() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "229"
+                  endingLineNumber = "229"
+                  offsetFromSymbolStart = "2344">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2359,10 +2846,226 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
-            landmarkName = "createOrGetChatRoomDocument()"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "startListeningForChatMessages()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E2941BD0-61F0-4CE4-AF42-740FED05155D - 9eb55a41993b4165"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.updateUserChatRoomData(_: __C.FIRCollectionReference, userID: Swift.String, chatRoomID: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "193"
+                  endingLineNumber = "193"
+                  offsetFromSymbolStart = "140">
+               </Location>
+               <Location
+                  uuid = "E2941BD0-61F0-4CE4-AF42-740FED05155D - 508747591377b8d4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatViewController.createOrGetChatRoomDocument() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "193"
+                  endingLineNumber = "193"
+                  offsetFromSymbolStart = "1388">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "03FF9CE3-BA5F-452E-B551-BB943F0997F9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ChatViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "663"
+            endingLineNumber = "663">
+            <Locations>
+               <Location
+                  uuid = "03FF9CE3-BA5F-452E-B551-BB943F0997F9 - 7ede1f4a02ae8cda"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatMessageCell.playAudio() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "663"
+                  endingLineNumber = "663"
+                  offsetFromSymbolStart = "476">
+               </Location>
+               <Location
+                  uuid = "03FF9CE3-BA5F-452E-B551-BB943F0997F9 - 6956630f7d8b35a4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatMessageCell.configure(with: ShareConnect.ChatMessage) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "663"
+                  endingLineNumber = "663"
+                  offsetFromSymbolStart = "1872">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "72D8923D-6A94-46A1-9E55-EE32994DF464"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ChatViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "668"
+            endingLineNumber = "668">
+            <Locations>
+               <Location
+                  uuid = "72D8923D-6A94-46A1-9E55-EE32994DF464 - 6956630f7d8b3501"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatMessageCell.configure(with: ShareConnect.ChatMessage) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "668"
+                  endingLineNumber = "668"
+                  offsetFromSymbolStart = "2224">
+               </Location>
+               <Location
+                  uuid = "72D8923D-6A94-46A1-9E55-EE32994DF464 - 7ede1f4a02ae8c7f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatMessageCell.playAudio() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "668"
+                  endingLineNumber = "668"
+                  offsetFromSymbolStart = "572">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EC9B6E27-9085-4952-B717-48C5DE8B1CE5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ChatViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "672"
+            endingLineNumber = "672">
+            <Locations>
+               <Location
+                  uuid = "EC9B6E27-9085-4952-B717-48C5DE8B1CE5 - 6956630f7d8b4a8d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatMessageCell.configure(with: ShareConnect.ChatMessage) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "672"
+                  endingLineNumber = "672"
+                  offsetFromSymbolStart = "2672">
+               </Location>
+               <Location
+                  uuid = "EC9B6E27-9085-4952-B717-48C5DE8B1CE5 - 7ede1f4a02aef3f3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatMessageCell.playAudio() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "672"
+                  endingLineNumber = "672"
+                  offsetFromSymbolStart = "684">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A1FFBFA4-A4C1-4B86-B195-93A7FBC440F1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ChatViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "675"
+            endingLineNumber = "675">
+            <Locations>
+               <Location
+                  uuid = "A1FFBFA4-A4C1-4B86-B195-93A7FBC440F1 - 6956630f7d8b4a28"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatMessageCell.configure(with: ShareConnect.ChatMessage) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "675"
+                  endingLineNumber = "675"
+                  offsetFromSymbolStart = "2780">
+               </Location>
+               <Location
+                  uuid = "A1FFBFA4-A4C1-4B86-B195-93A7FBC440F1 - 7ede1f4a02aef356"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.ChatMessageCell.playAudio() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "675"
+                  endingLineNumber = "675"
+                  offsetFromSymbolStart = "1044">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
