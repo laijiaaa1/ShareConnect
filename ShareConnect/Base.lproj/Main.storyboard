@@ -42,6 +42,21 @@
             </objects>
             <point key="canvasLocation" x="5084.6153846153848" y="738.62559241706163"/>
         </scene>
+        <!--Setting Profile View Controller-->
+        <scene sceneID="OcV-cl-tuN">
+            <objects>
+                <viewController storyboardIdentifier="SettingProfileViewController" id="MyZ-z0-9YJ" customClass="SettingProfileViewController" customModule="ShareConnect" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rhQ-KI-fI0">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="5G4-ih-hZ7"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZIG-2x-x6N" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1192" y="1547"/>
+        </scene>
         <!--Chat Supply Create View Controller-->
         <scene sceneID="W2P-mx-U2v">
             <objects>

@@ -38,6 +38,7 @@
 		346687A62B14657800723302 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A52B14657800723302 /* SearchResultsViewController.swift */; };
 		346687A82B182C8800723302 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A72B182C8800723302 /* RegistrationViewController.swift */; };
 		346687AA2B1AF94F00723302 /* ChatMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A92B1AF94F00723302 /* ChatMapViewController.swift */; };
+		346687B02B1C1E3200723302 /* SettingProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */; };
 		346DE7C72B05AB5C008D411A /* CreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7C62B05AB5C008D411A /* CreateViewController.swift */; };
 		346DE7C92B05AE4D008D411A /* CreateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */; };
 		346DE7CB2B05FE48008D411A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7CA2B05FE48008D411A /* SearchViewController.swift */; };
@@ -83,6 +84,7 @@
 		346687A52B14657800723302 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		346687A72B182C8800723302 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		346687A92B1AF94F00723302 /* ChatMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMapViewController.swift; sourceTree = "<group>"; };
+		346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingProfileViewController.swift; sourceTree = "<group>"; };
 		346DE7C62B05AB5C008D411A /* CreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateViewController.swift; sourceTree = "<group>"; };
 		346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRequestViewController.swift; sourceTree = "<group>"; };
 		346DE7CA2B05FE48008D411A /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				3410D9672B07129800D32744 /* DetailViewController.swift */,
 				3401F68F2B11BE1B0092E564 /* SellerInfo.swift */,
 				3410D97A2B0916C700D32744 /* ProfileViewController.swift */,
+				346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */,
 				3401F6862B0F4B010092E564 /* RecoderViewController.swift */,
 				3401F68D2B1192200092E564 /* CommendViewController.swift */,
 				3410D9692B07665700D32744 /* SelectedViewController.swift */,
@@ -345,6 +348,7 @@
 				346687AA2B1AF94F00723302 /* ChatMapViewController.swift in Sources */,
 				341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */,
 				3410D9872B0C42C600D32744 /* ChatListViewController.swift in Sources */,
+				346687B02B1C1E3200723302 /* SettingProfileViewController.swift in Sources */,
 				3410D9662B07125600D32744 /* GroupViewController.swift in Sources */,
 				3410D9712B0888E800D32744 /* Data.swift in Sources */,
 				3410D97F2B09C05600D32744 /* WebSocketManager.swift in Sources */,

@@ -97,10 +97,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func deleteProductFromDatabase(_ product: Product) {
         let db = Firestore.firestore()
-        //delete document
         db.collection("products").document(product.productId).delete()
     }
-    //long press to delete collection
     @objc func longPressToDeleteCollection(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             let point = sender.location(in: collectionCollectionView)
@@ -195,6 +193,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var selectedCollection: Collection?
     let userId = Auth.auth().currentUser?.uid
     let profileImageView = UIImageView()
+    let settingProfileButton = UIButton()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
@@ -309,6 +308,18 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         fetchGroups(userId: userId!)
         fetchRequests(userId: userId!, dataType: "request")
         fetchRequests(userId: userId!, dataType: "supply")
+        view.addSubview(settingProfileButton)
+        settingProfileButton.translatesAutoresizingMaskIntoConstraints = false
+        settingProfileButton.setImage(UIImage(systemName: "gear"), for: .normal)
+        settingProfileButton.tintColor = .black
+        settingProfileButton.addTarget(self, action: #selector(settingProfileButtonTapped), for: .touchUpInside)
+        settingProfileButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: settingProfileButton)
+    }
+    @objc func settingProfileButtonTapped() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let settingProfileVC = storyboard.instantiateViewController(withIdentifier: "SettingProfileViewController") as! SettingProfileViewController
+        navigationController?.pushViewController(settingProfileVC, animated: true)
     }
     func fetchUserData(userId: String) {
         let db = Firestore.firestore()
