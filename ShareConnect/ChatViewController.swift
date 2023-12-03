@@ -118,7 +118,9 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         let chatRoomsCollection = firestore.collection("chatRooms")
         let usersCollection = firestore.collection("users")
 
-        let chatRoomID = "\(buyerID)_\(sellerID)"
+        let sortedUserIDs = [buyerID, sellerID].sorted()
+        let chatRoomID = sortedUserIDs.joined(separator: "_")
+
         var existingChatRoomIDs = Set(existingChatRooms.keys)
 
         if existingChatRoomIDs.contains(chatRoomID) {
@@ -174,6 +176,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
+
     func checkIfChatRoomExistsInUser(_ collection: CollectionReference, userID: String, chatRoomID: String, completion: @escaping (Bool) -> Void) {
         collection.document(userID).getDocument { (documentSnapshot, error) in
             if let error = error {
