@@ -152,14 +152,24 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         return 150
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let chatItem = chatItems[indexPath.row]
-        let chatViewController = ChatViewController()
-        chatViewController.chatRoomDocument = firestore.collection("chatRooms").document(chatItem.chatRoomID).collection("messages").document()
-        chatViewController.buyerID = chatItem.buyerID
-        chatViewController.sellerID = chatItem.sellerID
-        chatViewController.chatRoomID = chatItem.chatRoomID
-        navigationController?.pushViewController(chatViewController, animated: true)
-    }
+            let chatItem = chatItems[indexPath.row]
+            if let existingChatIndex = chatItems.firstIndex(where: { $0.chatRoomID == chatItem.chatRoomID }) {
+                let chatViewController = ChatViewController()
+                chatViewController.chatRoomDocument = firestore.collection("chatRooms").document(chatItem.chatRoomID).collection("messages").document()
+                chatViewController.buyerID = chatItem.buyerID
+                chatViewController.sellerID = chatItem.sellerID
+                chatViewController.chatRoomID = chatItem.chatRoomID
+                navigationController?.pushViewController(chatViewController, animated: true)
+            } else {
+                let chatViewController = ChatViewController()
+                chatViewController.chatRoomDocument = firestore.collection("chatRooms").document(chatItem.chatRoomID).collection("messages").document()
+                chatViewController.buyerID = chatItem.buyerID
+                chatViewController.sellerID = chatItem.sellerID
+                chatViewController.chatRoomID = chatItem.chatRoomID
+                navigationController?.pushViewController(chatViewController, animated: true)
+            }
+        }
+
     func fetchRoom(chatRoomID: String) {
         firestore.collection("chatRooms").document(chatRoomID).collection("messages").getDocuments { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
