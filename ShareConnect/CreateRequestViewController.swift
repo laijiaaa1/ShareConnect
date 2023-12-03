@@ -88,7 +88,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             requestTableView.topAnchor.constraint(equalTo: requestSelectSegment.bottomAnchor, constant: 20),
             requestTableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             requestTableView.widthAnchor.constraint(equalToConstant: 320),
-            requestTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
+            requestTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90)
         ])
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(doneButton)
@@ -100,7 +100,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         doneButton.layer.masksToBounds = true
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         NSLayoutConstraint.activate([
-            doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60),
+            doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             doneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             doneButton.widthAnchor.constraint(equalToConstant: 320),
             doneButton.heightAnchor.constraint(equalToConstant: 50)
@@ -387,6 +387,8 @@ class RequestCell: UITableViewCell {
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.lightGray.cgColor
         textField.layer.cornerRadius = 10
+        textField.minimumFontSize = 10
+        textField.adjustsFontSizeToFitWidth = true
         contentView.addSubview(addBtn)
         contentView.addSubview(requestLabel)
         contentView.addSubview(textField)

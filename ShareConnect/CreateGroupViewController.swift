@@ -19,6 +19,8 @@ class CreateGroupViewController: CreateRequestViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.tintColor = .black
+        requestSelectSegment.setTitle("Public", forSegmentAt: 0)
+        requestSelectSegment.setTitle("Private", forSegmentAt: 1)
     }
     @objc override func requestSelectSegmentTapped() {
         if requestSelectSegment.selectedSegmentIndex == 0 {
@@ -37,7 +39,9 @@ class CreateGroupViewController: CreateRequestViewController {
         cell.requestLabel.text = "name"
         cell.addBtn.setBackgroundImage(UIImage(systemName: "plus"), for: .normal)
         cell.addBtn.tintColor = .black
-        var requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Require", "Number of people", "Invitation Code"]
+        cell.requestLabel.numberOfLines = 0
+        cell.requestLabel.frame = cell.contentView.bounds
+        var requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Require", "No. of people", "Invite Code(Private必填)"]
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info
@@ -58,20 +62,14 @@ class CreateGroupViewController: CreateRequestViewController {
         }else if indexPath.row == 7{
             cell.textField.tag = 7
         }
-      
-        
         if indexPath.row == 3 || indexPath.row == 4 {
             let timePicker = UIDatePicker()
             timePicker.datePickerMode = .dateAndTime
             timePicker.preferredDatePickerStyle = .wheels
             timePicker.addTarget(self, action: #selector(timePickerChanged), for: .valueChanged)
-            if indexPath.row == 3 {
-                cell.textField.inputView = timePicker
-                cell.textField.tag = 1
-            } else if indexPath.row == 4 {
-                cell.textField.inputView = timePicker
-                cell.textField.tag = 2
-            }
+            timePicker.tag = indexPath.row
+            cell.textField.tag = indexPath.row
+            cell.textField.inputView = timePicker
         }
         if indexPath.row == 6 {
             let stepper = UIStepper()
