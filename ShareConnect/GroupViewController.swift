@@ -87,7 +87,8 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(GroupTableViewCell.self, forCellReuseIdentifier: "GroupTableViewCell")
-        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
         view.backgroundColor = CustomColors.B1
       
         if sort == "product" {
@@ -129,6 +130,9 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
        
+    }
+    @objc func dismissKeyboard(){
+        view.endEditing(true)
     }
     @objc func searchTextFieldDidChange(){
         searchGroupsByName(searchString: searchTextField.text ?? "", completion: { (groups) in

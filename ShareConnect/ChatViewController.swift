@@ -73,6 +73,11 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         locationManager?.delegate = self
         locationManager?.requestWhenInUseAuthorization()
         locationManager?.startUpdatingLocation()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     func fetchUserData() {
         guard let userID = Auth.auth().currentUser?.uid else {

@@ -252,7 +252,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KBl-3T-boE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-967" y="7"/>
+            <point key="canvasLocation" x="663" y="-1108"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="Guq-4Q-BWf">
@@ -290,7 +290,7 @@
                                 <buttonConfiguration key="configuration" style="plain" title="login"/>
                                 <connections>
                                     <action selector="loginButtonTapped:" destination="pvm-5d-R8i" eventType="touchUpInside" id="KzH-Ts-hI5"/>
-                                    <segue destination="DYw-AW-csk" kind="show" id="fvc-LG-8zW"/>
+                                    <segue destination="DYw-AW-csk" kind="show" id="KRz-aw-TfY"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -302,6 +302,7 @@
                     <connections>
                         <outlet property="emailTextField" destination="4c1-az-Fi5" id="aBI-PJ-7mu"/>
                         <outlet property="passwordTextField" destination="eot-Tx-gVc" id="lre-CF-S6x"/>
+                        <segue destination="BYZ-38-t0r" kind="show" id="Aev-Od-8uK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nGK-71-K0O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -508,6 +509,9 @@
             <point key="canvasLocation" x="-266.15384615384613" y="-427.25118483412319"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="Aev-Od-8uK"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="cart" catalog="system" width="128" height="102"/>
         <image name="cart.fill" catalog="system" width="128" height="102"/>

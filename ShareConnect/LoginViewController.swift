@@ -19,31 +19,6 @@ class LoginViewController: UIViewController {
         view.backgroundColor = CustomColors.B1
     }
     @IBAction func registerButtonTapped(_ sender: UIButton) {
-//        guard let email = emailTextField.text, let password = passwordTextField.text else {
-//            return
-//        }
-//        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-//            if let error = error {
-//                print("Error creating user: \(error.localizedDescription)")
-//            } else {
-//                guard let uid = Auth.auth().currentUser?.uid else {
-//                    return
-//                }
-//                self.db.collection("users").document(uid).setData([
-//                    "email": email,
-//                ]) { error in
-//                    if let error = error {
-//                        print("Error adding user to Firestore: \(error.localizedDescription)")
-//                    } else {
-//                        print("User added to Firestore successfully")
-//                        if let buyerID = Auth.auth().currentUser?.uid {
-//                            Messaging.messaging().subscribe(toTopic: buyerID)
-//                        }
-//
-//                    }
-//                }
-//            }
-//        }
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "RegistrationViewController")
         self.navigationController?.pushViewController(vc, animated: true)
@@ -58,9 +33,9 @@ class LoginViewController: UIViewController {
             } else {
                 if let user = Auth.auth().currentUser {
                     print("User is already registered with UID: \(user.uid)")
-//                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//                    let vc = storyboard.instantiateViewController(withIdentifier: "HomePageViewController")
-//                    self.navigationController?.pushViewController(vc, animated: true)
+                
+                    
+
                     if let buyerID = Auth.auth().currentUser?.uid {
                         Messaging.messaging().subscribe(toTopic: buyerID)
                     }

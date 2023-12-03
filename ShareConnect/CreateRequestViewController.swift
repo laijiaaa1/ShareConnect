@@ -44,6 +44,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
         view.backgroundColor = CustomColors.B1
         navigationItem.title = "Create request"
         uploadButton.backgroundColor = .clear
@@ -104,6 +106,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             doneButton.widthAnchor.constraint(equalToConstant: 320),
             doneButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     @objc func doneButtonTapped() {
         let db = Firestore.firestore()

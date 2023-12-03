@@ -40,6 +40,11 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         submitButton.setTitle("Submit Review", for: .normal)
         submitButton.addTarget(self, action: #selector(submitReview), for: .touchUpInside)
         setup()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     func setup(){
         let backView = UIView()
