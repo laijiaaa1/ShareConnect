@@ -20,6 +20,10 @@ struct ChatItem {
     var buyerID: String
 }
 
+enum CurrentUserRole {
+    case seller
+    case buyer
+}
 class ChatListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChatDelegate {
     func didSelectChatRoom(_ chatRoomID: String) {
         let chatViewController = ChatViewController()
@@ -31,9 +35,17 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     var processedUserIDs = Set<String>()
     let tableView = UITableView()
     var sellerID: String?
+    var buyerID: String?
     var chatRoomID: String?
     var chatRoomDocument: DocumentReference?
     var userFetchID = Auth.auth().currentUser!.uid
+    var currentUserRole: CurrentUserRole = .seller
+    let roleToggleButton: UIButton = {
+           let button = UIButton(type: .system)
+           button.setTitle("Toggle Role", for: .normal)
+           button.addTarget(self, action: #selector(toggleRole), for: .touchUpInside)
+           return button
+       }()
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -48,76 +60,110 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.dataSource = self
         tableView.register(ChatListCell.self, forCellReuseIdentifier: "ChatListCell")
         view.addSubview(tableView)
+        view.addSubview(roleToggleButton)
+               roleToggleButton.translatesAutoresizingMaskIntoConstraints = false
+               NSLayoutConstraint.activate([
+                   roleToggleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                   roleToggleButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+               ])
+    }
+    @objc func toggleRole() {
+        if currentUserRole == .seller {
+            currentUserRole = .buyer
+        } else {
+            currentUserRole = .seller
+        }
+        if currentUserRole == .seller {
+            sellerID = Auth.auth().currentUser!.uid
+            buyerID = chatRoomDocument?.documentID.contains("buyer") ?? false ? chatRoomDocument?.documentID : ""
+        } else {
+            buyerID = Auth.auth().currentUser!.uid
+            sellerID = chatRoomDocument?.documentID.contains("seller") ?? false ? chatRoomDocument?.documentID : ""
+        }
+
+        chatItems.removeAll()
+        fetchChatData()
     }
     func fetchChatData() {
-        firestore.collection("users").document(userFetchID).getDocument { [weak self] (documentSnapshot, error) in
-            guard let self = self else { return }
-            if let error = error {
-                print("Error getting user documents: \(error.localizedDescription)")
-                return
-            }
-            if let document = documentSnapshot, document.exists {
-                guard let chatRoomIDs = document["chatRooms"] as? [String] else {
-                    print("No chatRoomIDs found for the user.")
-                    return
-                }
-                for chatRoomID in chatRoomIDs {
-                    self.fetchLatestMessage(for: document.documentID, chatRoomID: chatRoomID) { message in
-                        let chatItem = ChatItem(
-                            name: document.documentID,
-                            time: message.timestamp.description,
-                            message: message.text,
-                            profileImageUrl: message.profileImageUrl,
-                            unreadCount: 0,
-                            chatRoomID: chatRoomID,
-                            sellerID: message.sellerID,
-                            buyerID: message.buyerID
-                        )
-                        self.chatItems.append(chatItem)
-                        self.tableView.reloadData()
-                    }
-                }
-            }
-        }
-    }
-    func fetchLatestMessage(for userID: String, chatRoomID: String, completion: @escaping (ChatMessage) -> Void) {
-        firestore.collection("chatRooms").document(chatRoomID).collection("messages").order(by: "timestamp", descending: true).limit(to: 1).getDocuments { [weak self] (snapshot, error) in
-            guard let self = self else { return }
-            if let error = error {
-                print("Error getting latest message: \(error.localizedDescription)")
-                return
-            }
-            guard let document = snapshot?.documents.first else {
-                print("No document found for chat room \(chatRoomID)")
-                return
-            }
-            let data = document.data()
-            guard let text = data["text"] as? String,
-                  let isMe = data["isMe"] as? Bool,
-                  let name = data["name"] as? String,
-                  let timestampString = data["timestamp"] as? Timestamp,
-                  let profileImageUrl = data["profileImageUrl"] as? String,
-                  let chatRoomID = data["chatRoomID"] as? String,
-                  let sellerID = data["seller"] as? String,
-                  let buyerID = data["buyer"] as? String,
-                  let imageURL = data["imageURL"] as? String else {
-                print("Incomplete data in the message document for chat room \(chatRoomID)")
-                return
-            }
-            let timestamp = timestampString.dateValue()
-            let message = ChatMessage(text: text,
-                                      isMe: isMe,
-                                      timestamp: timestampString,
-                                      profileImageUrl: profileImageUrl,
-                                      name: name,
-                                      chatRoomID: chatRoomID,
-                                      sellerID: buyerID,
-                                      buyerID: sellerID,
-                                      imageURL: imageURL)
-            completion(message)
-        }
-    }
-    
+           firestore.collection("users").document(userFetchID).getDocument { [weak self] (documentSnapshot, error) in
+               guard let self = self else { return }
+               if let error = error {
+                   print("Error getting user documents: \(error.localizedDescription)")
+                   return
+               }
+               if let document = documentSnapshot, document.exists {
+                   guard let chatRoomIDs = document["chatRooms"] as? [String] else {
+                       print("No chatRoomIDs found for the user.")
+                       return
+                   }
+                   
+                   // Use DispatchGroup to wait for all messages to be fetched
+                   let dispatchGroup = DispatchGroup()
+                   
+                   for chatRoomID in chatRoomIDs {
+                       dispatchGroup.enter()
+                       self.fetchLatestMessage(for: document.documentID, chatRoomID: chatRoomID) { message in
+                           let chatItem = ChatItem(
+                               name: document.documentID,
+                               time: message.timestamp.description,
+                               message: message.text,
+                               profileImageUrl: message.profileImageUrl,
+                               unreadCount: 0,
+                               chatRoomID: chatRoomID,
+                               sellerID: message.sellerID,
+                               buyerID: message.buyerID
+                           )
+                           self.chatItems.append(chatItem)
+                           dispatchGroup.leave()
+                       }
+                   }
+                   
+                   // Notify when all messages are fetched
+                   dispatchGroup.notify(queue: .main) {
+                       self.tableView.reloadData()
+                   }
+               }
+           }
+       }
+
+       func fetchLatestMessage(for userID: String, chatRoomID: String, completion: @escaping (ChatMessage) -> Void) {
+           firestore.collection("chatRooms").document(chatRoomID).collection("messages").order(by: "timestamp", descending: true).limit(to: 1).getDocuments { [weak self] (snapshot, error) in
+               guard let self = self else { return }
+               if let error = error {
+                   print("Error getting latest message: \(error.localizedDescription)")
+                   return
+               }
+               guard let document = snapshot?.documents.first else {
+                   print("No document found for chat room \(chatRoomID)")
+                   return
+               }
+               let data = document.data()
+               guard let text = data["text"] as? String,
+                     let isMe = data["isMe"] as? Bool,
+                     let name = data["name"] as? String,
+                     let timestampString = data["timestamp"] as? Timestamp,
+                     let profileImageUrl = data["profileImageUrl"] as? String,
+                     let sellerID = data["seller"] as? String,
+                     let buyerID = data["buyer"] as? String,
+                     let imageURL = data["imageURL"] as? String else {
+                   print("Incomplete data in the message document for chat room \(chatRoomID)")
+                   return
+               }
+               if (self.currentUserRole == .seller && sellerID == self.sellerID) || (self.currentUserRole == .buyer && buyerID == self.buyerID) {
+                   let timestamp = timestampString.dateValue()
+                   let message = ChatMessage(text: text,
+                                             isMe: isMe,
+                                             timestamp: timestampString,
+                                             profileImageUrl: profileImageUrl,
+                                             name: name,
+                                             chatRoomID: chatRoomID,
+                                             sellerID: sellerID,
+                                             buyerID: buyerID,
+                                             imageURL: imageURL)
+                   completion(message)
+               }
+           }
+       }
     func didReceiveNewMessage(_ message: ChatMessage) {
         if let existingChatIndex = chatItems.firstIndex(where: { $0.name == message.name }) {
             chatItems[existingChatIndex].message = message.text
@@ -153,23 +199,12 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             let chatItem = chatItems[indexPath.row]
-            if let existingChatIndex = chatItems.firstIndex(where: { $0.chatRoomID == chatItem.chatRoomID }) {
-                let chatViewController = ChatViewController()
-                chatViewController.chatRoomDocument = firestore.collection("chatRooms").document(chatItem.chatRoomID).collection("messages").document()
-                chatViewController.buyerID = chatItem.buyerID
-                chatViewController.sellerID = chatItem.sellerID
-                chatViewController.chatRoomID = chatItem.chatRoomID
-                navigationController?.pushViewController(chatViewController, animated: true)
-            } else {
-                let chatViewController = ChatViewController()
-                chatViewController.chatRoomDocument = firestore.collection("chatRooms").document(chatItem.chatRoomID).collection("messages").document()
-                chatViewController.buyerID = chatItem.buyerID
-                chatViewController.sellerID = chatItem.sellerID
-                chatViewController.chatRoomID = chatItem.chatRoomID
-                navigationController?.pushViewController(chatViewController, animated: true)
-            }
+            let chatViewController = ChatViewController()
+            chatViewController.chatRoomID = chatItem.chatRoomID
+        chatViewController.buyerID = chatItem.buyerID
+        chatViewController.sellerID = chatItem.sellerID
+            navigationController?.pushViewController(chatViewController, animated: true)
         }
-
     func fetchRoom(chatRoomID: String) {
         firestore.collection("chatRooms").document(chatRoomID).collection("messages").getDocuments { [weak self] (querySnapshot, error) in
             guard let self = self else { return }
