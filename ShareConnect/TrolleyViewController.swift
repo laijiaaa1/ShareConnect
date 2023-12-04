@@ -55,7 +55,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         ])
         let checkoutButton = UIButton(type: .system)
         checkoutButton.setTitle("CONFIRM ORDER", for: .normal)
-        checkoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+//        checkoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         checkoutButton.setTitleColor(.white, for: .normal)
         checkoutButton.backgroundColor = .black
         checkoutButton.layer.cornerRadius = 10
@@ -64,9 +64,9 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             checkoutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
-            checkoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            checkoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            checkoutButton.heightAnchor.constraint(equalToConstant: 50)
+            checkoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            checkoutButton.heightAnchor.constraint(equalToConstant: 50),
+            checkoutButton.widthAnchor.constraint(equalToConstant: 320)
         ])
         loadCartFromFirestore()
     }

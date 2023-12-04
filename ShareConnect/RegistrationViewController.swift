@@ -71,7 +71,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         view.addSubview(profileImageView)
         view.addSubview(registerButton)
         profileImageView.image = UIImage(named: "icons8-user-48(@3×)")
-        profileImageView.layer.cornerRadius = 60
+        profileImageView.layer.cornerRadius = 50
         profileImageView.layer.masksToBounds = true
         profileImageView.tintColor = .gray
         NSLayoutConstraint.activate([
@@ -89,8 +89,8 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
             nameTextField.heightAnchor.constraint(equalToConstant: 40),
             profileImageView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 40),
             profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            profileImageView.widthAnchor.constraint(equalToConstant: 120),
-            profileImageView.heightAnchor.constraint(equalToConstant: 120),
+            profileImageView.widthAnchor.constraint(equalToConstant: 100),
+            profileImageView.heightAnchor.constraint(equalToConstant: 100),
             registerButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 60),
             registerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             registerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),

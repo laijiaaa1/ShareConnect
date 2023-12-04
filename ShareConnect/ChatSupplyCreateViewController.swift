@@ -14,6 +14,7 @@ import Kingfisher
 
 class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var product: Product?
+    var buyer: String!
     private var chatManager = ChatManager.shared
     var firestore: Firestore!
     var chatRoomDocument: DocumentReference!
@@ -110,7 +111,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             let vc = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
             vc.chatRoomDocument = documentReference
             vc.chatRoomID = documentReference.documentID
-            vc.buyerID = sellerID
+            vc.buyerID = self?.buyer
             vc.sellerID = Auth.auth().currentUser!.uid
             vc.cart = [seller: productArray]
             self?.navigationController?.popViewController(animated: true)
@@ -127,7 +128,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         } else {
             return
         }
-        
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error.localizedDescription)")
@@ -143,7 +143,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             }
         }
     }
-    
     func parseRequestData(_ data: [String: Any]) -> Request? {
         guard
             let requestID = data["requestID"] as? String,

@@ -32,6 +32,7 @@ class SellerInfoViewController: UIViewController, UITableViewDelegate, UITableVi
         view.addSubview(commendTableView)
         view.addSubview(commendTitleLabel)
         view.addSubview(productTitleLabel)
+        commendTableView.backgroundColor = CustomColors.B1
         commendTableView.separatorStyle = .none
         commendTitleLabel.text = "ALL REVIEWS"
         commendTitleLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
@@ -42,8 +43,8 @@ class SellerInfoViewController: UIViewController, UITableViewDelegate, UITableVi
             commendTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             commendTitleLabel.heightAnchor.constraint(equalToConstant: 60),
             commendTableView.topAnchor.constraint(equalTo: commendTitleLabel.bottomAnchor, constant: 10),
-            commendTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            commendTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            commendTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            commendTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             commendTableView.heightAnchor.constraint(equalToConstant: 600),
         ])
         commendTableView.delegate = self
@@ -79,6 +80,10 @@ class SellerInfoViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = commendTableView.dequeueReusableCell(withIdentifier: "CommendTableViewCell", for: indexPath) as! CommendTableViewCell
         let commend = commendList[indexPath.row]
+        cell.backgroundColor = CustomColors.B1
+        cell.layer.cornerRadius = 10
+        cell.layer.masksToBounds = true
+        cell.layer.borderWidth = 1
                cell.commendName.text = commend.comment
                cell.commendRating.text = String(commend.rating)
                cell.commendProduct.text = commend.productID

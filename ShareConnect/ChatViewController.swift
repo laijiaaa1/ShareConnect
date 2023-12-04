@@ -107,6 +107,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
     }
     @objc func addButtonTapped() {
         let vc = ChatSupplyCreateViewController()
+        vc.buyer = buyerID
         navigationController?.pushViewController(vc, animated: true)
     }
     func createOrGetChatRoomDocument() {
@@ -114,24 +115,18 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             print("Buyer ID or Seller ID is nil.")
             return
         }
-
         let chatRoomsCollection = firestore.collection("chatRooms")
         let usersCollection = firestore.collection("users")
-
         let sortedUserIDs = [buyerID, sellerID].sorted()
         let chatRoomID = sortedUserIDs.joined(separator: "_")
-
         var existingChatRoomIDs = Set(existingChatRooms.keys)
-
         if existingChatRoomIDs.contains(chatRoomID) {
             chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
                 guard let self = self else { return }
-
                 if let error = error {
                     print("Error getting chat room document: \(error.localizedDescription)")
                     return
                 }
-
                 if let document = documentSnapshot, document.exists {
                     self.chatRoomDocument = document.reference
                     self.chatRoomID = chatRoomID
@@ -207,7 +202,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
                 completion(false)
                 return
             }
-
             if let document = documentSnapshot, document.exists {
                 if let chatRooms = document["chatRooms"] as? [String], chatRooms.contains(chatRoomID) {
                     completion(true)
@@ -296,7 +290,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         tableView.register(ChatMessageCell.self, forCellReuseIdentifier: "cell")
         tableView.backgroundColor = CustomColors.B1
         view.addSubview(tableView)
-        tableView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 120)
+        tableView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 100)
         messageTextField.placeholder = "Type your message here..."
         messageTextField.borderStyle = .roundedRect
         messageTextField.backgroundColor = .white
@@ -464,34 +458,70 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         cell.backgroundColor = CustomColors.B1
         cell.configure(with: chatMessage)
         cell.label.text = chatMessage.text
-        cell.label.textAlignment = chatMessage.isMe ? .right : .left
-        cell.label.textColor = chatMessage.isMe ? .black : .black
+//        cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
+        cell.label.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
+        cell.label.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
         cell.label.numberOfLines = 0
+        cell.label.layer.cornerRadius = 10
+        cell.label.layer.masksToBounds = true
+        
         if let imageURL = URL(string: chatMessage.profileImageUrl) {
             cell.image.kf.setImage(with: imageURL)
+            let isMe = chatMessage.buyerID == Auth.auth().currentUser?.uid
+            if chatMessage.isMe == true {
+                cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
+                cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40).isActive = true
+                cell.image.topAnchor.constraint(equalTo: cell.topAnchor, constant: 10).isActive = true
+                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+                cell.label.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15).isActive = true
+                cell.label.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
+                cell.label.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
+                cell.label.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -10).isActive = true
+                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
+                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
+                cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.label.leadingAnchor, constant: -20).isActive = true
+                cell.timestampLabel.topAnchor.constraint(equalTo: cell.label.bottomAnchor, constant: -5).isActive = true
+                cell.imageURLpost.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -10).isActive = true
+            }else{
+                cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
+                cell.image.trailingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 40).isActive = true
+                cell.image.topAnchor.constraint(equalTo: cell.topAnchor, constant: 10).isActive = true
+                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+                cell.label.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 15).isActive = true
+                cell.label.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
+                cell.label.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
+                cell.label.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -10).isActive = true
+                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
+                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
+                cell.timestampLabel.leadingAnchor.constraint(equalTo: cell.label.trailingAnchor, constant: 20).isActive = true
+                cell.timestampLabel.topAnchor.constraint(equalTo: cell.label.bottomAnchor, constant: -5).isActive = true
+                cell.imageURLpost.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 10).isActive = true
+            }
         }
         if let imageURLpost = URL(string: chatMessage.imageURL ?? "") {
             cell.imageURLpost.kf.setImage(with: imageURLpost)
         }
-        cell.nameLabel.text = chatMessage.isMe ? currentUser?.name ?? "User" : currentUser?.name ?? "User"
+        cell.nameLabel.text = chatMessage.buyerID == Auth.auth().currentUser?.uid ? currentUser?.name ?? "Buyer" : seller?.sellerName ?? "Seller"
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         cell.timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
         cell.timestampLabel.textColor = .gray
-        cell.timestampLabel.textAlignment = chatMessage.isMe ? .right : .left
+//        cell.timestampLabel.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let minHeight: CGFloat = 60
+        let minHeight: CGFloat = 80
         let dynamicHeight = calculateDynamicHeight(for: indexPath)
         return max(dynamicHeight, minHeight)
     }
     private func calculateDynamicHeight(for indexPath: IndexPath) -> CGFloat {
         let content = chatMessages[indexPath.row].text
-        let font = UIFont.systemFont(ofSize: 17)
+        let font = UIFont.systemFont(ofSize: 15)
         let boundingBox = CGSize(width: tableView.bounds.width - 40, height: .greatestFiniteMagnitude)
         let size = content.boundingRect(with: boundingBox, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSAttributedString.Key.font: font], context: nil)
-        return ceil(size.height) + 25
+        return ceil(size.height) + 35
     }
 }
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -534,14 +564,16 @@ class ChatMessageCell: UITableViewCell {
         NSLayoutConstraint.activate([
             contentView.topAnchor.constraint(equalTo: topAnchor),
             contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.6),
-            contentView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
+            contentView.widthAnchor.constraint(equalTo: widthAnchor),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
         
         image.layer.cornerRadius = 15
         timestampLabel.font = UIFont.systemFont(ofSize: 12)
         nameLabel.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 15)
         label.numberOfLines = 0
+        label.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         image.layer.masksToBounds = true
         label.translatesAutoresizingMaskIntoConstraints = false
         timestampLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -549,20 +581,20 @@ class ChatMessageCell: UITableViewCell {
         image.translatesAutoresizingMaskIntoConstraints = false
         imageURLpost.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            timestampLabel.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
-            timestampLabel.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: 10),
-            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 10),
-            image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 10),
-            image.widthAnchor.constraint(equalToConstant: 30),
-            image.heightAnchor.constraint(equalToConstant: 30),
-            imageURLpost.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            imageURLpost.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+//            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+//            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+//            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+//            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+//            timestampLabel.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+//            timestampLabel.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: 10),
+//            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5),
+//            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 10),
+//            image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+//            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 10),
+//            image.widthAnchor.constraint(equalToConstant: 30),
+//            image.heightAnchor.constraint(equalToConstant: 30),
+//            imageURLpost.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+//            imageURLpost.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             imageURLpost.widthAnchor.constraint(equalToConstant: 80),
             imageURLpost.heightAnchor.constraint(equalToConstant: 80)
             

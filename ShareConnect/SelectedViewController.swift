@@ -221,7 +221,7 @@ class SelectedViewController: UIViewController {
         ])
         trolleyButton.setTitle("Add to trolley", for: .normal)
         trolleyButton.setTitleColor(.white, for: .normal)
-        trolleyButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
+//        trolleyButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         trolleyButton.backgroundColor = .black
         trolleyButton.layer.cornerRadius = 10
         trolleyButton.layer.masksToBounds = true
