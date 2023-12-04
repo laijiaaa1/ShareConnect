@@ -235,7 +235,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             }
             if let document = documentSnapshot, document.exists {
                 var userData = document.data() ?? [:]
-                
                 if var chatRooms = userData["chatRooms"] as? [String] {
                     chatRooms.append(chatRoomID)
                     userData["chatRooms"] = chatRooms
@@ -337,11 +336,28 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         present(mapViewController, animated: true, completion: nil)
     }
     @objc func imageButtonTapped() {
-        present(imagePicker!, animated: true, completion: nil)
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let cameraAction = UIAlertAction(title: "Take Photo", style: .default) { [weak self] _ in
+                imagePicker.sourceType = .camera
+                self?.present(imagePicker, animated: true, completion: nil)
+            }
+            alertController.addAction(cameraAction)
+        }
+        let galleryAction = UIAlertAction(title: "Choose from Library", style: .default) { [weak self] _ in
+            imagePicker.sourceType = .photoLibrary
+            self?.present(imagePicker, animated: true, completion: nil)
+        }
+        alertController.addAction(galleryAction)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
     }
     @objc func sendButtonTapped() {
         guard let message = messageTextField.text else { return }
-
         if let selectedImage = selectedImage {
             uploadFixedImage(selectedImage) { [weak self] (imageURL) in
                 self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL, location: self?.currentLocation)
