@@ -12,6 +12,7 @@ import FirebaseAuth
 import FirebaseCore
 import FirebaseStorage
 import DatePicker
+import JGProgressHUD
 
 class CreateRequestViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
     let requestTableView = UITableView()
@@ -19,7 +20,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     let requestSelectSegment = UISegmentedControl()
     let doneButton = UIButton()
     var groupOptions: [(String, String)] = []
-
+    let hud = JGProgressHUD()
     var sortPicker: UIPickerView?
     var usePicker: UIPickerView?
     var selectedGroupID: String?
@@ -185,6 +186,14 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 }
             }
         }
+        hud.textLabel.text = "Success"
+        hud.indicatorView = JGProgressHUDSuccessIndicatorView()
+        hud.show(in: view)
+        hud.dismiss(afterDelay: 1.0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.navigationController?.popViewController(animated: true)
+        }
+        
     }
     @objc func uploadButtonTapped() {
         let imagePickerController = UIImagePickerController()
@@ -346,6 +355,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 50
     }
+    
     @objc func timePickerChanged(sender: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"

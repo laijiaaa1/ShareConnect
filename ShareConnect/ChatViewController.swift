@@ -154,6 +154,31 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
                             return
                         }
                         if let document = documentSnapshot, document.exists {
+                                let documentData = document.data()
+                            if let text = documentData?["text"] as? String,
+                               let isMe = documentData?["isMe"] as? Bool,
+                                   let name = documentData?["name"] as? String,
+                                   let timestampString = documentData?["timestamp"] as? Timestamp,
+                                   let profileImageUrl = documentData?["profileImageUrl"] as? String,
+                                   let chatRoomID = documentData?["chatRoomID"] as? String,
+                                   let sellerID = documentData?["seller"] as? String,
+                                   let buyerID = documentData?["buyer"] as? String,
+                                   let imageURL = documentData?["imageURL"] as? String {
+                                    let timestamp = timestampString.dateValue()
+                                    let message = ChatMessage(
+                                        text: text,
+                                        isMe: isMe,
+                                        timestamp: timestampString,
+                                        profileImageUrl: profileImageUrl,
+                                        name: name,
+                                        chatRoomID: chatRoomID,
+                                        sellerID: sellerID,
+                                        buyerID: buyerID,
+                                        imageURL: imageURL
+                                    )
+                                    self.chatMessages.append(message)
+                                
+                            }
                             self.chatRoomDocument = document.reference
                             self.chatRoomID = chatRoomID
                             self.startListeningForChatMessages()
@@ -164,7 +189,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
                     }
                 } else {
                     chatRoomsCollection.document(chatRoomID).setData(["createdAt": FieldValue.serverTimestamp()])
-                  
                     self.updateUserChatRoomData(usersCollection, userID: buyerID, chatRoomID: chatRoomID)
                     self.updateUserChatRoomData(usersCollection, userID: sellerID, chatRoomID: chatRoomID)
                     self.chatRoomDocument = chatRoomsCollection.document(chatRoomID)
@@ -176,7 +200,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-
     func checkIfChatRoomExistsInUser(_ collection: CollectionReference, userID: String, chatRoomID: String, completion: @escaping (Bool) -> Void) {
         collection.document(userID).getDocument { (documentSnapshot, error) in
             if let error = error {
@@ -274,7 +297,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         tableView.register(ChatMessageCell.self, forCellReuseIdentifier: "cell")
         tableView.backgroundColor = CustomColors.B1
         view.addSubview(tableView)
-        tableView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 200)
+        tableView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 120)
         messageTextField.placeholder = "Type your message here..."
         messageTextField.borderStyle = .roundedRect
         messageTextField.backgroundColor = .white
@@ -404,7 +427,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
     }
     func convertCartToString(_ cart: [Seller: [Product]]) -> String {
         for (seller, products) in cart {
-            cartString.append("Seller: \(seller.sellerName)\n")
+            cartString.append("Talk with: \(seller.sellerName)\n")
             for product in products {
                 cartString.append(" - Product: \(product.name)\n")
                 cartString.append("   Quantity: \(product.quantity ?? 1)\n")

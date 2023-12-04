@@ -11,11 +11,11 @@ import FirebaseStorage
 import FirebaseCore
 import FirebaseFirestore
 import Kingfisher
+import JGProgressHUD
 
 class CreateGroupViewController: CreateRequestViewController {
     var isGroupPublic: Bool = true
     var groupData: [String: Any] = [:]
-
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.tintColor = .black
@@ -46,20 +46,13 @@ class CreateGroupViewController: CreateRequestViewController {
             let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info
         }
-//        if !isGroupPublic {
-//            var requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Require", "Number of people"]
-//            if indexPath.row < requestLabels.count {
-//                let info = requestLabels[indexPath.row]
-//                cell.requestLabel.text = info
-//            }
-//               }
-        if indexPath.row == 1{
+        if indexPath.row == 1 {
             cell.textField.tag = 3
-        }else if indexPath.row == 2{
+        } else if indexPath.row == 2 {
             cell.textField.tag = 4
-        }else if indexPath.row == 5{
+        } else if indexPath.row == 5 {
             cell.textField.tag = 5
-        }else if indexPath.row == 7{
+        } else if indexPath.row == 7 {
             cell.textField.tag = 7
         }
         if indexPath.row == 3 || indexPath.row == 4 {
@@ -84,9 +77,8 @@ class CreateGroupViewController: CreateRequestViewController {
             cell.textField.keyboardType = .default
         }
         if !isGroupPublic && indexPath.row == 7 {
-                   // Configure the cell for the invitation code
                    cell.textField.placeholder = "Enter Invitation Code"
-                   cell.textField.tag = 7 // Assign a unique tag for the invitation code field
+                   cell.textField.tag = 7
                }
         cell.addBtn.tag = indexPath.row 
         return cell
@@ -138,7 +130,6 @@ class CreateGroupViewController: CreateRequestViewController {
                }
            }
        }
-
     func saveGroupToFirebase() {
            guard let user = Auth.auth().currentUser else {
                print("Error: User is not authenticated.")
@@ -171,5 +162,12 @@ class CreateGroupViewController: CreateRequestViewController {
                    print("Group created and saved to Firestore.")
                }
            }
+        hud.textLabel.text = "Success"
+        hud.indicatorView = JGProgressHUDSuccessIndicatorView()
+        hud.show(in: view)
+        hud.dismiss(afterDelay: 1.0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.navigationController?.popViewController(animated: true)
+        }
        }
 }

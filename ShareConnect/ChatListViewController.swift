@@ -111,8 +111,8 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                                       profileImageUrl: profileImageUrl,
                                       name: name,
                                       chatRoomID: chatRoomID,
-                                      sellerID: sellerID,
-                                      buyerID: buyerID,
+                                      sellerID: buyerID,
+                                      buyerID: sellerID,
                                       imageURL: imageURL)
             completion(message)
         }
@@ -128,7 +128,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                                     time: message.timestamp.description,
                                     message: message.text,
                                     profileImageUrl: message.profileImageUrl,
-                                    unreadCount: 1, chatRoomID: message.chatRoomID, sellerID: message.buyerID, buyerID: message.sellerID)
+                                    unreadCount: 1, chatRoomID: message.chatRoomID, sellerID: message.sellerID, buyerID: message.buyerID)
             chatItems.append(chatItem)
         }
         tableView.reloadData()

@@ -16,4 +16,6 @@ target 'ShareConnect' do
  pod 'Kingfisher'
  pod 'DatePicker', '~> 1.3.0'
  pod 'FirebaseMessaging'
+ pod 'JGProgressHUD'
+ pod 'IQKeyboardManagerSwift'
 end

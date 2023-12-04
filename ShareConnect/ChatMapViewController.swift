@@ -9,6 +9,7 @@ import UIKit
 import CoreLocation
 import MapKit
 
+
 class MapSelectionViewController: UIViewController, MKMapViewDelegate {
 
     weak var delegate: MapSelectionDelegate?
@@ -19,7 +20,6 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
     var selectedCoordinate: CLLocationCoordinate2D? {
            didSet {
                if let coordinate = selectedCoordinate {
-                   // Update the map region to the selected coordinate
                    let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
                    mapView.setRegion(region, animated: true)
                }
@@ -54,16 +54,23 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
 
         confirmButton = UIButton(type: .system)
         confirmButton.setTitle("Confirm Location", for: .normal)
+        confirmButton.titleLabel?.font = .systemFont(ofSize: 16)
+        confirmButton.setTitleColor(.black, for: .normal)
+        confirmButton.backgroundColor = CustomColors.B1
+        confirmButton.layer.cornerRadius = 10
+        
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         view.addSubview(confirmButton)
 
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             confirmButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            confirmButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            confirmButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            confirmButton.widthAnchor.constraint(equalToConstant: 180),
+            confirmButton.heightAnchor.constraint(equalToConstant: 50)
         ])
 
-        let initialLocation = CLLocationCoordinate2D(latitude: 25.0422, longitude: 121.5354)  // Taipei coordinates
+        let initialLocation = CLLocationCoordinate2D(latitude: 25.0422, longitude: 121.5354)
         let regionRadius: CLLocationDistance = 1000
         let coordinateRegion = MKCoordinateRegion(
             center: initialLocation,
@@ -71,10 +78,21 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             longitudinalMeters: regionRadius
         )
         mapView.setRegion(coordinateRegion, animated: true)
-
-        // Add a long press gesture recognizer to add a custom annotation
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         mapView.addGestureRecognizer(longPressGesture)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return }
+        guard let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        let keyboardHeight = keyboardFrame.height
+        confirmButton.frame.origin.y -= keyboardHeight
+        searchController.searchBar.frame.origin.y -= keyboardHeight
+    }
+    @objc func keyboardWillHide(notification: NSNotification) {
+        confirmButton.frame.origin.y = view.frame.height - confirmButton.frame.height - 20
+        searchController.searchBar.frame.origin.y = view.safeAreaInsets.top
     }
 
     @objc func confirmButtonTapped() {
