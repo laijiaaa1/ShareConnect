@@ -87,7 +87,8 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(GroupTableViewCell.self, forCellReuseIdentifier: "GroupTableViewCell")
-        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
         view.backgroundColor = CustomColors.B1
       
         if sort == "product" {
@@ -128,6 +129,10 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         ])
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+       
+    }
+    @objc func dismissKeyboard(){
+        view.endEditing(true)
     }
     @objc func searchTextFieldDidChange(){
         searchGroupsByName(searchString: searchTextField.text ?? "", completion: { (groups) in
@@ -145,6 +150,24 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.groupNameLabel.text = group.name
         cell.groupMemberNumberLabel.text = "Members: + \(group.members.count.description)"
         cell.groupImage.kf.setImage(with: URL(string: group.image))
+        cell.addGroupHandler = {
+            //add memeber
+            if !group.members.contains(self.currentUser ?? "") {
+                Firestore.firestore().collection("groups").document(group.documentId).updateData(["members": FieldValue.arrayUnion([self.currentUser ?? ""])])
+                Firestore.firestore().collection("users").document(self.currentUser ?? "").updateData(["groups": FieldValue.arrayUnion([group.documentId])])
+                cell.groupMemberNumberLabel.text = "Members: + \(group.members.count.description)"
+            }
+            self.fetchGroupData(sort: self.sort ?? "")
+        }
+        if ((group.members.contains(currentUser ?? "")) == true){
+            cell.groupButton.setTitle("Joined", for: .normal)
+            cell.groupButton.backgroundColor = .lightGray
+            cell.groupButton.layer.borderWidth = 0
+            cell.groupButton.alpha = 0.5
+            cell.groupButton.isEnabled = false
+        } else {
+            groupButton.setTitle("        +", for: .normal)
+        }
         return cell
     }
     
@@ -312,6 +335,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let groupMemberNumberLabel = UILabel()
         let groupMemberNumberImage = UIImageView()
         let backView = UIView()
+        let currrentUser = Auth.auth().currentUser?.uid
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             groupImage.layer.cornerRadius = 10
@@ -323,8 +347,8 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
             groupMemberNumberImage.layer.cornerRadius = 10
             groupMemberNumberImage.layer.borderWidth = 1
             groupMemberNumberImage.layer.masksToBounds = true
-            groupButton.setTitle("+            ", for: .normal)
-            groupButton.contentHorizontalAlignment = .right
+            groupButton.setTitle("        +", for: .normal)
+            groupButton.contentHorizontalAlignment = .center
             groupButton.addTarget(self, action: #selector(addGroup), for: .touchUpInside)
             groupButton.setTitleColor(.black, for: .normal)
             groupButton.backgroundColor = .white
@@ -371,8 +395,9 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 groupButton.heightAnchor.constraint(equalToConstant: 40)
             ])
         }
-        @objc func addGroup(){
+        @objc func addGroup(_ sender: UIButton){
             addGroupHandler?()
+            sender.startAnimatingPressActions()
         }
         
         required init?(coder: NSCoder) {

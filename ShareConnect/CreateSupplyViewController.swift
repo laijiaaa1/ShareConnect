@@ -11,12 +11,14 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseCore
 import FirebaseStorage
+import JGProgressHUD
 
 class CreateSupplyViewController: CreateRequestViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Create Supply"
     }
+  
     @objc override func doneButtonTapped() {
         let db = Firestore.firestore()
         let storage = Storage.storage()
@@ -81,6 +83,13 @@ class CreateSupplyViewController: CreateRequestViewController {
                     }
                 }
             }
+        }
+        hud.textLabel.text = "Success"
+        hud.indicatorView = JGProgressHUDSuccessIndicatorView()
+        hud.show(in: view)
+        hud.dismiss(afterDelay: 1.0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.navigationController?.popViewController(animated: true)
         }
     }
 }

@@ -40,9 +40,13 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     override func viewWillAppear(_ animated: Bool) {
         browsingHistoryCollection.reloadData()
+        navigationController?.navigationBar.isHidden = false
+        tabBarController?.tabBar.isHidden = false
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
         browsingHistoryCollection.reloadData()
         let textAttributes = [NSAttributedString.Key.font:UIFont(name: "GeezaPro-Bold", size: 20)]
         view.backgroundColor = CustomColors.B1
@@ -138,6 +142,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         searchTextField.delegate = self
         textFieldShouldReturn(searchTextField)
         fetchGroupData()
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     @objc func chatListButtonClick(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

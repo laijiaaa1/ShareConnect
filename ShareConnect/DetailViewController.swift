@@ -87,7 +87,7 @@ class DetailViewController: UIViewController {
         ])
         view.addSubview(price)
         price.text = "800 / Day"
-        price.font = UIFont(name: "PingFangTC-Semibold", size: 15)
+        price.font = UIFont(name: "PingFangTC-Semibold", size: 16)
         price.textColor = .black
         price.translatesAutoresizingMaskIntoConstraints = false
         price.centerYAnchor.constraint(equalTo: priceImage.centerYAnchor).isActive = true
@@ -240,11 +240,12 @@ class DetailViewController: UIViewController {
         view.addSubview(sellerButton)
         sellerButton.translatesAutoresizingMaskIntoConstraints = false
         sellerButton.backgroundColor = .black
+        sellerButton.setImage(UIImage(named: "icons8-user-48(@3×)"), for: .normal)
         sellerButton.layer.cornerRadius = 15
         sellerButton.layer.masksToBounds = true
         NSLayoutConstraint.activate([
             sellerButton.centerYAnchor.constraint(equalTo: addCartButton.centerYAnchor),
-            sellerButton.trailingAnchor.constraint(equalTo: addCartButton.leadingAnchor, constant: -20),
+            sellerButton.trailingAnchor.constraint(equalTo: addCartButton.leadingAnchor, constant: -25),
             sellerButton.widthAnchor.constraint(equalToConstant: 30),
             sellerButton.heightAnchor.constraint(equalToConstant: 30)
         ])
@@ -360,12 +361,17 @@ class DetailViewController: UIViewController {
         let vc = storyboard.instantiateViewController(withIdentifier: "SelectedViewController") as! SelectedViewController
         if let imageURL = URL(string: product?.imageString ?? ""),
            let startTimeString = availability.text {
-            if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
-                vc.product = product
-                self.navigationController?.pushViewController(vc, animated: true)
-            } else {
-                print("Failed to convert startTimeString to Date")
+            print("startTimeString:", startTimeString)
+            let dateFormats = ["MM月 dd, yyyy", "yyyy-MM-dd", "your-other-date-format"]
+
+            for format in dateFormats {
+                if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
+                    vc.product = product
+                    self.navigationController?.pushViewController(vc, animated: true)
+                    break
+                }
             }
+
         } else {
             print("Failed to get availability or create image URL")
         }
