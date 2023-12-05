@@ -14,6 +14,7 @@ import Kingfisher
 
 class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var product: Product?
+    var buyer: String!
     private var chatManager = ChatManager.shared
     var firestore: Firestore!
     var chatRoomDocument: DocumentReference!
@@ -21,10 +22,10 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
     var products: [Product] = []
     var supplies: [Supply] = []
     let refreshControl = UIRefreshControl()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "My Supply"
+        navigationItem.title = "MY SUPPLY"
+        navigationController?.navigationBar.tintColor = .black
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
@@ -92,12 +93,10 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             print("Invalid indexPath.")
             return
         }
-        
         let selectedProduct = products[indexPath.row]
         let seller = selectedProduct.seller
         let sellerID = seller.sellerID
         let productArray = [selectedProduct]
-        
         chatManager.createOrGetChatRoomDocument(buyerID: Auth.auth().currentUser!.uid, sellerID: sellerID) { [weak self] (documentReference, error) in
             if let error = error {
                 print("Error creating chat room document: \(error.localizedDescription)")
@@ -108,12 +107,11 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
                 return
             }
             self?.chatRoomDocument = documentReference
-            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
             vc.chatRoomDocument = documentReference
             vc.chatRoomID = documentReference.documentID
-            vc.buyerID = sellerID
+            vc.buyerID = self?.buyer
             vc.sellerID = Auth.auth().currentUser!.uid
             vc.cart = [seller: productArray]
             self?.navigationController?.popViewController(animated: true)
@@ -130,7 +128,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         } else {
             return
         }
-        
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error.localizedDescription)")
@@ -146,7 +143,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             }
         }
     }
-    
     func parseRequestData(_ data: [String: Any]) -> Request? {
         guard
             let requestID = data["requestID"] as? String,

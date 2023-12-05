@@ -11,13 +11,17 @@ import FirebaseStorage
 import FirebaseCore
 import FirebaseFirestore
 import Kingfisher
+import JGProgressHUD
 
 class CreateGroupViewController: CreateRequestViewController {
     var isGroupPublic: Bool = true
     var groupData: [String: Any] = [:]
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Create Group"
+        navigationController?.navigationBar.tintColor = .black
+        requestSelectSegment.setTitle("Public", forSegmentAt: 0)
+        requestSelectSegment.setTitle("Private", forSegmentAt: 1)
     }
     @objc override func requestSelectSegmentTapped() {
         if requestSelectSegment.selectedSegmentIndex == 0 {
@@ -36,41 +40,30 @@ class CreateGroupViewController: CreateRequestViewController {
         cell.requestLabel.text = "name"
         cell.addBtn.setBackgroundImage(UIImage(systemName: "plus"), for: .normal)
         cell.addBtn.tintColor = .black
-        var requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Require", "Number of people", "Invitation Code"]
+        cell.requestLabel.numberOfLines = 0
+        cell.requestLabel.frame = cell.contentView.bounds
+        var requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Require", "No. of people", "Invite Code(Private必填)"]
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info
         }
-//        if !isGroupPublic {
-//            var requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Require", "Number of people"]
-//            if indexPath.row < requestLabels.count {
-//                let info = requestLabels[indexPath.row]
-//                cell.requestLabel.text = info
-//            }
-//               }
-        if indexPath.row == 1{
+        if indexPath.row == 1 {
             cell.textField.tag = 3
-        }else if indexPath.row == 2{
+        } else if indexPath.row == 2 {
             cell.textField.tag = 4
-        }else if indexPath.row == 5{
+        } else if indexPath.row == 5 {
             cell.textField.tag = 5
-        }else if indexPath.row == 7{
+        } else if indexPath.row == 7 {
             cell.textField.tag = 7
         }
-      
-        
         if indexPath.row == 3 || indexPath.row == 4 {
             let timePicker = UIDatePicker()
             timePicker.datePickerMode = .dateAndTime
             timePicker.preferredDatePickerStyle = .wheels
             timePicker.addTarget(self, action: #selector(timePickerChanged), for: .valueChanged)
-            if indexPath.row == 3 {
-                cell.textField.inputView = timePicker
-                cell.textField.tag = 1
-            } else if indexPath.row == 4 {
-                cell.textField.inputView = timePicker
-                cell.textField.tag = 2
-            }
+            timePicker.tag = indexPath.row
+            cell.textField.tag = indexPath.row
+            cell.textField.inputView = timePicker
         }
         if indexPath.row == 6 {
             let stepper = UIStepper()
@@ -85,9 +78,8 @@ class CreateGroupViewController: CreateRequestViewController {
             cell.textField.keyboardType = .default
         }
         if !isGroupPublic && indexPath.row == 7 {
-                   // Configure the cell for the invitation code
                    cell.textField.placeholder = "Enter Invitation Code"
-                   cell.textField.tag = 7 // Assign a unique tag for the invitation code field
+                   cell.textField.tag = 7
                }
         cell.addBtn.tag = indexPath.row 
         return cell
@@ -139,38 +131,54 @@ class CreateGroupViewController: CreateRequestViewController {
                }
            }
        }
-
     func saveGroupToFirebase() {
-           guard let user = Auth.auth().currentUser else {
-               print("Error: User is not authenticated.")
-               return
-           }
-
-           let groupsRef = Firestore.firestore().collection("groups")
-           groupData = [
-               "name": findCellWithTag(0)?.textField.text ?? "",
-                "description": findCellWithTag(3)?.textField.text ?? "",
-                "sort": findCellWithTag(4)?.textField.text ?? "",
-                "startTime": findCellWithTag(1)?.textField.text ?? "",
-                "endTime": findCellWithTag(2)?.textField.text ?? "",
-                "require": findCellWithTag(5)?.textField.text ?? "",
-               "numberOfPeople": Int(findCellWithTag(6)?.textField.text ?? "") ?? 1,
-                "owner": user.uid,
-                "isPublic": isGroupPublic,
-                "members": [user.uid],
-               "image": groupData["image"] ?? "",
-                "created": Date(),
-           ]
+        guard let user = Auth.auth().currentUser else {
+            print("Error: User is not authenticated.")
+            return
+        }
+        
+        let groupsRef = Firestore.firestore().collection("groups")
+        let userGroups = Firestore.firestore().collection("users").document(user.uid)
+        groupData = [
+            "name": findCellWithTag(0)?.textField.text ?? "",
+            "description": findCellWithTag(3)?.textField.text ?? "",
+            "sort": findCellWithTag(4)?.textField.text ?? "",
+            "startTime": findCellWithTag(1)?.textField.text ?? "",
+            "endTime": findCellWithTag(2)?.textField.text ?? "",
+            "require": findCellWithTag(5)?.textField.text ?? "",
+            "numberOfPeople": Int(findCellWithTag(6)?.textField.text ?? "") ?? 1,
+            "owner": user.uid,
+            "isPublic": isGroupPublic,
+            "members": [user.uid],
+            "image": groupData["image"] ?? "",
+            "created": Date(),
+        ]
         if !isGroupPublic {
             groupData["invitationCode"] = findCellWithTag(7)?.textField.text ?? ""
-              }
-
-           groupsRef.addDocument(data: groupData) { error in
-               if let error = error {
-                   print("Error creating group: \(error.localizedDescription)")
-               } else {
-                   print("Group created and saved to Firestore.")
-               }
-           }
+        }
+        var newGroupDocRef: DocumentReference?
+        newGroupDocRef = groupsRef.addDocument(data: groupData) { error in
+            if let error = error {
+                print("Error creating group: \(error.localizedDescription)")
+            } else {
+                let groupID = newGroupDocRef?.documentID
+                userGroups.updateData(["groups": FieldValue.arrayUnion([groupID])]) { error in
+                    if let error = error {
+                        print("Error updating user's groups: \(error.localizedDescription)")
+                    } else {
+                        print("User's groups updated in Firestore.")
+                    }
+                }
+                print("Group created and saved to Firestore.")
+            }
+        }
+        
+        hud.textLabel.text = "Success"
+        hud.indicatorView = JGProgressHUDSuccessIndicatorView()
+        hud.show(in: view)
+        hud.dismiss(afterDelay: 1.0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.navigationController?.popViewController(animated: true)
+        }
        }
 }

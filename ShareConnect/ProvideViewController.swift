@@ -12,7 +12,6 @@ import FirebaseFirestore
 class ProvideViewController: SelectedViewController {
     private var chatManager = ChatManager.shared
     private var chatRoomListener: ListenerRegistration?
-    
     var firestore: Firestore!
     var chatRoomDocument: DocumentReference!
     override func viewWillAppear(_ animated: Bool) {
@@ -32,8 +31,6 @@ class ProvideViewController: SelectedViewController {
         }
     }
     override func setup() {
-        //        if let request = request, let imageURL = URL(string: request.imageString) {
-        //            backImage.kf.setImage(with: imageURL)
         backImage.frame = CGRect(x: 0, y: 0, width: view.frame.width , height: view.frame.height / 2)
         backImage.layer.cornerRadius = 15
         backImage.layer.masksToBounds = true
@@ -46,22 +43,11 @@ class ProvideViewController: SelectedViewController {
         infoView.layer.cornerRadius = 15
         infoView.layer.masksToBounds = true
         view.addSubview(infoView)
-        //        nameLabel.text = request?.name
-        //        backImage.addSubview(nameLabel)
-        //        nameLabel.textColor = CustomColors.B1
-        //        nameLabel.backgroundColor = .clear
-        //        nameLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        //        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        //        NSLayoutConstraint.activate([
-        //            nameLabel.topAnchor.constraint(equalTo: backImage.topAnchor, constant: 70),
-        //            nameLabel.leadingAnchor.constraint(equalTo: backImage.leadingAnchor, constant: 30)
-        //        ])
         priceView.frame = CGRect(x: 40, y: 70, width: 30, height: 30)
         priceView.image = UIImage(named: "price")
         infoView.addSubview(priceView)
         priceLabel.frame = CGRect(x: 90, y: 70, width: 130, height: 30)
         priceLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        //        priceLabel.text = request?.price
         infoView.addSubview(priceLabel)
         availabilityView.backgroundColor = .white
         availabilityView.layer.cornerRadius = 10
@@ -84,7 +70,6 @@ class ProvideViewController: SelectedViewController {
             dateImage.leadingAnchor.constraint(equalTo: availabilityView.leadingAnchor, constant: 10)
         ])
         availabilityView.addSubview(availability)
-        //        availability.text = "\(request!.startTime)"
         availability.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         availability.textColor = .black
         availability.translatesAutoresizingMaskIntoConstraints = false
@@ -147,7 +132,8 @@ class ProvideViewController: SelectedViewController {
         ])
         addButton.setTitle("+", for: .normal)
         addButton.setTitleColor(.black, for: .normal)
-        addButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
+        addButton.addTarget(self, action: #selector(add), for: .touchUpInside)
+//        addButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 16)
         addButton.backgroundColor = .white
         addButton.layer.cornerRadius = 10
         addButton.layer.masksToBounds = true
@@ -162,6 +148,7 @@ class ProvideViewController: SelectedViewController {
         ])
         minusButton.setTitle("-", for: .normal)
         minusButton.setTitleColor(.black, for: .normal)
+        minusButton.addTarget(self, action: #selector(minus), for: .touchUpInside)
         minusButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         minusButton.backgroundColor = .white
         minusButton.layer.cornerRadius = 10
@@ -211,23 +198,18 @@ class ProvideViewController: SelectedViewController {
             print("Seller or product is nil.")
             return
         }
-        
         let sellerID = seller.sellerID
         let productArray = [product]
-        
         chatManager.createOrGetChatRoomDocument(buyerID: Auth.auth().currentUser!.uid, sellerID: sellerID) { [weak self] (documentReference, error) in
             if let error = error {
                 print("Error creating chat room document: \(error.localizedDescription)")
                 return
             }
-            
             guard let documentReference = documentReference else {
                 print("Document reference is nil.")
                 return
             }
-            
             self?.chatRoomDocument = documentReference
-            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
             vc.chatRoomDocument = documentReference
@@ -235,7 +217,6 @@ class ProvideViewController: SelectedViewController {
             vc.buyerID = sellerID
             vc.sellerID = Auth.auth().currentUser!.uid
             vc.cart = [seller: productArray]
-            
             self?.navigationController?.pushViewController(vc, animated: true)
         }
     }

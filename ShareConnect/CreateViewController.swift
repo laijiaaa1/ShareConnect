@@ -43,7 +43,7 @@ class CreateViewController: UIViewController {
         myRequestButton.setTitle("My request", for: .normal)
         myRequestButton.backgroundColor = .black
         myRequestButton.setTitleColor(.white, for: .normal)
-        myRequestButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        myRequestButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         myRequestButton.layer.cornerRadius = 25
         myRequestButton.layer.borderWidth = 1
         myRequestButton.layer.borderColor = UIColor.black.cgColor
@@ -56,7 +56,7 @@ class CreateViewController: UIViewController {
         mySupplyButton.setTitle("My supply", for: .normal)
         mySupplyButton.backgroundColor = .black
         mySupplyButton.setTitleColor(.white, for: .normal)
-        mySupplyButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        mySupplyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         mySupplyButton.layer.cornerRadius = 25
         mySupplyButton.translatesAutoresizingMaskIntoConstraints = false
         mySupplyButton.layer.borderWidth = 1
@@ -65,8 +65,7 @@ class CreateViewController: UIViewController {
         mySupplyButton.layer.shadowOffset = CGSize(width: 0, height: 2)
         mySupplyButton.layer.shadowRadius = 4
         mySupplyButton.layer.shadowOpacity = 0.5
-        
-        createGroupButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        createGroupButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         createGroupButton.layer.cornerRadius = 25
         createGroupButton.translatesAutoresizingMaskIntoConstraints = false
         createGroupButton.setTitle("Create group", for: .normal)
@@ -78,7 +77,6 @@ class CreateViewController: UIViewController {
         createGroupButton.layer.shadowOffset = CGSize(width: 0, height: 2)
         createGroupButton.layer.shadowRadius = 4
         createGroupButton.layer.shadowOpacity = 0.5
-        
         createGroupButton.addTarget(self, action: #selector(createGroupButtonTapped), for: .touchUpInside)
         myRequestButton.addTarget(self, action: #selector(myRequestButtonTapped), for: .touchUpInside)
         mySupplyButton.addTarget(self, action: #selector(mySupplyButtonTapped), for: .touchUpInside)

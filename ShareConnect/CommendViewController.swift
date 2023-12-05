@@ -40,6 +40,11 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         submitButton.setTitle("Submit Review", for: .normal)
         submitButton.addTarget(self, action: #selector(submitReview), for: .touchUpInside)
         setup()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     func setup(){
         let backView = UIView()
@@ -93,7 +98,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         commentTextView.layer.masksToBounds = true
         commentTextView.layer.borderWidth = 1
         commentTextView.layer.borderColor = UIColor.black.cgColor
-        commentTextView.font = UIFont.systemFont(ofSize: 15)
+        commentTextView.font = UIFont.systemFont(ofSize: 16)
         starRatingView.backgroundColor = .white
         starRatingView.layer.cornerRadius = 10
         starRatingView.layer.masksToBounds = true
@@ -106,7 +111,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         addImageButton.layer.borderColor = UIColor.black.cgColor
         nameLable.text = productName
         nameLable.textColor = .black
-        nameLable.font = UIFont.boldSystemFont(ofSize: 15)
+        nameLable.font = UIFont.boldSystemFont(ofSize: 16)
         nameLable.textAlignment = .left
         nameLable.numberOfLines = 0
         addImageButton.addTarget(self, action: #selector(addImage), for: .touchUpInside)
