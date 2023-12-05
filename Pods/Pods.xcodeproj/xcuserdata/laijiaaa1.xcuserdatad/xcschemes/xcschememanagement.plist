@@ -88,6 +88,11 @@
 			<key>orderHint</key>
 			<integer>12</integer>
 		</dict>
+		<key>FirebaseDatabase.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>34</integer>
+		</dict>
 		<key>FirebaseFirestore.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -143,6 +148,16 @@
 			<false/>
 			<key>orderHint</key>
 			<integer>19</integer>
+		</dict>
+		<key>IQKeyboardManagerSwift.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>35</integer>
+		</dict>
+		<key>JGProgressHUD.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>36</integer>
 		</dict>
 		<key>Kingfisher-Kingfisher.xcscheme</key>
 		<dict>
