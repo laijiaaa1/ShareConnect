@@ -18,6 +18,7 @@ class CreateGroupViewController: CreateRequestViewController {
     var groupData: [String: Any] = [:]
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Create Group"
         navigationController?.navigationBar.tintColor = .black
         requestSelectSegment.setTitle("Public", forSegmentAt: 0)
         requestSelectSegment.setTitle("Private", forSegmentAt: 1)
@@ -131,37 +132,47 @@ class CreateGroupViewController: CreateRequestViewController {
            }
        }
     func saveGroupToFirebase() {
-           guard let user = Auth.auth().currentUser else {
-               print("Error: User is not authenticated.")
-               return
-           }
-
-           let groupsRef = Firestore.firestore().collection("groups")
-           groupData = [
-               "name": findCellWithTag(0)?.textField.text ?? "",
-                "description": findCellWithTag(3)?.textField.text ?? "",
-                "sort": findCellWithTag(4)?.textField.text ?? "",
-                "startTime": findCellWithTag(1)?.textField.text ?? "",
-                "endTime": findCellWithTag(2)?.textField.text ?? "",
-                "require": findCellWithTag(5)?.textField.text ?? "",
-               "numberOfPeople": Int(findCellWithTag(6)?.textField.text ?? "") ?? 1,
-                "owner": user.uid,
-                "isPublic": isGroupPublic,
-                "members": [user.uid],
-               "image": groupData["image"] ?? "",
-                "created": Date(),
-           ]
+        guard let user = Auth.auth().currentUser else {
+            print("Error: User is not authenticated.")
+            return
+        }
+        
+        let groupsRef = Firestore.firestore().collection("groups")
+        let userGroups = Firestore.firestore().collection("users").document(user.uid)
+        groupData = [
+            "name": findCellWithTag(0)?.textField.text ?? "",
+            "description": findCellWithTag(3)?.textField.text ?? "",
+            "sort": findCellWithTag(4)?.textField.text ?? "",
+            "startTime": findCellWithTag(1)?.textField.text ?? "",
+            "endTime": findCellWithTag(2)?.textField.text ?? "",
+            "require": findCellWithTag(5)?.textField.text ?? "",
+            "numberOfPeople": Int(findCellWithTag(6)?.textField.text ?? "") ?? 1,
+            "owner": user.uid,
+            "isPublic": isGroupPublic,
+            "members": [user.uid],
+            "image": groupData["image"] ?? "",
+            "created": Date(),
+        ]
         if !isGroupPublic {
             groupData["invitationCode"] = findCellWithTag(7)?.textField.text ?? ""
-              }
-
-           groupsRef.addDocument(data: groupData) { error in
-               if let error = error {
-                   print("Error creating group: \(error.localizedDescription)")
-               } else {
-                   print("Group created and saved to Firestore.")
-               }
-           }
+        }
+        var newGroupDocRef: DocumentReference?
+        newGroupDocRef = groupsRef.addDocument(data: groupData) { error in
+            if let error = error {
+                print("Error creating group: \(error.localizedDescription)")
+            } else {
+                let groupID = newGroupDocRef?.documentID
+                userGroups.updateData(["groups": FieldValue.arrayUnion([groupID])]) { error in
+                    if let error = error {
+                        print("Error updating user's groups: \(error.localizedDescription)")
+                    } else {
+                        print("User's groups updated in Firestore.")
+                    }
+                }
+                print("Group created and saved to Firestore.")
+            }
+        }
+        
         hud.textLabel.text = "Success"
         hud.indicatorView = JGProgressHUDSuccessIndicatorView()
         hud.show(in: view)

@@ -24,7 +24,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
     let refreshControl = UIRefreshControl()
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "My Supply"
+        navigationItem.title = "MY SUPPLY"
         navigationController?.navigationBar.tintColor = .black
         view.addSubview(tableView)
         tableView.delegate = self
