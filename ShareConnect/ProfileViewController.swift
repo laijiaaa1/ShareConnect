@@ -242,8 +242,10 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let db = Firestore.firestore()
         if group.owner == userId {
             db.collection("groups").document(group.documentId).delete()
+            db.collection("users").document(userId ?? "").updateData(["groups": FieldValue.arrayRemove([group.documentId])])
         } else {
             db.collection("groups").document(group.documentId).updateData(["member": FieldValue.arrayRemove([userId])])
+            db.collection("users").document(userId ?? "").updateData(["groups": FieldValue.arrayRemove([group.documentId])])
         }
     }
     func deleteCollectionFromDatabase(_ collection: Collection) {

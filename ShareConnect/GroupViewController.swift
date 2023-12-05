@@ -157,6 +157,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 Firestore.firestore().collection("users").document(self.currentUser ?? "").updateData(["groups": FieldValue.arrayUnion([group.documentId])])
                 cell.groupMemberNumberLabel.text = "Members: + \(group.members.count.description)"
             }
+            self.fetchGroupData(sort: self.sort ?? "")
         }
         if ((group.members.contains(currentUser ?? "")) == true){
             cell.groupButton.setTitle("Joined", for: .normal)
@@ -394,8 +395,9 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 groupButton.heightAnchor.constraint(equalToConstant: 40)
             ])
         }
-        @objc func addGroup(){
+        @objc func addGroup(_ sender: UIButton){
             addGroupHandler?()
+            sender.startAnimatingPressActions()
         }
         
         required init?(coder: NSCoder) {

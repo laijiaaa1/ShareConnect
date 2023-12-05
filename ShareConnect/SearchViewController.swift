@@ -567,7 +567,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
 class ClassCollectionViewCell: UICollectionViewCell {
     let buttonsStackView = UIStackView()
     let textLabel = UILabel()
-    let productClassification = ["Camping", "Tableware", "Activity", "Party", "Sports","Photography","Workshop", "Others"]
+    let productClassification = ["Camping", "Tableware", "Activity", "Party", "Sports", "Others"]
     let placeClassification = ["Meeting", "Workshop", "Sports", "Activity", "Photography", "Others"]
     var allRequests: [Product] = []
     var allSupplies: [Product] = []

@@ -27,7 +27,7 @@ extension SellerInfoViewController {
             commendName.textColor = .black
             commendName.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                commendName.topAnchor.constraint(equalTo: contentView.topAnchor),
+                commendName.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
                 commendName.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             ])
             contentView.addSubview(commendRating)
@@ -54,7 +54,8 @@ extension SellerInfoViewController {
             commendProduct.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 commendProduct.topAnchor.constraint(equalTo: commendRating.bottomAnchor, constant: 10),
-                commendProduct.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30)
+                commendProduct.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+                commendProduct.widthAnchor.constraint(equalToConstant: 150)
             ])
             contentView.addSubview(commendProductImage)
             commendProductImage.image = UIImage(systemName: "star.fill")

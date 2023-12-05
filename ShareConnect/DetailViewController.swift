@@ -240,11 +240,12 @@ class DetailViewController: UIViewController {
         view.addSubview(sellerButton)
         sellerButton.translatesAutoresizingMaskIntoConstraints = false
         sellerButton.backgroundColor = .black
+        sellerButton.setImage(UIImage(named: "icons8-user-48(@3×)"), for: .normal)
         sellerButton.layer.cornerRadius = 15
         sellerButton.layer.masksToBounds = true
         NSLayoutConstraint.activate([
             sellerButton.centerYAnchor.constraint(equalTo: addCartButton.centerYAnchor),
-            sellerButton.trailingAnchor.constraint(equalTo: addCartButton.leadingAnchor, constant: -20),
+            sellerButton.trailingAnchor.constraint(equalTo: addCartButton.leadingAnchor, constant: -25),
             sellerButton.widthAnchor.constraint(equalToConstant: 30),
             sellerButton.heightAnchor.constraint(equalToConstant: 30)
         ])
