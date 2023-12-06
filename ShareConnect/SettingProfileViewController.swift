@@ -40,7 +40,7 @@ class SettingProfileViewController: UIViewController {
             outImage.heightAnchor.constraint(equalToConstant: 40),
             outImage.bottomAnchor.constraint(equalTo: logoutButton.topAnchor, constant: -30),
             deleteAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            deleteAccountButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 50),
+            deleteAccountButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 50)
         ])
     }
     @objc func logoutButtonTapped() {
@@ -64,7 +64,6 @@ class SettingProfileViewController: UIViewController {
             let db = Firestore.firestore()
             let userCollection = db.collection("users")
             let userDocument = userCollection.document(currentUser.uid)
-            
             userDocument.delete { error in
                 if let error = error {
                     print("刪除用戶集合錯誤: \(error.localizedDescription)")
@@ -82,10 +81,8 @@ class SettingProfileViewController: UIViewController {
             }
         })
     }
-
     func navigateToLoginScreen() {
         let rootViewController = UIApplication.shared.windows.first!.rootViewController
-        
         if let tabBarController = rootViewController as? UITabBarController {
             if let selectedViewController = tabBarController.selectedViewController as? UINavigationController {
                 selectedViewController.popToRootViewController(animated: true)
@@ -94,7 +91,6 @@ class SettingProfileViewController: UIViewController {
             navigationController.popToRootViewController(animated: true)
         }
     }
-
     func showConfirmationAlert(title: String, message: String, confirmAction: @escaping () -> Void) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let confirmAction = UIAlertAction(title: "確定", style: .destructive) { _ in

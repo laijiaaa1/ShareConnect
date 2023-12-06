@@ -219,7 +219,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
         deleteAction.image = UIImage(systemName: "trash.fill")
-        
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         configuration.performsFirstActionWithFullSwipe = false
         return configuration
@@ -350,14 +349,14 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 requestButton.backgroundColor = .white
                 supplyButton.setTitleColor(.black, for: .normal)
                 supplyButton.backgroundColor = .white
-            }else if button == requestButton {
+            } else if button == requestButton {
                 groupButton.setTitleColor(.black, for: .normal)
                 groupButton.backgroundColor = .white
                 collectionButton.setTitleColor(.black, for: .normal)
                 collectionButton.backgroundColor = .white
                 supplyButton.setTitleColor(.black, for: .normal)
                 supplyButton.backgroundColor = .white
-            }else if button == supplyButton {
+            } else if button == supplyButton {
                 groupButton.setTitleColor(.black, for: .normal)
                 groupButton.backgroundColor = .white
                 collectionButton.setTitleColor(.black, for: .normal)
@@ -365,7 +364,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 requestButton.setTitleColor(.black, for: .normal)
                 requestButton.backgroundColor = .white
             }
-        }else if !button.isSelected{
+        } else if !button.isSelected {
             button.setTitleColor(.black, for: .normal)
             button.backgroundColor = .white
         }

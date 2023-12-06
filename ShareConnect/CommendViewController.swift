@@ -12,7 +12,7 @@ import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
 
-struct Commend{
+struct Commend {
     var comment: String
     var rating: Int
     var image: String
@@ -46,7 +46,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-    func setup(){
+    func setup() {
         let backView = UIView()
         view.addSubview(backView)
         backView.translatesAutoresizingMaskIntoConstraints = false
@@ -89,7 +89,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
             addImageButton.topAnchor.constraint(equalTo: commentTextView.bottomAnchor, constant: 20),
             addImageButton.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
             addImageButton.heightAnchor.constraint(equalToConstant: 50),
-            addImageButton.widthAnchor.constraint(equalToConstant: 50),
+            addImageButton.widthAnchor.constraint(equalToConstant: 50)
         ])
         imageView.contentMode = .scaleToFill
         imageView.layer.cornerRadius = 10
@@ -129,7 +129,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         submitButton.layer.borderWidth = 1
         submitButton.setTitleColor(.black, for: .normal)
     }
-    @objc func addImage(){
+    @objc func addImage() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         let alertController = UIAlertController(title: "Choose Image Source", message: nil, preferredStyle: .actionSheet)
@@ -150,24 +150,24 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         present(alertController, animated: true, completion: nil)
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let selectedImage = info[.originalImage] as? UIImage {
-                addImageButton.setBackgroundImage(selectedImage, for: .normal)
-            }
-            dismiss(animated: true, completion: nil)
+        if let selectedImage = info[.originalImage] as? UIImage {
+            addImageButton.setBackgroundImage(selectedImage, for: .normal)
         }
-
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            dismiss(animated: true, completion: nil)
-        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
     @objc func submitReview() {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             return
         }
-
+        
         let textComment = commentTextView.text
         let uploadedImage = imageView.image
         let starRating = starRatingView.rating
-
+        
         let reviewsCollection = Firestore.firestore().collection("reviews")
         let reviewID = reviewsCollection.document().documentID
         let imageStorageRef = Storage.storage().reference().child("review_images/\(reviewID).jpg")
@@ -189,9 +189,9 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
                         "rating": starRating,
                         "image": imageUrl,
                         "timestamp": Date(),
-                        "sellerID": self.sellerID,
+                        "sellerID": self.sellerID
                     ]
-
+                    
                     reviewsCollection.document(reviewID).setData(reviewData) { error in
                         if let error = error {
                             print("Error adding review: \(error.localizedDescription)")
@@ -209,9 +209,8 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
                 "comment": textComment ?? "",
                 "rating": starRating,
                 "timestamp": Date(),
-                "sellerID": sellerID,
+                "sellerID": sellerID
             ]
-
             reviewsCollection.document(reviewID).setData(reviewData) { error in
                 if let error = error {
                     print("Error adding review: \(error.localizedDescription)")
@@ -222,7 +221,6 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
             }
         }
     }
-
 }
 class StarRatingView: UIView {
     var rating: Int = 0 {

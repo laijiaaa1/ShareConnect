@@ -12,7 +12,6 @@ import FirebaseAuth
 import FirebaseStorage
 
 class ClassViewController: UIViewController {
-    
     let classProductButton = UIButton()
     let classPlaceButton = UIButton()
     var currentButtonType: ProductType = .request
@@ -28,16 +27,10 @@ class ClassViewController: UIViewController {
         navigationItem.title = "CLASS"
         navigationController?.navigationBar.isHidden = false
         view.backgroundColor = CustomColors.B1
-//        view.addSubview(alphaView)
         view.addSubview(classPlaceButton)
         view.addSubview(classProductButton)
-       
         view.addSubview(placeLabel)
         view.addSubview(productLabel)
-        
-        
-//        alphaView.backgroundColor = .black
-//        alphaView.alpha = 0.5
         placeLabel.frame.size = CGSize(width: 100, height: 50)
         productLabel.frame.size = CGSize(width: 100, height: 50)
         placeLabel.text = "PLACE"
@@ -66,10 +59,6 @@ class ClassViewController: UIViewController {
         classPlaceButton.layer.masksToBounds = true
         classProductButton.layer.masksToBounds = true
         NSLayoutConstraint.activate([
-//            alphaView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-//            alphaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            alphaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            alphaView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             classPlaceButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             classPlaceButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             classPlaceButton.widthAnchor.constraint(equalTo: view.widthAnchor),
@@ -77,7 +66,7 @@ class ClassViewController: UIViewController {
             classProductButton.topAnchor.constraint(equalTo: classPlaceButton.bottomAnchor, constant: 30),
             classProductButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -35),
             classProductButton.widthAnchor.constraint(equalTo: view.widthAnchor),
-            classProductButton.heightAnchor.constraint(equalToConstant: 300),
+            classProductButton.heightAnchor.constraint(equalToConstant: 300)
         ])
         placeLabel.translatesAutoresizingMaskIntoConstraints = false
         productLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -89,18 +78,15 @@ class ClassViewController: UIViewController {
             productLabel.topAnchor.constraint(equalTo: placeLabel.bottomAnchor),
             productLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             productLabel.widthAnchor.constraint(equalTo: view.widthAnchor),
-            productLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            productLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-       
     }
-    
     @objc func classPlaceButtonAction() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "SearchViewController") as! SearchViewController
         vc.usification = "place"
         navigationController?.pushViewController(vc, animated: true)
     }
-    
     @objc func classProductButtonAction() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "SearchViewController") as! SearchViewController

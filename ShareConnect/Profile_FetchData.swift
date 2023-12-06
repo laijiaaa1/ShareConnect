@@ -98,7 +98,6 @@ extension ProfileViewController {
         }
         let db = Firestore.firestore()
         let userCollectionReference = db.collection("collections").document(userId)
-        
         userCollectionReference.getDocument { (document, error) in
             if let error = error {
                 print("Error getting document: \(error.localizedDescription)")
@@ -129,7 +128,6 @@ extension ProfileViewController {
                 self.groups.removeAll()
                 for document in querySnapshot!.documents {
                     let data = document.data()
-                    
                     if let group = self.parseGroupData(data: data, documentId: document.documentID) {
                         self.groups.append(group)
                     }

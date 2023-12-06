@@ -14,9 +14,7 @@ class SearchResultsViewController: SearchViewController{
         super.viewDidLoad()
         title = "Search Results"
     }
-
     // MARK: - UICollectionViewDataSource
-
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedIndexPath = indexPath
         if collectionView == classCollectionView {
@@ -48,7 +46,7 @@ class SearchResultsViewController: SearchViewController{
         if collectionView == classCollectionView {
             return 1
         }
-        if collectionView == collectionView{
+        if collectionView == collectionView {
             if currentButtonType == .request {
                 return searchResults.count
             } else if currentButtonType == .supply {

@@ -19,10 +19,10 @@ class CartManager {
     }
     func convertCartToDictionary(_ cart: [Seller: [Product]]) -> [Seller: [[String: Any]]] {
         var cartDictionary: [Seller: [[String: Any]]] = [:]
-
+        
         for (seller, products) in cart {
             let productDictionaries = products.map { $0.toDictionary() }
-                   cartDictionary[seller] = productDictionaries
+            cartDictionary[seller] = productDictionaries
         }
         return cartDictionary
     }
@@ -49,7 +49,7 @@ extension Product {
     func toDictionary() -> [String: Any] {
         return [
             "productId": productId,
-            "name": name,
+            "name": name
         ]
     }
 }

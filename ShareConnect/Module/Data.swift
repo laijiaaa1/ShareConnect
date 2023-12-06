@@ -22,14 +22,12 @@ struct Product: Codable, Equatable {
     var seller: Seller
     var itemType: ProductType
     var isCollected: Bool = false
-    
     enum CodingKeys: String, CodingKey {
         case productId, name, price, startTime, imageString, description, sort, quantity, use, endTime, seller, itemType
     }
     static func == (lhs: Product, rhs: Product) -> Bool {
-           return lhs.productId == rhs.productId
-       }
-    
+        return lhs.productId == rhs.productId
+    }
     init(productId: String, name: String, price: String, startTime: String, imageString: String, description: String, sort: String, quantity: Int, use: String, endTime: String, seller: Seller, itemType: ProductType) {
         self.productId = productId
         self.name = name
@@ -44,7 +42,6 @@ struct Product: Codable, Equatable {
         self.seller = seller
         self.itemType = itemType
     }
-    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         productId = try container.decode(String.self, forKey: .productId)
@@ -60,7 +57,6 @@ struct Product: Codable, Equatable {
         seller = try container.decode(Seller.self, forKey: .seller)
         itemType = try container.decode(ProductType.self, forKey: .itemType)
     }
-    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(productId, forKey: .productId)
@@ -77,63 +73,27 @@ struct Product: Codable, Equatable {
         try container.encode(itemType, forKey: .itemType)
     }
 }
-
 struct Seller: Hashable, Codable {
     var sellerID: String
     var sellerName: String
-    
     enum CodingKeys: String, CodingKey {
         case sellerID, sellerName
     }
-    
     init(sellerID: String, sellerName: String) {
         self.sellerID = sellerID
         self.sellerName = sellerName
     }
-    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         sellerID = try container.decode(String.self, forKey: .sellerID)
         sellerName = try container.decode(String.self, forKey: .sellerName)
     }
-    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(sellerID, forKey: .sellerID)
         try container.encode(sellerName, forKey: .sellerName)
     }
 }
-
-//struct Product: Codable {
-//    var productId: String
-//    var name: String
-//    let price: String
-//    let startTime: String
-//    var imageString: String
-//    let description: String
-//    let sort: String
-//    var quantity: String
-//    let use: String
-//    let endTime: String
-//    let seller: Seller
-//    let itemType: ProductType
-//
-//    init(productId: String, name: String, price: String, startTime: String, imageString: String, description: String, sort: String, quantity: String, use: String, endTime: String, seller: Seller, itemType: ProductType) {
-//        self.productId = productId
-//        self.name = name
-//        self.price = price
-//        self.startTime = startTime
-//        self.imageString = imageString
-//        self.description = description
-//        self.sort = sort
-//        self.quantity = quantity
-//        self.use = use
-//        self.endTime = endTime
-//        self.seller = seller
-//        self.itemType = itemType
-//    }
-//}
-
 enum ProductType: String, Codable {
     case request
     case supply
@@ -148,25 +108,6 @@ extension ProductType {
         }
     }
 }
-
-//struct Seller: Hashable, Codable {
-//    var sellerID: String
-//    var sellerName: String
-//}
-//extension Seller {
-//    init?(data: [String: Any]) {
-//        guard
-//            let sellerID = data["sellerID"] as? String,
-//            let sellerName = data["sellerName"] as? String
-//        else {
-//            return nil
-//        }
-//
-//        self.sellerID = sellerID
-//        self.sellerName = sellerName
-//    }
-//}
-
 struct Request: Codable {
     let requestID: String
     let buyerID: String
@@ -178,7 +119,6 @@ struct Request: Codable {
 enum RequestStatus: String, Codable {
     case open
     case closed
-    
     init?(rawValue: String) {
         switch rawValue {
         case "open":
@@ -190,25 +130,19 @@ enum RequestStatus: String, Codable {
         }
     }
 }
-
-
-
 struct UserData: Codable, Hashable {
     var userID: String
     var username: String
 }
-
-struct Supply: Codable{
+struct Supply: Codable {
     let supplyID: String
     let sellerID: String
     let items: [Product]
     let status: SupplyStatus
 }
-
 enum SupplyStatus: String, Codable {
     case open
     case closed
-    
     init?(rawValue: String) {
         switch rawValue {
         case "open":
@@ -220,7 +154,6 @@ enum SupplyStatus: String, Codable {
         }
     }
 }
-
 struct ChatMessage {
     let text: String
     let isMe: Bool
@@ -240,8 +173,7 @@ struct User {
     let email: String
     let profileImageUrl: String
 }
-
-struct Collection{
+struct Collection {
     var name: String
     var imageString: String
     var productId: String
@@ -265,7 +197,6 @@ struct Reviews {
     let productID: String
     let rating: Int
     let timestamp: Date
-    
     init?(comment: String, userID: String, sellerID: String, image: String, productID: String, rating: Int, timestamp: Date) {
         self.comment = comment
         self.userID = userID
@@ -287,7 +218,6 @@ struct Reviews {
         else {
             return nil
         }
-        
         self.init(comment: comment,
                   userID: userID,
                   sellerID: sellerID,
@@ -305,7 +235,7 @@ struct Order {
     let createdAt: Date
     let cart: [[String: Any]]
     let isCompleted: Bool
-    
+
     init?(document: QueryDocumentSnapshot) {
         guard let data = document.data() as? [String: Any],
               let orderID = document.documentID as? String,
@@ -324,9 +254,9 @@ struct Order {
         self.createdAt = createdAtTimestamp.dateValue()
         self.cart = cart
         if let isCompleted = data["isCompleted"] as? Bool {
-                   self.isCompleted = isCompleted
-               } else {
-                   self.isCompleted = false
-               }
+            self.isCompleted = isCompleted
+        } else {
+            self.isCompleted = false
+        }
     }
 }

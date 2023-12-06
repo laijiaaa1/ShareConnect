@@ -32,13 +32,13 @@ class FirestoreService {
             "Price": price,
             "type": type,
             "timestamp": FieldValue.serverTimestamp(),
-            "productId": productId,
+            "productId": productId
         ]
         db.collection("users").document(uid).collection("browsingHistory").whereField("productId", isEqualTo: productId).getDocuments { (snapshot, error) in
             if let error = error {
                 print("Error adding document: \(error.localizedDescription)")
             }
-            for document in snapshot!.documents{
+            for document in snapshot!.documents {
                 self.db.collection("users").document(uid).collection("browsingHistory").document(document.documentID).delete{ error in
                     if let error = error {
                         print("Error delete document: \(error.localizedDescription)")

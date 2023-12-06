@@ -44,9 +44,7 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         return collectionView
     }()
     override func viewWillAppear(_ animated: Bool) {
-              
-                    fetchRequestsForUser(type: .request)
-                
+        fetchRequestsForUser(type: .request)
     }
     override func viewDidLoad() {
         view.backgroundColor = CustomColors.B1
@@ -71,12 +69,10 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     @objc func refresh() {
         let userID = Auth.auth().currentUser?.uid ?? ""
-       
-            if currentButtonType == .request {
-                fetchRequestsForUser(type: .request)
-            } else if currentButtonType == .supply {
-                fetchRequestsForUser(type: .supply)
-            
+        if currentButtonType == .request {
+            fetchRequestsForUser(type: .request)
+        } else if currentButtonType == .supply {
+            fetchRequestsForUser(type: .supply)
         }
         collectionView.reloadData()
     }
@@ -111,12 +107,11 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         if collectionView == classCollectionView {
             return 1
         }
-        if collectionView == collectionView{
-                if currentButtonType == .request {
-                    return allRequests.count
-                } else if currentButtonType == .supply {
-                    return allSupplies.count
-                
+        if collectionView == collectionView {
+            if currentButtonType == .request {
+                return allRequests.count
+            } else if currentButtonType == .supply {
+                return allSupplies.count
             }
         }
         return 0
@@ -131,21 +126,17 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         }
         if collectionView == collectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
-                if currentButtonType == .request {
-                    cell.product = allRequests[indexPath.item]
-                } else if currentButtonType == .supply {
-                    cell.product = allSupplies[indexPath.item]
-                
+            if currentButtonType == .request {
+                cell.product = allRequests[indexPath.item]
+            } else if currentButtonType == .supply {
+                cell.product = allSupplies[indexPath.item]
             }
-          
             return cell
         }
         return UICollectionViewCell()
     }
     func didSelectClassification(_ classification: String, forType type: ProductType) {
-      
-            fetchDataForSort(classification: classification, type: type)
-        
+        fetchDataForSort(classification: classification, type: type)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellWidth = collectionView.frame.width / 2
@@ -157,7 +148,7 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         lineView.center.x = button1.center.x
         button1.setTitleColor(.black, for: .normal)
         button2.setTitleColor(.lightGray, for: .normal)
-            fetchRequestsForUser(type: .request)
+        fetchRequestsForUser(type: .request)
         collectionView.reloadData()
     }
     @objc func button2Action() {
@@ -165,19 +156,15 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         lineView.center.x = button2.center.x
         button1.setTitleColor(.lightGray, for: .normal)
         button2.setTitleColor(.black, for: .normal)
-
-            fetchRequestsForUser(type: .supply)
-
+        
+        fetchRequestsForUser(type: .supply)
+        
         collectionView.reloadData()
     }
     func setupUI() {
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
-        //        stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        //        stackView.layer.borderWidth = 1
-        //        stackView.layer.cornerRadius = 10
-        //        stackView.layer.masksToBounds = true
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -187,11 +174,9 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         ])
         button1.setTitle("Request", for: .normal)
         button1.setTitleColor(.black, for: .normal)
-//        button1.layer.borderWidth = 1
         button1.addTarget(self, action: #selector(button1Action), for: .touchUpInside)
         button2.setTitle("Available", for: .normal)
         button2.setTitleColor(.black, for: .normal)
-//        button2.layer.borderWidth = 1
         button2.addTarget(self, action: #selector(button2Action), for: .touchUpInside)
         stackView.addArrangedSubview(button1)
         stackView.addArrangedSubview(button2)
@@ -205,7 +190,6 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
             lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2),
             lineView.heightAnchor.constraint(equalToConstant: 2)
         ])
-        //        classCollectionView.register(ClassCollectionViewCell.self, forCellWithReuseIdentifier: "classCell")
         classCollectionView.backgroundColor = CustomColors.B1
         classCollectionView.translatesAutoresizingMaskIntoConstraints = false
         classCollectionView.showsHorizontalScrollIndicator = false
@@ -232,59 +216,52 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         ])
         scrollView.contentSize = CGSize(width: view.frame.width, height: collectionView.frame.height)
     }
-        func fetchRequestsForUser(type: ProductType) {
-            guard let groupId = group?.documentId else {
-                print("Group ID is nil.")
-                return
-            }
-
-            let db = Firestore.firestore()
-            let productsCollection = db.collection("productsGroup").whereField("product.groupID", isEqualTo: groupId)
-
-            productsCollection.getDocuments { (querySnapshot, error) in
-                if let error = error {
-                    print("Error getting documents: \(error)")
-                } else {
-                    if self.currentButtonType == .request {
-                        self.allRequests.removeAll()
-                    } else if self.currentButtonType == .supply {
-                        self.allSupplies.removeAll()
-                    }
-
-                    for document in querySnapshot!.documents {
-                        let productData = document.data()
-
-                        if let productTypeRawValue = productData["type"] as? String,
-                           let productType = ProductType(rawValue: productTypeRawValue),
-                           let product = self.parseProductData(productData: productData) {
-                            
-                            if productType == type && product.itemType == type {
-                                print("Appending \(type): \(product)")
-                                if type == .request {
-                                    self.allRequests.append(product)
-                                } else if type == .supply {
-                                    self.allSupplies.append(product)
-                                }
-                            }
-                        } else {
-                            print("Error parsing product type")
-                        }
-                    }
-
-                    if type == .request {
-                        self.allRequests.sort(by: { $0.startTime < $1.startTime })
-                    } else if type == .supply {
-                        self.allSupplies.sort(by: { $0.startTime < $1.startTime })
-                    }
-
-                    print("All requests: \(self.allRequests)")
-                    print("All supplies: \(self.allSupplies)")
-
-                    self.collectionView.reloadData()
-                    self.collectionView.refreshControl?.endRefreshing()
+    func fetchRequestsForUser(type: ProductType) {
+        guard let groupId = group?.documentId else {
+            print("Group ID is nil.")
+            return
+        }
+        let db = Firestore.firestore()
+        let productsCollection = db.collection("productsGroup").whereField("product.groupID", isEqualTo: groupId)
+        productsCollection.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                if self.currentButtonType == .request {
+                    self.allRequests.removeAll()
+                } else if self.currentButtonType == .supply {
+                    self.allSupplies.removeAll()
                 }
+                for document in querySnapshot!.documents {
+                    let productData = document.data()
+                    if let productTypeRawValue = productData["type"] as? String,
+                       let productType = ProductType(rawValue: productTypeRawValue),
+                       let product = self.parseProductData(productData: productData) {
+                        if productType == type && product.itemType == type {
+                            print("Appending \(type): \(product)")
+                            if type == .request {
+                                self.allRequests.append(product)
+                            } else if type == .supply {
+                                self.allSupplies.append(product)
+                            }
+                        }
+                    } else {
+                        print("Error parsing product type")
+                    }
+                }
+                if type == .request {
+                    self.allRequests.sort(by: { $0.startTime < $1.startTime })
+                } else if type == .supply {
+                    self.allSupplies.sort(by: { $0.startTime < $1.startTime })
+                }
+                print("All requests: \(self.allRequests)")
+                print("All supplies: \(self.allSupplies)")
+                
+                self.collectionView.reloadData()
+                self.collectionView.refreshControl?.endRefreshing()
             }
         }
+    }
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
               let productId = product["productId"] as? String,
@@ -373,7 +350,6 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         }
     }
 }
-
 //class SearchCollectionViewCell: UICollectionViewCell {
 //    let underView = UIView()
 //    let imageView = UIImageView()

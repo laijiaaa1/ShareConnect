@@ -27,14 +27,12 @@ struct Group {
     var image: String
     var invitationCode: String?
     var created: Date
-    
     mutating func addMember(userId: String) {
-           if !members.contains(userId) {
-               members.append(userId)
-           }
-       }
+        if !members.contains(userId) {
+            members.append(userId)
+        }
+    }
 }
-
 extension Group {
     init?(data: [String: Any], documentId: String) {
         guard
@@ -90,7 +88,6 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         view.backgroundColor = CustomColors.B1
-      
         if sort == "product" {
             fetchGroupData(sort: "product")
         } else if sort == "place" {
@@ -129,12 +126,11 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         ])
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-       
     }
-    @objc func dismissKeyboard(){
+    @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-    @objc func searchTextFieldDidChange(){
+    @objc func searchTextFieldDidChange() {
         searchGroupsByName(searchString: searchTextField.text ?? "", completion: { (groups) in
             self.groups = groups
             self.tableView.reloadData()
@@ -151,7 +147,6 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.groupMemberNumberLabel.text = "Members: + \(group.members.count.description)"
         cell.groupImage.kf.setImage(with: URL(string: group.image))
         cell.addGroupHandler = {
-            //add memeber
             if !group.members.contains(self.currentUser ?? "") {
                 Firestore.firestore().collection("groups").document(group.documentId).updateData(["members": FieldValue.arrayUnion([self.currentUser ?? ""])])
                 Firestore.firestore().collection("users").document(self.currentUser ?? "").updateData(["groups": FieldValue.arrayUnion([group.documentId])])
@@ -159,7 +154,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
             self.fetchGroupData(sort: self.sort ?? "")
         }
-        if ((group.members.contains(currentUser ?? "")) == true){
+        if ((group.members.contains(currentUser ?? "")) == true) {
             cell.groupButton.setTitle("Joined", for: .normal)
             cell.groupButton.backgroundColor = .lightGray
             cell.groupButton.layer.borderWidth = 0
@@ -170,7 +165,6 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
         return cell
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 250
     }
@@ -192,12 +186,10 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
     }
-
     func fetchGroupData(sort: String) {
         let sort = sort
         let groupsRef = Firestore.firestore().collection("groups")
         let query = groupsRef.whereField("isPublic", isEqualTo: true).whereField("sort", isEqualTo: sort)
-        
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error fetching public groups: \(error.localizedDescription)")
@@ -215,11 +207,9 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     private func updateGroupInFirestore(groupId: String, updatedGroup: Group) {
         let groupsRef = Firestore.firestore().collection("groups")
-        
         let updatedData: [String: Any] = [
             "members": updatedGroup.members
         ]
-        
         groupsRef.document(groupId).updateData(updatedData) { error in
             if let error = error {
                 print("Error updating group in Firestore: \(error.localizedDescription)")
@@ -249,7 +239,6 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 "groupInvitationCode": updatedGroup.invitationCode ?? ""
             ]
         ]
-        
         userRef.updateData(["groups": userGroupsData], completion: { error in
             if let error = error {
                 print("Error updating user in Firestore: \(error.localizedDescription)")
@@ -264,27 +253,27 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let query = groupsCollection
             .whereField("name", isGreaterThanOrEqualTo: searchString)
             .whereField("name", isLessThan: searchString + "\u{f8ff}")
-
+        
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error searching groups: \(error.localizedDescription)")
                 completion([])
             } else {
                 var searchResults: [Group] = []
-
+                
                 for document in querySnapshot!.documents {
                     let data = document.data()
-
+                    
                     if let group = self.parseGroupData(data: data, documentId: document.documentID) {
                         searchResults.append(group)
                     }
                 }
-
+                
                 completion(searchResults)
             }
         }
     }
-
+    
     func parseGroupData(data: [String: Any], documentId: String) -> Group? {
         guard
             let name = data["name"] as? String,
@@ -302,7 +291,6 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         else {
             return nil
         }
-
         var group = Group(
             documentId: documentId,
             name: name,
@@ -319,104 +307,100 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
             created: createdTimestamp.dateValue()
         )
         group.invitationCode = data["invitationCode"] as? String
-
         return group
     }
-
-
 }
-    class GroupTableViewCell: UITableViewCell{
-        var addGroupHandler: (() -> Void)?
-        var group: Group?
-        var showInvitationCodeAlert: ((Group, @escaping (Bool) -> Void) -> Void)?
-        let groupImage = UIImageView()
-        let groupButton = UIButton()
-        let groupNameLabel = UILabel()
-        let groupMemberNumberLabel = UILabel()
-        let groupMemberNumberImage = UIImageView()
-        let backView = UIView()
-        let currrentUser = Auth.auth().currentUser?.uid
-        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            super.init(style: style, reuseIdentifier: reuseIdentifier)
-            groupImage.layer.cornerRadius = 10
-            groupImage.layer.masksToBounds = true
-            groupImage.layer.borderWidth = 1
-            groupNameLabel.text = "Camping Group"
-            groupMemberNumberLabel.text = "member：1"
-            groupMemberNumberImage.backgroundColor = .yellow
-            groupMemberNumberImage.layer.cornerRadius = 10
-            groupMemberNumberImage.layer.borderWidth = 1
-            groupMemberNumberImage.layer.masksToBounds = true
-            groupButton.setTitle("        +", for: .normal)
-            groupButton.contentHorizontalAlignment = .center
-            groupButton.addTarget(self, action: #selector(addGroup), for: .touchUpInside)
-            groupButton.setTitleColor(.black, for: .normal)
-            groupButton.backgroundColor = .white
-            groupButton.layer.cornerRadius = 20
-            groupButton.layer.borderWidth = 1
-            groupButton.layer.masksToBounds = true
-            backView.backgroundColor = .white
-            backView.layer.cornerRadius = 10
-            backView.layer.masksToBounds = true
-            backView.layer.borderWidth = 1
-            contentView.addSubview(backView)
-            backView.addSubview(groupImage)
-            backView.addSubview(groupNameLabel)
-            backView.addSubview(groupMemberNumberLabel)
-            backView.addSubview(groupButton)
-            backView.addSubview(groupMemberNumberImage)
-            backView.translatesAutoresizingMaskIntoConstraints = false
-            groupImage.translatesAutoresizingMaskIntoConstraints = false
-            groupNameLabel.translatesAutoresizingMaskIntoConstraints = false
-            groupMemberNumberLabel.translatesAutoresizingMaskIntoConstraints = false
-            groupButton.translatesAutoresizingMaskIntoConstraints = false
-            groupMemberNumberImage.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                backView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-                backView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-                backView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-                backView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-                groupImage.topAnchor.constraint(equalTo: backView.topAnchor),
-                groupImage.leadingAnchor.constraint(equalTo: backView.leadingAnchor),
-                groupImage.trailingAnchor.constraint(equalTo: backView.trailingAnchor),
-                groupImage.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -80),
-                groupNameLabel.topAnchor.constraint(equalTo: groupImage.bottomAnchor, constant: 15),
-                groupNameLabel.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
-                groupMemberNumberImage.topAnchor.constraint(equalTo: groupNameLabel.bottomAnchor, constant: 15),
-                groupMemberNumberImage.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
-                groupMemberNumberImage.widthAnchor.constraint(equalToConstant: 20),
-                groupMemberNumberImage.heightAnchor.constraint(equalToConstant: 20),
-                groupMemberNumberLabel.topAnchor.constraint(equalTo: groupNameLabel.bottomAnchor, constant: 15),
-                groupMemberNumberLabel.leadingAnchor.constraint(equalTo: groupMemberNumberImage.trailingAnchor, constant: 20),
-                groupButton.topAnchor.constraint(equalTo: groupImage.bottomAnchor, constant: 15),
-                groupButton.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20),
-                groupButton.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -20),
-                groupButton.widthAnchor.constraint(equalToConstant: 80),
-                groupButton.heightAnchor.constraint(equalToConstant: 40)
-            ])
-        }
-        @objc func addGroup(_ sender: UIButton){
-            addGroupHandler?()
-            sender.startAnimatingPressActions()
-        }
-        
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+class GroupTableViewCell: UITableViewCell {
+    var addGroupHandler: (() -> Void)?
+    var group: Group?
+    var showInvitationCodeAlert: ((Group, @escaping (Bool) -> Void) -> Void)?
+    let groupImage = UIImageView()
+    let groupButton = UIButton()
+    let groupNameLabel = UILabel()
+    let groupMemberNumberLabel = UILabel()
+    let groupMemberNumberImage = UIImageView()
+    let backView = UIView()
+    let currrentUser = Auth.auth().currentUser?.uid
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        groupImage.layer.cornerRadius = 10
+        groupImage.layer.masksToBounds = true
+        groupImage.layer.borderWidth = 1
+        groupNameLabel.text = "Camping Group"
+        groupMemberNumberLabel.text = "member：1"
+        groupMemberNumberImage.backgroundColor = .yellow
+        groupMemberNumberImage.layer.cornerRadius = 10
+        groupMemberNumberImage.layer.borderWidth = 1
+        groupMemberNumberImage.layer.masksToBounds = true
+        groupButton.setTitle("        +", for: .normal)
+        groupButton.contentHorizontalAlignment = .center
+        groupButton.addTarget(self, action: #selector(addGroup), for: .touchUpInside)
+        groupButton.setTitleColor(.black, for: .normal)
+        groupButton.backgroundColor = .white
+        groupButton.layer.cornerRadius = 20
+        groupButton.layer.borderWidth = 1
+        groupButton.layer.masksToBounds = true
+        backView.backgroundColor = .white
+        backView.layer.cornerRadius = 10
+        backView.layer.masksToBounds = true
+        backView.layer.borderWidth = 1
+        contentView.addSubview(backView)
+        backView.addSubview(groupImage)
+        backView.addSubview(groupNameLabel)
+        backView.addSubview(groupMemberNumberLabel)
+        backView.addSubview(groupButton)
+        backView.addSubview(groupMemberNumberImage)
+        backView.translatesAutoresizingMaskIntoConstraints = false
+        groupImage.translatesAutoresizingMaskIntoConstraints = false
+        groupNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        groupMemberNumberLabel.translatesAutoresizingMaskIntoConstraints = false
+        groupButton.translatesAutoresizingMaskIntoConstraints = false
+        groupMemberNumberImage.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            backView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            backView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            backView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            groupImage.topAnchor.constraint(equalTo: backView.topAnchor),
+            groupImage.leadingAnchor.constraint(equalTo: backView.leadingAnchor),
+            groupImage.trailingAnchor.constraint(equalTo: backView.trailingAnchor),
+            groupImage.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -80),
+            groupNameLabel.topAnchor.constraint(equalTo: groupImage.bottomAnchor, constant: 15),
+            groupNameLabel.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
+            groupMemberNumberImage.topAnchor.constraint(equalTo: groupNameLabel.bottomAnchor, constant: 15),
+            groupMemberNumberImage.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
+            groupMemberNumberImage.widthAnchor.constraint(equalToConstant: 20),
+            groupMemberNumberImage.heightAnchor.constraint(equalToConstant: 20),
+            groupMemberNumberLabel.topAnchor.constraint(equalTo: groupNameLabel.bottomAnchor, constant: 15),
+            groupMemberNumberLabel.leadingAnchor.constraint(equalTo: groupMemberNumberImage.trailingAnchor, constant: 20),
+            groupButton.topAnchor.constraint(equalTo: groupImage.bottomAnchor, constant: 15),
+            groupButton.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20),
+            groupButton.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -20),
+            groupButton.widthAnchor.constraint(equalToConstant: 80),
+            groupButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
     }
+    @objc func addGroup(_ sender: UIButton) {
+        addGroupHandler?()
+        sender.startAnimatingPressActions()
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 extension GroupViewController {
     func showInvitationCodeAlert(group: Group, completion: @escaping (Bool) -> Void) {
         var mutableGroup = group
         let alertController = UIAlertController(title: "Enter Invitation Code", message: nil, preferredStyle: .alert)
-
+        
         alertController.addTextField { textField in
             textField.placeholder = "Invitation Code"
         }
-
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
             completion(false)
         }
-
+        
         let joinAction = UIAlertAction(title: "Join", style: .default) { _ in
             if let invitationCode = alertController.textFields?.first?.text {
                 if invitationCode == mutableGroup.invitationCode {
@@ -433,10 +417,10 @@ extension GroupViewController {
                 completion(false)
             }
         }
-
+        
         alertController.addAction(cancelAction)
         alertController.addAction(joinAction)
-
+        
         present(alertController, animated: true, completion: nil)
     }
 }

@@ -221,7 +221,6 @@ class SelectedViewController: UIViewController {
         ])
         trolleyButton.setTitle("Add to trolley", for: .normal)
         trolleyButton.setTitleColor(.white, for: .normal)
-//        trolleyButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         trolleyButton.backgroundColor = .black
         trolleyButton.layer.cornerRadius = 10
         trolleyButton.layer.masksToBounds = true
@@ -250,10 +249,10 @@ class SelectedViewController: UIViewController {
         ])
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
-    @objc func add(){
+    @objc func add() {
         selectedQuantity += 1
     }
-    @objc func minus(){
+    @objc func minus() {
         selectedQuantity = max(1, selectedQuantity - 1)
     }
 }

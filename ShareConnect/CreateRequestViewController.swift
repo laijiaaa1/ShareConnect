@@ -193,7 +193,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.navigationController?.popViewController(animated: true)
         }
-        
     }
     @objc func uploadButtonTapped() {
         let imagePickerController = UIImagePickerController()
@@ -295,7 +294,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     func updateSelectedGroupUI(groupId: String, groupName: String) {
         selectedGroupID = groupId
         selectedGroup = groupName
-
         if let selectedGroupID = selectedGroupID, let selectedGroup = selectedGroup {
             groupHeaderLabel.text = "Selected Group: \(selectedGroup)"
             if requestTableView.tableHeaderView == nil {
@@ -317,7 +315,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             requestTableView.tableHeaderView = nil
         }
     }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return selectedGroupID != nil ? 9 : 8
     }
@@ -355,7 +352,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 50
     }
-    
     @objc func timePickerChanged(sender: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
@@ -368,7 +364,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             endCell.textField.text = timeString
         }
     }
-
     func findCellWithTag(_ tag: Int) -> RequestCell? {
         for i in 0..<requestTableView.numberOfSections {
             for j in 0..<requestTableView.numberOfRows(inSection: i) {

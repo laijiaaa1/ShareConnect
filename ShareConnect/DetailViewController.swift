@@ -133,7 +133,6 @@ class DetailViewController: UIViewController {
             shareButton.widthAnchor.constraint(equalToConstant: 30)
         ])
         shareButton.addTarget(self, action: #selector(share), for: .touchUpInside)
-        
         view.addSubview(availabilityView)
         availabilityView.backgroundColor = .white
         availabilityView.layer.cornerRadius = 10
@@ -251,23 +250,21 @@ class DetailViewController: UIViewController {
         ])
         sellerButton.addTarget(self, action: #selector(sellerInfoShow), for: .touchUpInside)
     }
-    @objc func sellerInfoShow(){
-       
+    @objc func sellerInfoShow() {
         let sellerInfo = SellerInfoViewController()
         sellerInfo.sellerID = product?.seller.sellerID
         navigationController?.pushViewController(sellerInfo, animated: true)
-        
     }
     @objc func back() {
         navigationController?.popViewController(animated: true)
     }
-    @objc func share(){
+    @objc func share() {
         guard let product = product else { return }
         let productDetail = "Product Name: \(product.name)\nPrice: \(product.price)\nDescription: \(product.description)"
         let activityVC = UIActivityViewController(activityItems: [productDetail], applicationActivities: nil)
         present(activityVC, animated: true, completion: nil)
     }
-    @objc func goChatPage(){
+    @objc func goChatPage() {
         let chatVC = ChatViewController()
         chatVC.sellerID = product?.seller.sellerID
         chatVC.buyerID = Auth.auth().currentUser?.uid
@@ -275,7 +272,6 @@ class DetailViewController: UIViewController {
     }
     @objc func addCollection() {
         isCollected.toggle()
-        
         guard let currentUserID = Auth.auth().currentUser?.uid,
               let productID = product?.productId,
               let productName = product?.name,
@@ -307,7 +303,6 @@ class DetailViewController: UIViewController {
             let removedProductData: [String: Any] = [
                 "productId": productID
             ]
-            
             userCollectionReference.updateData([
                 "collectedProducts": FieldValue.arrayRemove([removedProductData])
             ]) { error in
@@ -320,15 +315,12 @@ class DetailViewController: UIViewController {
             collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
             removeFromLocalStorage(productID: productID)
         }
-        
     }
     func addToLocalStorage(productData: [String: Any]) {
         var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
         savedCollections.append(productData)
         UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
     }
-
-    // Update local storage when removing from collection
     func removeFromLocalStorage(productID: String) {
         var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
         savedCollections.removeAll { $0["productId"] as? String == productID }
@@ -386,7 +378,6 @@ class DetailViewController: UIViewController {
                 self.contentDescriptionView.layer.cornerRadius = 10
                 self.contentDescriptionView.translatesAutoresizingMaskIntoConstraints = false
                 self.contentDescriptionView.transform = CGAffineTransform(translationX: 30, y: 560)
-                
                 NSLayoutConstraint.activate([
                     self.contentDescriptionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 600),
                     self.contentDescriptionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
@@ -407,16 +398,13 @@ class DetailViewController: UIViewController {
             }
         }
     }
-
     func addDescriptionLabel() {
         if descriptionLabel2.superview == nil {
             contentDescriptionView.addSubview(descriptionLabel2)
             contentDescriptionView.isScrollEnabled = true
-            
             descriptionLabel2.numberOfLines = 0
             contentDescriptionView.showsVerticalScrollIndicator = true
             contentDescriptionView.showsHorizontalScrollIndicator = true
-            
             descriptionLabel2.text = "\(product?.description ?? "")\n \(product?.sort ?? "")\n \(product?.use ?? "")\n \(product?.endTime ?? "")"
             descriptionLabel2.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
@@ -451,7 +439,6 @@ class DetailViewController: UIViewController {
                 use.trailingAnchor.constraint(equalTo: contentDescriptionView.trailingAnchor, constant: -30),
                 use.heightAnchor.constraint(equalToConstant: 20)
             ])
-//            self.view.layoutIfNeeded()
         } else {
             removeDescriptionLabel()
         }
@@ -462,6 +449,5 @@ class DetailViewController: UIViewController {
         quantity.removeFromSuperview()
         use.removeFromSuperview()
         contentDescriptionView.removeFromSuperview()
-//        self.view.layoutIfNeeded()
     }
 }

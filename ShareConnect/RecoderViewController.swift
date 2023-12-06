@@ -75,7 +75,6 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         fetchOrdersFromFirestore(isRenter: false)
     }
     func fetchOrdersFromFirestore(isRenter: Bool) {
-        
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             return
         }
@@ -96,7 +95,6 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return orderID.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! RecoderTableViewCell
         cell.order = orderID[indexPath.row]
@@ -105,33 +103,28 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.returnButton.setTitle("Return", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)
             cell.returnButton.isEnabled = !orderID[indexPath.row].isCompleted
-           
         } else if loanButton.isSelected{
             cell.returnButton.setTitle("Remind", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(remindButtonTapped), for: .touchUpInside)
         }
-           return cell
+        return cell
     }
     @objc func remindButtonTapped() {
         if let orderID = order?.orderID {
             scheduleLocalNotification(for: orderID)
         }
     }
-
-    // Schedule a local notification for a specific orderID
     func scheduleLocalNotification(for orderID: String) {
         let content = UNMutableNotificationContent()
         content.title = "Reminder"
         content.body = "Don't forget to return the item for order \(orderID)!"
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)  // Trigger in 5 seconds
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
         let request = UNNotificationRequest(identifier: "reminder_\(orderID)", content: content, trigger: trigger)
-
         UNUserNotificationCenter.current().add(request, withCompletionHandler: { error in
             if let error = error {
             }
         }
-    )}
+        )}
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
@@ -139,19 +132,13 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         guard let selectedIndexPath = tableView.indexPathForSelectedRow else {
             return
         }
-
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "CommendViewController") as! CommendViewController
-
         let selectedOrder = orderID[selectedIndexPath.row]
-
         vc.productName = selectedOrder.orderID
         vc.productImage = selectedOrder.image
         vc.productID = selectedOrder.orderID
         vc.sellerID = selectedOrder.sellerID
-
         navigationController?.pushViewController(vc, animated: true)
     }
-
 }
-

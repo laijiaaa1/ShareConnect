@@ -97,7 +97,6 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
             registerButton.heightAnchor.constraint(equalToConstant: 40),
         ])
     }
-    
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -134,7 +133,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
                     self.db.collection("users").document(uid).setData([
                         "email": email,
                         "name": name,
-                        "profileImageUrl": imageUrl,
+                        "profileImageUrl": imageUrl
                     ]) { error in
                         if let error = error {
                             print("Error adding user to Firestore: \(error.localizedDescription)")

@@ -118,7 +118,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                 deVC.product = cell.product
                 if currentButtonType == .request {
                     self.navigationController?.pushViewController(vc, animated: true)
-                } else if currentButtonType == .supply{
+                } else if currentButtonType == .supply {
                     self.navigationController?.pushViewController(deVC, animated: true)
                 }
             }
@@ -128,7 +128,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         if collectionView == classCollectionView {
             return 1
         }
-        if collectionView == collectionView{
+        if collectionView == collectionView {
             if usification == "product" {
                 if currentButtonType == .request {
                     return allRequests.count
@@ -176,9 +176,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         return UICollectionViewCell()
     }
     func didSelectClassification(_ classification: String, forType type: ProductType) {
-        if usification == "product"{
+        if usification == "product" {
         fetchDataForSort(classification: classification, type: type, usification: "product")
-    }else if usification == "place"{
+    } else if usification == "place" {
             fetchDataForSort(classification: classification, type: type, usification: "place")
         }
     }
@@ -537,20 +537,6 @@ class SearchCollectionViewCell: UICollectionViewCell {
             }
         }
     }
-
-//
-//    func addToLocalStorage(productData: [String: Any]) {
-//        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
-//        savedCollections.append(productData)
-//        UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
-//    }
-//
-//    // Update local storage when removing from collection
-//    func removeFromLocalStorage(productID: String) {
-//        var savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
-//        savedCollections.removeAll { $0["productId"] as? String == productID }
-//        UserDefaults.standard.set(savedCollections, forKey: "SavedCollections")
-//    }
     func updateUI() {
         if let product = product {
             nameLabel.text = product.name
@@ -594,7 +580,7 @@ class ClassCollectionViewCell: UICollectionViewCell {
             buttonsStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
             buttonsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             buttonsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            buttonsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+            buttonsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
         ])
     }
     func updateUI() {

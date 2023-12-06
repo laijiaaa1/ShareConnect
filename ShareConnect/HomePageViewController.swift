@@ -37,7 +37,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     var browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     let db = Firestore.firestore()
     var searchTimer: Timer?
-    
     override func viewWillAppear(_ animated: Bool) {
         browsingHistoryCollection.reloadData()
         navigationController?.navigationBar.isHidden = false
@@ -123,9 +122,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         let historyScrollView = UIScrollView(frame: CGRect(x: 30, y: 600, width: view.frame.width - 60, height: 150))
         view.addSubview(historyScrollView)
         self.browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: browsingHistoryItems.count * 320, height: Int(historyScrollView.frame.height)), collectionViewLayout: layout2)
-        
         historyScrollView.addSubview(browsingHistoryCollection)
-        //        browsingHistoryCollection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         browsingHistoryCollection.backgroundColor = .clear
         browsingHistoryCollection.delegate = self
         browsingHistoryCollection.dataSource = self
@@ -146,7 +143,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-    @objc func chatListButtonClick(){
+    @objc func chatListButtonClick() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "ChatListViewController") as? ChatListViewController ?? ChatListViewController()
         navigationController?.pushViewController(vc, animated: true)
@@ -157,7 +154,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             self?.browsingHistoryCollection.reloadData()
         }
     }
-    
     @objc func buttonClick(sender: UIButton) {
         let groupViewController = GroupViewController()
         switch sender.tag {
@@ -196,11 +192,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 imageView.contentMode = .scaleToFill
                 imageView.kf.setImage(with: URL(string: groups[indexPath.row].image))
                 cell.addSubview(imageView)
-//                let backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
-//                backgroundView.backgroundColor = .white
-//                backgroundView.alpha = 0.3
-//                cell.addSubview(backgroundView)
-                
                 let label = UILabel(frame: CGRect(x: 0, y: 100, width: 150, height: 30))
                 label.text = groups[indexPath.row].name
                 label.font = UIFont(name: "GeezaPro-Bold", size: 15)
@@ -333,7 +324,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         )
         return newProduct
     }
-    
     func fetchGroupData() {
         let groupsRef = Firestore.firestore().collection("groups").getDocuments { (querySnapshot, error) in
             if let error = error {

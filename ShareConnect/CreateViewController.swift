@@ -51,7 +51,6 @@ class CreateViewController: UIViewController {
         myRequestButton.layer.shadowOffset = CGSize(width: 0, height: 2)
         myRequestButton.layer.shadowRadius = 4
         myRequestButton.layer.shadowOpacity = 0.5
-        
         myRequestButton.translatesAutoresizingMaskIntoConstraints = false
         mySupplyButton.setTitle("My supply", for: .normal)
         mySupplyButton.backgroundColor = .black
@@ -107,7 +106,7 @@ class CreateViewController: UIViewController {
             createGroupButton.centerXAnchor.constraint(equalTo: createGroupView.centerXAnchor),
             createGroupButton.topAnchor.constraint(equalTo: createGroupView.bottomAnchor, constant: -40),
             createGroupButton.widthAnchor.constraint(equalTo: createGroupView.widthAnchor, multiplier: 0.8),
-            createGroupButton.heightAnchor.constraint(equalToConstant: 50),
+            createGroupButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     @objc func myRequestButtonTapped() {

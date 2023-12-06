@@ -179,7 +179,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             return nil
         }
         let sellerData = product["seller"] as? [String: Any]
-        //        let itemTypeRawValue = product["type"] as? String
         guard let sellerID = sellerData?["sellerID"] as? String,
               let sellerName = sellerData?["sellerName"] as? String,
               let itemType = productData["type"] as? String

@@ -44,7 +44,6 @@ class ChatManager {
             }
         }
     }
-    
     func startListeningForChatMessages(chatRoomDocument: DocumentReference, completion: @escaping ([ChatMessage], Error?) -> Void) -> ListenerRegistration {
         let messagesCollection = chatRoomDocument.collection("messages")
         return messagesCollection.addSnapshotListener { (querySnapshot, error) in
@@ -67,7 +66,7 @@ class ChatManager {
                    let buyerID = data["buyer"] as? String,
                    let sellerID = data["seller"] as? String,
                 let chatRoomID = data["chatRoomID"] as? String,
-                let imageURL = data["imageURL"] as? String{
+                let imageURL = data["imageURL"] as? String {
                     let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL)
                     chatMessages.append(chatMessage)
                 }
@@ -81,7 +80,7 @@ class ChatManager {
             "text": message,
             "isMe": isMe,
             "timestamp": FieldValue.serverTimestamp(),
-            "name": isMe ? "Buyer" : seller?.sellerName ?? "",
+            "name": isMe ? "Buyer" : seller?.sellerName ?? ""
         ]) { error in
             completion(error)
         }
@@ -89,7 +88,6 @@ class ChatManager {
     func convertCartToString(_ cart: [Seller: [Product]]) -> String {
         for (seller, products) in cart {
             cartString.append("Seller: \(seller.sellerName)\n")
-            
             for product in products {
                 cartString.append(" - Product: \(product.name)\n")
                 cartString.append("   Quantity: \(product.quantity ?? 1)\n")

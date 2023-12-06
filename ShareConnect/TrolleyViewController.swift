@@ -16,7 +16,7 @@ protocol TrolleyCellDelegate: AnyObject {
     func didSelectSeller(sellerID: String)
     func quantityChanged(forProduct product: Product, newQuantity: Int)
 }
-class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TrolleyCellDelegate{
+class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TrolleyCellDelegate {
     func didSelectSeller(sellerID: String) {
         print("Selected seller: \(sellerID)")
     }
@@ -55,7 +55,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         ])
         let checkoutButton = UIButton(type: .system)
         checkoutButton.setTitle("CONFIRM ORDER", for: .normal)
-//        checkoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        //        checkoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         checkoutButton.setTitleColor(.white, for: .normal)
         checkoutButton.backgroundColor = .black
         checkoutButton.layer.cornerRadius = 10
@@ -88,10 +88,8 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         } else {
             cart[seller] = [product]
         }
-
         saveCartToFirestore(cart)
     }
-
     func saveCartToFirestore(_ cart: [Seller: [Product]]) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             return
@@ -104,15 +102,12 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         userCartDocument.setData(["buyerID": currentUserID, "cart": cartData])
     }
-    
     func loadCartFromFirestore() {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             return
         }
-        
         let cartCollection = Firestore.firestore().collection("carts")
         let userCartDocument = cartCollection.document(currentUserID)
-        
         userCartDocument.getDocument { [weak self] (document, error) in
             guard let self = self, let document = document, document.exists,
                   let buyerID = document.data()?["buyerID"] as? String,
@@ -125,23 +120,20 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
                       let products = try? JSONDecoder().decode([Product].self, from: encodedProducts) else {
                     return
                 }
-                
                 let seller = Seller(sellerID: sellerID, sellerName: "Seller:\(sellerID)")
                 result[seller] = products
             }
-            
             self.cart = cart
-            
             self.tableView.reloadData()
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-           let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
-           let seller = Array(cart.keys)[indexPath.section]
-           let cartItems = cart[seller] ?? []
-           cell.setupUI(seller: seller, cartItems: cartItems, delegate: self)
-           return cell
-       }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
+        let seller = Array(cart.keys)[indexPath.section]
+        let cartItems = cart[seller] ?? []
+        cell.setupUI(seller: seller, cartItems: cartItems, delegate: self)
+        return cell
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let seller = Array(cart.keys)[section]
         return cart[seller]?.count ?? 0
@@ -149,7 +141,6 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     func numberOfSections(in tableView: UITableView) -> Int {
         return cart.keys.count
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
@@ -207,19 +198,19 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             print("Seller ID is nil.")
             return
         }
-//        self.createChatRoom(with: sellerID) { [weak self] chatRoomID in
-//            guard let self = self else { return }
-          let chatList = ChatListViewController()
+        //        self.createChatRoom(with: sellerID) { [weak self] chatRoomID in
+        //            guard let self = self else { return }
+        let chatList = ChatListViewController()
         chatList.sellerID = sellerID
-//        chatList.sellerName = "seller"
-            let checkoutVC = ChatViewController()
-//            checkoutVC.fetchUserData()
-            checkoutVC.cart = self.cart
-            checkoutVC.sellerID = sellerID
-            checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
-            checkoutVC.chatRoomID = chatRoomID
-            self.navigationController?.pushViewController(checkoutVC, animated: true)
-//        }
+        //        chatList.sellerName = "seller"
+        let checkoutVC = ChatViewController()
+        //            checkoutVC.fetchUserData()
+        checkoutVC.cart = self.cart
+        checkoutVC.sellerID = sellerID
+        checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
+        checkoutVC.chatRoomID = chatRoomID
+        self.navigationController?.pushViewController(checkoutVC, animated: true)
+        //        }
         createOrderRecord { [weak self] orderID in
             guard let self = self else { return }
             let orderConfirmationVC = RecoderViewController()
@@ -239,7 +230,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             "sellerID": sellerID,
             "image": cart.first.map { $0.value.first?.imageString },
             "createdAt": FieldValue.serverTimestamp(),
-            "cart": encodeCart(),
+            "cart": encodeCart()
         ]) { error in
             if let error = error {
                 print("Error creating order record: \(error.localizedDescription)")
@@ -262,39 +253,38 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         cart = [:]
         tableView.reloadData()
     }
-    
-//    func createChatRoom(with sellerID: String?, completion: @escaping (String) -> Void) {
-//        let chatRoomCollection = Firestore.firestore().collection("chatRooms")
-//        let newChatRoomRef = chatRoomCollection.addDocument(data: [
-//            "buyerID": Auth.auth().currentUser?.uid ?? "",
-//            "sellerID": sellerID ?? "",
-//            "createdAt": FieldValue.serverTimestamp(),
-//            "cart": encodeCart(),
-//        ])
-//        chatRoomID = newChatRoomRef.documentID
-//        let messagesCollection = newChatRoomRef.collection("messages")
-//        
-//        let initialMessage = "Hello!"
-//        messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
-//        
-//        completion(chatRoomID)
-//    }
+    //    func createChatRoom(with sellerID: String?, completion: @escaping (String) -> Void) {
+    //        let chatRoomCollection = Firestore.firestore().collection("chatRooms")
+    //        let newChatRoomRef = chatRoomCollection.addDocument(data: [
+    //            "buyerID": Auth.auth().currentUser?.uid ?? "",
+    //            "sellerID": sellerID ?? "",
+    //            "createdAt": FieldValue.serverTimestamp(),
+    //            "cart": encodeCart(),
+    //        ])
+    //        chatRoomID = newChatRoomRef.documentID
+    //        let messagesCollection = newChatRoomRef.collection("messages")
+    //
+    //        let initialMessage = "Hello!"
+    //        messagesCollection.addDocument(data: ["text": initialMessage, "isMe": false, "timestamp": FieldValue.serverTimestamp()])
+    //
+    //        completion(chatRoomID)
+    //    }
     func encodeCart() -> [[String: Any]] {
         var encodedCart: [[String: Any]] = []
         for (seller, products) in cart {
             let encodedProducts = products.map { product in
                 [
                     "Name": product.name,
-                    "Price": product.price,
+                    "Price": product.price
                 ]
             }
             let encodedSeller: [String: Any] = [
                 "sellerID": seller.sellerID,
-                "sellerName": seller.sellerName,
+                "sellerName": seller.sellerName
             ]
             encodedCart.append([
                 "seller": encodedSeller,
-                "products": encodedProducts,
+                "products": encodedProducts
             ])
         }
         return encodedCart
@@ -304,21 +294,20 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         return sellerID
     }
     func quantityChanged(forProduct product: Product, newQuantity: Int) {
-           // Find the seller and product in the cart and update the quantity
-           if let seller = cart.keys.first(where: { $0.sellerID == product.seller.sellerID }),
-              var sellerProducts = cart[seller],
-              let productIndex = sellerProducts.firstIndex(where: { $0.productId == product.productId }) {
-               sellerProducts[productIndex].quantity = newQuantity
-               cart[seller] = sellerProducts
-               saveCartToFirestore(cart)
-           }
-       }
+        if let seller = cart.keys.first(where: { $0.sellerID == product.seller.sellerID }),
+           var sellerProducts = cart[seller],
+           let productIndex = sellerProducts.firstIndex(where: { $0.productId == product.productId }) {
+            sellerProducts[productIndex].quantity = newQuantity
+            cart[seller] = sellerProducts
+            saveCartToFirestore(cart)
+        }
+    }
 }
 class TrolleyCell: UITableViewCell {
     var sellerID: String?
     weak var delegate: TrolleyCellDelegate?
-      var seller: Seller?
-      var products: [Product] = []
+    var seller: Seller?
+    var products: [Product] = []
     var number: Int = 1 {
         didSet {
             numberLabel.text = "\(number)"
@@ -332,27 +321,20 @@ class TrolleyCell: UITableViewCell {
     let quantityLabel = UILabel()
     let minusButton = UIButton()
     let plusButton = UIButton()
-//    let selectSellerButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.addTarget(self, action: #selector(selectSellerButtonTapped), for: .touchUpInside)
-//        return button
-//    }()
     @objc func selectSellerButtonTapped() {
         guard let sellerID = sellerID else { return }
         delegate?.didSelectSeller(sellerID: sellerID)
     }
     func setupUI(seller: Seller, cartItems: [Product], delegate: TrolleyCellDelegate) {
         self.seller = seller
-               self.delegate = delegate
-               self.products = cartItems
+        self.delegate = delegate
+        self.products = cartItems
         if let product = cartItems.first {
-                   nameLabel.text = product.name
-                   priceLabel.text = "NT$ \(product.price)"
-                   imageViewUP.kf.setImage(with: URL(string: product.imageString))
-                   quantityLabel.text = "\(product.quantity)"
-               }
-//        selectSellerButton.addTarget(self, action: #selector(selectSellerButtonTapped), for: .touchUpInside)
-           
+            nameLabel.text = product.name
+            priceLabel.text = "NT$ \(product.price)"
+            imageViewUP.kf.setImage(with: URL(string: product.imageString))
+            quantityLabel.text = "\(product.quantity)"
+        }
         backView.backgroundColor = .white
         contentView.addSubview(backView)
         backView.translatesAutoresizingMaskIntoConstraints = false
@@ -431,32 +413,19 @@ class TrolleyCell: UITableViewCell {
             plusButton.heightAnchor.constraint(equalToConstant: 30)
         ])
         plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
-//        contentView.addSubview(selectSellerButton)
-//        selectSellerButton.layer.cornerRadius = 10
-//        selectSellerButton.layer.masksToBounds = true
-//        selectSellerButton.layer.borderWidth = 1
-//        selectSellerButton.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            selectSellerButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-//            selectSellerButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-//            selectSellerButton.widthAnchor.constraint(equalToConstant: 30),
-//            selectSellerButton.heightAnchor.constraint(equalToConstant: 30)
-//        ])
     }
     @objc func minusButtonTapped() {
-           number = max(1, number - 1)
-           updateQuantity()
-       }
-
-       @objc func plusButtonTapped() {
-           number += 1
-           updateQuantity()
-       }
-
-       func updateQuantity() {
-           guard let product = products.first else {
-               return
-           }
-           delegate?.quantityChanged(forProduct: product, newQuantity: number)
-       }
+        number = max(1, number - 1)
+        updateQuantity()
+    }
+    @objc func plusButtonTapped() {
+        number += 1
+        updateQuantity()
+    }
+    func updateQuantity() {
+        guard let product = products.first else {
+            return
+        }
+        delegate?.quantityChanged(forProduct: product, newQuantity: number)
+    }
 }

@@ -78,10 +78,10 @@ class CreateGroupViewController: CreateRequestViewController {
             cell.textField.keyboardType = .default
         }
         if !isGroupPublic && indexPath.row == 7 {
-                   cell.textField.placeholder = "Enter Invitation Code"
-                   cell.textField.tag = 7
-               }
-        cell.addBtn.tag = indexPath.row 
+            cell.textField.placeholder = "Enter Invitation Code"
+            cell.textField.tag = 7
+        }
+        cell.addBtn.tag = indexPath.row
         return cell
     }
     @objc func stepperValueChanged(sender: UIStepper) {
@@ -92,51 +92,50 @@ class CreateGroupViewController: CreateRequestViewController {
     @objc override func doneButtonTapped() {
         if isGroupPublic || (!isGroupPublic && isValidInvitationCode()) {
             uploadGroupImageAndSaveToFirebase()
-                } else {
-                    print("Error: Invitation code is required for private groups.")
-                }
+        } else {
+            print("Error: Invitation code is required for private groups.")
+        }
     }
     func isValidInvitationCode() -> Bool {
-           let code = findCellWithTag(7)?.textField.text ?? ""
-           let minLength = 6
+        let code = findCellWithTag(7)?.textField.text ?? ""
+        let minLength = 6
         if !code.isEmpty && code.count >= minLength{
             return true
         }
-            return false
-       }
+        return false
+    }
     func uploadGroupImageAndSaveToFirebase() {
-           guard let user = Auth.auth().currentUser else {
-               print("Error: User is not authenticated.")
-               return
-           }
-           guard let groupImage = uploadButton.backgroundImage(for: .normal),
-                 let imageData = groupImage.jpegData(compressionQuality: 0.1) else {
-               print("Error: Unable to get group image data.")
-               return
-           }
-           let imageName = UUID().uuidString
-           let imageRef = Storage.storage().reference().child("group_images/\(imageName).jpg")
-           imageRef.putData(imageData, metadata: nil) { (metadata, error) in
-               if let error = error {
-                   print("Error uploading image: \(error)")
-               } else {
-                   imageRef.downloadURL { (url, error) in
-                       if let error = error {
-                           print("Error getting download URL: \(error)")
-                       } else if let downloadURL = url {
-                            self.groupData["image"] = downloadURL.absoluteString
-                            self.saveGroupToFirebase()
-                       }
-                   }
-               }
-           }
-       }
+        guard let user = Auth.auth().currentUser else {
+            print("Error: User is not authenticated.")
+            return
+        }
+        guard let groupImage = uploadButton.backgroundImage(for: .normal),
+              let imageData = groupImage.jpegData(compressionQuality: 0.1) else {
+            print("Error: Unable to get group image data.")
+            return
+        }
+        let imageName = UUID().uuidString
+        let imageRef = Storage.storage().reference().child("group_images/\(imageName).jpg")
+        imageRef.putData(imageData, metadata: nil) { (metadata, error) in
+            if let error = error {
+                print("Error uploading image: \(error)")
+            } else {
+                imageRef.downloadURL { (url, error) in
+                    if let error = error {
+                        print("Error getting download URL: \(error)")
+                    } else if let downloadURL = url {
+                        self.groupData["image"] = downloadURL.absoluteString
+                        self.saveGroupToFirebase()
+                    }
+                }
+            }
+        }
+    }
     func saveGroupToFirebase() {
         guard let user = Auth.auth().currentUser else {
             print("Error: User is not authenticated.")
             return
         }
-        
         let groupsRef = Firestore.firestore().collection("groups")
         let userGroups = Firestore.firestore().collection("users").document(user.uid)
         groupData = [
@@ -151,7 +150,7 @@ class CreateGroupViewController: CreateRequestViewController {
             "isPublic": isGroupPublic,
             "members": [user.uid],
             "image": groupData["image"] ?? "",
-            "created": Date(),
+            "created": Date()
         ]
         if !isGroupPublic {
             groupData["invitationCode"] = findCellWithTag(7)?.textField.text ?? ""
@@ -172,7 +171,6 @@ class CreateGroupViewController: CreateRequestViewController {
                 print("Group created and saved to Firestore.")
             }
         }
-        
         hud.textLabel.text = "Success"
         hud.indicatorView = JGProgressHUDSuccessIndicatorView()
         hud.show(in: view)
@@ -180,5 +178,5 @@ class CreateGroupViewController: CreateRequestViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.navigationController?.popViewController(animated: true)
         }
-       }
+    }
 }

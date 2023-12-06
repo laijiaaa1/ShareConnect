@@ -9,34 +9,33 @@ import UIKit
 import CoreLocation
 import MapKit
 
-
 class MapSelectionViewController: UIViewController, MKMapViewDelegate {
-
+    
     weak var delegate: MapSelectionDelegate?
     var mapView: MKMapView!
     var locationManager: CLLocationManager!
     var searchController: UISearchController!
     var confirmButton: UIButton!
     var selectedCoordinate: CLLocationCoordinate2D? {
-           didSet {
-               if let coordinate = selectedCoordinate {
-                   let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
-                   mapView.setRegion(region, animated: true)
-               }
-           }
-       }
+        didSet {
+            if let coordinate = selectedCoordinate {
+                let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+                mapView.setRegion(region, animated: true)
+            }
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         mapView = MKMapView(frame: view.bounds)
         mapView.delegate = self
         view.addSubview(mapView)
-
+        
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-
+        
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -44,14 +43,14 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         definesPresentationContext = true
         view.addSubview(searchController.searchBar)
         view.bringSubviewToFront(searchController.searchBar)
-
+        
         searchController.searchBar.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             searchController.searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchController.searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             searchController.searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-
+        
         confirmButton = UIButton(type: .system)
         confirmButton.setTitle("Confirm Location", for: .normal)
         confirmButton.titleLabel?.font = .systemFont(ofSize: 16)
@@ -61,7 +60,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         view.addSubview(confirmButton)
-
+        
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             confirmButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
@@ -69,7 +68,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             confirmButton.widthAnchor.constraint(equalToConstant: 180),
             confirmButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-
+        
         let initialLocation = CLLocationCoordinate2D(latitude: 25.0422, longitude: 121.5354)
         let regionRadius: CLLocationDistance = 1000
         let coordinateRegion = MKCoordinateRegion(
@@ -94,7 +93,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         confirmButton.frame.origin.y = view.frame.height - confirmButton.frame.height - 20
         searchController.searchBar.frame.origin.y = view.safeAreaInsets.top
     }
-
+    
     @objc func confirmButtonTapped() {
         if let selectedCoordinate = selectedCoordinate {
             delegate?.didSelectLocation(selectedCoordinate)
@@ -104,28 +103,22 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         }
     }
     @objc func handleLongPress(sender: UILongPressGestureRecognizer) {
-            if sender.state == .began {
-                let locationInView = sender.location(in: mapView)
-                let tappedCoordinate = mapView.convert(locationInView, toCoordinateFrom: mapView)
-                
-                // Add a custom annotation with coordinates
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = tappedCoordinate
-                mapView.addAnnotation(annotation)
-                
-                // Save the selected coordinates
-                selectedCoordinate = tappedCoordinate
-                
-                // Display information about the tapped location
-                let alertController = UIAlertController(
-                    title: "Location Tapped",
-                    message: "Coordinates: \(tappedCoordinate.latitude), \(tappedCoordinate.longitude)",
-                    preferredStyle: .alert
-                )
-                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                present(alertController, animated: true, completion: nil)
-            }
+        if sender.state == .began {
+            let locationInView = sender.location(in: mapView)
+            let tappedCoordinate = mapView.convert(locationInView, toCoordinateFrom: mapView)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = tappedCoordinate
+            mapView.addAnnotation(annotation)
+            selectedCoordinate = tappedCoordinate
+            let alertController = UIAlertController(
+                title: "Location Tapped",
+                message: "Coordinates: \(tappedCoordinate.latitude), \(tappedCoordinate.longitude)",
+                preferredStyle: .alert
+            )
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alertController, animated: true, completion: nil)
         }
+    }
 }
 protocol MapSelectionDelegate: AnyObject {
     func didSelectLocation(_ coordinate: CLLocationCoordinate2D)
@@ -138,7 +131,6 @@ extension MapSelectionViewController: CLLocationManagerDelegate {
         let region = MKCoordinateRegion(center: location, latitudinalMeters: 1000, longitudinalMeters: 1000)
         mapView.setRegion(region, animated: true)
     }
-    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location error: \(error.localizedDescription)")
     }
@@ -156,7 +148,6 @@ extension MapSelectionViewController: UISearchResultsUpdating {
         let localSearch = MKLocalSearch(request: request)
         localSearch.start { [weak self] (response, error) in
             guard let self = self else { return }
-            
             if let error = error {
                 print("Local search error: \(error.localizedDescription)")
                 return
@@ -171,28 +162,24 @@ extension MapSelectionViewController: UISearchResultsUpdating {
         }
     }
 }
-
 extension MapSelectionViewController {
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let annotation = view.annotation else {
             return
         }
-        
-        // Display information about the tapped location
         let alertController = UIAlertController(title: "Location Tapped", message: annotation.title ?? "Unknown", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-          let identifier = "CustomAnnotation"
-          var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-          if annotationView == nil {
-              annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-              annotationView?.canShowCallout = true
-          } else {
-              annotationView?.annotation = annotation
-          }
-          return annotationView
-      }
+        let identifier = "CustomAnnotation"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+        } else {
+            annotationView?.annotation = annotation
+        }
+        return annotationView
+    }
 }
-
