@@ -121,77 +121,84 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         let imageName = UUID().uuidString
         let productId = UUID().uuidString
         let storageRef = storage.reference().child("images/\(imageName).jpg")
-        if let imageURL = uploadButton.backgroundImage(for: .normal), let imageData = imageURL.jpegData(compressionQuality: 0.1) {
-            storageRef.putData(imageData, metadata: nil) { (metadata, error) in
-                if let error = error {
-                    print("Error uploading image: \(error)")
-                } else {
-                    storageRef.downloadURL { [self] (url, error) in
+        DispatchQueue.global().async {
+            DispatchQueue.main.async {
+                if let imageURL = self.uploadButton.backgroundImage(for: .normal), let imageData = imageURL.jpegData(compressionQuality: 0.1) {
+                    storageRef.putData(imageData, metadata: nil) { (metadata, error) in
                         if let error = error {
-                            print("Error getting download URL: \(error)")
-                        } else if let downloadURL = url {
-                            var productData: [String: Any] = [:]
-                            productData["productId"] = productId
-                            productData["image"] = downloadURL.absoluteString
-                            productData["seller"] = [
-                                "sellerID": user?.uid ?? "",
-                                "sellerName": user?.email ?? ""
-                            ]
-                            for i in 0..<self.requestTableView.numberOfSections {
-                                   for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
-                                       let indexPath = IndexPath(row: j, section: i)
-                                       if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
-                                           let key = cell.requestLabel.text ?? ""
-                                           let value = cell.textField.text ?? ""
-                                           productData[key] = value
-                                       }
-                                   }
-                               }
-                            if let selectedGroupID = self.selectedGroupID,
-                                   let selectedGroupName = self.selectedGroup {
-                                    productData["groupID"] = selectedGroupID
-                                    productData["groupName"] = selectedGroupName
-                                }
-                            let demandProduct = Product(
-                                productId: productData["productId"] as? String ?? "",
-                                name: productData["Name"] as? String ?? "",
-                                price: productData["Price"] as? String ?? "",
-                                startTime: productData["End Time"] as? String ?? "",
-                                imageString: productData["image"] as? String ?? "",
-                                description: productData["Description"] as? String ?? "",
-                                sort: productData["Sort"] as? String ?? "",
-                                quantity: productData["Quantity"] as? Int ?? 1,
-                                use: productData["Use"] as? String ?? "",
-                                endTime: productData["End Time"] as? String ?? "",
-                                seller: Seller(
-                                    sellerID: user?.uid ?? "",
-                                    sellerName: user?.email ?? ""
-                                ),
-                                itemType: .request
-                            )
-                            let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
-
-                            db.collection(collectionName).addDocument(data: [
-                                "type": ProductType.request.rawValue,
-                                "product": productData
-                            ]) { error in
+                            print("Error uploading image: \(error)")
+                        } else {
+                            storageRef.downloadURL { [self] (url, error) in
                                 if let error = error {
-                                    print("Error writing document: \(error)")
-                                } else {
-                                    print("Document successfully written!")
+                                    print("Error getting download URL: \(error)")
+                                } else if let downloadURL = url {
+                                    var productData: [String: Any] = [:]
+                                    productData["productId"] = productId
+                                    productData["image"] = downloadURL.absoluteString
+                                    productData["seller"] = [
+                                        "sellerID": user?.uid ?? "",
+                                        "sellerName": user?.email ?? ""
+                                    ]
+                                    for i in 0..<self.requestTableView.numberOfSections {
+                                        for j in 0..<self.requestTableView.numberOfRows(inSection: i) {
+                                            let indexPath = IndexPath(row: j, section: i)
+                                            if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
+                                                let key = cell.requestLabel.text ?? ""
+                                                let value = cell.textField.text ?? ""
+                                                productData[key] = value
+                                            }
+                                        }
+                                    }
+                                    if let selectedGroupID = self.selectedGroupID,
+                                       let selectedGroupName = self.selectedGroup {
+                                        productData["groupID"] = selectedGroupID
+                                        productData["groupName"] = selectedGroupName
+                                    }
+                                    let demandProduct = Product(
+                                        productId: productData["productId"] as? String ?? "",
+                                        name: productData["Name"] as? String ?? "",
+                                        price: productData["Price"] as? String ?? "",
+                                        startTime: productData["End Time"] as? String ?? "",
+                                        imageString: productData["image"] as? String ?? "",
+                                        description: productData["Description"] as? String ?? "",
+                                        sort: productData["Sort"] as? String ?? "",
+                                        quantity: productData["Quantity"] as? Int ?? 1,
+                                        use: productData["Use"] as? String ?? "",
+                                        endTime: productData["End Time"] as? String ?? "",
+                                        seller: Seller(
+                                            sellerID: user?.uid ?? "",
+                                            sellerName: user?.email ?? ""
+                                        ),
+                                        itemType: .request
+                                    )
+                                    let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
+                                    
+                                    db.collection(collectionName).addDocument(data: [
+                                        "type": ProductType.request.rawValue,
+                                        "product": productData
+                                    ]) { error in
+                                        if let error = error {
+                                            print("Error writing document: \(error)")
+                                        } else {
+                                            print("Document successfully written!")
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-        hud.textLabel.text = "Success"
-        hud.indicatorView = JGProgressHUDSuccessIndicatorView()
-        hud.show(in: view)
-        hud.dismiss(afterDelay: 1.0)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.navigationController?.popViewController(animated: true)
+            DispatchQueue.main.async {
+                self.hud.textLabel.text = "Success"
+                self.hud.indicatorView = JGProgressHUDSuccessIndicatorView()
+                self.hud.show(in: self.view)
+                self.hud.dismiss(afterDelay: 1.0)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.navigationController?.popViewController(animated: true)
+                }
+                
+            }
         }
     }
     @objc func uploadButtonTapped() {
@@ -244,16 +251,13 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 let data = document.data()
                 if let groupIDs = data?["groups"] as? [String] {
                     var groupOptions: [(String, String)] = []
-
                     let dispatchGroup = DispatchGroup()
-
                     for groupID in groupIDs {
                         dispatchGroup.enter()
                         db.collection("groups").document(groupID).getDocument { (groupDocument, groupError) in
                             defer {
                                 dispatchGroup.leave()
                             }
-
                             if let groupDocument = groupDocument, groupDocument.exists {
                                 let groupData = groupDocument.data()
                                 if let groupName = groupData?["name"] as? String {
@@ -339,7 +343,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             cell.textField.tag = indexPath.row
             cell.textField.inputView = timePicker
         }
-
         if indexPath.row == 8 && selectedGroupID != nil {
             cell.requestLabel.text = "Group"
             cell.textField.text = selectedGroupName
@@ -374,56 +377,5 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             }
         }
         return nil
-    }
-}
-class RequestCell: UITableViewCell {
-    let requestLabel = UILabel()
-    let addBtn = UIButton()
-    let textField = UITextField()
-    var isExpanded: Bool = false {
-        didSet {
-            updateCellHeight()
-        }
-    }
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        requestLabel.translatesAutoresizingMaskIntoConstraints = false
-        addBtn.translatesAutoresizingMaskIntoConstraints = false
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.isHidden = true
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.lightGray.cgColor
-        textField.layer.cornerRadius = 10
-        textField.minimumFontSize = 10
-        textField.adjustsFontSizeToFitWidth = true
-        contentView.addSubview(addBtn)
-        contentView.addSubview(requestLabel)
-        contentView.addSubview(textField)
-        NSLayoutConstraint.activate([
-            requestLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            requestLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            requestLabel.widthAnchor.constraint(equalToConstant: 100),
-            requestLabel.heightAnchor.constraint(equalToConstant: 20),
-            addBtn.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            addBtn.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            addBtn.widthAnchor.constraint(equalToConstant: 20),
-            addBtn.heightAnchor.constraint(equalToConstant: 20),
-            textField.topAnchor.constraint(equalTo: requestLabel.bottomAnchor, constant: 10),
-            textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            textField.heightAnchor.constraint(equalToConstant: 40)
-        ])
-        addBtn.addTarget(self, action: #selector(addBtnTapped), for: .touchUpInside)
-    }
-    @objc func addBtnTapped() {
-        isExpanded = !isExpanded
-    }
-    private func updateCellHeight() {
-        let newHeight: CGFloat = isExpanded ? 100 : 50
-        frame.size.height = newHeight
-        textField.isHidden = !isExpanded
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

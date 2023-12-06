@@ -54,6 +54,7 @@
 		34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */; };
 		34D67F002B20A72000DE879B /* ChatListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFF2B20A72000DE879B /* ChatListCell.swift */; };
 		34D67F022B20A99D00DE879B /* TrolleyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F012B20A99D00DE879B /* TrolleyCell.swift */; };
+		34D67F052B20AC3C00DE879B /* CreateRequest_RequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F042B20AC3C00DE879B /* CreateRequest_RequestCell.swift */; };
 		CC99D844D6CD00D0115262BD /* Pods_ShareConnect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19192464EEB9831E46A38D35 /* Pods_ShareConnect.framework */; };
 /* End PBXBuildFile section */
 
@@ -109,6 +110,7 @@
 		34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPage_GroupTableViewCell.swift; sourceTree = "<group>"; };
 		34D67EFF2B20A72000DE879B /* ChatListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCell.swift; sourceTree = "<group>"; };
 		34D67F012B20A99D00DE879B /* TrolleyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrolleyCell.swift; sourceTree = "<group>"; };
+		34D67F042B20AC3C00DE879B /* CreateRequest_RequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRequest_RequestCell.swift; sourceTree = "<group>"; };
 		D7AAC5A05BCEF95BCA4A2B9B /* Pods-ShareConnect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareConnect.release.xcconfig"; path = "Target Support Files/Pods-ShareConnect/Pods-ShareConnect.release.xcconfig"; sourceTree = "<group>"; };
 		E0D3BC877A1806FFBEA6A27A /* Pods-ShareConnect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareConnect.debug.xcconfig"; path = "Target Support Files/Pods-ShareConnect/Pods-ShareConnect.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -192,6 +194,7 @@
 		34B530F42B20A42C00A4C222 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				34D67F042B20AC3C00DE879B /* CreateRequest_RequestCell.swift */,
 				34D67F012B20A99D00DE879B /* TrolleyCell.swift */,
 				34D67EFF2B20A72000DE879B /* ChatListCell.swift */,
 				34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */,
@@ -414,6 +417,7 @@
 				34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */,
 				3401F6902B11BE1B0092E564 /* SellerInfoViewController.swift in Sources */,
 				3410D97D2B09BA0400D32744 /* ChatViewController.swift in Sources */,
+				34D67F052B20AC3C00DE879B /* CreateRequest_RequestCell.swift in Sources */,
 				341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */,
 				346687B42B1C6CB100723302 /* Profile_MyRequestCell.swift in Sources */,
 				3401F6932B13627A0092E564 /* SubGroupViewController.swift in Sources */,
