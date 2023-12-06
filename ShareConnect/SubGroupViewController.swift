@@ -97,7 +97,7 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
                 deVC.product = cell.product
                 if currentButtonType == .request {
                     self.navigationController?.pushViewController(vc, animated: true)
-                } else if currentButtonType == .supply{
+                } else if currentButtonType == .supply {
                     self.navigationController?.pushViewController(deVC, animated: true)
                 }
             }
@@ -156,9 +156,7 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         lineView.center.x = button2.center.x
         button1.setTitleColor(.lightGray, for: .normal)
         button2.setTitleColor(.black, for: .normal)
-        
         fetchRequestsForUser(type: .supply)
-        
         collectionView.reloadData()
     }
     func setupUI() {
@@ -256,7 +254,6 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
                 }
                 print("All requests: \(self.allRequests)")
                 print("All supplies: \(self.allSupplies)")
-                
                 self.collectionView.reloadData()
                 self.collectionView.refreshControl?.endRefreshing()
             }

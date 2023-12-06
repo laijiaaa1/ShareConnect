@@ -103,7 +103,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.returnButton.setTitle("Return", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)
             cell.returnButton.isEnabled = !orderID[indexPath.row].isCompleted
-        } else if loanButton.isSelected{
+        } else if loanButton.isSelected {
             cell.returnButton.setTitle("Remind", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(remindButtonTapped), for: .touchUpInside)
         }

@@ -10,9 +10,6 @@ import FirebaseAuth
 import FirebaseFirestore
 import Kingfisher
 
-struct CustomColors {
-    static let B1 = UIColor(red: 246/255, green: 246/255, blue: 244/255, alpha: 1)
-}
 class HomePageViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     let chatListButton = UIButton()
     let searchTextField = UITextField()
@@ -213,7 +210,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 let browsingRecord = browsingHistoryItems[indexPath.row]
                 let xpoint = CGFloat(indexPath.item) * 320
                 cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
-                var view = UIView()
+                let view = UIView()
                 let viewPoint = CGFloat(indexPath.item) * 320
                 view.frame = CGRect(x: 20+viewPoint, y: 28, width: 100, height: 100)
                 view.layer.cornerRadius = 10

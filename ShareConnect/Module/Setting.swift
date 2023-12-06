@@ -34,3 +34,70 @@ extension UIImage {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
 }
+struct CustomColors {
+    static let B1 = UIColor(red: 246/255, green: 246/255, blue: 244/255, alpha: 1)
+}
+class StarRatingView: UIView {
+    var rating: Int = 0 {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    var ratingButtons = [UIButton]()
+    var spacing = 5
+    var stars = 5
+    override var intrinsicContentSize: CGSize {
+        let buttonSize = Int(frame.size.height)
+        let width = (buttonSize + spacing) * stars
+        return CGSize(width: width, height: buttonSize)
+    }
+    override func layoutSubviews() {
+        var buttonFrame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        for (index, button) in ratingButtons.enumerated() {
+            buttonFrame.origin.x = CGFloat(index * (50 + spacing))
+            button.frame = buttonFrame
+        }
+        updateButtonSelectionStates()
+    }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        spacing = 5
+        stars = 5
+        setupButtons()
+    }
+    required init(coder: NSCoder) {
+        super.init(coder: coder)!
+        spacing = 5
+        stars = 5
+        setupButtons()
+    }
+    private func setupButtons() {
+        for _ in 0..<stars {
+            let button = UIButton()
+            button.backgroundColor = .white
+            button.tintColor = .black
+            button.setImage(UIImage(systemName: "star"), for: .normal)
+            button.setImage(UIImage(systemName: "star.fill"), for: .selected)
+            button.adjustsImageWhenHighlighted = false
+            button.addTarget(self, action: #selector(ratingButtonTapped(button:)), for: .touchUpInside)
+            ratingButtons.append(button)
+            addSubview(button)
+        }
+    }
+    @objc func ratingButtonTapped(button: UIButton) {
+        guard let index = ratingButtons.firstIndex(of: button) else {
+            fatalError("The button, \(button), is not in the ratingButtons array: \(ratingButtons)")
+        }
+        let selectedRating = index + 1
+        if selectedRating == rating {
+            rating = 0
+        } else {
+            rating = selectedRating
+        }
+    }
+    private func updateButtonSelectionStates() {
+        for (index, button) in ratingButtons.enumerated() {
+            button.isSelected = index < rating
+        }
+    }
+}

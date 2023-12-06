@@ -139,11 +139,9 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         } else {
             self.checkIfChatRoomExistsInUser(usersCollection, userID: buyerID, chatRoomID: chatRoomID) { [weak self] exists in
                 guard let self = self else { return }
-                
                 if exists {
                     chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
                         guard let self = self else { return }
-                        
                         if let error = error {
                             print("Error getting chat room document: \(error.localizedDescription)")
                             return
@@ -270,7 +268,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
                    let buyerID = data["buyer"] as? String,
                    let sellerID = data["seller"] as? String,
                    let chatRoomID = data["chatRoomID"] as? String,
-                   let imageURL = data["imageURL"] as? String{
+                   let imageURL = data["imageURL"] as? String {
                     let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL)
                     self.chatMessages.append(chatMessage)
                 }
@@ -304,7 +302,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             imageView.topAnchor.constraint(equalTo: view.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            imageView.bottomAnchor.constraint(equalTo: tableView.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: tableView.topAnchor)
         ])
         sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
         sendButton.tintColor = .black
@@ -362,7 +360,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         selectedImage = nil
         imageView.image = nil
     }
-    
     func uploadFixedImage(_ image: UIImage, completion: @escaping (String) -> Void) {
         guard let resizedImage = image.resized(toSize: CGSize(width: 50, height: 50)) else {
             completion("")

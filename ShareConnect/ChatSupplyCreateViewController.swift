@@ -39,7 +39,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: 600),
+            tableView.heightAnchor.constraint(equalToConstant: 600)
         ])
         let createNewButton = UIButton()
         createNewButton.setTitle("Create New", for: .normal)
@@ -62,7 +62,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         tableView.reloadData()
         refreshControl.endRefreshing()
     }
-    @objc func createNewButtonTapped(){
+    @objc func createNewButtonTapped() {
         let vc = CreateSupplyViewController()
         navigationController?.pushViewController(vc, animated: true)
     }

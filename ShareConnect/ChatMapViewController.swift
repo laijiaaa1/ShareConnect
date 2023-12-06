@@ -10,7 +10,6 @@ import CoreLocation
 import MapKit
 
 class MapSelectionViewController: UIViewController, MKMapViewDelegate {
-    
     weak var delegate: MapSelectionDelegate?
     var mapView: MKMapView!
     var locationManager: CLLocationManager!
@@ -26,16 +25,13 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         mapView = MKMapView(frame: view.bounds)
         mapView.delegate = self
         view.addSubview(mapView)
-        
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-        
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -43,24 +39,20 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         definesPresentationContext = true
         view.addSubview(searchController.searchBar)
         view.bringSubviewToFront(searchController.searchBar)
-        
         searchController.searchBar.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             searchController.searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchController.searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             searchController.searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-        
         confirmButton = UIButton(type: .system)
         confirmButton.setTitle("Confirm Location", for: .normal)
         confirmButton.titleLabel?.font = .systemFont(ofSize: 16)
         confirmButton.setTitleColor(.black, for: .normal)
         confirmButton.backgroundColor = CustomColors.B1
         confirmButton.layer.cornerRadius = 10
-        
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         view.addSubview(confirmButton)
-        
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             confirmButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
@@ -68,7 +60,6 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             confirmButton.widthAnchor.constraint(equalToConstant: 180),
             confirmButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
         let initialLocation = CLLocationCoordinate2D(latitude: 25.0422, longitude: 121.5354)
         let regionRadius: CLLocationDistance = 1000
         let coordinateRegion = MKCoordinateRegion(
@@ -93,7 +84,6 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         confirmButton.frame.origin.y = view.frame.height - confirmButton.frame.height - 20
         searchController.searchBar.frame.origin.y = view.safeAreaInsets.top
     }
-    
     @objc func confirmButtonTapped() {
         if let selectedCoordinate = selectedCoordinate {
             delegate?.didSelectLocation(selectedCoordinate)
@@ -135,7 +125,6 @@ extension MapSelectionViewController: CLLocationManagerDelegate {
         print("Location error: \(error.localizedDescription)")
     }
 }
-
 extension MapSelectionViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {

@@ -12,15 +12,6 @@ import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
 
-struct Commend {
-    var comment: String
-    var rating: Int
-    var image: String
-    var sellerID: String
-    var buyerID: String
-    var productID: String
-    var time: String
-}
 class CommendViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     var productName: String?
     var productImage: String?
@@ -155,7 +146,6 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         }
         dismiss(animated: true, completion: nil)
     }
-    
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
@@ -163,11 +153,9 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             return
         }
-        
         let textComment = commentTextView.text
         let uploadedImage = imageView.image
         let starRating = starRatingView.rating
-        
         let reviewsCollection = Firestore.firestore().collection("reviews")
         let reviewID = reviewsCollection.document().documentID
         let imageStorageRef = Storage.storage().reference().child("review_images/\(reviewID).jpg")
@@ -191,7 +179,6 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
                         "timestamp": Date(),
                         "sellerID": self.sellerID
                     ]
-                    
                     reviewsCollection.document(reviewID).setData(reviewData) { error in
                         if let error = error {
                             print("Error adding review: \(error.localizedDescription)")
@@ -219,70 +206,6 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
                     self.navigationController?.popViewController(animated: true)
                 }
             }
-        }
-    }
-}
-class StarRatingView: UIView {
-    var rating: Int = 0 {
-        didSet {
-            setNeedsLayout()
-        }
-    }
-    var ratingButtons = [UIButton]()
-    var spacing = 5
-    var stars = 5
-    override var intrinsicContentSize: CGSize {
-        let buttonSize = Int(frame.size.height)
-        let width = (buttonSize + spacing) * stars
-        return CGSize(width: width, height: buttonSize)
-    }
-    override func layoutSubviews() {
-        var buttonFrame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        for (index, button) in ratingButtons.enumerated() {
-            buttonFrame.origin.x = CGFloat(index * (50 + spacing))
-            button.frame = buttonFrame
-        }
-        updateButtonSelectionStates()
-    }
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        spacing = 5
-        stars = 5
-        setupButtons()
-    }
-    required init(coder: NSCoder) {
-        super.init(coder: coder)!
-        spacing = 5
-        stars = 5
-        setupButtons()
-    }
-    private func setupButtons() {
-        for _ in 0..<stars {
-            let button = UIButton()
-            button.backgroundColor = .white
-            button.tintColor = .black
-            button.setImage(UIImage(systemName: "star"), for: .normal)
-            button.setImage(UIImage(systemName: "star.fill"), for: .selected)
-            button.adjustsImageWhenHighlighted = false
-            button.addTarget(self, action: #selector(ratingButtonTapped(button:)), for: .touchUpInside)
-            ratingButtons.append(button)
-            addSubview(button)
-        }
-    }
-    @objc func ratingButtonTapped(button: UIButton) {
-        guard let index = ratingButtons.firstIndex(of: button) else {
-            fatalError("The button, \(button), is not in the ratingButtons array: \(ratingButtons)")
-        }
-        let selectedRating = index + 1
-        if selectedRating == rating {
-            rating = 0
-        } else {
-            rating = selectedRating
-        }
-    }
-    private func updateButtonSelectionStates() {
-        for (index, button) in ratingButtons.enumerated() {
-            button.isSelected = index < rating
         }
     }
 }

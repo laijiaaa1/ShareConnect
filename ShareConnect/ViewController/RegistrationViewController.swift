@@ -94,7 +94,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
             registerButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 60),
             registerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             registerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
-            registerButton.heightAnchor.constraint(equalToConstant: 40),
+            registerButton.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
     @objc func dismissKeyboard() {

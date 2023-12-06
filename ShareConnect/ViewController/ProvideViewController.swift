@@ -97,7 +97,6 @@ class ProvideViewController: SelectedViewController {
             itemView.heightAnchor.constraint(equalToConstant: 70)
         ])
         itemView.addSubview(itemInfo)
-        //        itemInfo.text = request?.name
         itemInfo.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         itemInfo.textColor = .black
         itemInfo.translatesAutoresizingMaskIntoConstraints = false

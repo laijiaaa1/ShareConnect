@@ -7,7 +7,7 @@ import FirebaseStorage
 import MJRefresh
 import Kingfisher
 
-class SearchResultsViewController: SearchViewController{
+class SearchResultsViewController: SearchViewController {
     var searchResults: [Product] = []
     var products: [Product] = []
     override func viewDidLoad() {
@@ -36,7 +36,7 @@ class SearchResultsViewController: SearchViewController{
                 deVC.product = cell.product
                 if currentButtonType == .request {
                     self.navigationController?.pushViewController(vc, animated: true)
-                } else if currentButtonType == .supply{
+                } else if currentButtonType == .supply {
                     self.navigationController?.pushViewController(deVC, animated: true)
                 }
             }
