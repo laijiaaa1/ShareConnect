@@ -243,9 +243,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         if group.owner == userId {
             db.collection("groups").document(group.documentId).delete()
             db.collection("users").document(userId ?? "").updateData(["groups": FieldValue.arrayRemove([group.documentId])])
+            fetchGroups(userId: userId ?? "")
         } else {
-            db.collection("groups").document(group.documentId).updateData(["member": FieldValue.arrayRemove([userId])])
+            db.collection("groups").document(group.documentId).updateData(["members": FieldValue.arrayRemove([userId])])
             db.collection("users").document(userId ?? "").updateData(["groups": FieldValue.arrayRemove([group.documentId])])
+            fetchGroups(userId: userId ?? "")
         }
     }
     func deleteCollectionFromDatabase(_ collection: Collection) {
