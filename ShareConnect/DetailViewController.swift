@@ -355,7 +355,6 @@ class DetailViewController: UIViewController {
            let startTimeString = availability.text {
             print("startTimeString:", startTimeString)
             let dateFormats = ["MM月 dd, yyyy", "yyyy-MM-dd", "your-other-date-format"]
-
             for format in dateFormats {
                 if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
                     vc.product = product
@@ -410,7 +409,7 @@ class DetailViewController: UIViewController {
             NSLayoutConstraint.activate([
                 descriptionLabel2.topAnchor.constraint(equalTo: contentDescriptionView.topAnchor, constant: 10),
                 descriptionLabel2.leadingAnchor.constraint(equalTo: contentDescriptionView.leadingAnchor, constant: 30),
-                descriptionLabel2.trailingAnchor.constraint(equalTo: contentDescriptionView.trailingAnchor, constant: -30),
+                descriptionLabel2.trailingAnchor.constraint(equalTo: contentDescriptionView.trailingAnchor, constant: -30)
             ])
             contentDescriptionView.addSubview(sort)
             sort.text = product?.sort
