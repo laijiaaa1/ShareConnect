@@ -52,8 +52,18 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         navigationController?.navigationBar.tintColor = .black
         if usification == "product" {
             fetchRequestsForUser(type: .request, usification: "product")
+            if currentButtonType == .request {
+                fetchRequestsForUser(type: .request, usification: "product")
+            } else if currentButtonType == .supply {
+                fetchRequestsForUser(type: .supply, usification: "product")
+            }
         } else if usification == "place" {
             fetchRequestsForUser(type: .request, usification: "place")
+            if currentButtonType == .request {
+                fetchRequestsForUser(type: .request, usification: "place")
+            } else if currentButtonType == .supply {
+                fetchRequestsForUser(type: .supply, usification: "place")
+            }
         }
     }
     override func viewDidLoad() {
@@ -192,9 +202,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func button1Action() {
         currentButtonType = .request
+        let position = button1.frame.origin.x
         UIView.animate(withDuration: 0.3) {
-            self.lineView.center.x = self.button1.center.x
+            self.lineView.frame.origin.x = position
         }
+        self.lineView.layoutIfNeeded()
         button1.setTitleColor(.black, for: .normal)
         button2.setTitleColor(.lightGray, for: .normal)
         if usification == "product" {
@@ -206,9 +218,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func button2Action() {
         currentButtonType = .supply
+        let position = button2.frame.origin.x
         UIView.animate(withDuration: 0.3) {
-            self.lineView.center.x = self.button2.center.x
+            self.lineView.frame.origin.x = position
         }
+        self.lineView.layoutIfNeeded()
         button1.setTitleColor(.lightGray, for: .normal)
         button2.setTitleColor(.black, for: .normal)
         if usification == "place" {

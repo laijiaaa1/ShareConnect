@@ -166,7 +166,6 @@
 				34B530F42B20A42C00A4C222 /* View */,
 				34B530F52B20A4AF00A4C222 /* ViewController */,
 				34D67F032B20AAC900DE879B /* Manager */,
-				341E9B8F2B03629800997FE9 /* HomePageViewController.swift */,
 				34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */,
 				3410D9672B07129800D32744 /* DetailViewController.swift */,
 				3410D97A2B0916C700D32744 /* ProfileViewController.swift */,
@@ -207,6 +206,7 @@
 		34B530F52B20A4AF00A4C222 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				341E9B8F2B03629800997FE9 /* HomePageViewController.swift */,
 				3401F6922B13627A0092E564 /* SubGroupViewController.swift */,
 				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
 				346DE7CD2B063616008D411A /* LoginViewController.swift */,
