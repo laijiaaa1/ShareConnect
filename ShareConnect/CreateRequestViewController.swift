@@ -12,7 +12,7 @@ import FirebaseAuth
 import FirebaseCore
 import FirebaseStorage
 import DatePicker
-import JGProgressHUD
+//import JGProgressHUD
 
 class CreateRequestViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UITextFieldDelegate {
     let requestTableView = UITableView()
@@ -20,7 +20,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     let requestSelectSegment = UISegmentedControl()
     let doneButton = UIButton()
     var groupOptions: [(String, String)] = []
-    let hud = JGProgressHUD()
+//    let hud = JGProgressHUD()
     var sortPicker: UIPickerView?
     var usePicker: UIPickerView?
     var selectedGroupID: String?
@@ -172,7 +172,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                         itemType: .request
                                     )
                                     let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
-                                    
                                     db.collection(collectionName).addDocument(data: [
                                         "type": ProductType.request.rawValue,
                                         "product": productData
@@ -190,14 +189,13 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 }
             }
             DispatchQueue.main.async {
-                self.hud.textLabel.text = "Success"
-                self.hud.indicatorView = JGProgressHUDSuccessIndicatorView()
-                self.hud.show(in: self.view)
-                self.hud.dismiss(afterDelay: 1.0)
+//                self.hud.textLabel.text = "Success"
+//                self.hud.indicatorView = JGProgressHUDSuccessIndicatorView()
+//                self.hud.show(in: self.view)
+//                self.hud.dismiss(afterDelay: 1.0)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    self.navigationController?.popViewController(animated: true)
+//                    self.navigationController?.popViewController(animated: true)
                 }
-                
             }
         }
     }
