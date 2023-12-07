@@ -49,7 +49,7 @@ extension RecoderViewController {
             backView.addSubview(productImageView)
             productImageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                productImageView.topAnchor.constraint(equalTo: backView.topAnchor, constant: 10),
+                productImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 productImageView.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 10),
                 productImageView.widthAnchor.constraint(equalToConstant: 80),
                 productImageView.heightAnchor.constraint(equalToConstant: 80)
@@ -59,7 +59,7 @@ extension RecoderViewController {
             backView.addSubview(nameLabel)
             nameLabel.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                nameLabel.topAnchor.constraint(equalTo: backView.topAnchor, constant: 10),
+                nameLabel.topAnchor.constraint(equalTo: productImageView.topAnchor, constant: 10),
                 nameLabel.leadingAnchor.constraint(equalTo: productImageView.trailingAnchor, constant: 10),
                 nameLabel.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -10),
                 nameLabel.heightAnchor.constraint(equalToConstant: 30)

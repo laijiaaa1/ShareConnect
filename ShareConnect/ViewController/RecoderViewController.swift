@@ -21,6 +21,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
     let loanButton = UIButton()
     let stackView = UIStackView()
     let tableView = UITableView()
+    var isCompleted = false
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.tintColor = .black
@@ -99,6 +100,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! RecoderTableViewCell
         cell.order = orderID[indexPath.row]
         cell.returnButton.setTitle("Return", for: .normal)
+
         if rentalButton.isSelected {
             cell.returnButton.setTitle("Return", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)
@@ -107,8 +109,53 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.returnButton.setTitle("Remind", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(remindButtonTapped), for: .touchUpInside)
         }
+
+        if orderID[indexPath.row].isCompleted {
+            cell.returnButton.setTitle("Completed", for: .normal)
+            cell.returnButton.backgroundColor = .lightGray
+            cell.returnButton.isEnabled = false
+        } else {
+            fetchReviewFromFireStore(for: orderID[indexPath.row].orderID) { hasReview in
+                DispatchQueue.main.async {
+                    if hasReview {
+                        cell.returnButton.setTitle("Done", for: .normal)
+                        cell.returnButton.backgroundColor = .lightGray
+                        cell.returnButton.layer.borderColor = UIColor.lightGray.cgColor
+                        cell.returnButton.setTitleColor(.white, for: .normal)
+                        cell.returnButton.isEnabled = false
+                    } else {
+                        cell.returnButton.setTitle("Return", for: .normal)
+                        cell.returnButton.backgroundColor = .white
+                        cell.returnButton.layer.borderColor = UIColor.black.cgColor
+                        cell.returnButton.setTitleColor(.black, for: .normal)
+                        cell.returnButton.isEnabled = true
+                    }
+                }
+            }
+        }
+
         return cell
     }
+
+    func fetchReviewFromFireStore(for orderID: String, completion: @escaping (Bool) -> Void) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            completion(false)
+            return
+        }
+
+        let reviewsCollection = Firestore.firestore().collection("reviews")
+        reviewsCollection.whereField("userID", isEqualTo: currentUserID).whereField("productID", isEqualTo: orderID).getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error fetching reviews: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+
+            let hasReview = !(querySnapshot?.documents.isEmpty ?? false) 
+            completion(hasReview)
+        }
+    }
+
     @objc func remindButtonTapped() {
         if let orderID = order?.orderID {
             scheduleLocalNotification(for: orderID)
@@ -128,7 +175,11 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
-    @objc func returnButtonTapped() {
+    @objc func returnButtonTapped(_ sender: UIButton) {
+        sender.startAnimatingPressActions()
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            return
+        }
         guard let selectedIndexPath = tableView.indexPathForSelectedRow else {
             return
         }

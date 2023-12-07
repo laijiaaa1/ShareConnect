@@ -251,7 +251,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func deleteCollectionFromDatabase(_ collection: Collection) {
         let db = Firestore.firestore()
-        db.collection("collections").document(Auth.auth().currentUser!.uid).updateData(["collectedProducts": FieldValue.arrayRemove([collection.productId])])
+        db.collection("collections").document(userId ?? "").updateData(["collectedProducts": FieldValue.arrayRemove([collection.productId])])
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if selectedButton == groupButton {
