@@ -17,8 +17,7 @@ import Kingfisher
 class ClassCollectionViewCell: UICollectionViewCell {
     let buttonsStackView = UIStackView()
     let textLabel = UILabel()
-    let productClassification = ["Camping", "Tableware", "Activity", "Party", "Sports", "Others"]
-    let placeClassification = ["Meeting", "Workshop", "Sports", "Activity", "Photography", "Others"]
+    let productClassification = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
     var allRequests: [Product] = []
     var allSupplies: [Product] = []
     var currentButtonType: ProductType? {
@@ -66,7 +65,11 @@ class ClassCollectionViewCell: UICollectionViewCell {
         if let classificationText = sender.currentTitle {
             print("Tapped Classification: \(classificationText)")
             if let delegate = delegate, let currentButtonType = currentButtonType {
-                delegate.didSelectClassification(classificationText, forType: currentButtonType)
+                if currentButtonType == .request {
+                    delegate.didSelectClassification(classificationText, forType: currentButtonType)
+                } else if currentButtonType == .supply {
+                    delegate.didSelectClassification(classificationText, forType: currentButtonType)
+                }
             }
         }
     }

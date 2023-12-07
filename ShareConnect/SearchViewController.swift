@@ -50,11 +50,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.tintColor = .black
-                if usification == "product" {
-                    fetchRequestsForUser(type: .request, usification: "product")
-                } else if usification == "place" {
-                    fetchRequestsForUser(type: .request, usification: "place")
-                }
+        if usification == "product" {
+            fetchRequestsForUser(type: .request, usification: "product")
+        } else if usification == "place" {
+            fetchRequestsForUser(type: .request, usification: "place")
+        }
     }
     override func viewDidLoad() {
         view.backgroundColor = CustomColors.B1
@@ -139,7 +139,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                     return allSupplies.count
                 }
                 return 0
-            } else if 
+            } else if
                 usification == "place"{
                 if currentButtonType == .request {
                     return allRequests.count
@@ -180,8 +180,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     func didSelectClassification(_ classification: String, forType type: ProductType) {
         if usification == "product" {
-        fetchDataForSort(classification: classification, type: type, usification: "product")
-    } else if usification == "place" {
+            fetchDataForSort(classification: classification, type: type, usification: "product")
+        } else if usification == "place" {
             fetchDataForSort(classification: classification, type: type, usification: "place")
         }
     }
@@ -373,21 +373,20 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                 if let productTypeRawValue = productData["type"] as? String,
                    let productType = ProductType(rawValue: productTypeRawValue),
                    let product = self.parseProductData(productData: productData) {
-                    if productType == type {
-                        if product.itemType == type {
-                            print("Appending \(type): \(product)")
-                            if type == .request {
-                                if product.sort == classification {
-                                    self.allRequests.append(product)
-                                }
-                            } else if type == .supply {
-                                if product.sort == classification {
-                                    self.allSupplies.append(product)
-                                }
+                    if productType.rawValue == "request" {
+                        if product.itemType == productType {
+                            print("Appending \(productType): \(product)")
+                            if product.sort == classification {
+                                self.allRequests.append(product)
                             }
                         }
-                    } else {
-                        print("Skipped product with unknown type: \(productType)")
+                    } else if productType.rawValue == "supply" {
+                        if product.itemType == productType {
+                            print("Appending \(productType): \(product)")
+                            if product.sort == classification {
+                                self.allSupplies.append(product)
+                            }
+                        }
                     }
                 } else {
                     print("Error parsing product type")
