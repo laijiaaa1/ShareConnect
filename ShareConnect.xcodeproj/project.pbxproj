@@ -167,10 +167,6 @@
 				34B530F52B20A4AF00A4C222 /* ViewController */,
 				34D67F032B20AAC900DE879B /* Manager */,
 				341E9B8F2B03629800997FE9 /* HomePageViewController.swift */,
-				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
-				34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */,
-				34B530F02B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift */,
-				3401F6922B13627A0092E564 /* SubGroupViewController.swift */,
 				34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */,
 				3410D9672B07129800D32744 /* DetailViewController.swift */,
 				3410D97A2B0916C700D32744 /* ProfileViewController.swift */,
@@ -202,6 +198,8 @@
 				346687B32B1C6CB100723302 /* Profile_MyRequestCell.swift */,
 				346687B52B1C6D5E00723302 /* Profile_CollectionCell.swift */,
 				346687B92B1C6E6600723302 /* Recoder_RecoderTBCell.swift */,
+				34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */,
+				34B530F02B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -209,6 +207,8 @@
 		34B530F52B20A4AF00A4C222 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				3401F6922B13627A0092E564 /* SubGroupViewController.swift */,
+				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
 				346DE7CD2B063616008D411A /* LoginViewController.swift */,
 				346687A72B182C8800723302 /* RegistrationViewController.swift */,
 				3410D9692B07665700D32744 /* SelectedViewController.swift */,
