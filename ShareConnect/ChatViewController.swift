@@ -321,10 +321,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
     @objc func locationButtonTapped() {
         let mapViewController = MapSelectionViewController()
         mapViewController.delegate = self
-//        mapViewController.modalPresentationStyle = .fullScreen
-//        present(mapViewController, animated: true, completion: nil)
         navigationController?.pushViewController(mapViewController, animated: true)
-        
     }
     @objc func imageButtonTapped() {
         let imagePicker = UIImagePickerController()

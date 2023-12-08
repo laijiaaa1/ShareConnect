@@ -124,7 +124,6 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
     @objc func confirmButtonTapped() {
         if let selectedCoordinate = selectedCoordinate {
             delegate?.didSelectLocation(selectedCoordinate)
-//            dismiss(animated: true, completion: nil)
             navigationController?.popViewController(animated: true)
         } else {
             print("No location selected.")
