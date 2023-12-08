@@ -75,6 +75,9 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         locationManager?.startUpdatingLocation()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
+        tableView.register(TextCell.self, forCellReuseIdentifier: "textCell")
+        tableView.register(ImageCell.self, forCellReuseIdentifier: "imageCell")
+        tableView.register(MapCell.self, forCellReuseIdentifier: "mapCell")
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -281,7 +284,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         view.backgroundColor = CustomColors.B1
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(ChatMessageCell.self, forCellReuseIdentifier: "cell")
         tableView.backgroundColor = CustomColors.B1
         view.addSubview(tableView)
         tableView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 100)
@@ -365,7 +367,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             completion("")
             return
         }
-        guard let imageData = resizedImage.jpegData(compressionQuality: 0.8) else {
+        guard let imageData = resizedImage.jpegData(compressionQuality: 0.1) else {
             completion("")
             return
         }
@@ -445,62 +447,52 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         return chatMessages.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChatMessageCell
-        let chatMessage = chatMessages[indexPath.row]
-        cell.backgroundColor = CustomColors.B1
-        cell.configure(with: chatMessage)
-        cell.label.text = chatMessage.text
-        //        cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
-        cell.label.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
-        cell.label.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
-        cell.label.numberOfLines = 0
-        cell.label.layer.cornerRadius = 10
-        cell.label.layer.masksToBounds = true
-        if let imageURL = URL(string: chatMessage.profileImageUrl) {
-            cell.image.kf.setImage(with: imageURL)
-            let isMe = chatMessage.buyerID == Auth.auth().currentUser?.uid
-            if chatMessage.isMe == true {
-                cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
-                cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40).isActive = true
-                cell.image.topAnchor.constraint(equalTo: cell.topAnchor, constant: 10).isActive = true
-                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
-                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
-                cell.label.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15).isActive = true
-                cell.label.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
-                cell.label.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
-                cell.label.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -10).isActive = true
-                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
-                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
-                cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.label.leadingAnchor, constant: -20).isActive = true
-                cell.timestampLabel.topAnchor.constraint(equalTo: cell.label.bottomAnchor, constant: -5).isActive = true
-                cell.imageURLpost.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -10).isActive = true
-            } else {
-                cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
-                cell.image.trailingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 40).isActive = true
-                cell.image.topAnchor.constraint(equalTo: cell.topAnchor, constant: 10).isActive = true
-                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
-                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
-                cell.label.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 15).isActive = true
-                cell.label.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
-                cell.label.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
-                cell.label.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -10).isActive = true
-                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
-                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
-                cell.timestampLabel.leadingAnchor.constraint(equalTo: cell.label.trailingAnchor, constant: 20).isActive = true
-                cell.timestampLabel.topAnchor.constraint(equalTo: cell.label.bottomAnchor, constant: -5).isActive = true
-                cell.imageURLpost.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 10).isActive = true
+        if chatMessages[indexPath.row].isLocation == true {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "mapCell", for: indexPath) as! MapCell
+            let chatMessage = chatMessages[indexPath.row]
+            cell.backgroundColor = CustomColors.B1
+            cell.configure(with: chatMessage)
+            cell.label.text = chatMessage.text
+            cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
+            cell.label.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
+            cell.label.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
+            cell.label.numberOfLines = 0
+            cell.label.layer.cornerRadius = 10
+            cell.label.layer.masksToBounds = true
+            return cell
+        }else if chatMessages[indexPath.row].imageURL != "" {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "imageCell", for: indexPath) as! ImageCell
+            let chatMessage = chatMessages[indexPath.row]
+            cell.backgroundColor = CustomColors.B1
+            cell.configure(with: chatMessage)
+            cell.label.text = chatMessage.text
+            cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
+            cell.label.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
+            cell.label.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
+            cell.label.numberOfLines = 0
+            cell.label.layer.cornerRadius = 10
+            cell.label.layer.masksToBounds = true
+            if let imageURL = URL(string: chatMessage.profileImageUrl ?? "") {
+                cell.image.kf.setImage(with: imageURL)
             }
+            if let imagePost = URL(string: chatMessage.imageURL ?? "") {
+                cell.imageURLpost.kf.setImage(with: imagePost)
+            }
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "textCell", for: indexPath) as! TextCell
+            let chatMessage = chatMessages[indexPath.row]
+            cell.backgroundColor = CustomColors.B1
+            cell.configure(with: chatMessage)
+            cell.label.text = chatMessage.text
+            cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
+            cell.label.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
+            cell.label.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
+            cell.label.numberOfLines = 0
+            cell.label.layer.cornerRadius = 10
+            cell.label.layer.masksToBounds = true
+            return cell
         }
-        if let imageURLpost = URL(string: chatMessage.imageURL ?? "") {
-            cell.imageURLpost.kf.setImage(with: imageURLpost)
-        }
-        cell.nameLabel.text = chatMessage.buyerID == Auth.auth().currentUser?.uid ? currentUser?.name ?? "Buyer" : seller?.sellerName ?? "Seller"
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        cell.timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
-        cell.timestampLabel.textColor = .gray
-        //        cell.timestampLabel.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
-        return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let minHeight: CGFloat = 80
@@ -530,78 +522,11 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
         dismiss(animated: true, completion: nil)
     }
 }
-class ChatMessageCell: UITableViewCell {
-    var label = UILabel()
-    var timestampLabel = UILabel()
-    var nameLabel = UILabel()
-    var image = UIImageView()
-    var imageURLpost = UIImageView()
-    var chatMessage: ChatMessage?
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupUI()
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    private func setupUI() {
-        contentView.addSubview(label)
-        contentView.addSubview(timestampLabel)
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(image)
-        contentView.addSubview(imageURLpost)
-        contentView.backgroundColor = CustomColors.B1
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: widthAnchor),
-            contentView.trailingAnchor.constraint(equalTo: trailingAnchor)
-        ])
-        image.layer.cornerRadius = 15
-        timestampLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.font = UIFont.systemFont(ofSize: 12)
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.numberOfLines = 0
-        label.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        image.layer.masksToBounds = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        image.translatesAutoresizingMaskIntoConstraints = false
-        imageURLpost.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageURLpost.widthAnchor.constraint(equalToConstant: 80),
-            imageURLpost.heightAnchor.constraint(equalToConstant: 80)
-        ])
-    }
-    func configure(with chatMessage: ChatMessage) {
-        self.chatMessage = chatMessage
-        if chatMessage.isLocation ?? true, !chatMessage.text.isEmpty {
-            label.text = "📍 Location"
-            label.textColor = .blue
-            label.isUserInteractionEnabled = true
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openMap(_:)))
-            label.addGestureRecognizer(tapGesture)
-        } else if let imageURL = URL(string: chatMessage.imageURL ?? "") {
-            image.kf.setImage(with: imageURL)
-        } else {
-            label.text = chatMessage.text
-            label.textColor = .black
-            label.isUserInteractionEnabled = false
-        }
-    }
-    @objc func openMap(_ gesture: UITapGestureRecognizer) {
-        guard let mapLink = chatMessage?.text, let url = URL(string: mapLink) else { return }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-    }
-}
 extension ChatViewController: MapSelectionDelegate {
     func didSelectLocation(_ coordinate: CLLocationCoordinate2D) {
         sendLocationToFirestore(coordinate)
     }
 }
-
 extension ChatViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last?.coordinate else { return }
