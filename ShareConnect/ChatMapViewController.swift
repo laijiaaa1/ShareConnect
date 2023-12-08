@@ -15,6 +15,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
     var locationManager: CLLocationManager!
     var searchController: UISearchController!
     var confirmButton: UIButton!
+    var returnToUserLocationButton: UIButton!
     var selectedCoordinate: CLLocationCoordinate2D? {
         didSet {
             if let coordinate = selectedCoordinate {
@@ -35,6 +36,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.showsCancelButton = false
         navigationItem.searchController = searchController
         definesPresentationContext = true
         view.addSubview(searchController.searchBar)
@@ -48,8 +50,8 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         confirmButton = UIButton(type: .system)
         confirmButton.setTitle("Confirm Location", for: .normal)
         confirmButton.titleLabel?.font = .systemFont(ofSize: 16)
-        confirmButton.setTitleColor(.black, for: .normal)
-        confirmButton.backgroundColor = CustomColors.B1
+        confirmButton.setTitleColor(.white, for: .normal)
+        confirmButton.backgroundColor = .black
         confirmButton.layer.cornerRadius = 10
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         view.addSubview(confirmButton)
@@ -60,7 +62,21 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             confirmButton.widthAnchor.constraint(equalToConstant: 180),
             confirmButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+        returnToUserLocationButton = UIButton()
+        returnToUserLocationButton.setImage(UIImage(systemName: "location.fill"), for: .normal)
+        returnToUserLocationButton.backgroundColor = .black
+        returnToUserLocationButton.layer.cornerRadius = 10
+        returnToUserLocationButton.addTarget(self, action: #selector(returnToUserLocationButtonTapped), for: .touchUpInside)
+        view.addSubview(returnToUserLocationButton)
+        returnToUserLocationButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            returnToUserLocationButton.topAnchor.constraint(equalTo: confirmButton.topAnchor),
+            returnToUserLocationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            returnToUserLocationButton.widthAnchor.constraint(equalToConstant: 50),
+            returnToUserLocationButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
         let initialLocation = CLLocationCoordinate2D(latitude: 25.0422, longitude: 121.5354)
+        let userLocation = locationManager.location?.coordinate ?? initialLocation
         let regionRadius: CLLocationDistance = 1000
         let coordinateRegion = MKCoordinateRegion(
             center: initialLocation,
@@ -72,6 +88,27 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         mapView.addGestureRecognizer(longPressGesture)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    @objc func returnToUserLocationButtonTapped() {
+        if CLLocationManager.locationServicesEnabled() {
+            switch locationManager.authorizationStatus {
+            case .notDetermined, .restricted, .denied:
+                print("Location services disabled")
+            case .authorizedAlways, .authorizedWhenInUse:
+                DispatchQueue.global(qos: .userInitiated).async {
+                    [weak self] in
+                    guard let self = self else {return}
+                    if let userLocation = locationManager.location?.coordinate {
+                        let region = MKCoordinateRegion(center: userLocation, latitudinalMeters: 1000, longitudinalMeters: 1000)
+                        DispatchQueue.main.async {
+                            self.mapView.setRegion(region, animated: true)
+                        }
+                    }
+                }
+            @unknown default:
+                print("Unknown location authorization status.")
+            }
+        }
     }
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo else { return }
@@ -87,7 +124,8 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
     @objc func confirmButtonTapped() {
         if let selectedCoordinate = selectedCoordinate {
             delegate?.didSelectLocation(selectedCoordinate)
-            dismiss(animated: true, completion: nil)
+//            dismiss(animated: true, completion: nil)
+            navigationController?.popViewController(animated: true)
         } else {
             print("No location selected.")
         }

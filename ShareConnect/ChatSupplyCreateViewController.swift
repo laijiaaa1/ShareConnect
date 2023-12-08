@@ -43,6 +43,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         ])
         let createNewButton = UIButton()
         createNewButton.setTitle("Create New", for: .normal)
+        createNewButton.startAnimatingPressActions()
         createNewButton.backgroundColor = .black
         createNewButton.layer.cornerRadius = 15
         view.addSubview(createNewButton)

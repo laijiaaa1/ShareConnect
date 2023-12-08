@@ -94,6 +94,12 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         collectionButton.setTitle("Collection", for: .normal)
         requestButton.setTitle("Request", for: .normal)
         supplyButton.setTitle("Supply", for: .normal)
+        let buttons = [groupButton, collectionButton, requestButton, supplyButton]
+        buttons.forEach { (button) in
+            button.layer.cornerRadius = 5
+            button.clipsToBounds = true
+            button.startAnimatingPressActions()
+        }
         groupButton.addTarget(self, action: #selector(groupButtonTapped), for: .touchUpInside)
         collectionButton.addTarget(self, action: #selector(collectionButtonTapped), for: .touchUpInside)
         requestButton.addTarget(self, action: #selector(requestButtonTapped), for: .touchUpInside)

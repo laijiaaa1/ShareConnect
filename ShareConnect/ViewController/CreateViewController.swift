@@ -41,6 +41,7 @@ class CreateViewController: UIViewController {
         createGroupView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(createGroupView)
         myRequestButton.setTitle("My request", for: .normal)
+        myRequestButton.startAnimatingPressActions()
         myRequestButton.backgroundColor = .black
         myRequestButton.setTitleColor(.white, for: .normal)
         myRequestButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
@@ -53,6 +54,7 @@ class CreateViewController: UIViewController {
         myRequestButton.layer.shadowOpacity = 0.5
         myRequestButton.translatesAutoresizingMaskIntoConstraints = false
         mySupplyButton.setTitle("My supply", for: .normal)
+        mySupplyButton.startAnimatingPressActions()
         mySupplyButton.backgroundColor = .black
         mySupplyButton.setTitleColor(.white, for: .normal)
         mySupplyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
@@ -68,6 +70,7 @@ class CreateViewController: UIViewController {
         createGroupButton.layer.cornerRadius = 25
         createGroupButton.translatesAutoresizingMaskIntoConstraints = false
         createGroupButton.setTitle("Create group", for: .normal)
+        createGroupButton.startAnimatingPressActions()
         createGroupButton.backgroundColor = .black
         createGroupButton.setTitleColor(.white, for: .normal)
         createGroupButton.layer.borderWidth = 1

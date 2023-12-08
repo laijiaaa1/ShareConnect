@@ -52,6 +52,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(uploadButton)
         uploadButton.setTitle("+", for: .normal)
+        uploadButton.startAnimatingPressActions()
         uploadButton.setTitleColor(.black, for: .normal)
         uploadButton.titleLabel?.font = UIFont.systemFont(ofSize: 40)
         uploadButton.layer.cornerRadius = 10
@@ -95,6 +96,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         view.addSubview(doneButton)
         doneButton.backgroundColor = .black
         doneButton.setTitle("Done", for: .normal)
+        doneButton.startAnimatingPressActions()
         doneButton.setTitleColor(.white, for: .normal)
         doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         doneButton.layer.cornerRadius = 10

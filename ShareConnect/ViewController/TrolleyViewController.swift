@@ -55,11 +55,11 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         ])
         let checkoutButton = UIButton(type: .system)
         checkoutButton.setTitle("CONFIRM ORDER", for: .normal)
-        //        checkoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         checkoutButton.setTitleColor(.white, for: .normal)
         checkoutButton.backgroundColor = .black
         checkoutButton.layer.cornerRadius = 10
         checkoutButton.addTarget(self, action: #selector(checkoutButtonTapped), for: .touchUpInside)
+        checkoutButton.startAnimatingPressActions()
         view.addSubview(checkoutButton)
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -198,24 +198,25 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             print("Seller ID is nil.")
             return
         }
-        //        self.createChatRoom(with: sellerID) { [weak self] chatRoomID in
-        //            guard let self = self else { return }
-        let chatList = ChatListViewController()
-        chatList.sellerID = sellerID
-        //        chatList.sellerName = "seller"
-        let checkoutVC = ChatViewController()
-        //            checkoutVC.fetchUserData()
-        checkoutVC.cart = self.cart
-        checkoutVC.sellerID = sellerID
-        checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
-        checkoutVC.chatRoomID = chatRoomID
-        self.navigationController?.pushViewController(checkoutVC, animated: true)
-        //        }
-        createOrderRecord { [weak self] orderID in
-            guard let self = self else { return }
-            let orderConfirmationVC = RecoderViewController()
-            orderConfirmationVC.orderID = self.orderIDs
-            self.clearShoppingCart()
+        if cart.isEmpty {
+            print("Cart is empty.")
+            return
+        } else {
+            let chatList = ChatListViewController()
+            chatList.sellerID = sellerID
+            //        chatList.sellerName = "seller"
+            let checkoutVC = ChatViewController()
+            checkoutVC.cart = self.cart
+            checkoutVC.sellerID = sellerID
+            checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
+            checkoutVC.chatRoomID = chatRoomID
+            self.navigationController?.pushViewController(checkoutVC, animated: true)
+            createOrderRecord { [weak self] orderID in
+                guard let self = self else { return }
+                let orderConfirmationVC = RecoderViewController()
+                orderConfirmationVC.orderID = self.orderIDs
+                self.clearShoppingCart()
+            }
         }
     }
     func createOrderRecord(completion: @escaping (String) -> Void) {

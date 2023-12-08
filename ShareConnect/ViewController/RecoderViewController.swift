@@ -59,12 +59,15 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.dataSource = self
         tableView.backgroundColor = CustomColors.B1
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         fetchOrdersFromFirestore(isRenter: true)
     }
     @objc func rentalButtonTapped() {
         rentalButton.isSelected = true
         loanButton.isSelected = false
         rentalButton.setTitleColor(.black, for: .normal)
+        rentalButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        loanButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         loanButton.setTitleColor(.lightGray, for: .normal)
         fetchOrdersFromFirestore(isRenter: true)
     }
@@ -72,6 +75,8 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         rentalButton.isSelected = false
         loanButton.isSelected = true
         rentalButton.setTitleColor(.lightGray, for: .normal)
+        loanButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        rentalButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         loanButton.setTitleColor(.black, for: .normal)
         fetchOrdersFromFirestore(isRenter: false)
     }
@@ -119,8 +124,8 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
                 DispatchQueue.main.async {
                     if hasReview {
                         cell.returnButton.setTitle("Done", for: .normal)
-                        cell.returnButton.backgroundColor = .lightGray
-                        cell.returnButton.layer.borderColor = UIColor.lightGray.cgColor
+                        cell.returnButton.backgroundColor = .black
+                        cell.returnButton.layer.borderColor = UIColor.black.cgColor
                         cell.returnButton.setTitleColor(.white, for: .normal)
                         cell.returnButton.isEnabled = false
                     } else {

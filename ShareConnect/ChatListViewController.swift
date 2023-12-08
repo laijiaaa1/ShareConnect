@@ -28,6 +28,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     lazy var roleToggleButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Roll Seller", for: .normal)
+        button.startAnimatingPressActions()
         button.addTarget(self, action: #selector(toggleRole), for: .touchUpInside)
         return button
     }()
@@ -37,14 +38,22 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         fetchChatData()
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.tintColor = .black
+        view.backgroundColor = CustomColors.B1
     }
     func setupUI() {
         navigationItem.title = "CHAT LIST"
-        tableView.frame = view.bounds
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.75)
+        ])
         tableView.delegate = self
+        tableView.backgroundColor = CustomColors.B1
         tableView.dataSource = self
         tableView.register(ChatListCell.self, forCellReuseIdentifier: "ChatListCell")
-        view.addSubview(tableView)
         view.addSubview(roleToggleButton)
         roleToggleButton.backgroundColor = .black
         roleToggleButton.setTitleColor(.white, for: .normal)
@@ -53,7 +62,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         roleToggleButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             roleToggleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            roleToggleButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
+            roleToggleButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15),
             roleToggleButton.widthAnchor.constraint(equalToConstant: 320),
             roleToggleButton.heightAnchor.constraint(equalToConstant: 50)
         ])
@@ -178,6 +187,11 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatListCell", for: indexPath) as? ChatListCell ?? ChatListCell()
         let chatItem = chatItems[indexPath.row]
+        if currentUserRole == .seller {
+            cell.nameLabel.text = chatItem.buyerID
+        } else {
+            cell.nameLabel.text = chatItem.sellerID
+        }
         cell.nameLabel.text = chatItem.sellerID == Auth.auth().currentUser?.uid ? chatItem.buyerID : chatItem.sellerID
         cell.timeLabel.text = chatItem.time
         cell.avatarImageView.kf.setImage(with: URL(string: chatItem.profileImageUrl))

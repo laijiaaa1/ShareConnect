@@ -51,7 +51,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         navigationController?.navigationBar.tintColor = .black
     }
     override func viewDidDisappear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isHidden = true
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -321,7 +321,10 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
     @objc func locationButtonTapped() {
         let mapViewController = MapSelectionViewController()
         mapViewController.delegate = self
-        present(mapViewController, animated: true, completion: nil)
+//        mapViewController.modalPresentationStyle = .fullScreen
+//        present(mapViewController, animated: true, completion: nil)
+        navigationController?.pushViewController(mapViewController, animated: true)
+        
     }
     @objc func imageButtonTapped() {
         let imagePicker = UIImagePickerController()

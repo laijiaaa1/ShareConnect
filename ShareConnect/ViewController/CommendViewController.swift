@@ -66,7 +66,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
             imageView.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
             imageView.heightAnchor.constraint(equalToConstant: 80),
             imageView.widthAnchor.constraint(equalToConstant: 80),
-            nameLable.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 10),
+            nameLable.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
             nameLable.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 20),
             nameLable.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20),
             starRatingView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
@@ -84,6 +84,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         ])
         imageView.contentMode = .scaleToFill
         imageView.layer.cornerRadius = 10
+        imageView.layer.borderWidth = 1
         imageView.layer.masksToBounds = true
         commentTextView.layer.cornerRadius = 10
         commentTextView.layer.masksToBounds = true
@@ -114,11 +115,12 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
             submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             submitButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        submitButton.backgroundColor = .white
+        submitButton.backgroundColor = .black
         submitButton.layer.cornerRadius = 10
         submitButton.layer.masksToBounds = true
         submitButton.layer.borderWidth = 1
-        submitButton.setTitleColor(.black, for: .normal)
+        submitButton.setTitleColor(.white, for: .normal)
+        submitButton.startAnimatingPressActions()
     }
     @objc func addImage() {
         let imagePickerController = UIImagePickerController()

@@ -46,6 +46,30 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         browsingHistoryCollection.reloadData()
         let textAttributes = [NSAttributedString.Key.font:UIFont(name: "GeezaPro-Bold", size: 20)]
         view.backgroundColor = CustomColors.B1
+        searchProduct()
+        groupClass()
+        hotGroup()
+        browsHistory()
+        listenForBrowsingHistory()
+        chatList()
+        browsingHistoryCollection.register(HistoryCell.self, forCellWithReuseIdentifier: "cell")
+        hotCollection.delegate = self
+        hotCollection.dataSource = self
+        browsingHistoryCollection.delegate = self
+        browsingHistoryCollection.dataSource = self
+        searchTextField.delegate = self
+        textFieldShouldReturn(searchTextField)
+        fetchGroupData()
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    @objc func chatListButtonClick() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "ChatListViewController") as? ChatListViewController ?? ChatListViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    func searchProduct() {
         searchTextField.layer.borderWidth = 1
         searchTextField.layer.cornerRadius = 22
         searchTextField.layer.masksToBounds = true
@@ -64,6 +88,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         searchTextField.rightViewMode = .always
         searchTextField.backgroundColor = .white
         view.addSubview(searchTextField)
+    }
+    func groupClass() {
         let views = [productView, placeView, courseView, foodView]
         let labels = ["Product", "Place", "Course", "Food"]
         let images = ["icons8-camping-tent-72(@3×)", "icons8-room-72(@3×)", "icons8-course-72(@3×)", "icons8-pizza-five-eighths-32"]
@@ -90,6 +116,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         let line = UIView(frame: CGRect(x: 0, y: 280, width: view.frame.width, height: 1))
         line.backgroundColor = .lightGray
         view.addSubview(line)
+    }
+    func hotGroup() {
         let hotCollectionLabel = UILabel(frame: CGRect(x: 30, y: 310, width: 160, height: 20))
         hotCollectionLabel.text = "Hot Collections"
         hotCollectionLabel.font = UIFont(name: "GeezaPro-Bold", size: 18)
@@ -103,13 +131,13 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         hotScrollView.contentSize = CGSize(width: totalWidth, height: hotCollection.frame.height)
         hotCollection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         hotCollection.backgroundColor = .clear
-        hotCollection.delegate = self
-        hotCollection.dataSource = self
         hotScrollView.showsHorizontalScrollIndicator = false
         hotCollection.showsHorizontalScrollIndicator = false
         let line2 = UIView(frame: CGRect(x: 0, y: 530, width: view.frame.width, height: 1))
         line2.backgroundColor = .lightGray
         view.addSubview(line2)
+    }
+    func browsHistory() {
         browsingHistory.frame = CGRect(x: 30, y: 560, width: 160, height: 20)
         browsingHistory.text = "Browsing History"
         browsingHistory.font = UIFont(name: "GeezaPro-Bold", size: 18)
@@ -121,36 +149,28 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         self.browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: browsingHistoryItems.count * 320, height: Int(historyScrollView.frame.height)), collectionViewLayout: layout2)
         historyScrollView.addSubview(browsingHistoryCollection)
         browsingHistoryCollection.backgroundColor = .clear
-        browsingHistoryCollection.delegate = self
-        browsingHistoryCollection.dataSource = self
         browsingHistoryCollection.showsHorizontalScrollIndicator = false
         historyScrollView.showsHorizontalScrollIndicator = false
         let historyTotalWidth = CGFloat(browsingHistoryItems.count) * 320
         historyScrollView.contentSize = CGSize(width: historyTotalWidth, height: browsingHistoryCollection.frame.height)
-        listenForBrowsingHistory()
+    }
+    func chatList() {
         chatListButton.setImage(UIImage(named: "icons8-chat-24(@1×)"), for: .normal)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: chatListButton)
         chatListButton.addTarget(self, action: #selector(chatListButtonClick), for: .touchUpInside)
         view.addSubview(chatListButton)
-        browsingHistoryCollection.register(HistoryCell.self, forCellWithReuseIdentifier: "cell")
-        searchTextField.delegate = self
-        textFieldShouldReturn(searchTextField)
-        fetchGroupData()
-    }
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
-    }
-    @objc func chatListButtonClick() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "ChatListViewController") as? ChatListViewController ?? ChatListViewController()
-        navigationController?.pushViewController(vc, animated: true)
     }
     func listenForBrowsingHistory() {
         FirestoreService.shared.listenForBrowsingHistoryChanges { [weak self] browsingRecords in
-            self?.browsingHistoryItems = browsingRecords.map { ($0.name, $0.image, $0.productId) }
-            self?.browsingHistoryCollection.reloadData()
+            DispatchQueue.global().async {
+                self?.browsingHistoryItems = browsingRecords.map { ($0.name, $0.image, $0.productId) }
+                DispatchQueue.main.async {
+                    self?.browsingHistoryCollection.reloadData()
+                }
+            }
         }
     }
+
     @objc func buttonClick(sender: UIButton) {
         let groupViewController = GroupViewController()
         switch sender.tag {
@@ -322,22 +342,27 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         return newProduct
     }
     func fetchGroupData() {
-        let groupsRef = Firestore.firestore().collection("groups").getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error fetching public groups: \(error.localizedDescription)")
-            } else {
-                self.groups.removeAll()
-                for document in querySnapshot!.documents {
-                    let data = document.data()
-                    if let group = Group(data: data, documentId: document.documentID) {
-                        self.groups.append(group)
+        DispatchQueue.global().async { [weak self] in
+            let groupsRef = Firestore.firestore().collection("groups").getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Error fetching public groups: \(error.localizedDescription)")
+                } else {
+                    self?.groups.removeAll()
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        if let group = Group(data: data, documentId: document.documentID) {
+                            self?.groups.append(group)
+                        }
+                    }
+                    self?.groups.sort(by: { $0.members.count > $1.members.count })
+                    DispatchQueue.main.async {
+                        self?.hotCollection.reloadData()
                     }
                 }
-                self.groups.sort(by: { $0.members.count > $1.members.count })
-                self.hotCollection.reloadData()
             }
         }
     }
+
 }
 
 class HistoryCell: UICollectionViewCell {
