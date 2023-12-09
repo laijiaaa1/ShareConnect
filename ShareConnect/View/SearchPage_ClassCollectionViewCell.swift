@@ -55,7 +55,7 @@ class ClassCollectionViewCell: UICollectionViewCell {
             let button = UIButton()
             button.setTitle(classification, for: .normal)
             button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-            button.setTitleColor(.black, for: .normal)
+            button.setTitleColor(.white, for: .normal)
             button.addTarget(self, action: #selector(classificationButtonTapped(_:)), for: .touchUpInside)
             buttonsStackView.addArrangedSubview(button)
         }

@@ -26,12 +26,16 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
+        tabBarController?.tabBar.backgroundColor = .black
+        tabBarController?.tabBar.barTintColor = .black
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.tintColor = .white
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(GroupTableViewCell.self, forCellReuseIdentifier: "GroupTableViewCell")
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
         if sort == "product" {
             fetchGroupData(sort: "product")
         } else if sort == "place" {
@@ -41,7 +45,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         } else if sort == "food" {
             fetchGroupData(sort: "food")
         }
-        tableView.backgroundColor = CustomColors.B1
+        tableView.backgroundColor = .black
         searchTextField.layer.borderWidth = 1
         searchTextField.layer.cornerRadius = 22
         searchTextField.layer.masksToBounds = true
@@ -70,6 +74,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         ])
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+        
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -86,7 +91,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupTableViewCell", for: indexPath) as! GroupTableViewCell
         let group = groups[indexPath.row]
-        cell.backgroundColor = CustomColors.B1
+        cell.backgroundColor = .black
         cell.groupNameLabel.text = group.name
         cell.groupMemberNumberLabel.text = "Members: + \(group.members.count.description)"
         cell.groupImage.kf.setImage(with: URL(string: group.image))

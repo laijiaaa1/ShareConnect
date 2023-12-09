@@ -16,6 +16,7 @@ class ProvideViewController: SelectedViewController {
     var chatRoomDocument: DocumentReference!
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
+        navigationController?.navigationBar.tintColor = .white
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,17 +40,18 @@ class ProvideViewController: SelectedViewController {
         backView.backgroundColor = UIColor(red: 228/255, green: 220/255, blue: 209/255, alpha: 0.5)
         view.addSubview(backView)
         infoView.frame = CGRect(x: 0, y: 250, width: view.frame.width, height: view.frame.height - 250)
-        infoView.backgroundColor = CustomColors.B1
+        infoView.backgroundColor = .black
         infoView.layer.cornerRadius = 15
         infoView.layer.masksToBounds = true
         view.addSubview(infoView)
         priceView.frame = CGRect(x: 40, y: 70, width: 30, height: 30)
-        priceView.image = UIImage(named: "price")
+        priceView.image = UIImage(named: "icons8-price-50 (1)")
         infoView.addSubview(priceView)
+        priceLabel.textColor = .white
         priceLabel.frame = CGRect(x: 90, y: 70, width: 130, height: 30)
         priceLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         infoView.addSubview(priceLabel)
-        availabilityView.backgroundColor = .white
+        availabilityView.backgroundColor = UIColor(named: "G2")
         availabilityView.layer.cornerRadius = 10
         infoView.addSubview(availabilityView)
         availabilityView.translatesAutoresizingMaskIntoConstraints = false
@@ -71,7 +73,7 @@ class ProvideViewController: SelectedViewController {
         ])
         availabilityView.addSubview(availability)
         availability.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        availability.textColor = .black
+        availability.textColor = .white
         availability.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             availability.centerYAnchor.constraint(equalTo: availabilityView.centerYAnchor),
@@ -79,14 +81,14 @@ class ProvideViewController: SelectedViewController {
         ])
         itemLabel.text = "Item"
         itemLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        itemLabel.textColor = .black
+        itemLabel.textColor = .white
         infoView.addSubview(itemLabel)
         itemLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             itemLabel.topAnchor.constraint(equalTo: availabilityView.bottomAnchor, constant: 60),
             itemLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
         ])
-        itemView.backgroundColor = .white
+        itemView.backgroundColor = UIColor(named: "G2")
         itemView.layer.cornerRadius = 10
         infoView.addSubview(itemView)
         itemView.translatesAutoresizingMaskIntoConstraints = false
@@ -98,7 +100,7 @@ class ProvideViewController: SelectedViewController {
         ])
         itemView.addSubview(itemInfo)
         itemInfo.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        itemInfo.textColor = .black
+        itemInfo.textColor = .white
         itemInfo.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             itemInfo.centerYAnchor.constraint(equalTo: itemView.centerYAnchor),
@@ -106,7 +108,7 @@ class ProvideViewController: SelectedViewController {
         ])
         quantity.text = "Quantity"
         quantity.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        quantity.textColor = .black
+        quantity.textColor = .white
         infoView.addSubview(quantity)
         quantity.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -115,8 +117,8 @@ class ProvideViewController: SelectedViewController {
         ])
         numberLabel.text = "1"
         numberLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        numberLabel.textColor = .black
-        nameLabel.backgroundColor = .white
+        numberLabel.textColor = .white
+        nameLabel.backgroundColor = UIColor(named: "G2")
         numberLabel.layer.cornerRadius = 10
         numberLabel.layer.masksToBounds = true
         numberLabel.textAlignment = .center
@@ -126,7 +128,7 @@ class ProvideViewController: SelectedViewController {
         NSLayoutConstraint.activate([
             numberLabel.centerYAnchor.constraint(equalTo: quantity.centerYAnchor),
             numberLabel.leadingAnchor.constraint(equalTo: quantity.trailingAnchor, constant: 30),
-            numberLabel.widthAnchor.constraint(equalToConstant: 180),
+            numberLabel.widthAnchor.constraint(equalToConstant: 150),
             numberLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
         addButton.setTitle("+", for: .normal)
@@ -163,7 +165,7 @@ class ProvideViewController: SelectedViewController {
         trolleyButton.setTitle("Chat with the requester", for: .normal)
         trolleyButton.setTitleColor(.white, for: .normal)
         trolleyButton.titleLabel?.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        trolleyButton.backgroundColor = .black
+        trolleyButton.backgroundColor = UIColor(named: "G3")
         trolleyButton.layer.cornerRadius = 10
         trolleyButton.layer.masksToBounds = true
         trolleyButton.layer.borderWidth = 1
@@ -177,8 +179,8 @@ class ProvideViewController: SelectedViewController {
         ])
         trolleyButton.addTarget(self, action: #selector(trolleyButtonTapped), for: .touchUpInside)
         closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
-        closeButton.imageView?.tintColor = .black
-        closeButton.backgroundColor = .white
+        closeButton.imageView?.tintColor = .white
+        closeButton.backgroundColor = UIColor(named: "G2")
         closeButton.layer.cornerRadius = 30
         closeButton.layer.masksToBounds = true
         view.addSubview(closeButton)

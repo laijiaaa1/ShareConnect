@@ -44,7 +44,7 @@ class DetailViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
         setupView()
         if let product = product {
             titleLabel.text = product.name
@@ -59,7 +59,7 @@ class DetailViewController: UIViewController {
         view.addSubview(titleLabel)
         titleLabel.text = "Title"
         titleLabel.font = UIFont(name: "PingFangTC-Semibold", size: 30)
-        titleLabel.textColor = .black
+        titleLabel.textColor = .white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
@@ -77,7 +77,7 @@ class DetailViewController: UIViewController {
             detailImage.widthAnchor.constraint(equalToConstant: 320)
         ])
         view.addSubview(priceImage)
-        priceImage.image = UIImage(named: "price")
+        priceImage.image = UIImage(named: "icons8-price-50 (1)")
         priceImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             priceImage.topAnchor.constraint(equalTo: detailImage.bottomAnchor, constant: 30),
@@ -87,14 +87,14 @@ class DetailViewController: UIViewController {
         ])
         view.addSubview(price)
         price.text = "800 / Day"
-        price.font = UIFont(name: "PingFangTC-Semibold", size: 16)
-        price.textColor = .black
+        price.font = UIFont(name: "PingFangTC-Semibold", size: 18)
+        price.textColor = .white
         price.translatesAutoresizingMaskIntoConstraints = false
         price.centerYAnchor.constraint(equalTo: priceImage.centerYAnchor).isActive = true
-        price.leadingAnchor.constraint(equalTo: priceImage.trailingAnchor, constant: 30).isActive = true
+        price.leadingAnchor.constraint(equalTo: priceImage.trailingAnchor, constant: 20).isActive = true
         price.widthAnchor.constraint(equalToConstant: 200)
         view.addSubview(addCartButton)
-        addCartButton.setImage(UIImage(named: "icons8-buy-72(@3×)"), for: .normal)
+        addCartButton.setImage(UIImage(named: "icons8-cart-90"), for: .normal)
         addCartButton.translatesAutoresizingMaskIntoConstraints = false
         addCartButton.addTarget(self, action: #selector(goSelectedPage), for: .touchUpInside)
         NSLayoutConstraint.activate([
@@ -105,7 +105,7 @@ class DetailViewController: UIViewController {
         ])
         view.addSubview(chatButton)
         chatButton.addTarget(self, action: #selector(goChatPage), for: .touchUpInside)
-        chatButton.setImage(UIImage(named: "icons8-chat-72(@3×)"), for: .normal)
+        chatButton.setImage(UIImage(named: "icons8-customer-support-90 (1)"), for: .normal)
         chatButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             chatButton.centerYAnchor.constraint(equalTo: price.centerYAnchor),
@@ -124,7 +124,7 @@ class DetailViewController: UIViewController {
         ])
         collectionButton.addTarget(self, action: #selector(addCollection), for: .touchUpInside)
         view.addSubview(shareButton)
-        shareButton.setImage(UIImage(named: "icons8-share-72(@3×)"), for: .normal)
+        shareButton.setImage(UIImage(named: "icons8-share-96"), for: .normal)
         shareButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             shareButton.bottomAnchor.constraint(equalTo: titleLabel.bottomAnchor),
@@ -134,7 +134,7 @@ class DetailViewController: UIViewController {
         ])
         shareButton.addTarget(self, action: #selector(share), for: .touchUpInside)
         view.addSubview(availabilityView)
-        availabilityView.backgroundColor = .white
+        availabilityView.backgroundColor = UIColor(named: "G2")
         availabilityView.layer.cornerRadius = 10
         availabilityView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -146,7 +146,7 @@ class DetailViewController: UIViewController {
         availabilityView.addSubview(availability)
         availability.text = "Availability"
         availability.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        availability.textColor = .black
+        availability.textColor = .white
         availability.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             availability.centerYAnchor.constraint(equalTo: availabilityView.centerYAnchor),
@@ -166,7 +166,7 @@ class DetailViewController: UIViewController {
         dateImage.isUserInteractionEnabled = true
         dateImage.addGestureRecognizer(tapGesture)
         view.addSubview(descriptionView)
-        descriptionView.backgroundColor = .white
+        descriptionView.backgroundColor = UIColor(named: "G2")
         descriptionView.layer.cornerRadius = 10
         descriptionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -179,7 +179,7 @@ class DetailViewController: UIViewController {
         descriptionLabel.text = "Product details"
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        descriptionLabel.textColor = .black
+        descriptionLabel.textColor = .white
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             descriptionLabel.centerYAnchor.constraint(equalTo: descriptionView.centerYAnchor),
@@ -198,7 +198,7 @@ class DetailViewController: UIViewController {
         descriptionButton.isUserInteractionEnabled = true
         descriptionButton.addGestureRecognizer(tap)
         view.addSubview(otherView)
-        otherView.backgroundColor = .white
+        otherView.backgroundColor = UIColor(named: "G2")
         otherView.layer.cornerRadius = 10
         otherView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -210,7 +210,7 @@ class DetailViewController: UIViewController {
         otherView.addSubview(otherLabel)
         otherLabel.text = "Other remark"
         otherLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        otherLabel.textColor = .black
+        otherLabel.textColor = .white
         otherLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             otherLabel.centerYAnchor.constraint(equalTo: otherView.centerYAnchor),
@@ -239,14 +239,12 @@ class DetailViewController: UIViewController {
         view.addSubview(sellerButton)
         sellerButton.translatesAutoresizingMaskIntoConstraints = false
         sellerButton.backgroundColor = .black
-        sellerButton.setImage(UIImage(named: "icons8-user-48(@3×)"), for: .normal)
-        sellerButton.layer.cornerRadius = 15
-        sellerButton.layer.masksToBounds = true
+        sellerButton.setImage(UIImage(named: "icons8-comment-48(@2×)"), for: .normal)
         NSLayoutConstraint.activate([
             sellerButton.centerYAnchor.constraint(equalTo: addCartButton.centerYAnchor),
             sellerButton.trailingAnchor.constraint(equalTo: addCartButton.leadingAnchor, constant: -25),
-            sellerButton.widthAnchor.constraint(equalToConstant: 30),
-            sellerButton.heightAnchor.constraint(equalToConstant: 30)
+            sellerButton.widthAnchor.constraint(equalToConstant: 25),
+            sellerButton.heightAnchor.constraint(equalToConstant: 25)
         ])
         sellerButton.addTarget(self, action: #selector(sellerInfoShow), for: .touchUpInside)
     }

@@ -34,6 +34,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ClassCollectionViewCell.self, forCellWithReuseIdentifier: "classCell")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.tintColor = .white
         return collectionView
     }()
     let collectionView: UICollectionView = {
@@ -42,7 +43,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         layout.itemSize = CGSize(width: 180, height: 300)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
@@ -67,10 +67,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
     }
     override func viewDidLoad() {
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
         super.viewDidLoad()
         loadSavedCollections()
-        tabBarController?.tabBar.backgroundColor = CustomColors.B1
+//        tabBarController?.tabBar.backgroundColor = CustomColors.B1
         collectionView.showsVerticalScrollIndicator = false
         setupUI()
         navigationItem.title = "SHARECONNECT"
@@ -207,7 +207,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             self.lineView.frame.origin.x = position
         }
         self.lineView.layoutIfNeeded()
-        button1.setTitleColor(.black, for: .normal)
+        button1.setTitleColor(.white, for: .normal)
         button2.setTitleColor(.lightGray, for: .normal)
         if usification == "product" {
             fetchRequestsForUser(type: .request, usification: "product")
@@ -224,7 +224,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         self.lineView.layoutIfNeeded()
         button1.setTitleColor(.lightGray, for: .normal)
-        button2.setTitleColor(.black, for: .normal)
+        button2.setTitleColor(.white, for: .normal)
         if usification == "place" {
             fetchRequestsForUser(type: .supply, usification: "place")
         } else {
@@ -237,6 +237,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
+        stackView.backgroundColor = .black
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -245,15 +246,15 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         ])
         button1.setTitle("Request", for: .normal)
         button1.startAnimatingPressActions()
-        button1.setTitleColor(.black, for: .normal)
+        button1.setTitleColor(.white, for: .normal)
         button1.addTarget(self, action: #selector(button1Action), for: .touchUpInside)
         button2.setTitle("Available", for: .normal)
         button2.startAnimatingPressActions()
-        button2.setTitleColor(.black, for: .normal)
+        button2.setTitleColor(.white, for: .normal)
         button2.addTarget(self, action: #selector(button2Action), for: .touchUpInside)
         stackView.addArrangedSubview(button1)
         stackView.addArrangedSubview(button2)
-        lineView.backgroundColor = .black
+        lineView.backgroundColor = .white
         lineView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(lineView)
         NSLayoutConstraint.activate([
@@ -262,7 +263,8 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2),
             lineView.heightAnchor.constraint(equalToConstant: 2)
         ])
-        classCollectionView.backgroundColor = CustomColors.B1
+        classCollectionView.backgroundColor = .black
+        classCollectionView.tintColor = .white
         classCollectionView.translatesAutoresizingMaskIntoConstraints = false
         classCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(classCollectionView)
@@ -279,7 +281,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10
         view.addSubview(collectionView)
-        collectionView.backgroundColor = CustomColors.B1
+        collectionView.backgroundColor = .black
+        collectionView.tintColor = .white
+        collectionView.layer.cornerRadius = 10
+        collectionView.layer.masksToBounds = true
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: classCollectionView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),

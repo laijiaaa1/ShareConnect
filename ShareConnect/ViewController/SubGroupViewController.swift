@@ -31,18 +31,21 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         layout.itemSize = CGSize(width: 180, height: 300)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .black
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
     override func viewWillAppear(_ animated: Bool) {
         fetchRequestsForUser(type: .request)
+        tabBarController?.tabBar.backgroundColor = .black
+        tabBarController?.tabBar.barTintColor = .black
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.tintColor = .white
     }
     override func viewDidLoad() {
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
         super.viewDidLoad()
         loadSavedCollections()
-        tabBarController?.tabBar.backgroundColor = CustomColors.B1
         collectionView.showsVerticalScrollIndicator = false
         setupUI()
         navigationItem.title = "SHARECONNECT"
@@ -124,7 +127,7 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
     @objc func button1Action() {
         currentButtonType = .request
         lineView.center.x = button1.center.x
-        button1.setTitleColor(.black, for: .normal)
+        button1.setTitleColor(.white, for: .normal)
         button2.setTitleColor(.lightGray, for: .normal)
         fetchRequestsForUser(type: .request)
         collectionView.reloadData()
@@ -133,7 +136,7 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         currentButtonType = .supply
         lineView.center.x = button2.center.x
         button1.setTitleColor(.lightGray, for: .normal)
-        button2.setTitleColor(.black, for: .normal)
+        button2.setTitleColor(.white, for: .normal)
         fetchRequestsForUser(type: .supply)
         collectionView.reloadData()
     }
@@ -149,14 +152,16 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
             stackView.heightAnchor.constraint(equalToConstant: 44)
         ])
         button1.setTitle("Request", for: .normal)
-        button1.setTitleColor(.black, for: .normal)
+        button1.setTitleColor(.white, for: .normal)
+        button1.backgroundColor = .black
         button1.addTarget(self, action: #selector(button1Action), for: .touchUpInside)
         button2.setTitle("Available", for: .normal)
-        button2.setTitleColor(.black, for: .normal)
+        button2.setTitleColor(.white, for: .normal)
+        button2.backgroundColor = .black
         button2.addTarget(self, action: #selector(button2Action), for: .touchUpInside)
         stackView.addArrangedSubview(button1)
         stackView.addArrangedSubview(button2)
-        lineView.backgroundColor = .black
+        lineView.backgroundColor = .white
         lineView.translatesAutoresizingMaskIntoConstraints = false
         lineView.center.x = button1.center.x
         view.addSubview(lineView)
@@ -173,7 +178,7 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10
         view.addSubview(collectionView)
-        collectionView.backgroundColor = CustomColors.B1
+        collectionView.backgroundColor = .black
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: lineView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),

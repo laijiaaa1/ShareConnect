@@ -38,7 +38,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }
     func setupUI() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .yellow
+        imageView.backgroundColor = .white
         imageView.layer.cornerRadius = 10
         imageView.layer.masksToBounds = true
         contentView.addSubview(imageView)
@@ -50,6 +50,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         ])
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.text = "Name"
+        nameLabel.textColor = .white
         nameLabel.font = UIFont.systemFont(ofSize: 12)
         contentView.addSubview(nameLabel)
         NSLayoutConstraint.activate([
@@ -60,6 +61,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         ])
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
         priceLabel.text = "$ 0.00"
+        priceLabel.textColor = .white
         priceLabel.font = UIFont.systemFont(ofSize: 12)
         contentView.addSubview(priceLabel)
         NSLayoutConstraint.activate([
@@ -70,6 +72,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         ])
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         dateLabel.text = "Date"
+        dateLabel.textColor = .white
         dateLabel.font = UIFont.systemFont(ofSize: 12)
         contentView.addSubview(dateLabel)
         NSLayoutConstraint.activate([

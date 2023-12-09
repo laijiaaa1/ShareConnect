@@ -30,9 +30,8 @@ class GroupTableViewCell: UITableViewCell {
         groupImage.layer.borderWidth = 1
         groupNameLabel.text = "Camping Group"
         groupMemberNumberLabel.text = "member：1"
-        groupMemberNumberImage.backgroundColor = .yellow
+        groupMemberNumberImage.backgroundColor = UIColor(named: "G3")
         groupMemberNumberImage.layer.cornerRadius = 10
-        groupMemberNumberImage.layer.borderWidth = 1
         groupMemberNumberImage.layer.masksToBounds = true
         groupButton.setTitle("        +", for: .normal)
         groupButton.contentHorizontalAlignment = .center
@@ -74,7 +73,7 @@ class GroupTableViewCell: UITableViewCell {
             groupMemberNumberImage.widthAnchor.constraint(equalToConstant: 20),
             groupMemberNumberImage.heightAnchor.constraint(equalToConstant: 20),
             groupMemberNumberLabel.topAnchor.constraint(equalTo: groupNameLabel.bottomAnchor, constant: 15),
-            groupMemberNumberLabel.leadingAnchor.constraint(equalTo: groupMemberNumberImage.trailingAnchor, constant: 20),
+            groupMemberNumberLabel.leadingAnchor.constraint(equalTo: groupMemberNumberImage.trailingAnchor, constant: 10),
             groupButton.topAnchor.constraint(equalTo: groupImage.bottomAnchor, constant: 15),
             groupButton.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20),
             groupButton.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -20),

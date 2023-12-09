@@ -45,7 +45,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         view.addGestureRecognizer(tapGesture)
         browsingHistoryCollection.reloadData()
         let textAttributes = [NSAttributedString.Key.font:UIFont(name: "GeezaPro-Bold", size: 20)]
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
         searchProduct()
         groupClass()
         hotGroup()
@@ -107,20 +107,22 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             label.text = labels[i]
             label.font = UIFont(name: "GeezaPro-Bold", size: 15)
             label.textAlignment = .center
+            label.textColor = .white
             view.addSubview(label)
             let button = UIButton(frame: CGRect(x: 30 + 88 * i, y: 170, width: 70, height: 70))
             button.tag = i
             button.addTarget(self, action: #selector(buttonClick), for: .touchUpInside)
             view.addSubview(button)
         }
-        let line = UIView(frame: CGRect(x: 0, y: 280, width: view.frame.width, height: 1))
-        line.backgroundColor = .lightGray
-        view.addSubview(line)
+//        let line = UIView(frame: CGRect(x: 0, y: 280, width: view.frame.width, height: 1))
+//        line.backgroundColor = .lightGray
+//        view.addSubview(line)
     }
     func hotGroup() {
         let hotCollectionLabel = UILabel(frame: CGRect(x: 30, y: 310, width: 160, height: 20))
         hotCollectionLabel.text = "Hot Collections"
         hotCollectionLabel.font = UIFont(name: "GeezaPro-Bold", size: 18)
+        hotCollectionLabel.textColor = .white
         view.addSubview(hotCollectionLabel)
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -133,13 +135,14 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         hotCollection.backgroundColor = .clear
         hotScrollView.showsHorizontalScrollIndicator = false
         hotCollection.showsHorizontalScrollIndicator = false
-        let line2 = UIView(frame: CGRect(x: 0, y: 530, width: view.frame.width, height: 1))
-        line2.backgroundColor = .lightGray
-        view.addSubview(line2)
+//        let line2 = UIView(frame: CGRect(x: 0, y: 530, width: view.frame.width, height: 1))
+//        line2.backgroundColor = .lightGray
+//        view.addSubview(line2)
     }
     func browsHistory() {
         browsingHistory.frame = CGRect(x: 30, y: 560, width: 160, height: 20)
         browsingHistory.text = "Browsing History"
+        browsingHistory.textColor = .white
         browsingHistory.font = UIFont(name: "GeezaPro-Bold", size: 18)
         view.addSubview(browsingHistory)
         let layout2 = UICollectionViewFlowLayout()
@@ -155,7 +158,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         historyScrollView.contentSize = CGSize(width: historyTotalWidth, height: browsingHistoryCollection.frame.height)
     }
     func chatList() {
-        chatListButton.setImage(UIImage(named: "icons8-chat-24(@1×)"), for: .normal)
+        chatListButton.setImage(UIImage(named: "icons8-message-24(@1×)"), for: .normal)
+        chatListButton.frame.size = CGSize(width: 30, height: 30)
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: chatListButton)
         chatListButton.addTarget(self, action: #selector(chatListButtonClick), for: .touchUpInside)
         view.addSubview(chatListButton)
@@ -252,9 +257,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 cell.addSubview(label)
                 let imageButton = UIButton(frame: CGRect(x: 230, y: 80, width: 60, height: 30))
                 imageButton.setTitle("Detail", for: .normal)
-                imageButton.setTitleColor(.black, for: .normal)
+                imageButton.setTitleColor(.white, for: .normal)
                 imageButton.layer.cornerRadius = 10
-                imageButton.layer.borderWidth = 1
+                imageButton.backgroundColor = UIColor(named: "G3")
                 imageButton.titleLabel?.font = UIFont(name: "GeezaPro-Bold", size: 15)
                 imageButton.tag = indexPath.row
                 imageButton.addTarget(self, action: #selector(imageButtonClick), for: .touchUpInside)
