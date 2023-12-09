@@ -166,6 +166,7 @@ struct ChatMessage {
     let imageURL: String?
     var isLocation: Bool?
     var mapLink: String?
+    var audioURL: String?
 }
 struct User {
     let uid: String

@@ -12,18 +12,30 @@ import FirebaseStorage
 import Kingfisher
 import MapKit
 import CoreLocation
+import AVFoundation
+import AVKit
+import Firebase
+import FirebaseDatabase
 
 protocol ChatDelegate: AnyObject {
     func didReceiveNewMessage(_ message: ChatMessage)
     func didSelectChatRoom(_ chatRoomID: String)
 }
-class ChatViewController: UIViewController, MKMapViewDelegate {
+class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDelegate {
     var cart: [Seller: [Product]]?
     var sellerID: String?
     var buyerID: String?
     let tableView = UITableView()
     let messageTextField = UITextField()
     let sendButton = UIButton()
+    let voiceButton = UIButton()
+    var audioRecorder: AVAudioRecorder!
+        var audioPlayer: AVAudioPlayer!
+        var audioFileURL: URL!
+        var audioStorageRef: StorageReference!
+        var databaseRef: DatabaseReference!
+    var audioURL: String?
+    var isRecording = false
     var chatMessages = [ChatMessage]()
     var cartString = ""
     var firestore: Firestore = Firestore.firestore()
@@ -78,6 +90,8 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         tableView.register(TextCell.self, forCellReuseIdentifier: "textCell")
         tableView.register(ImageCell.self, forCellReuseIdentifier: "imageCell")
         tableView.register(MapCell.self, forCellReuseIdentifier: "mapCell")
+        tableView.register(VoiceCell.self, forCellReuseIdentifier: "voiceCell")
+
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -159,7 +173,8 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
                                let chatRoomID = documentData?["chatRoomID"] as? String,
                                let sellerID = documentData?["seller"] as? String,
                                let buyerID = documentData?["buyer"] as? String,
-                               let imageURL = documentData?["imageURL"] as? String {
+                               let imageURL = documentData?["imageURL"] as? String,
+                               let audioURL = documentData?["audioURL"] as? String {
                                 let timestamp = timestampString.dateValue()
                                 let message = ChatMessage(
                                     text: text,
@@ -170,7 +185,9 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
                                     chatRoomID: chatRoomID,
                                     sellerID: sellerID,
                                     buyerID: buyerID,
-                                    imageURL: imageURL
+                                    imageURL: imageURL,
+                                    audioURL: audioURL
+                                    
                                 )
                                 self.chatMessages.append(message)
                             }
@@ -271,9 +288,13 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
                    let buyerID = data["buyer"] as? String,
                    let sellerID = data["seller"] as? String,
                    let chatRoomID = data["chatRoomID"] as? String,
-                   let imageURL = data["imageURL"] as? String {
-                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL)
+                   let audioURL = data["audioURL"] as? String,
+                   let imageURL = data["imageURL"] as? String
+                 {
+                    print("Download URL: \(audioURL)")
+                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL, audioURL: audioURL)
                     self.chatMessages.append(chatMessage)
+                   
                 }
             }
             self.chatMessages.sort { $0.timestamp.dateValue() < $1.timestamp.dateValue() }
@@ -290,7 +311,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         messageTextField.placeholder = "Type your message here..."
         messageTextField.borderStyle = .roundedRect
         messageTextField.backgroundColor = .white
-        messageTextField.frame = CGRect(x: 100, y: view.bounds.height - 80, width: view.bounds.width - 140, height: 40)
+        messageTextField.frame = CGRect(x: 130, y: view.bounds.height - 80, width: view.bounds.width - 180, height: 40)
         view.addSubview(messageTextField)
         let imageButton = UIButton(type: .system)
         imageButton.setImage(UIImage(named: "icons8-unsplash-30(@1×)"), for: .normal)
@@ -320,7 +341,78 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         locationButton.frame = CGRect(x: 10, y: view.bounds.height - 80, width: 50, height: 50)
         locationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
         view.addSubview(locationButton)
+        view.addSubview(voiceButton)
+        voiceButton.translatesAutoresizingMaskIntoConstraints = false
+        voiceButton.setImage(UIImage(systemName: "mic"), for: .normal)
+        voiceButton.addTarget(self, action: #selector(voiceButtonTapped), for: .touchUpInside)
+        voiceButton.tintColor = .black
+        NSLayoutConstraint.activate([
+            voiceButton.topAnchor.constraint(equalTo: imageButton.topAnchor),
+            voiceButton.leadingAnchor.constraint(equalTo: imageButton.trailingAnchor, constant: -10),
+            voiceButton.widthAnchor.constraint(equalToConstant: 55),
+            voiceButton.heightAnchor.constraint(equalToConstant: 55)
+        ])
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+           voiceButton.addGestureRecognizer(longPressGesture)
     }
+    @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            startRecording()
+        } else if gesture.state == .ended {
+            stopRecording()
+            uploadAudioToFirebase()
+        }
+    }
+    @objc func voiceButtonTapped() {
+        if isRecording {
+            stopRecording()
+        } else {
+            startRecording()
+        }
+    }
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    func startRecording() {
+            let audioFilename = getDocumentsDirectory().appendingPathComponent("recording.wav")
+
+            let settings = [
+                AVFormatIDKey: Int(kAudioFormatLinearPCM),
+                AVSampleRateKey: 12000,
+                AVNumberOfChannelsKey: 1,
+                AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+            ]
+
+            do {
+                audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
+                audioRecorder.delegate = self
+                audioRecorder.record()
+                isRecording = true
+                updateUIForRecording(true)
+            } catch {
+                print("錄音失敗")
+            }
+        }
+
+        func stopRecording() {
+            audioRecorder.stop()
+            audioRecorder = nil
+            isRecording = false
+            updateUIForRecording(false)
+            audioFileURL = audioFileURL ?? getDocumentsDirectory().appendingPathComponent("recording.wav")
+             
+        }
+
+        func updateUIForRecording(_ isRecording: Bool) {
+            if isRecording {
+                   voiceButton.setImage(UIImage(systemName: "mic.fill"), for: .normal)
+                   voiceButton.tintColor = .red
+               } else {
+                   voiceButton.setImage(UIImage(systemName: "mic"), for: .normal)
+                   voiceButton.tintColor = .black
+               }
+        }
     @objc func locationButtonTapped() {
         let mapViewController = MapSelectionViewController()
         mapViewController.delegate = self
@@ -405,7 +497,8 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             "buyer": currentUser?.uid ?? "",
             "seller": buyerID ?? "",
             "chatRoomID": chatRoomID ?? "",
-            "imageURL": imageURL ?? ""
+            "imageURL": imageURL ?? "",
+            "audioURL": audioURL ?? ""
         ]
         if let location = location {
             let geoPoint = GeoPoint(latitude: location.latitude, longitude: location.longitude)
@@ -444,12 +537,77 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         }
         return cartString
     }
+    func uploadAudioToFirebase() {
+        guard let audioFileURL = audioFileURL else {
+               print("Error: audioFileURL is nil.")
+               return
+           }
+
+           guard let audioData = try? Data(contentsOf: audioFileURL) else {
+               print("Error creating audio data.")
+               return
+           }
+let audioStorageRef = Storage.storage().reference().child("audio")
+        
+        let audioRef = audioStorageRef.child(UUID().uuidString + ".wav")
+
+        audioRef.putData(audioData, metadata: nil) { [weak self] (metadata, error) in
+            guard let self = self else {
+                print("Self is nil.")
+                return
+            }
+
+            if let error = error {
+                print("Upload failed: \(error.localizedDescription)")
+                return
+            }
+
+            audioRef.downloadURL { (url, error) in
+                guard let downloadURL = url else {
+                    print("Unable to get download URL: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                self.saveAudioMessageToDatabase(downloadURL: downloadURL.absoluteString)
+            }
+        }
+    }
+
+    func saveAudioMessageToDatabase(downloadURL: String) {
+        guard let chatRoomDocument = chatRoomDocument else {
+            print("Chat room document is nil.")
+            return
+        }
+
+        let messagesCollection = chatRoomDocument.collection("messages")
+        let audioMessage = [
+            "text": downloadURL,
+            "audioURL": downloadURL,
+            "isMe": true,
+            "timestamp": FieldValue.serverTimestamp(),
+            "name": currentUser?.name ?? "",
+            "profileImageUrl": currentUser?.profileImageUrl ?? "",
+            "buyer": currentUser?.uid ?? "",
+            "seller": buyerID ?? "",
+            "chatRoomID": chatRoomID ?? "",
+            "imageURL": nil ?? "",
+        ] as [String : Any]
+
+        messagesCollection.addDocument(data: audioMessage) { [weak self] (error) in
+            if let error = error {
+                print("Error sending audio message: \(error.localizedDescription)")
+                return
+            }
+            self?.tableView.reloadData()
+        }
+    }
+
 }
 extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatMessages.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let chatMessage = chatMessages[indexPath.row]
         if chatMessages[indexPath.row].imageURL != "" {
             let cell = tableView.dequeueReusableCell(withIdentifier: "imageCell", for: indexPath) as! ImageCell
             let chatMessage = chatMessages[indexPath.row]
@@ -458,37 +616,43 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             if let imagePost = URL(string: chatMessage.imageURL ?? "") {
                 cell.imageURLpost.kf.setImage(with: imagePost)
             }
-//            let isMe = chatMessage.buyerID == Auth.auth().currentUser?.uid
-//            if isMe == true {
-                cell.timestampLabel.textAlignment = .right
-                cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
-                cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40).isActive = true
-                cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.imageURLpost.leadingAnchor, constant: -20).isActive = true
-
-                cell.imageURLpost.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15).isActive = true
-                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
-                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
-                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-                cell.imageURLpost.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-                cell.imageURLpost.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
-                cell.imageURLpost.widthAnchor.constraint(equalToConstant: 80).isActive = true
-                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
-                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
-//            } else {
-//                cell.timestampLabel.textAlignment = .left
-//                cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
-//                cell.image.trailingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 40).isActive = true
-//                cell.imageURLpost.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 15).isActive = true
-//                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
-//                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
-//                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-//                cell.timestampLabel.leadingAnchor.constraint(equalTo: cell.imageURLpost.trailingAnchor, constant: 20).isActive = true
-//                cell.imageURLpost.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-//                cell.imageURLpost.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
-//                cell.imageURLpost.widthAnchor.constraint(equalToConstant: 80).isActive = true
-//                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
-//                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
-//            }
+            //            let isMe = chatMessage.buyerID == Auth.auth().currentUser?.uid
+            //            if isMe == true {
+            cell.timestampLabel.textAlignment = .right
+            cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
+            cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40).isActive = true
+            cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.imageURLpost.leadingAnchor, constant: -20).isActive = true
+            
+            cell.imageURLpost.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15).isActive = true
+            cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+            cell.imageURLpost.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+            cell.imageURLpost.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
+            cell.imageURLpost.widthAnchor.constraint(equalToConstant: 80).isActive = true
+            cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
+            cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
+            //            } else {
+            //                cell.timestampLabel.textAlignment = .left
+            //                cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
+            //                cell.image.trailingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 40).isActive = true
+            //                cell.imageURLpost.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 15).isActive = true
+            //                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            //                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            //                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+            //                cell.timestampLabel.leadingAnchor.constraint(equalTo: cell.imageURLpost.trailingAnchor, constant: 20).isActive = true
+            //                cell.imageURLpost.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+            //                cell.imageURLpost.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
+            //                cell.imageURLpost.widthAnchor.constraint(equalToConstant: 80).isActive = true
+            //                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
+            //                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
+            //            }
+            return cell
+        } else if chatMessage.audioURL != "" {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "voiceCell", for: indexPath) as! VoiceCell
+               let audioURL = chatMessage.audioURL
+            print("Audio URL: \(audioURL)") // Add this line to print the audio URL
+            cell.configure(with: audioURL)
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "textCell", for: indexPath) as! TextCell
@@ -498,46 +662,46 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             cell.messageLabel.text = chatMessage.text
             cell.messageLabel.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
             cell.messageLabel.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
-//        let isMe = Auth.auth().currentUser?.uid
-//            if isMe == chatMessage.buyerID{
-                NSLayoutConstraint.activate([
-                    cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10),
-                    cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40),
-                    cell.messageLabel.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15),
-                    cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.messageLabel.leadingAnchor, constant: -20),
-                    cell.image.widthAnchor.constraint(equalToConstant: 30),
-                    cell.image.heightAnchor.constraint(equalToConstant: 30),
-                    cell.messageLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5),
-                    cell.messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150),
-                    cell.messageLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
-                    cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
-                    cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor),
-                    cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5),
-                ])
-//            } else {
-//                cell.messageLabel.textAlignment = .left
-//                cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
-//                cell.image.trailingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 40).isActive = true
-//                cell.messageLabel.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 15).isActive = true
-//                cell.timestampLabel.leadingAnchor.constraint(equalTo: cell.messageLabel.trailingAnchor, constant: 20).isActive = true
-//                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
-//                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
-//                cell.messageLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
-//                cell.messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
-//                cell.messageLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-//                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-//                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
-//                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
-//            }
+            //        let isMe = Auth.auth().currentUser?.uid
+            //            if isMe == chatMessage.buyerID{
+            NSLayoutConstraint.activate([
+                cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10),
+                cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40),
+                cell.messageLabel.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15),
+                cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.messageLabel.leadingAnchor, constant: -20),
+                cell.image.widthAnchor.constraint(equalToConstant: 30),
+                cell.image.heightAnchor.constraint(equalToConstant: 30),
+                cell.messageLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5),
+                cell.messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150),
+                cell.messageLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
+                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
+                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor),
+                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5),
+            ])
+            //            } else {
+            //                cell.messageLabel.textAlignment = .left
+            //                cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
+            //                cell.image.trailingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 40).isActive = true
+            //                cell.messageLabel.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 15).isActive = true
+            //                cell.timestampLabel.leadingAnchor.constraint(equalTo: cell.messageLabel.trailingAnchor, constant: 20).isActive = true
+            //                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            //                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            //                cell.messageLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
+            //                cell.messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
+            //                cell.messageLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+            //                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+            //                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
+            //                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
+            //            }
             cell.messageLabel.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
             cell.messageLabel.numberOfLines = 0
             cell.messageLabel.layer.cornerRadius = 10
             cell.messageLabel.layer.masksToBounds = true
             if let mapLink = cell.messageLabel.text, let url = URL(string: mapLink) {
-                   let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openMap(_:)))
-                   cell.messageLabel.isUserInteractionEnabled = true
-                   cell.messageLabel.addGestureRecognizer(tapGesture)
-               }
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openMap(_:)))
+                cell.messageLabel.isUserInteractionEnabled = true
+                cell.messageLabel.addGestureRecognizer(tapGesture)
+            }
             return cell
         }
     }
@@ -548,7 +712,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let minHeight: CGFloat = 80
         let dynamicHeight = calculateDynamicHeight(for: indexPath)

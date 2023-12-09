@@ -12,6 +12,7 @@ import FirebaseStorage
 import Kingfisher
 import MapKit
 import CoreLocation
+import AVFAudio
 
 class TextCell: UITableViewCell {
     let timestampLabel: UILabel = {
@@ -311,5 +312,113 @@ class MapCell: UITableViewCell {
     @objc func openMap(_ gesture: UITapGestureRecognizer) {
         guard let mapLink = chatMessage?.text, let url = URL(string: mapLink) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+}
+
+class VoiceCell: UITableViewCell {
+    var audioPlayer: AVAudioPlayer?
+    var playButton = UIButton()
+    var audioURL: String? {
+        didSet {
+            guard let audioURL = audioURL else { return }
+            let url = URL(string: audioURL)
+            downloadFileFromURL(url: url!)
+        }
+    }
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    private func setupUI() {
+        // Add play button to the cell
+        playButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
+        playButton.tintColor = .black
+        playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchUpInside)
+        contentView.addSubview(playButton)
+
+        // Set up constraints for the play button
+        playButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            playButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            playButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            playButton.widthAnchor.constraint(equalToConstant: 30),
+            playButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+    }
+
+    @objc func playButtonTapped() {
+        if let audioPlayer = audioPlayer {
+            if audioPlayer.isPlaying {
+                // If audio is already playing, stop playback
+                audioPlayer.stop()
+                playButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
+            } else {
+                // If audio is not playing, start playback
+                audioPlayer.play()
+                playButton.setImage(UIImage(systemName: "pause.circle"), for: .normal)
+            }
+        } else {
+            print("Audio player is nil. Check the file format and URL.")
+        }
+    }
+
+    func downloadFileFromURL(url: URL) {
+        let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let destinationURL = documentsDirectoryURL.appendingPathComponent(url.lastPathComponent)
+
+        // If the file exists locally, use it
+        if FileManager.default.fileExists(atPath: destinationURL.path) {
+            setupAudioPlayer(with: destinationURL)
+        } else {
+            // Download the file if it doesn't exist locally
+            URLSession.shared.downloadTask(with: url) { [weak self] (tempURL, _, error) in
+                guard let self = self, let tempURL = tempURL, error == nil else {
+                    print("Error downloading file: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+
+                do {
+                    // Move the downloaded file to the destination URL
+                    try FileManager.default.moveItem(at: tempURL, to: destinationURL)
+                    self.setupAudioPlayer(with: destinationURL)
+                } catch {
+                    print("Error moving file: \(error.localizedDescription)")
+                }
+            }.resume()
+        }
+    }
+
+    func setupAudioPlayer(with fileURL: URL) {
+        // Set up your audio player with the file URL
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+            audioPlayer?.delegate = self
+            audioPlayer?.prepareToPlay()
+            playButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
+        } catch {
+            print("Error initializing AVAudioPlayer: \(error.localizedDescription)")
+        }
+    }
+
+    func configure(with audioURL: String?) {
+        self.audioURL = audioURL
+    }
+}
+
+extension VoiceCell: AVAudioPlayerDelegate {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        playButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
+    }
+
+    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+        // Handle audio decoding errors if needed
+        print("Audio decoding error: \(error?.localizedDescription ?? "Unknown error")")
     }
 }

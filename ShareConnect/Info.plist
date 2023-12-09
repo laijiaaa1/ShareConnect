@@ -4,6 +4,8 @@
 <dict>
 	<key></key>
 	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to your microphone for recording audio messages.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to give you location services.</string>
 	<key>NSCameraUsageDescription</key>
