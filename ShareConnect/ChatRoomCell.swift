@@ -14,27 +14,27 @@ import MapKit
 import CoreLocation
 
 class TextCell: UITableViewCell {
-    let label: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .white
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+//    let label: UILabel = {
+//        let label = UILabel()
+//        label.font = UIFont.systemFont(ofSize: 15)
+//        label.textColor = .white
+//        label.numberOfLines = 0
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        return label
+//    }()
     let timestampLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .gray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+        let timestampLabel = UILabel()
+        timestampLabel.font = UIFont.systemFont(ofSize: 12)
+        timestampLabel.textColor = .gray
+        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
+        return timestampLabel
     }()
     let nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .gray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+        let nameLabel = UILabel()
+        nameLabel.font = UIFont.systemFont(ofSize: 12)
+        nameLabel.textColor = .gray
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        return nameLabel
     }()
     let image: UIImageView = {
         let image = UIImageView()
@@ -44,17 +44,17 @@ class TextCell: UITableViewCell {
         return image
     }()
     let messageLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .white
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+        let messageLabel = UILabel()
+        messageLabel.font = UIFont.systemFont(ofSize: 15)
+        messageLabel.textColor = .white
+        messageLabel.numberOfLines = 0
+        messageLabel.translatesAutoresizingMaskIntoConstraints = false
+        return messageLabel
     }()
     var chatMessage: ChatMessage?
     override func prepareForReuse() {
         super.prepareForReuse()
-        label.text = ""
+//        label.text = ""
         timestampLabel.text = ""
         nameLabel.text = ""
         image.image = nil
@@ -68,63 +68,77 @@ class TextCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     private func setupUI() {
-        contentView.addSubview(label)
+//        contentView.addSubview(label)
         contentView.addSubview(timestampLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(image)
         contentView.addSubview(messageLabel)
-        image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
-        image.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40).isActive = true
-        image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        label.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
-        label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
-        label.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
-        label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
-        nameLabel.centerXAnchor.constraint(equalTo: image.centerXAnchor).isActive = true
-        nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5).isActive = true
-        timestampLabel.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: -20).isActive = true
-        timestampLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: -5).isActive = true
-        messageLabel.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
-        messageLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
-        messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
-        messageLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+        if chatMessage?.buyerID == Auth.auth().currentUser?.uid ?? "" {
+//            label.textAlignment = .right
+            messageLabel.textAlignment = .right
+            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
+            image.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40).isActive = true
+//            label.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
+            messageLabel.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
+            timestampLabel.trailingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: -20).isActive = true
+            image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            messageLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
+            messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
+            messageLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            timestampLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            nameLabel.centerXAnchor.constraint(equalTo: image.centerXAnchor).isActive = true
+            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5).isActive = true
+            
+        } else {
+//            label.textAlignment = .left
+            messageLabel.textAlignment = .left
+            image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+            image.trailingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40).isActive = true
+//            label.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 15).isActive = true
+            messageLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 15).isActive = true
+            timestampLabel.leadingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 20).isActive = true
+            image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            messageLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
+            messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
+            messageLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            timestampLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            nameLabel.centerXAnchor.constraint(equalTo: image.centerXAnchor).isActive = true
+            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5).isActive = true
+        }
     }
     func configure(with chatMessage: ChatMessage) {
         self.chatMessage = chatMessage
-        label.text = chatMessage.text
-        nameLabel.text = chatMessage.buyerID == Auth.auth().currentUser?.uid ? chatMessage.name ?? "Buyer" :  "Seller"
+        messageLabel.text = chatMessage.text
+//        nameLabel.text = chatMessage.buyerID == Auth.auth().currentUser?.uid ? chatMessage.name ?? "Buyer" :  "Seller"
+        
+        nameLabel.text = chatMessage.name
         image.kf.setImage(with: URL(string: chatMessage.profileImageUrl))
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
         timestampLabel.textColor = .gray
-        //        timestampLabel.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
     }
+//    @objc func openMap(_ gesture: UITapGestureRecognizer) {
+//        guard let mapLink = chatMessage?.text, let url = URL(string: mapLink) else { return }
+//        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//    }
 }
 class ImageCell: UITableViewCell {
-    let label: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .white
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     let timestampLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .gray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+        let timestampLabel = UILabel()
+        timestampLabel.font = UIFont.systemFont(ofSize: 12)
+        timestampLabel.textColor = .gray
+        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
+        return timestampLabel
     }()
     let nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .gray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+        let nameLabel = UILabel()
+        nameLabel.font = UIFont.systemFont(ofSize: 12)
+        nameLabel.textColor = .gray
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        return nameLabel
     }()
     let image: UIImageView = {
         let image = UIImageView()
@@ -143,7 +157,6 @@ class ImageCell: UITableViewCell {
     var chatMessage: ChatMessage?
     override func prepareForReuse() {
         super.prepareForReuse()
-        label.text = ""
         timestampLabel.text = ""
         nameLabel.text = ""
         image.image = nil
@@ -157,36 +170,49 @@ class ImageCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     private func setupUI() {
-        contentView.addSubview(label)
         contentView.addSubview(timestampLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(image)
         contentView.addSubview(imageURLpost)
-        NSLayoutConstraint.activate([
-            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            image.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
-            image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            image.widthAnchor.constraint(equalToConstant: 30),
-            image.heightAnchor.constraint(equalToConstant: 30),
-            label.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15),
-            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            label.widthAnchor.constraint(lessThanOrEqualToConstant: 150),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            nameLabel.centerXAnchor.constraint(equalTo: image.centerXAnchor),
-            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5),
-            timestampLabel.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: -20),
-            timestampLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: -5),
-            imageURLpost.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15),
-            imageURLpost.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            imageURLpost.widthAnchor.constraint(lessThanOrEqualToConstant: 150),
-            imageURLpost.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
-        ])
+        if chatMessage?.buyerID == Auth.auth().currentUser?.uid ?? "" {
+            timestampLabel.textAlignment = .right
+            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
+            image.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40).isActive = true
+            timestampLabel.trailingAnchor.constraint(equalTo: imageURLpost.leadingAnchor, constant: -20).isActive = true
+
+            imageURLpost.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
+            image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            timestampLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            imageURLpost.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            imageURLpost.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
+            imageURLpost.widthAnchor.constraint(equalToConstant: 80).isActive = true
+            nameLabel.centerXAnchor.constraint(equalTo: image.centerXAnchor).isActive = true
+            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5).isActive = true
+        } else {
+            timestampLabel.textAlignment = .left
+            image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+            image.trailingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40).isActive = true
+            imageURLpost.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 15).isActive = true
+            image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            timestampLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            timestampLabel.leadingAnchor.constraint(equalTo: imageURLpost.trailingAnchor, constant: 20).isActive = true
+            imageURLpost.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            imageURLpost.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
+            imageURLpost.widthAnchor.constraint(equalToConstant: 80).isActive = true
+            nameLabel.centerXAnchor.constraint(equalTo: image.centerXAnchor).isActive = true
+            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5).isActive = true
+        }
     }
     func configure(with chatMessage: ChatMessage) {
-        label.text = chatMessage.text
+        self.chatMessage = chatMessage
         nameLabel.text = chatMessage.name
         image.kf.setImage(with: URL(string: chatMessage.profileImageUrl))
-        imageURLpost.kf.setImage(with: URL(string: chatMessage.imageURL ?? ""))
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
+        timestampLabel.textColor = .gray
     }
 }
 class MapCell: UITableViewCell {
@@ -199,18 +225,18 @@ class MapCell: UITableViewCell {
         return label
     }()
     let timestampLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .gray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+        let timestampLabel = UILabel()
+        timestampLabel.font = UIFont.systemFont(ofSize: 12)
+        timestampLabel.textColor = .gray
+        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
+        return timestampLabel
     }()
     let nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .gray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+        let nameLabel = UILabel()
+        nameLabel.font = UIFont.systemFont(ofSize: 12)
+        nameLabel.textColor = .gray
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        return nameLabel
     }()
     let image: UIImageView = {
         let image = UIImageView()
@@ -223,6 +249,7 @@ class MapCell: UITableViewCell {
         let map = MKMapView()
         map.layer.cornerRadius = 15
         map.layer.masksToBounds = true
+        
         map.translatesAutoresizingMaskIntoConstraints = false
         return map
     }()
@@ -248,33 +275,56 @@ class MapCell: UITableViewCell {
         contentView.addSubview(nameLabel)
         contentView.addSubview(image)
         contentView.addSubview(map)
-        NSLayoutConstraint.activate([
-            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            image.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
-            image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            image.widthAnchor.constraint(equalToConstant: 30),
-            image.heightAnchor.constraint(equalToConstant: 30),
-            label.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15),
-            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            label.widthAnchor.constraint(lessThanOrEqualToConstant: 150),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            nameLabel.centerXAnchor.constraint(equalTo: image.centerXAnchor),
-            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5),
-            timestampLabel.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: -20),
-            timestampLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: -5),
-            map.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15),
-            map.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            map.widthAnchor.constraint(lessThanOrEqualToConstant: 50),
-            map.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
-        ])
+        if chatMessage?.buyerID == Auth.auth().currentUser?.uid ?? "" {
+            label.textAlignment = .right
+           
+            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
+            image.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40).isActive = true
+            label.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
+            map.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            map.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
+            map.widthAnchor.constraint(equalToConstant: 150).isActive = true
+            map.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
+            image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            timestampLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            timestampLabel.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: -20).isActive = true
+            timestampLabel.textAlignment = .right
+            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+            nameLabel.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
+            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5).isActive = true
+        } else {
+            image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+            image.trailingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40).isActive = true
+            label.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 15).isActive = true
+            image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            nameLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 15).isActive = true
+            map.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            map.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
+            map.widthAnchor.constraint(equalToConstant: 150).isActive = true
+            map.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 15).isActive = true
+           
+            timestampLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+            timestampLabel.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 20).isActive = true
+            timestampLabel.textAlignment = .left
+            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5).isActive = true
+            nameLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 15).isActive = true
+        }
     }
     func configure(with chatMessage: ChatMessage) {
         self.chatMessage = chatMessage
         label.text = chatMessage.text
+        label.isUserInteractionEnabled = true
         nameLabel.text = chatMessage.name
         image.kf.setImage(with: URL(string: chatMessage.profileImageUrl))
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openMap(_:)))
-        label.addGestureRecognizer(tapGesture)
+        addGestureRecognizer(tapGesture)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
+        timestampLabel.textColor = .gray
     }
     @objc func openMap(_ gesture: UITapGestureRecognizer) {
         guard let mapLink = chatMessage?.text, let url = URL(string: mapLink) else { return }

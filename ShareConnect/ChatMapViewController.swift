@@ -76,7 +76,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             returnToUserLocationButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         let initialLocation = CLLocationCoordinate2D(latitude: 25.0422, longitude: 121.5354)
-        let userLocation = locationManager.location?.coordinate ?? initialLocation
+        let userLocation = locationManager.location?.coordinate 
         let regionRadius: CLLocationDistance = 1000
         let coordinateRegion = MKCoordinateRegion(
             center: initialLocation,

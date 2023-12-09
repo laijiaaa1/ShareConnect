@@ -314,6 +314,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         view.addSubview(sendButton)
         let locationButton = UIButton(type: .system)
         locationButton.setImage(UIImage(named: "icons8-map-24(@1×)"), for: .normal)
+        locationButton.startAnimatingPressActions()
         locationButton.tintColor = .black
         locationButton.setTitleColor(.black, for: .normal)
         locationButton.frame = CGRect(x: 10, y: view.bounds.height - 80, width: 50, height: 50)
@@ -453,7 +454,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             cell.backgroundColor = CustomColors.B1
             cell.configure(with: chatMessage)
             cell.label.text = chatMessage.text
-            cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
+//            cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
             cell.label.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
             cell.label.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
             cell.label.numberOfLines = 0
@@ -465,16 +466,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             let chatMessage = chatMessages[indexPath.row]
             cell.backgroundColor = CustomColors.B1
             cell.configure(with: chatMessage)
-            cell.label.text = chatMessage.text
-            cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
-            cell.label.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
-            cell.label.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
-            cell.label.numberOfLines = 0
-            cell.label.layer.cornerRadius = 10
-            cell.label.layer.masksToBounds = true
-            if let imageURL = URL(string: chatMessage.profileImageUrl ?? "") {
-                cell.image.kf.setImage(with: imageURL)
-            }
             if let imagePost = URL(string: chatMessage.imageURL ?? "") {
                 cell.imageURLpost.kf.setImage(with: imagePost)
             }
@@ -484,16 +475,18 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             let chatMessage = chatMessages[indexPath.row]
             cell.backgroundColor = CustomColors.B1
             cell.configure(with: chatMessage)
-            cell.label.text = chatMessage.text
-            cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
-            cell.label.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
-            cell.label.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
-            cell.label.numberOfLines = 0
-            cell.label.layer.cornerRadius = 10
-            cell.label.layer.masksToBounds = true
+            cell.messageLabel.text = chatMessage.text
+            cell.messageLabel.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
+            cell.messageLabel.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
+            cell.messageLabel.numberOfLines = 0
+            cell.messageLabel.layer.cornerRadius = 10
+            cell.messageLabel.layer.masksToBounds = true
             return cell
         }
+        
     }
+
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let minHeight: CGFloat = 80
         let dynamicHeight = calculateDynamicHeight(for: indexPath)
