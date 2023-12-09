@@ -24,13 +24,13 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
     var isCompleted = false
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.tintColor = .black
-        view.backgroundColor = CustomColors.B1
+        navigationController?.navigationBar.tintColor = .white
+        view.backgroundColor = .black
         navigationItem.title = "RECODER"
         rentalButton.setTitle("Rental Items", for: .normal)
         loanButton.setTitle("On Loan", for: .normal)
-        rentalButton.setTitleColor(.black, for: .normal)
-        loanButton.setTitleColor(.black, for: .normal)
+        rentalButton.setTitleColor(.white, for: .normal)
+        loanButton.setTitleColor(.white, for: .normal)
         rentalButton.addTarget(self, action: #selector(rentalButtonTapped), for: .touchUpInside)
         loanButton.addTarget(self, action: #selector(loanButtonTapped), for: .touchUpInside)
         view.addSubview(stackView)
@@ -57,7 +57,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.register(RecoderTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.backgroundColor = CustomColors.B1
+        tableView.backgroundColor = .black
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         fetchOrdersFromFirestore(isRenter: true)
@@ -65,7 +65,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
     @objc func rentalButtonTapped() {
         rentalButton.isSelected = true
         loanButton.isSelected = false
-        rentalButton.setTitleColor(.black, for: .normal)
+        rentalButton.setTitleColor(UIColor(named: "G3"), for: .normal)
         rentalButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         loanButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         loanButton.setTitleColor(.lightGray, for: .normal)
@@ -77,7 +77,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         rentalButton.setTitleColor(.lightGray, for: .normal)
         loanButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         rentalButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        loanButton.setTitleColor(.black, for: .normal)
+        loanButton.setTitleColor(UIColor(named: "G3"), for: .normal)
         fetchOrdersFromFirestore(isRenter: false)
     }
     func fetchOrdersFromFirestore(isRenter: Bool) {
@@ -105,7 +105,8 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! RecoderTableViewCell
         cell.order = orderID[indexPath.row]
         cell.returnButton.setTitle("Return", for: .normal)
-
+        cell.layer.cornerRadius = 10
+        cell.layer.masksToBounds = true
         if rentalButton.isSelected {
             cell.returnButton.setTitle("Return", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)

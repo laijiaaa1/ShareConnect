@@ -44,13 +44,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = CustomColors.B1
-        tabBarController?.tabBar.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
+        tabBarController?.tabBar.backgroundColor = .black
         view.addSubview(profileImageView)
-        collectionCollectionView.backgroundColor = CustomColors.B1
-        requestTableView.backgroundColor = CustomColors.B1
-        supplyTableView.backgroundColor = CustomColors.B1
-        groupTableView.backgroundColor = CustomColors.B1
+        collectionCollectionView.backgroundColor = .black
+        requestTableView.backgroundColor = .black
+        supplyTableView.backgroundColor = .black
+        groupTableView.backgroundColor = .black
         profileImageView.layer.cornerRadius = 50
         profileImageView.clipsToBounds = true
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -63,6 +63,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         view.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.text = "Luna"
+        nameLabel.textColor = .white
         nameLabel.font = UIFont.boldSystemFont(ofSize: 20)
         nameLabel.textAlignment = .center
         NSLayoutConstraint.activate([
@@ -146,7 +147,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let recoderButton = UIButton()
         view.addSubview(recoderButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: #selector(recoderButtonTapped))
-        navigationItem.rightBarButtonItem?.tintColor = .black
+        navigationItem.rightBarButtonItem?.tintColor = .white
         fetchUserData(userId: userId!)
         fetchCollections(userId: userId!)
         fetchGroups(userId: userId!)
@@ -177,6 +178,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyRequestCell", for: indexPath) as! MyRequestCell
+        cell.layer.masksToBounds = true
+        cell.layer.cornerRadius = 10
         if selectedButton == groupButton {
             guard indexPath.row < groups.count else {
                 cell.requestNameLabel.text = "N/A"
@@ -278,7 +281,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as! CollectionCell
         cell.layer.cornerRadius = 10
-        cell.backgroundColor = .lightGray
+        cell.layer.masksToBounds = true
+        cell.backgroundColor = .black
         cell.nameLabel.text = collections[indexPath.item].name
         cell.imageView.kf.setImage(with: URL(string: collections[indexPath.row].imageString))
         return cell
@@ -336,7 +340,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         if button.isSelected {
             selectedButton?.setTitleColor(.black, for: .normal)
             button.setTitleColor(.white, for: .normal)
-            button.backgroundColor = .black
+            button.backgroundColor = UIColor(named: "G3")
             selectedButton = button
             UIView.animate(withDuration: 0.3) {
                 self.lineView.frame.origin.x = button.frame.origin.x

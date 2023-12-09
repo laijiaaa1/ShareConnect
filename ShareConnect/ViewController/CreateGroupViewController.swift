@@ -39,8 +39,11 @@ class CreateGroupViewController: CreateRequestViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "requestCell", for: indexPath) as? RequestCell ?? RequestCell()
         cell.requestLabel.text = "name"
         cell.addBtn.setBackgroundImage(UIImage(systemName: "plus"), for: .normal)
-        cell.addBtn.tintColor = .black
+        cell.addBtn.tintColor = .white
+        cell.backgroundColor = UIColor(named: "G2")
         cell.requestLabel.numberOfLines = 0
+        cell.requestLabel.textColor = .white
+        cell.textField.textColor = .white
         cell.requestLabel.frame = cell.contentView.bounds
         var requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Require", "No. of people", "Invite Code(Private必填)"]
         if indexPath.row < requestLabels.count {

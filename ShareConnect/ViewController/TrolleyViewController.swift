@@ -40,8 +40,8 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
         navigationItem.title = "TROLLEY"
-        view.backgroundColor = CustomColors.B1
-        tableView.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
+        tableView.backgroundColor = .black
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TrolleyCell.self, forCellReuseIdentifier: "TrolleyCell")
@@ -49,14 +49,15 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             tableView.heightAnchor.constraint(equalToConstant: 600),
             tableView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
         let checkoutButton = UIButton(type: .system)
         checkoutButton.setTitle("CONFIRM ORDER", for: .normal)
         checkoutButton.setTitleColor(.white, for: .normal)
-        checkoutButton.backgroundColor = .black
+        checkoutButton.backgroundColor = UIColor(named: "G3")
         checkoutButton.layer.cornerRadius = 10
         checkoutButton.addTarget(self, action: #selector(checkoutButtonTapped), for: .touchUpInside)
         checkoutButton.startAnimatingPressActions()
@@ -129,6 +130,9 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TrolleyCell", for: indexPath) as! TrolleyCell
+        cell.backgroundColor = .white
+        cell.layer.cornerRadius = 10
+        cell.layer.masksToBounds = true
         let seller = Array(cart.keys)[indexPath.section]
         let cartItems = cart[seller] ?? []
         cell.setupUI(seller: seller, cartItems: cartItems, delegate: self)
@@ -144,26 +148,26 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let seller = Array(cart.keys)[section]
-        let headerView = UIView()
-        headerView.backgroundColor = .white
-        let sellerNameLabel = UILabel()
-        sellerNameLabel.text = seller.sellerName
-        headerView.addSubview(sellerNameLabel)
-        sellerNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            sellerNameLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
-            sellerNameLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 10),
-            sellerNameLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -10),
-            sellerNameLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10)
-        ])
-        selectedSellerID = seller.sellerID
-        return headerView
-    }
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
-    }
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let seller = Array(cart.keys)[section]
+//        let headerView = UIView()
+//        headerView.backgroundColor = .white
+//        let sellerNameLabel = UILabel()
+//        sellerNameLabel.text = seller.sellerName
+//        headerView.addSubview(sellerNameLabel)
+//        sellerNameLabel.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            sellerNameLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
+//            sellerNameLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 10),
+//            sellerNameLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -10),
+//            sellerNameLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10)
+//        ])
+//        selectedSellerID = seller.sellerID
+//        return headerView
+//    }
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return 50
+//    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let seller = Array(cart.keys)[indexPath.section]
         let cartItems = cart[seller] ?? []

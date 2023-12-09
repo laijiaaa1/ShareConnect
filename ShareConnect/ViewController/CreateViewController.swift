@@ -19,7 +19,7 @@ class CreateViewController: UIViewController {
     let createGroupLabel = UILabel()
     let createGroupButton = UIButton()
     override func viewDidLoad() {
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
         super.viewDidLoad()
         navigationItem.title = "SHARECONNECT"
         myRequestView.layer.cornerRadius = 50

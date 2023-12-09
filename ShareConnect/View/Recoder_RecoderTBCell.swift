@@ -31,8 +31,8 @@ extension RecoderViewController {
             backView.backgroundColor = CustomColors.B1
             contentView.layer.cornerRadius = 10
             contentView.layer.masksToBounds = true
-            contentView.layer.borderWidth = 1
-            contentView.backgroundColor = CustomColors.B1
+//            contentView.layer.borderWidth = 1
+            contentView.backgroundColor = .black
             backView.layer.cornerRadius = 10
             backView.layer.masksToBounds = true
             contentView.addSubview(backView)

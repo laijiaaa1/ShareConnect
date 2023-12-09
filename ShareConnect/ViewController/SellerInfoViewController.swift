@@ -26,13 +26,14 @@ class SellerInfoViewController: UIViewController, UITableViewDelegate, UITableVi
         super.viewDidLoad()
         navigationItem.title = "SELLER INFO"
         navigationController?.navigationBar.isHidden = false
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
         view.addSubview(commendTableView)
         view.addSubview(commendTitleLabel)
         view.addSubview(productTitleLabel)
-        commendTableView.backgroundColor = CustomColors.B1
+        commendTableView.backgroundColor = .black
         commendTableView.separatorStyle = .none
         commendTitleLabel.text = "ALL REVIEWS"
+        commendTitleLabel.textColor = .white
         commendTitleLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         commendTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         commendTableView.translatesAutoresizingMaskIntoConstraints = false

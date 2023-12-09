@@ -25,7 +25,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
     let nameLable = UILabel()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
         navigationItem.title = "COMMEND"
         imageView.kf.setImage(with: URL(string: productImage ?? ""))
         submitButton.setTitle("Submit Review", for: .normal)
@@ -47,7 +47,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
             backView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             backView.heightAnchor.constraint(equalToConstant: 500)
         ])
-        backView.backgroundColor = .white
+        backView.backgroundColor = .black
         backView.layer.cornerRadius = 10
         backView.layer.borderWidth = 1
         backView.layer.masksToBounds = true
@@ -91,18 +91,17 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         commentTextView.layer.borderWidth = 1
         commentTextView.layer.borderColor = UIColor.black.cgColor
         commentTextView.font = UIFont.systemFont(ofSize: 16)
-        starRatingView.backgroundColor = .white
-        starRatingView.layer.cornerRadius = 10
-        starRatingView.layer.masksToBounds = true
+        starRatingView.backgroundColor = .black
+        starRatingView.tintColor = UIColor(named: "G3")
         addImageButton.setTitle("+", for: .normal)
-        addImageButton.setTitleColor(.black, for: .normal)
+        addImageButton.setTitleColor(UIColor(named: "G3"), for: .normal)
         addImageButton.backgroundColor = .white
         addImageButton.layer.cornerRadius = 25
         addImageButton.layer.masksToBounds = true
         addImageButton.layer.borderWidth = 1
         addImageButton.layer.borderColor = UIColor.black.cgColor
         nameLable.text = productName
-        nameLable.textColor = .black
+        nameLable.textColor = .white
         nameLable.font = UIFont.boldSystemFont(ofSize: 16)
         nameLable.textAlignment = .left
         nameLable.numberOfLines = 0
@@ -115,7 +114,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
             submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             submitButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        submitButton.backgroundColor = .black
+        submitButton.backgroundColor = UIColor(named: "G3")
         submitButton.layer.cornerRadius = 10
         submitButton.layer.masksToBounds = true
         submitButton.layer.borderWidth = 1

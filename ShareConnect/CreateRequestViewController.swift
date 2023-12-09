@@ -36,7 +36,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
-        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.tintColor = .white
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -46,14 +46,14 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         super.viewDidLoad()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
         navigationItem.title = "Create request"
-        uploadButton.backgroundColor = .clear
+        uploadButton.backgroundColor = UIColor(named: "G2")
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(uploadButton)
         uploadButton.setTitle("+", for: .normal)
         uploadButton.startAnimatingPressActions()
-        uploadButton.setTitleColor(.black, for: .normal)
+        uploadButton.setTitleColor(UIColor(named: "G3"), for: .normal)
         uploadButton.titleLabel?.font = UIFont.systemFont(ofSize: 40)
         uploadButton.layer.cornerRadius = 10
         uploadButton.layer.borderWidth = 1
@@ -71,6 +71,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         requestSelectSegment.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(requestSelectSegment)
         requestSelectSegment.selectedSegmentIndex = 0
+        requestSelectSegment.backgroundColor = UIColor(named: "G2")
+        requestSelectSegment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "G3")!], for: .selected)
+        requestSelectSegment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
         requestSelectSegment.layer.cornerRadius = 10
         requestSelectSegment.addTarget(self, action: #selector(requestSelectSegmentTapped), for: .valueChanged)
         NSLayoutConstraint.activate([
@@ -84,7 +87,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         requestTableView.delegate = self
         requestTableView.dataSource = self
         requestTableView.layer.cornerRadius = 10
-        requestTableView.backgroundColor = CustomColors.B1
+        requestTableView.backgroundColor = .black
         requestTableView.register(UITableViewCell.self, forCellReuseIdentifier: "requestCell")
         NSLayoutConstraint.activate([
             requestTableView.topAnchor.constraint(equalTo: requestSelectSegment.bottomAnchor, constant: 20),
@@ -94,7 +97,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         ])
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(doneButton)
-        doneButton.backgroundColor = .black
+        doneButton.backgroundColor = UIColor(named: "G3")
         doneButton.setTitle("Done", for: .normal)
         doneButton.startAnimatingPressActions()
         doneButton.setTitleColor(.white, for: .normal)
@@ -311,9 +314,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                     groupHeaderLabel.bottomAnchor.constraint(equalTo: requestTableView.tableHeaderView!.bottomAnchor, constant: -16)
                 ])
                 groupHeaderLabel.textAlignment = .center
-                groupHeaderLabel.textColor = .black
-                groupHeaderLabel.backgroundColor = CustomColors.B1
-                groupHeaderLabel.font = UIFont.systemFont(ofSize: 12)
+                groupHeaderLabel.textColor = .white
+                groupHeaderLabel.backgroundColor = .black
+                groupHeaderLabel.font = UIFont.systemFont(ofSize: 14)
             }
         } else {
             requestTableView.tableHeaderView = nil
@@ -326,13 +329,16 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         let cell = tableView.dequeueReusableCell(withIdentifier: "requestCell", for: indexPath) as? RequestCell ?? RequestCell()
         cell.requestLabel.text = "name"
         cell.addBtn.setBackgroundImage(UIImage(systemName: "plus"), for: .normal)
-        cell.addBtn.tintColor = .black
+        cell.addBtn.tintColor = .white
+        cell.backgroundColor = UIColor(named: "G2")
         cell.textField.delegate = self
+        cell.textField.textColor = .white
 
         let requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Quantity", "Use", "Price"]
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info
+            cell.requestLabel.textColor = .white
         }
         if indexPath.row == 3 || indexPath.row == 4 {
             let timePicker = UIDatePicker()

@@ -67,7 +67,7 @@ class TrolleyCell: UITableViewCell {
         contentView.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: imageViewUP.topAnchor),
+            nameLabel.topAnchor.constraint(equalTo: imageViewUP.topAnchor, constant: 5),
             nameLabel.leadingAnchor.constraint(equalTo: imageViewUP.trailingAnchor, constant: 20),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
         ])
@@ -76,7 +76,6 @@ class TrolleyCell: UITableViewCell {
         NSLayoutConstraint.activate([
             priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
             priceLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            priceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
         numberLabel.text = "\(number)"
         numberLabel.textAlignment = .center

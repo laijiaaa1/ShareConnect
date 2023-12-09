@@ -97,17 +97,18 @@ class SelectedViewController: UIViewController {
         backView.backgroundColor = UIColor(red: 228/255, green: 220/255, blue: 209/255, alpha: 0.5)
         view.addSubview(backView)
         infoView.frame = CGRect(x: 0, y: 250, width: view.frame.width, height: view.frame.height - 250)
-        infoView.backgroundColor = CustomColors.B1
+        infoView.backgroundColor = .black
         infoView.layer.cornerRadius = 15
         infoView.layer.masksToBounds = true
         view.addSubview(infoView)
         priceView.frame = CGRect(x: 40, y: 70, width: 30, height: 30)
-        priceView.image = UIImage(named: "price")
+        priceView.image = UIImage(named: "icons8-price-50 (1)")
         infoView.addSubview(priceView)
         priceLabel.frame = CGRect(x: 90, y: 70, width: 130, height: 30)
         priceLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
+        priceLabel.textColor = .white
         infoView.addSubview(priceLabel)
-        availabilityView.backgroundColor = .white
+        availabilityView.backgroundColor = UIColor(named: "G2")
         availabilityView.layer.cornerRadius = 10
         infoView.addSubview(availabilityView)
         availabilityView.translatesAutoresizingMaskIntoConstraints = false
@@ -129,7 +130,7 @@ class SelectedViewController: UIViewController {
         ])
         availabilityView.addSubview(availability)
         availability.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        availability.textColor = .black
+        availability.textColor = .white
         availability.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             availability.centerYAnchor.constraint(equalTo: availabilityView.centerYAnchor),
@@ -137,14 +138,14 @@ class SelectedViewController: UIViewController {
         ])
         itemLabel.text = "Item"
         itemLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        itemLabel.textColor = .black
+        itemLabel.textColor = .white
         infoView.addSubview(itemLabel)
         itemLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             itemLabel.topAnchor.constraint(equalTo: availabilityView.bottomAnchor, constant: 60),
             itemLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
         ])
-        itemView.backgroundColor = .white
+        itemView.backgroundColor = UIColor(named: "G2")
         itemView.layer.cornerRadius = 10
         infoView.addSubview(itemView)
         itemView.translatesAutoresizingMaskIntoConstraints = false
@@ -156,7 +157,7 @@ class SelectedViewController: UIViewController {
         ])
         itemView.addSubview(itemInfo)
         itemInfo.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        itemInfo.textColor = .black
+        itemInfo.textColor = .white
         itemInfo.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             itemInfo.centerYAnchor.constraint(equalTo: itemView.centerYAnchor),
@@ -164,7 +165,7 @@ class SelectedViewController: UIViewController {
         ])
         quantity.text = "Quantity"
         quantity.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        quantity.textColor = .black
+        quantity.textColor = .white
         infoView.addSubview(quantity)
         quantity.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -173,18 +174,17 @@ class SelectedViewController: UIViewController {
         ])
         numberLabel.text = "1"
         numberLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        numberLabel.textColor = .black
-        nameLabel.backgroundColor = .white
+        numberLabel.textColor = .white
+//        nameLabel.backgroundColor = .white
         numberLabel.layer.cornerRadius = 10
         numberLabel.layer.masksToBounds = true
         numberLabel.textAlignment = .center
-        numberLabel.layer.borderWidth = 1
         infoView.addSubview(numberLabel)
         numberLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             numberLabel.centerYAnchor.constraint(equalTo: quantity.centerYAnchor),
             numberLabel.leadingAnchor.constraint(equalTo: quantity.trailingAnchor, constant: 30),
-            numberLabel.widthAnchor.constraint(equalToConstant: 180),
+            numberLabel.widthAnchor.constraint(equalToConstant: 150),
             numberLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
         addButton.setTitle("+", for: .normal)
@@ -221,7 +221,7 @@ class SelectedViewController: UIViewController {
         ])
         trolleyButton.setTitle("Add to trolley", for: .normal)
         trolleyButton.setTitleColor(.white, for: .normal)
-        trolleyButton.backgroundColor = .black
+        trolleyButton.backgroundColor = UIColor(named: "G3")
         trolleyButton.layer.cornerRadius = 10
         trolleyButton.layer.masksToBounds = true
         trolleyButton.layer.borderWidth = 1
@@ -235,8 +235,8 @@ class SelectedViewController: UIViewController {
         ])
         trolleyButton.addTarget(self, action: #selector(trolleyButtonTapped), for: .touchUpInside)
         closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
-        closeButton.imageView?.tintColor = .black
-        closeButton.backgroundColor = .white
+        closeButton.imageView?.tintColor = .white
+        closeButton.backgroundColor = UIColor(named: "G2")
         closeButton.layer.cornerRadius = 30
         closeButton.layer.masksToBounds = true
         view.addSubview(closeButton)
