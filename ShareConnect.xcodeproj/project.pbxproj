@@ -174,7 +174,6 @@
 				346687B12B1C6B2E00723302 /* Profile_FetchData.swift */,
 				3410D97C2B09BA0400D32744 /* ChatViewController.swift */,
 				3481ACB12B2375CD00BFDCDE /* ChatRoomCell.swift */,
-				346687A92B1AF94F00723302 /* ChatMapViewController.swift */,
 				3410D9862B0C42C600D32744 /* ChatListViewController.swift */,
 				346687A52B14657800723302 /* SearchResultsViewController.swift */,
 				346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */,
@@ -224,6 +223,7 @@
 				346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */,
 				3401F6862B0F4B010092E564 /* RecoderViewController.swift */,
 				3401F68D2B1192200092E564 /* CommendViewController.swift */,
+				346687A92B1AF94F00723302 /* ChatMapViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
