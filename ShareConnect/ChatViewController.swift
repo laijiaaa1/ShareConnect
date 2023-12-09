@@ -413,6 +413,8 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
             messageData["isLocation"] = true
             let mapLink = "https://maps.apple.com/?q=\(location.latitude),\(location.longitude)"
             messageData["text"] = mapLink
+        } else {
+            messageData["text"] = message
         }
         messagesCollection.addDocument(data: messageData) { [weak self] (error) in
             if let error = error {
@@ -448,13 +450,13 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         return chatMessages.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if chatMessages[indexPath.row].isLocation == true {
+        if chatMessages[indexPath.row].isLocation == true ?? true {
             let cell = tableView.dequeueReusableCell(withIdentifier: "mapCell", for: indexPath) as! MapCell
             let chatMessage = chatMessages[indexPath.row]
             cell.backgroundColor = CustomColors.B1
             cell.configure(with: chatMessage)
             cell.label.text = chatMessage.text
-//            cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
+            cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
             cell.label.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
             cell.label.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
             cell.label.numberOfLines = 0
@@ -477,16 +479,16 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             cell.configure(with: chatMessage)
             cell.messageLabel.text = chatMessage.text
             cell.messageLabel.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
+            cell.messageLabel.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
             cell.messageLabel.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
             cell.messageLabel.numberOfLines = 0
             cell.messageLabel.layer.cornerRadius = 10
             cell.messageLabel.layer.masksToBounds = true
             return cell
         }
-        
     }
-
-
+    
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let minHeight: CGFloat = 80
         let dynamicHeight = calculateDynamicHeight(for: indexPath)

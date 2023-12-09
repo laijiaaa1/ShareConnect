@@ -14,14 +14,6 @@ import MapKit
 import CoreLocation
 
 class TextCell: UITableViewCell {
-//    let label: UILabel = {
-//        let label = UILabel()
-//        label.font = UIFont.systemFont(ofSize: 15)
-//        label.textColor = .white
-//        label.numberOfLines = 0
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        return label
-//    }()
     let timestampLabel: UILabel = {
         let timestampLabel = UILabel()
         timestampLabel.font = UIFont.systemFont(ofSize: 12)
@@ -54,7 +46,6 @@ class TextCell: UITableViewCell {
     var chatMessage: ChatMessage?
     override func prepareForReuse() {
         super.prepareForReuse()
-//        label.text = ""
         timestampLabel.text = ""
         nameLabel.text = ""
         image.image = nil
@@ -68,17 +59,15 @@ class TextCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     private func setupUI() {
-//        contentView.addSubview(label)
         contentView.addSubview(timestampLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(image)
         contentView.addSubview(messageLabel)
-        if chatMessage?.buyerID == Auth.auth().currentUser?.uid ?? "" {
-//            label.textAlignment = .right
+        let isMe = Auth.auth().currentUser?.uid
+        if isMe == chatMessage?.buyerID {
             messageLabel.textAlignment = .right
             image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
             image.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40).isActive = true
-//            label.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
             messageLabel.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
             timestampLabel.trailingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: -20).isActive = true
             image.widthAnchor.constraint(equalToConstant: 30).isActive = true
@@ -91,11 +80,9 @@ class TextCell: UITableViewCell {
             nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5).isActive = true
             
         } else {
-//            label.textAlignment = .left
             messageLabel.textAlignment = .left
             image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
             image.trailingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40).isActive = true
-//            label.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 15).isActive = true
             messageLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 15).isActive = true
             timestampLabel.leadingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 20).isActive = true
             image.widthAnchor.constraint(equalToConstant: 30).isActive = true
@@ -111,8 +98,6 @@ class TextCell: UITableViewCell {
     func configure(with chatMessage: ChatMessage) {
         self.chatMessage = chatMessage
         messageLabel.text = chatMessage.text
-//        nameLabel.text = chatMessage.buyerID == Auth.auth().currentUser?.uid ? chatMessage.name ?? "Buyer" :  "Seller"
-        
         nameLabel.text = chatMessage.name
         image.kf.setImage(with: URL(string: chatMessage.profileImageUrl))
         let formatter = DateFormatter()
@@ -120,10 +105,6 @@ class TextCell: UITableViewCell {
         timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
         timestampLabel.textColor = .gray
     }
-//    @objc func openMap(_ gesture: UITapGestureRecognizer) {
-//        guard let mapLink = chatMessage?.text, let url = URL(string: mapLink) else { return }
-//        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-//    }
 }
 class ImageCell: UITableViewCell {
     let timestampLabel: UILabel = {
@@ -174,7 +155,8 @@ class ImageCell: UITableViewCell {
         contentView.addSubview(nameLabel)
         contentView.addSubview(image)
         contentView.addSubview(imageURLpost)
-        if chatMessage?.buyerID == Auth.auth().currentUser?.uid ?? "" {
+        let isMe = chatMessage?.buyerID == Auth.auth().currentUser?.uid
+        if isMe == true {
             timestampLabel.textAlignment = .right
             image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
             image.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40).isActive = true
@@ -275,7 +257,8 @@ class MapCell: UITableViewCell {
         contentView.addSubview(nameLabel)
         contentView.addSubview(image)
         contentView.addSubview(map)
-        if chatMessage?.buyerID == Auth.auth().currentUser?.uid ?? "" {
+        let isMe = chatMessage?.buyerID == Auth.auth().currentUser?.uid
+        if isMe == true {
             label.textAlignment = .right
            
             image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
