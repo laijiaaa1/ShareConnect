@@ -95,21 +95,25 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             case .notDetermined, .restricted, .denied:
                 print("Location services disabled")
             case .authorizedAlways, .authorizedWhenInUse:
-                DispatchQueue.global(qos: .userInitiated).async {
-                    [weak self] in
-                    guard let self = self else {return}
-                    if let userLocation = locationManager.location?.coordinate {
-                        let region = MKCoordinateRegion(center: userLocation, latitudinalMeters: 1000, longitudinalMeters: 1000)
-                        DispatchQueue.main.async {
-                            self.mapView.setRegion(region, animated: true)
-                        }
-                    }
-                }
+                locationManagerDidChangeAuthorization(locationManager)
             @unknown default:
                 print("Unknown location authorization status.")
             }
         }
     }
+
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            if let userLocation = manager.location?.coordinate {
+                let region = MKCoordinateRegion(center: userLocation, latitudinalMeters: 1000, longitudinalMeters: 1000)
+                DispatchQueue.main.async {
+                    self.mapView.setRegion(region, animated: true)
+                }
+            }
+        }
+    }
+
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo else { return }
         guard let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }

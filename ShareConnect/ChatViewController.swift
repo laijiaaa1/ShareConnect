@@ -351,12 +351,12 @@ class ChatViewController: UIViewController, MKMapViewDelegate {
         guard let message = messageTextField.text else { return }
         if let selectedImage = selectedImage {
             uploadFixedImage(selectedImage) { [weak self] (imageURL) in
-                self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL, location: self?.currentLocation)
+                self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL, location: nil)
                 self?.selectedImage = nil
                 self?.imageView.image = nil
             }
         } else {
-            sendMessageToFirestore(message, isMe: true, location: currentLocation)
+            sendMessageToFirestore(message, isMe: true, location: nil)
         }
         messageTextField.text = ""
         currentLocation = nil
@@ -450,20 +450,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         return chatMessages.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if chatMessages[indexPath.row].isLocation == true ?? true {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "mapCell", for: indexPath) as! MapCell
-            let chatMessage = chatMessages[indexPath.row]
-            cell.backgroundColor = CustomColors.B1
-            cell.configure(with: chatMessage)
-            cell.label.text = chatMessage.text
-            cell.label.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
-            cell.label.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
-            cell.label.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
-            cell.label.numberOfLines = 0
-            cell.label.layer.cornerRadius = 10
-            cell.label.layer.masksToBounds = true
-            return cell
-        }else if chatMessages[indexPath.row].imageURL != "" {
+        if chatMessages[indexPath.row].imageURL != "" {
             let cell = tableView.dequeueReusableCell(withIdentifier: "imageCell", for: indexPath) as! ImageCell
             let chatMessage = chatMessages[indexPath.row]
             cell.backgroundColor = CustomColors.B1
@@ -471,6 +458,37 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             if let imagePost = URL(string: chatMessage.imageURL ?? "") {
                 cell.imageURLpost.kf.setImage(with: imagePost)
             }
+//            let isMe = chatMessage.buyerID == Auth.auth().currentUser?.uid
+//            if isMe == true {
+                cell.timestampLabel.textAlignment = .right
+                cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
+                cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40).isActive = true
+                cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.imageURLpost.leadingAnchor, constant: -20).isActive = true
+
+                cell.imageURLpost.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15).isActive = true
+                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+                cell.imageURLpost.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+                cell.imageURLpost.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
+                cell.imageURLpost.widthAnchor.constraint(equalToConstant: 80).isActive = true
+                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
+                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
+//            } else {
+//                cell.timestampLabel.textAlignment = .left
+//                cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
+//                cell.image.trailingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 40).isActive = true
+//                cell.imageURLpost.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 15).isActive = true
+//                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+//                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+//                cell.timestampLabel.leadingAnchor.constraint(equalTo: cell.imageURLpost.trailingAnchor, constant: 20).isActive = true
+//                cell.imageURLpost.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+//                cell.imageURLpost.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
+//                cell.imageURLpost.widthAnchor.constraint(equalToConstant: 80).isActive = true
+//                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
+//                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
+//            }
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "textCell", for: indexPath) as! TextCell
@@ -480,15 +498,57 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             cell.messageLabel.text = chatMessage.text
             cell.messageLabel.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
             cell.messageLabel.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
+//        let isMe = Auth.auth().currentUser?.uid
+//            if isMe == chatMessage.buyerID{
+                NSLayoutConstraint.activate([
+                    cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10),
+                    cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40),
+                    cell.messageLabel.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15),
+                    cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.messageLabel.leadingAnchor, constant: -20),
+                    cell.image.widthAnchor.constraint(equalToConstant: 30),
+                    cell.image.heightAnchor.constraint(equalToConstant: 30),
+                    cell.messageLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5),
+                    cell.messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150),
+                    cell.messageLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
+                    cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
+                    cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor),
+                    cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5),
+                ])
+//            } else {
+//                cell.messageLabel.textAlignment = .left
+//                cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
+//                cell.image.trailingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 40).isActive = true
+//                cell.messageLabel.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 15).isActive = true
+//                cell.timestampLabel.leadingAnchor.constraint(equalTo: cell.messageLabel.trailingAnchor, constant: 20).isActive = true
+//                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+//                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//                cell.messageLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
+//                cell.messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
+//                cell.messageLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+//                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
+//                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
+//                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
+//            }
             cell.messageLabel.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
             cell.messageLabel.numberOfLines = 0
             cell.messageLabel.layer.cornerRadius = 10
             cell.messageLabel.layer.masksToBounds = true
+            if let mapLink = cell.messageLabel.text, let url = URL(string: mapLink) {
+                   let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openMap(_:)))
+                   cell.messageLabel.isUserInteractionEnabled = true
+                   cell.messageLabel.addGestureRecognizer(tapGesture)
+               }
             return cell
         }
     }
-    
-    
+    @objc func openMap(_ gesture: UITapGestureRecognizer) {
+        //gesture.view 獲取到正確的
+        guard let tappedCell = gesture.view as? UILabel, let mapLink = tappedCell.text, let url = URL(string: mapLink) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let minHeight: CGFloat = 80
         let dynamicHeight = calculateDynamicHeight(for: indexPath)
