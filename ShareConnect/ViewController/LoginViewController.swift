@@ -34,7 +34,7 @@ class LoginViewController: UIViewController {
                 if let user = Auth.auth().currentUser {
                     print("User is already registered with UID: \(user.uid)")
                     if let buyerID = Auth.auth().currentUser?.uid {
-                        Messaging.messaging().subscribe(toTopic: buyerID)
+//                        Messaging.messaging().subscribe(toTopic: buyerID)
                     }
 
                 }
