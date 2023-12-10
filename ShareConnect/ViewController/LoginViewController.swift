@@ -16,7 +16,7 @@ class LoginViewController: UIViewController {
     let db = Firestore.firestore()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
     }
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

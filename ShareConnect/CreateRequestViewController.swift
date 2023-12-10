@@ -47,7 +47,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         view.backgroundColor = .black
-        navigationItem.title = "Create request"
+        navigationItem.title = "Create Demand"
         uploadButton.backgroundColor = UIColor(named: "G2")
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(uploadButton)

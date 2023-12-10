@@ -244,7 +244,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.heightAnchor.constraint(equalToConstant: 44)
         ])
-        button1.setTitle("Request", for: .normal)
+        button1.setTitle("Required", for: .normal)
         button1.startAnimatingPressActions()
         button1.setTitleColor(.white, for: .normal)
         button1.addTarget(self, action: #selector(button1Action), for: .touchUpInside)

@@ -41,6 +41,10 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.refreshControl = refreshControl
         navigationItem.title = "TROLLEY"
         view.backgroundColor = .black
+        let backPicture = UIImageView()
+        backPicture.image = UIImage(named: "3")
+        backPicture.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        view.addSubview(backPicture)
         tableView.backgroundColor = .black
         tableView.delegate = self
         tableView.dataSource = self
@@ -51,7 +55,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            tableView.heightAnchor.constraint(equalToConstant: 600),
+            tableView.heightAnchor.constraint(equalToConstant: 400),
             tableView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
         let checkoutButton = UIButton(type: .system)

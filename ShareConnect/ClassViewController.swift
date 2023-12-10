@@ -24,17 +24,21 @@ class ClassViewController: UIViewController {
     let productLabel = UILabel()
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "CLASS"
+//        navigationItem.title = "CLASS"
         navigationController?.navigationBar.isHidden = false
         view.backgroundColor = .black
+        let backPicture = UIImageView()
+        backPicture.image = UIImage(named: "2")
+        backPicture.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        view.addSubview(backPicture)
         view.addSubview(classPlaceButton)
         view.addSubview(classProductButton)
         view.addSubview(placeLabel)
         view.addSubview(productLabel)
         placeLabel.frame.size = CGSize(width: 200, height: 50)
         productLabel.frame.size = CGSize(width: 200, height: 50)
-        placeLabel.text = "PLACE"
-        productLabel.text = "PRODUCT"
+//        placeLabel.text = "PLACE"
+//        productLabel.text = "PRODUCT"
         placeLabel.textColor = .white
         productLabel.textColor = .white
         placeLabel.font = UIFont.systemFont(ofSize: 30)
@@ -44,14 +48,14 @@ class ClassViewController: UIViewController {
         alphaView.translatesAutoresizingMaskIntoConstraints = false
         classPlaceButton.translatesAutoresizingMaskIntoConstraints = false
         classProductButton.translatesAutoresizingMaskIntoConstraints = false
-        classPlaceButton.backgroundColor = .black
-        classProductButton.backgroundColor = .black
+        classPlaceButton.backgroundColor = .clear
+        classProductButton.backgroundColor = .clear
         classPlaceButton.addTarget(self, action: #selector(classPlaceButtonAction), for: .touchUpInside)
         classProductButton.addTarget(self, action: #selector(classProductButtonAction), for: .touchUpInside)
-        classPlaceButton.setImage(UIImage(named: "place"), for: .normal)
-        classPlaceButton.titleLabel?.text = "PLACE"
-        classProductButton.setImage(UIImage(named: "product"), for: .normal)
-        classProductButton.titleLabel?.text = "PRODUCT"
+//        classPlaceButton.setImage(UIImage(named: "place"), for: .normal)
+//        classPlaceButton.titleLabel?.text = "PLACE"
+//        classProductButton.setImage(UIImage(named: "product"), for: .normal)
+//        classProductButton.titleLabel?.text = "PRODUCT"
         classPlaceButton.setTitleColor(.white, for: .normal)
         classProductButton.setTitleColor(.white, for: .normal)
         classPlaceButton.layer.cornerRadius = 125
@@ -59,12 +63,12 @@ class ClassViewController: UIViewController {
         classPlaceButton.layer.masksToBounds = true
         classProductButton.layer.masksToBounds = true
         NSLayoutConstraint.activate([
-            classPlaceButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            classPlaceButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             classPlaceButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             classPlaceButton.widthAnchor.constraint(equalTo: view.widthAnchor),
             classPlaceButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 80),
             classPlaceButton.heightAnchor.constraint(equalToConstant: 250),
-            classProductButton.topAnchor.constraint(equalTo: classPlaceButton.bottomAnchor, constant: 50),
+            classProductButton.topAnchor.constraint(equalTo: classPlaceButton.bottomAnchor, constant: 100),
             classProductButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             classProductButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -80),
             classProductButton.widthAnchor.constraint(equalTo: view.widthAnchor),

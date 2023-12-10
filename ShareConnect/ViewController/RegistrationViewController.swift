@@ -56,7 +56,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .black
         setupUI()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
@@ -64,33 +64,51 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         profileImageView.addGestureRecognizer(imageTapGesture)
     }
     func setupUI() {
-        view.backgroundColor = CustomColors.B1
+        let backPicture = UIImageView()
+        backPicture.image = UIImage(named: "7")
+        backPicture.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        view.addSubview(backPicture)
+        view.sendSubviewToBack(backPicture)
         view.addSubview(emailTextField)
         view.addSubview(passwordTextField)
         view.addSubview(nameTextField)
         view.addSubview(profileImageView)
         view.addSubview(registerButton)
-        profileImageView.image = UIImage(named: "icons8-user-48(@3×)")
-        profileImageView.layer.cornerRadius = 50
+        emailTextField.backgroundColor = .clear
+        passwordTextField.backgroundColor = .clear
+        nameTextField.backgroundColor = .clear
+        emailTextField.borderStyle = .none
+        passwordTextField.borderStyle = .none
+        nameTextField.borderStyle = .none
+//        profileImageView.image = UIImage(named: "icons8-user-48(@3×)")
+        profileImageView.layer.cornerRadius = 60
         profileImageView.layer.masksToBounds = true
         profileImageView.tintColor = .gray
+        profileImageView.backgroundColor = .clear
+        let addImageLabel = UILabel()
+        view.addSubview(addImageLabel)
+        addImageLabel.text = "Tap to add your image"
+        addImageLabel.textColor = .white
+        addImageLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             emailTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
             emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             emailTextField.heightAnchor.constraint(equalToConstant: 40),
-            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 20),
+            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 25),
             passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             passwordTextField.heightAnchor.constraint(equalToConstant: 40),
-            nameTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 20),
+            nameTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 25),
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             nameTextField.heightAnchor.constraint(equalToConstant: 40),
             profileImageView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 40),
             profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            profileImageView.widthAnchor.constraint(equalToConstant: 100),
-            profileImageView.heightAnchor.constraint(equalToConstant: 100),
+            profileImageView.widthAnchor.constraint(equalToConstant: 120),
+            profileImageView.heightAnchor.constraint(equalToConstant: 120),
+            addImageLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: -15),
+            addImageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             registerButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 60),
             registerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             registerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),

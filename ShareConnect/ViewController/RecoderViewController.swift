@@ -27,8 +27,8 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         navigationController?.navigationBar.tintColor = .white
         view.backgroundColor = .black
         navigationItem.title = "RECODER"
-        rentalButton.setTitle("Rental Items", for: .normal)
-        loanButton.setTitle("On Loan", for: .normal)
+        rentalButton.setTitle("BORROWED IN", for: .normal)
+        loanButton.setTitle("LENT OUT", for: .normal)
         rentalButton.setTitleColor(.white, for: .normal)
         loanButton.setTitleColor(.white, for: .normal)
         rentalButton.addTarget(self, action: #selector(rentalButtonTapped), for: .touchUpInside)

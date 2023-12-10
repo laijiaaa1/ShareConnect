@@ -33,7 +33,7 @@ class MyRequestCell: UITableViewCell {
         requestDateLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             requestImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            requestImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            requestImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             requestImageView.heightAnchor.constraint(equalToConstant: 80),
             requestImageView.widthAnchor.constraint(equalToConstant: 80),
             requestNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),

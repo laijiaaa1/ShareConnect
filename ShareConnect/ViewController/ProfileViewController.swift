@@ -47,6 +47,12 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         view.backgroundColor = .black
         tabBarController?.tabBar.backgroundColor = .black
+       
+        let backPicture = UIImageView()
+        backPicture.image = UIImage(named: "4")
+        backPicture.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        view.addSubview(backPicture)
+        view.sendSubviewToBack(backPicture)
         view.addSubview(profileImageView)
         collectionCollectionView.backgroundColor = .black
         requestTableView.backgroundColor = .black
@@ -82,8 +88,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 5),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             stackView.heightAnchor.constraint(equalToConstant: 50)
         ])
         let labels = [groupButton, collectionButton, requestButton, supplyButton]
@@ -94,7 +100,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         groupButton.setTitle("Group", for: .normal)
         collectionButton.setTitle("Collection", for: .normal)
-        requestButton.setTitle("Request", for: .normal)
+        requestButton.setTitle("Demand", for: .normal)
         supplyButton.setTitle("Supply", for: .normal)
         let buttons = [groupButton, collectionButton, requestButton, supplyButton]
         buttons.forEach { (button) in
@@ -120,8 +126,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         groupTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             groupTableView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 10),
-            groupTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            groupTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            groupTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            groupTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             groupTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
         ])
         groupTableView.dataSource = self
@@ -181,6 +187,14 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyRequestCell", for: indexPath) as! MyRequestCell
         cell.layer.masksToBounds = true
         cell.layer.cornerRadius = 10
+        //inset between the cell
+        cell.layer.borderWidth = 10
+        cell.layer.borderColor = UIColor.black.cgColor
+       //iner raydius
+        cell.contentView.layer.cornerRadius = 20
+        cell.contentView.layer.masksToBounds = true
+        cell.contentView.layer.borderWidth = 10
+        cell.contentView.layer.borderColor = UIColor.black.cgColor
         cell.backgroundColor = .black
         if selectedButton == groupButton {
             guard indexPath.row < groups.count else {
