@@ -31,21 +31,22 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         tableView.dataSource = self
         refreshControl.addTarget(self, action: #selector(handleUIRefresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
+        tableView.backgroundColor = .black
         tableView.register(SupplyTableViewCell.self, forCellReuseIdentifier: "SupplyTableViewCell")
         fetchRequests(userId: Auth.auth().currentUser!.uid, dataType: "supply")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: 600)
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            tableView.heightAnchor.constraint(equalToConstant: 650)
         ])
         let createNewButton = UIButton()
         createNewButton.setTitle("Create New", for: .normal)
         createNewButton.startAnimatingPressActions()
-        createNewButton.backgroundColor = .black
-        createNewButton.layer.cornerRadius = 15
+        createNewButton.backgroundColor = UIColor(named: "G3")
+        createNewButton.layer.cornerRadius = 10
         view.addSubview(createNewButton)
         createNewButton.setTitleColor(.white, for: .normal)
         createNewButton.translatesAutoresizingMaskIntoConstraints = false
@@ -67,6 +68,27 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         let vc = CreateSupplyViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
+    //add table headerView to say
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        let headerLabel = UILabel()
+        headerLabel.text = "Choose your supply to chat !"
+        headerLabel.textColor = UIColor(named: "G3")
+        headerLabel.font = UIFont(name: "HelveticaNeue", size: 20)
+        headerView.addSubview(headerLabel)
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            headerLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+            headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            headerLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+            headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
+        ])
+        headerView.backgroundColor = .black
+        return headerView
+    }
+  func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return products.count
     }
@@ -75,6 +97,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SupplyTableViewCell", for: indexPath) as! SupplyTableViewCell
+        cell.backgroundColor = .black
         guard indexPath.row < products.count else {
             cell.requestNameLabel.text = "N/A"
             cell.requestDescriptionLabel.text = "N/A"

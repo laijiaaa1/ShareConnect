@@ -25,7 +25,7 @@ class TextCell: UITableViewCell {
     let nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.textColor = .gray
+        nameLabel.textColor = .white
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         return nameLabel
     }()
@@ -118,7 +118,7 @@ class ImageCell: UITableViewCell {
     let nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.textColor = .gray
+        nameLabel.textColor = .white
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         return nameLabel
     }()
@@ -217,7 +217,7 @@ class MapCell: UITableViewCell {
     let nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.textColor = .gray
+        nameLabel.textColor = .white
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         return nameLabel
     }()
@@ -260,7 +260,6 @@ class MapCell: UITableViewCell {
         let isMe = chatMessage?.buyerID == Auth.auth().currentUser?.uid
         if isMe == true {
             messageLabel.textAlignment = .right
-           
             image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
             image.leadingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40).isActive = true
             messageLabel.trailingAnchor.constraint(equalTo: image.leadingAnchor, constant: -15).isActive = true
@@ -287,7 +286,6 @@ class MapCell: UITableViewCell {
             map.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
             map.widthAnchor.constraint(equalToConstant: 150).isActive = true
             map.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 15).isActive = true
-           
             timestampLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
             timestampLabel.leadingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 20).isActive = true
             timestampLabel.textAlignment = .left
@@ -314,7 +312,6 @@ class MapCell: UITableViewCell {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }
-
 class VoiceCell: UITableViewCell {
     var audioPlayer: AVAudioPlayer?
     var playButton = UIButton()
@@ -325,42 +322,74 @@ class VoiceCell: UITableViewCell {
             downloadFileFromURL(url: url!)
         }
     }
-
+    let timestampLabel: UILabel = {
+        let timestampLabel = UILabel()
+        timestampLabel.font = UIFont.systemFont(ofSize: 12)
+        timestampLabel.textColor = .gray
+        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
+        return timestampLabel
+    }()
+    let nameLabel: UILabel = {
+        let nameLabel = UILabel()
+        nameLabel.font = UIFont.systemFont(ofSize: 12)
+        nameLabel.textColor = .white
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        return nameLabel
+    }()
+    let image: UIImageView = {
+        let image = UIImageView()
+        image.layer.cornerRadius = 15
+        image.layer.masksToBounds = true
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    var chatMessage: ChatMessage?
+    let backView: UIView = {
+        let backView = UIView()
+        backView.layer.cornerRadius = 10
+        backView.translatesAutoresizingMaskIntoConstraints = false
+        return backView
+    }()
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        timestampLabel.text = ""
+        nameLabel.text = ""
+        image.image = nil
+    }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
-
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
     }
-
     private func setupUI() {
-        // Add play button to the cell
+        contentView.addSubview(timestampLabel)
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(image)
+        contentView.addSubview(backView)
         playButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
         playButton.tintColor = .black
         playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchUpInside)
-        contentView.addSubview(playButton)
-
-        // Set up constraints for the play button
+        backView.addSubview(playButton)
         playButton.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        backView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            playButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            playButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            playButton.widthAnchor.constraint(equalToConstant: 30),
-            playButton.heightAnchor.constraint(equalToConstant: 30)
+            contentView.widthAnchor.constraint(equalToConstant: 300),
+            contentView.topAnchor.constraint(equalTo: topAnchor),
+            contentView.heightAnchor.constraint(equalToConstant: 50),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
 
     @objc func playButtonTapped() {
         if let audioPlayer = audioPlayer {
             if audioPlayer.isPlaying {
-                // If audio is already playing, stop playback
                 audioPlayer.stop()
                 playButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
             } else {
-                // If audio is not playing, start playback
                 audioPlayer.play()
                 playButton.setImage(UIImage(systemName: "pause.circle"), for: .normal)
             }
@@ -368,24 +397,18 @@ class VoiceCell: UITableViewCell {
             print("Audio player is nil. Check the file format and URL.")
         }
     }
-
     func downloadFileFromURL(url: URL) {
         let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let destinationURL = documentsDirectoryURL.appendingPathComponent(url.lastPathComponent)
-
-        // If the file exists locally, use it
         if FileManager.default.fileExists(atPath: destinationURL.path) {
             setupAudioPlayer(with: destinationURL)
         } else {
-            // Download the file if it doesn't exist locally
             URLSession.shared.downloadTask(with: url) { [weak self] (tempURL, _, error) in
                 guard let self = self, let tempURL = tempURL, error == nil else {
                     print("Error downloading file: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
-
                 do {
-                    // Move the downloaded file to the destination URL
                     try FileManager.default.moveItem(at: tempURL, to: destinationURL)
                     self.setupAudioPlayer(with: destinationURL)
                 } catch {
@@ -396,29 +419,32 @@ class VoiceCell: UITableViewCell {
     }
 
     func setupAudioPlayer(with fileURL: URL) {
-        // Set up your audio player with the file URL
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()
-            playButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
+            DispatchQueue.main.async {
+                self.playButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
+            }
         } catch {
             print("Error initializing AVAudioPlayer: \(error.localizedDescription)")
         }
     }
-
-    func configure(with audioURL: String?) {
+    func configure(with audioURL: String?, chatMessage: ChatMessage) {
         self.audioURL = audioURL
+        nameLabel.text = chatMessage.name
+        image.kf.setImage(with: URL(string: chatMessage.profileImageUrl))
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
+        timestampLabel.textColor = .gray
     }
 }
-
 extension VoiceCell: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         playButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
     }
-
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        // Handle audio decoding errors if needed
         print("Audio decoding error: \(error?.localizedDescription ?? "Unknown error")")
     }
 }

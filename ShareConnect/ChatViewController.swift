@@ -60,7 +60,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
     var existingChatRooms: [String: Bool] = [:]
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
-        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.tintColor = .white
     }
     override func viewDidDisappear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
@@ -187,7 +187,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                                     buyerID: buyerID,
                                     imageURL: imageURL,
                                     audioURL: audioURL
-                                    
                                 )
                                 self.chatMessages.append(message)
                             }
@@ -302,10 +301,10 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         }
     }
     private func setupUI() {
-        view.backgroundColor = CustomColors.B1
+        view.backgroundColor = .black
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = CustomColors.B1
+        tableView.backgroundColor = .black
         view.addSubview(tableView)
         tableView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 100)
         messageTextField.placeholder = "Type your message here..."
@@ -315,8 +314,8 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         view.addSubview(messageTextField)
         let imageButton = UIButton(type: .system)
         imageButton.setImage(UIImage(named: "icons8-unsplash-30(@1×)"), for: .normal)
-        imageButton.tintColor = .black
-        imageButton.setTitleColor(.black, for: .normal)
+        imageButton.tintColor = .white
+        imageButton.setTitleColor(.white, for: .normal)
         imageButton.frame = CGRect(x: 50, y: view.bounds.height - 80, width: 50, height: 50)
         imageButton.addTarget(self, action: #selector(imageButtonTapped), for: .touchUpInside)
         view.addSubview(imageButton)
@@ -328,29 +327,29 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
             imageView.bottomAnchor.constraint(equalTo: tableView.topAnchor)
         ])
         sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
-        sendButton.tintColor = .black
-        sendButton.setTitleColor(.black, for: .normal)
+        sendButton.tintColor = .white
+        sendButton.setTitleColor(.white, for: .normal)
         sendButton.frame = CGRect(x: view.bounds.width - 50, y: view.bounds.height - 80, width: 50, height: 50)
         sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
         view.addSubview(sendButton)
         let locationButton = UIButton(type: .system)
         locationButton.setImage(UIImage(named: "icons8-map-24(@1×)"), for: .normal)
         locationButton.startAnimatingPressActions()
-        locationButton.tintColor = .black
-        locationButton.setTitleColor(.black, for: .normal)
+        locationButton.tintColor = .white
+        locationButton.setTitleColor(.white, for: .normal)
         locationButton.frame = CGRect(x: 10, y: view.bounds.height - 80, width: 50, height: 50)
         locationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
         view.addSubview(locationButton)
         view.addSubview(voiceButton)
         voiceButton.translatesAutoresizingMaskIntoConstraints = false
-        voiceButton.setImage(UIImage(systemName: "mic"), for: .normal)
+        voiceButton.setImage(UIImage(systemName: "mic.fill"), for: .normal)
         voiceButton.addTarget(self, action: #selector(voiceButtonTapped), for: .touchUpInside)
-        voiceButton.tintColor = .black
+        voiceButton.tintColor = .white
         NSLayoutConstraint.activate([
             voiceButton.topAnchor.constraint(equalTo: imageButton.topAnchor),
-            voiceButton.leadingAnchor.constraint(equalTo: imageButton.trailingAnchor, constant: -10),
-            voiceButton.widthAnchor.constraint(equalToConstant: 55),
-            voiceButton.heightAnchor.constraint(equalToConstant: 55)
+            voiceButton.leadingAnchor.constraint(equalTo: imageButton.trailingAnchor, constant: -15),
+            voiceButton.widthAnchor.constraint(equalToConstant: 50),
+            voiceButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
            voiceButton.addGestureRecognizer(longPressGesture)
@@ -401,7 +400,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
             isRecording = false
             updateUIForRecording(false)
             audioFileURL = audioFileURL ?? getDocumentsDirectory().appendingPathComponent("recording.wav")
-             
         }
 
         func updateUIForRecording(_ isRecording: Bool) {
@@ -410,7 +408,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                    voiceButton.tintColor = .red
                } else {
                    voiceButton.setImage(UIImage(systemName: "mic"), for: .normal)
-                   voiceButton.tintColor = .black
+                   voiceButton.tintColor = .white
                }
         }
     @objc func locationButtonTapped() {
@@ -548,20 +546,16 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                return
            }
 let audioStorageRef = Storage.storage().reference().child("audio")
-        
         let audioRef = audioStorageRef.child(UUID().uuidString + ".wav")
-
         audioRef.putData(audioData, metadata: nil) { [weak self] (metadata, error) in
             guard let self = self else {
                 print("Self is nil.")
                 return
             }
-
             if let error = error {
                 print("Upload failed: \(error.localizedDescription)")
                 return
             }
-
             audioRef.downloadURL { (url, error) in
                 guard let downloadURL = url else {
                     print("Unable to get download URL: \(error?.localizedDescription ?? "Unknown error")")
@@ -571,13 +565,11 @@ let audioStorageRef = Storage.storage().reference().child("audio")
             }
         }
     }
-
     func saveAudioMessageToDatabase(downloadURL: String) {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
             return
         }
-
         let messagesCollection = chatRoomDocument.collection("messages")
         let audioMessage = [
             "text": downloadURL,
@@ -591,7 +583,6 @@ let audioStorageRef = Storage.storage().reference().child("audio")
             "chatRoomID": chatRoomID ?? "",
             "imageURL": nil ?? "",
         ] as [String : Any]
-
         messagesCollection.addDocument(data: audioMessage) { [weak self] (error) in
             if let error = error {
                 print("Error sending audio message: \(error.localizedDescription)")
@@ -611,7 +602,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         if chatMessages[indexPath.row].imageURL != "" {
             let cell = tableView.dequeueReusableCell(withIdentifier: "imageCell", for: indexPath) as! ImageCell
             let chatMessage = chatMessages[indexPath.row]
-            cell.backgroundColor = CustomColors.B1
+            cell.backgroundColor = .black
             cell.configure(with: chatMessage)
             if let imagePost = URL(string: chatMessage.imageURL ?? "") {
                 cell.imageURLpost.kf.setImage(with: imagePost)
@@ -622,7 +613,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
             cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40).isActive = true
             cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.imageURLpost.leadingAnchor, constant: -20).isActive = true
-            
             cell.imageURLpost.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15).isActive = true
             cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
             cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -650,14 +640,32 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             return cell
         } else if chatMessage.audioURL != "" {
             let cell = tableView.dequeueReusableCell(withIdentifier: "voiceCell", for: indexPath) as! VoiceCell
+            cell.backgroundColor = .black
                let audioURL = chatMessage.audioURL
-            print("Audio URL: \(audioURL)") // Add this line to print the audio URL
-            cell.configure(with: audioURL)
+            print("Audio URL: \(audioURL)")
+            cell.configure(with: audioURL, chatMessage: chatMessage)
+            NSLayoutConstraint.activate([
+                cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10),
+                cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40),
+                cell.image.widthAnchor.constraint(equalToConstant: 30),
+                cell.image.heightAnchor.constraint(equalToConstant: 30),
+                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor),
+                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5),
+                cell.backView.heightAnchor.constraint(equalToConstant: 50),
+                cell.backView.widthAnchor.constraint(equalToConstant: 200),
+                cell.backView.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor,constant: -20),
+                cell.backView.topAnchor.constraint(equalTo: cell.image.topAnchor, constant: 5),
+                cell.playButton.centerYAnchor.constraint(equalTo: cell.backView.centerYAnchor),
+                cell.playButton.leadingAnchor.constraint(equalTo: cell.backView.leadingAnchor, constant: 20),
+                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.backView.bottomAnchor, constant: -5),
+                cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.backView.leadingAnchor, constant: -20)
+            ])
+            cell.backView.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "textCell", for: indexPath) as! TextCell
             let chatMessage = chatMessages[indexPath.row]
-            cell.backgroundColor = CustomColors.B1
+            cell.backgroundColor = .black
             cell.configure(with: chatMessage)
             cell.messageLabel.text = chatMessage.text
             cell.messageLabel.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
@@ -712,7 +720,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let minHeight: CGFloat = 80
         let dynamicHeight = calculateDynamicHeight(for: indexPath)
