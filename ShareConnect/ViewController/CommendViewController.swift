@@ -11,6 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
+import ProgressHUD
 
 class CommendViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     var productName: String?
@@ -26,9 +27,9 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        navigationItem.title = "COMMEND"
+        navigationItem.title = "COMMENT"
         imageView.kf.setImage(with: URL(string: productImage ?? ""))
-        submitButton.setTitle("Submit Review", for: .normal)
+        submitButton.setTitle("Submit Commect", for: .normal)
         submitButton.addTarget(self, action: #selector(submitReview), for: .touchUpInside)
         setup()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -203,8 +204,13 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
                     print("Error adding review: \(error.localizedDescription)")
                 } else {
                     print("Review added successfully!")
-                    self.navigationController?.popViewController(animated: true)
                 }
+            }
+        }
+        DispatchQueue.main.async {
+            ProgressHUD.succeed("Comment Success", delay: 1.5)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.navigationController?.popViewController(animated: true)
             }
         }
     }

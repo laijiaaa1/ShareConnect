@@ -10,6 +10,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseMessaging
 import FirebaseStorage
+import ProgressHUD
 
 class RegistrationViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     let db = Firestore.firestore()
@@ -81,7 +82,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         passwordTextField.borderStyle = .none
         nameTextField.borderStyle = .none
 //        profileImageView.image = UIImage(named: "icons8-user-48(@3×)")
-        profileImageView.layer.cornerRadius = 60
+        profileImageView.layer.cornerRadius = 70
         profileImageView.layer.masksToBounds = true
         profileImageView.tintColor = .gray
         profileImageView.backgroundColor = .clear
@@ -92,22 +93,22 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         addImageLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             emailTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
-            emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             emailTextField.heightAnchor.constraint(equalToConstant: 40),
-            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 25),
-            passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 30),
+            passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             passwordTextField.heightAnchor.constraint(equalToConstant: 40),
             nameTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 25),
-            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             nameTextField.heightAnchor.constraint(equalToConstant: 40),
-            profileImageView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 40),
+            profileImageView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 30),
             profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            profileImageView.widthAnchor.constraint(equalToConstant: 120),
-            profileImageView.heightAnchor.constraint(equalToConstant: 120),
-            addImageLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: -15),
+            profileImageView.widthAnchor.constraint(equalToConstant: 140),
+            profileImageView.heightAnchor.constraint(equalToConstant: 140),
+            addImageLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: -75),
             addImageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             registerButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 60),
             registerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
@@ -162,7 +163,12 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
                             }
                             let storyboard = UIStoryboard(name: "Main", bundle: nil)
                             let vc = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
-                            self.navigationController?.pushViewController(vc, animated: true)
+                            DispatchQueue.main.async {
+                                ProgressHUD.succeed("Regist Success", delay: 1.5)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                    self.navigationController?.pushViewController(vc, animated: true)
+                                }
+                            }
                         }
                     }
                 }

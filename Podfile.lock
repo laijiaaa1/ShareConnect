@@ -802,6 +802,7 @@ PODS:
     - nanopb/encode (= 2.30909.1)
   - nanopb/decode (2.30909.1)
   - nanopb/encode (2.30909.1)
+  - ProgressHUD (14.1.0)
   - PromisesObjC (2.3.1)
   - RecaptchaInterop (100.0.0)
   - SwiftLint (0.54.0)
@@ -819,6 +820,7 @@ DEPENDENCIES:
   - IQKeyboardManagerSwift
   - Kingfisher
   - MJRefresh
+  - ProgressHUD
   - SwiftLint
 
 SPEC REPOS:
@@ -854,6 +856,7 @@ SPEC REPOS:
     - Libuv-gRPC
     - MJRefresh
     - nanopb
+    - ProgressHUD
     - PromisesObjC
     - RecaptchaInterop
     - SwiftLint
@@ -890,10 +893,11 @@ SPEC CHECKSUMS:
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   MJRefresh: 2fe7fb43a5167ceda20bb7e63f130c04fd1814a5
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
+  ProgressHUD: c4a55f108815c46a6bf082407d2f806840b7a869
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   SwiftLint: c1de071d9d08c8aba837545f6254315bc900e211
 
-PODFILE CHECKSUM: 087639cc58de174b252ff1d84e0a0d1ed1643ee9
+PODFILE CHECKSUM: d9998bf198d7695842a6d9a2c569b9565a0d0245
 
 COCOAPODS: 1.13.0

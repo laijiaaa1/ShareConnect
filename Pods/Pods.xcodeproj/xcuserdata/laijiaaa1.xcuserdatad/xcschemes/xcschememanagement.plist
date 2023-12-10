@@ -207,26 +207,33 @@
 			<key>orderHint</key>
 			<integer>34</integer>
 		</dict>
-		<key>PromisesObjC.xcscheme</key>
+		<key>ProgressHUD.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>35</integer>
 		</dict>
-		<key>RecaptchaInterop.xcscheme</key>
+		<key>PromisesObjC.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>36</integer>
 		</dict>
-		<key>SwiftLint.xcscheme</key>
+		<key>RecaptchaInterop.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>37</integer>
+		</dict>
+		<key>SwiftLint.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>38</integer>
 		</dict>
 		<key>abseil.xcscheme</key>
 		<dict>

@@ -11,7 +11,7 @@ import FirebaseStorage
 import FirebaseCore
 import FirebaseFirestore
 import Kingfisher
-//import JGProgressHUD
+import ProgressHUD
 
 class CreateGroupViewController: CreateRequestViewController {
     var isGroupPublic: Bool = true
@@ -174,12 +174,11 @@ class CreateGroupViewController: CreateRequestViewController {
                 print("Group created and saved to Firestore.")
             }
         }
-//        hud.textLabel.text = "Success"
-//        hud.indicatorView = JGProgressHUDSuccessIndicatorView()
-//        hud.show(in: view)
-//        hud.dismiss(afterDelay: 1.0)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.navigationController?.popViewController(animated: true)
+        DispatchQueue.main.async {
+            ProgressHUD.succeed("Success", delay: 1.5)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
 }

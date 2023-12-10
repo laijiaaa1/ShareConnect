@@ -16,7 +16,7 @@ class ProvideViewController: SelectedViewController {
     var chatRoomDocument: DocumentReference!
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
-        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.tintColor = .black
     }
     override func viewDidLoad() {
         super.viewDidLoad()

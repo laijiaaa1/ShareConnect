@@ -11,6 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
+import ProgressHUD
 
 class SelectedViewController: UIViewController {
     var product: Product?
@@ -73,8 +74,14 @@ class SelectedViewController: UIViewController {
         print("Product added to cart: \(product.name) - Quantity: \(selectedQuantity)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let trolleyViewController = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController {
-            navigationController?.pushViewController(trolleyViewController, animated: true)
+            DispatchQueue.main.async {
+                ProgressHUD.succeed("Add Success", delay: 1.5)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.navigationController?.pushViewController(trolleyViewController, animated: true)
+                }
+            }
         }
+      
     }
     func saveCartToFirestore(_ cart: [Seller: [Product]]) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {

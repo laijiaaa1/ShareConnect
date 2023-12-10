@@ -11,6 +11,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseAuth
 import FirebaseStorage
+import ProgressHUD
 
 protocol TrolleyCellDelegate: AnyObject {
     func didSelectSeller(sellerID: String)
@@ -85,7 +86,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             if let existingProductIndex = sellerProducts.firstIndex(where: { $0.productId == product.productId }) {
                 sellerProducts[existingProductIndex].quantity += 1
             } else {
-                var mutableProduct = product // Make a mutable copy
+                var mutableProduct = product
                 mutableProduct.quantity = 1
                 sellerProducts.append(mutableProduct)
             }
@@ -152,26 +153,27 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let seller = Array(cart.keys)[section]
-//        let headerView = UIView()
-//        headerView.backgroundColor = .white
-//        let sellerNameLabel = UILabel()
-//        sellerNameLabel.text = seller.sellerName
-//        headerView.addSubview(sellerNameLabel)
-//        sellerNameLabel.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            sellerNameLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
-//            sellerNameLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 10),
-//            sellerNameLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -10),
-//            sellerNameLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10)
-//        ])
-//        selectedSellerID = seller.sellerID
-//        return headerView
-//    }
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return 50
-//    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let seller = Array(cart.keys)[section]
+        let headerView = UIView()
+        headerView.backgroundColor = .black
+        let sellerNameLabel = UILabel()
+        sellerNameLabel.text = seller.sellerName
+        sellerNameLabel.textColor = UIColor(named: "G2")
+        headerView.addSubview(sellerNameLabel)
+        sellerNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            sellerNameLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
+            sellerNameLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 10),
+            sellerNameLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -10),
+            sellerNameLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10)
+        ])
+        selectedSellerID = seller.sellerID
+        return headerView
+    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let seller = Array(cart.keys)[indexPath.section]
         let cartItems = cart[seller] ?? []
@@ -218,12 +220,18 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             checkoutVC.sellerID = sellerID
             checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
             checkoutVC.chatRoomID = chatRoomID
-            self.navigationController?.pushViewController(checkoutVC, animated: true)
+            
             createOrderRecord { [weak self] orderID in
                 guard let self = self else { return }
                 let orderConfirmationVC = RecoderViewController()
                 orderConfirmationVC.orderID = self.orderIDs
                 self.clearShoppingCart()
+            }
+            DispatchQueue.main.async {
+                ProgressHUD.succeed("Order Success", delay: 1.5)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.navigationController?.pushViewController(checkoutVC, animated: true)
+                }
             }
         }
     }
