@@ -328,7 +328,7 @@ struct Commend {
 }
 struct ChatItem {
     var name: String
-    var time: String
+    var time: Date
     var message: String
     var profileImageUrl: String
     var unreadCount: Int

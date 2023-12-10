@@ -180,6 +180,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyRequestCell", for: indexPath) as! MyRequestCell
         cell.layer.masksToBounds = true
         cell.layer.cornerRadius = 10
+        cell.backgroundColor = .black
         if selectedButton == groupButton {
             guard indexPath.row < groups.count else {
                 cell.requestNameLabel.text = "N/A"

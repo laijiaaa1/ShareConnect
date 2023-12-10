@@ -19,4 +19,5 @@ target 'ShareConnect' do
 # pod 'JGProgressHUD'
  pod 'IQKeyboardManagerSwift'
  pod 'FirebaseDatabase'
+ pod 'FirebaseFirestoreSwift'
 end

@@ -18,9 +18,6 @@ class ChatListCell: UITableViewCell {
     let unreadLabel = UILabel()
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        nameLabel.text = "name"
-        nameLabel.frame = CGRect(x: 10, y: 10, width: 100, height: 20)
-        contentView.addSubview(nameLabel)
         timeLabel.text = "time"
         contentView.addSubview(timeLabel)
         timeLabel.textAlignment = .right
@@ -42,7 +39,17 @@ class ChatListCell: UITableViewCell {
             avatarImageView.widthAnchor.constraint(equalToConstant: 80),
             avatarImageView.heightAnchor.constraint(equalToConstant: 80),
             avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50)
+            avatarImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+        nameLabel.text = "name"
+        contentView.addSubview(nameLabel)
+        nameLabel.textColor = .white
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 30),
+            nameLabel.topAnchor.constraint(equalTo: avatarImageView.topAnchor, constant: 10),
+            nameLabel.widthAnchor.constraint(equalToConstant: 200),
+            nameLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
         messageLabel.text = "message"
         contentView.addSubview(messageLabel)
@@ -51,14 +58,14 @@ class ChatListCell: UITableViewCell {
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             messageLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 30),
-            messageLabel.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor, constant: -10),
+            messageLabel.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor, constant: 10),
             messageLabel.widthAnchor.constraint(equalToConstant: 200),
             messageLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
         contentView.addSubview(unreadLabel)
         unreadLabel.text = "1"
         unreadLabel.textColor = .white
-        unreadLabel.backgroundColor = .red
+        unreadLabel.backgroundColor = UIColor(named: "G3")
         unreadLabel.layer.cornerRadius = 10
         unreadLabel.layer.masksToBounds = true
         unreadLabel.textAlignment = .center

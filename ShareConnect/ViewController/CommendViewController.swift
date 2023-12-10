@@ -92,7 +92,6 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         commentTextView.layer.borderColor = UIColor.black.cgColor
         commentTextView.font = UIFont.systemFont(ofSize: 16)
         starRatingView.backgroundColor = .black
-        starRatingView.tintColor = UIColor(named: "G3")
         addImageButton.setTitle("+", for: .normal)
         addImageButton.setTitleColor(UIColor(named: "G3"), for: .normal)
         addImageButton.backgroundColor = .white

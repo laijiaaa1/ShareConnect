@@ -37,8 +37,8 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         setupUI()
         fetchChatData()
         tabBarController?.tabBar.isHidden = true
-        navigationController?.navigationBar.tintColor = .black
-        view.backgroundColor = CustomColors.B1
+        navigationController?.navigationBar.tintColor = .white
+        view.backgroundColor = .black
     }
     func setupUI() {
         navigationItem.title = "CHAT LIST"
@@ -51,11 +51,11 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
             tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.75)
         ])
         tableView.delegate = self
-        tableView.backgroundColor = CustomColors.B1
+        tableView.backgroundColor = .black
         tableView.dataSource = self
         tableView.register(ChatListCell.self, forCellReuseIdentifier: "ChatListCell")
         view.addSubview(roleToggleButton)
-        roleToggleButton.backgroundColor = .black
+        roleToggleButton.backgroundColor = UIColor(named: "G3")
         roleToggleButton.setTitleColor(.white, for: .normal)
         roleToggleButton.layer.cornerRadius = 10
         roleToggleButton.clipsToBounds = true
@@ -109,7 +109,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                     self.fetchLatestMessage(for: document.documentID, chatRoomID: chatRoomID) { message in
                         let chatItem = ChatItem(
                             name: document.documentID,
-                            time: message.timestamp.description,
+                            time: message.timestamp.dateValue(),
                             message: message.text,
                             profileImageUrl: message.profileImageUrl,
                             unreadCount: 1,
@@ -168,11 +168,11 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     func didReceiveNewMessage(_ message: ChatMessage) {
         if let existingChatIndex = chatItems.firstIndex(where: { $0.chatRoomID == message.chatRoomID }) {
             chatItems[existingChatIndex].message = message.text
-            chatItems[existingChatIndex].time = message.timestamp.description
+            chatItems[existingChatIndex].time = message.timestamp.dateValue()
             chatItems[existingChatIndex].unreadCount += 1
         } else {
             let chatItem = ChatItem(name: message.name,
-                                    time: message.timestamp.description,
+                                    time: message.timestamp.dateValue(),
                                     message: message.text,
                                     profileImageUrl: message.profileImageUrl,
                                     unreadCount: 1, chatRoomID: message.chatRoomID, sellerID: message.sellerID, buyerID: message.buyerID)
@@ -187,20 +187,30 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatListCell", for: indexPath) as? ChatListCell ?? ChatListCell()
         let chatItem = chatItems[indexPath.row]
-        if currentUserRole == .seller {
-            cell.nameLabel.text = chatItem.buyerID
-        } else {
-            cell.nameLabel.text = chatItem.sellerID
+        cell.backgroundColor = .black
+        let otherUserID = currentUserRole == .seller ? chatItem.buyerID : chatItem.sellerID
+        getUserName(for: otherUserID) { userName in
+            DispatchQueue.main.async {
+                cell.nameLabel.text = userName ?? "User"
+                cell.avatarImageView.kf.setImage(with: URL(string: chatItem.profileImageUrl))
+                cell.messageLabel.text = chatItem.message
+                cell.unreadLabel.text = "\(chatItem.unreadCount)"
+                let dateString = chatItem.time
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                if let date = dateFormatter.date(from: dateFormatter.string(from: dateString)) {
+                    dateFormatter.dateFormat = "HH:mm"
+                    let formattedTime = dateFormatter.string(from: date)
+                    cell.timeLabel.text = formattedTime
+                } else {
+                    print("Error converting date string to Date.")
+                }
+            }
         }
-        cell.nameLabel.text = chatItem.sellerID == Auth.auth().currentUser?.uid ? chatItem.buyerID : chatItem.sellerID
-        cell.timeLabel.text = chatItem.time
-        cell.avatarImageView.kf.setImage(with: URL(string: chatItem.profileImageUrl))
-        cell.messageLabel.text = chatItem.message
-        cell.unreadLabel.text = "\(chatItem.unreadCount)"
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
+        return 120
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chatItem = chatItems[indexPath.row]
@@ -210,6 +220,29 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
         chatViewController.sellerID = chatItem.sellerID
         navigationController?.pushViewController(chatViewController, animated: true)
     }
+    func getUserName(for userID: String, completion: @escaping (String?) -> Void) {
+        let usersCollection = Firestore.firestore().collection("users")
+        let userDocument = usersCollection.document(userID)
+        userDocument.getDocument { (documentSnapshot, error) in
+            if let error = error {
+                print("Error getting user document: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+            guard let document = documentSnapshot, document.exists else {
+                print("No user found for ID: \(userID)")
+                completion(nil)
+                return
+            }
+            if let userName = document["name"] as? String {
+                completion(userName)
+            } else {
+                print("User document does not contain a 'name' field.")
+                completion(nil)
+            }
+        }
+    }
+
     func fetchRoom(chatRoomID: String) {
         firestore.collection("chatRooms").document(chatRoomID).collection("messages").getDocuments { [weak self] (querySnapshot, error) in
             guard let self = self else { return }

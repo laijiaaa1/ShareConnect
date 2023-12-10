@@ -74,8 +74,8 @@ class StarRatingView: UIView {
     private func setupButtons() {
         for _ in 0..<stars {
             let button = UIButton()
-            button.backgroundColor = .white
-            button.tintColor = .black
+            button.backgroundColor = .black
+            button.tintColor = UIColor(named: "G3")
             button.setImage(UIImage(systemName: "star"), for: .normal)
             button.setImage(UIImage(systemName: "star.fill"), for: .selected)
             button.adjustsImageWhenHighlighted = false
