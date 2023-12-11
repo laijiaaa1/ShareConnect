@@ -46,25 +46,19 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
+    func fetchData() {
+        if usification == "product" {
+            fetchRequestsForUser(type: currentButtonType, usification: "product")
+            } else if usification == "place" {
+                fetchRequestsForUser(type: currentButtonType, usification: "place")
+            }
+        }
+    
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.tintColor = .black
-        if usification == "product" {
-            fetchRequestsForUser(type: .request, usification: "product")
-            if currentButtonType == .request {
-                fetchRequestsForUser(type: .request, usification: "product")
-            } else if currentButtonType == .supply {
-                fetchRequestsForUser(type: .supply, usification: "product")
-            }
-        } else if usification == "place" {
-            fetchRequestsForUser(type: .request, usification: "place")
-            if currentButtonType == .request {
-                fetchRequestsForUser(type: .request, usification: "place")
-            } else if currentButtonType == .supply {
-                fetchRequestsForUser(type: .supply, usification: "place")
-            }
-        }
+        fetchData()
     }
     override func viewDidLoad() {
         view.backgroundColor = .black
@@ -81,13 +75,13 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let userID = Auth.auth().currentUser?.uid ?? ""
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        if usification == "product" {
-            fetchRequestsForUser(type: .request, usification: "product")
-            fetchRequestsForUser(type: .supply, usification: "product")
-        } else if usification == "place" {
-            fetchRequestsForUser(type: .request, usification: "place")
-            fetchRequestsForUser(type: .supply, usification: "place")
-        }
+//        if usification == "product" {
+//            fetchRequestsForUser(type: .request, usification: "product")
+//            fetchRequestsForUser(type: .supply, usification: "product")
+//        } else if usification == "place" {
+//            fetchRequestsForUser(type: .request, usification: "place")
+//            fetchRequestsForUser(type: .supply, usification: "place")
+//        }
     }
     func loadSavedCollections() {
         let savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
@@ -171,15 +165,15 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         if collectionView == collectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
             if usification == "product" {
-                if currentButtonType == .request {
+                if currentButtonType == .request, allRequests.count > indexPath.item {
                     cell.product = allRequests[indexPath.item]
-                } else if currentButtonType == .supply {
+                } else if currentButtonType == .supply, allSupplies.count > indexPath.item  {
                     cell.product = allSupplies[indexPath.item]
                 }
             } else if usification == "place" {
-                if currentButtonType == .request {
+                if currentButtonType == .request, allRequests.count > indexPath.item {
                     cell.product = allRequests[indexPath.item]
-                } else if currentButtonType == .supply {
+                } else if currentButtonType == .supply, allSupplies.count > indexPath.item {
                     cell.product = allSupplies[indexPath.item]
                 }
             }
@@ -293,51 +287,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         ])
         scrollView.contentSize = CGSize(width: view.frame.width, height: collectionView.frame.height)
     }
-    func fetchRequestsForUser(type: ProductType, usification: String) {
-        let db = Firestore.firestore()
-        let productsCollection = db.collection("products").whereField("product.Use", isEqualTo: usification)
-        productsCollection.getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error getting documents: \(error)")
-            } else {
-                if self.currentButtonType == .request {
-                    self.allRequests.removeAll()
-                } else if self.currentButtonType == .supply {
-                    self.allSupplies.removeAll()
-                }
-                for document in querySnapshot!.documents {
-                    let productData = document.data()
-                    if let productTypeRawValue = productData["type"] as? String,
-                       let productType = ProductType(rawValue: productTypeRawValue),
-                       let product = self.parseProductData(productData: productData) {
-                        if productType == type {
-                            if product.itemType == type {
-                                print("Appending \(type): \(product)")
-                                if type == .request {
-                                    self.allRequests.append(product)
-                                } else if type == .supply {
-                                    self.allSupplies.append(product)
-                                }
-                            }
-                        } else {
-                            print("Skipped product with unknown type: \(productType)")
-                        }
-                    } else {
-                        print("Error parsing product type")
-                    }
-                }
-                if type == .request {
-                    self.allRequests.sort(by: { $0.startTime < $1.startTime })
-                } else if type == .supply {
-                    self.allSupplies.sort(by: { $0.startTime < $1.startTime })
-                }
-                print("All requests: \(self.allRequests)")
-                print("All supplies: \(self.allSupplies)")
-                self.collectionView.reloadData()
-                self.collectionView.refreshControl?.endRefreshing()
-            }
-        }
-    }
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
               let productId = product["productId"] as? String,
@@ -383,45 +332,110 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     func fetchDataForSort(classification: String, type: ProductType, usification: String) {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products").whereField("product.Use", isEqualTo: usification)
+
         productsCollection.getDocuments { (querySnapshot, error) in
             if self.currentButtonType == .request {
                 self.allRequests.removeAll()
             } else if self.currentButtonType == .supply {
                 self.allSupplies.removeAll()
             }
+            let dispatchGroup = DispatchGroup()
             for document in querySnapshot!.documents {
                 let productData = document.data()
                 if let productTypeRawValue = productData["type"] as? String,
                    let productType = ProductType(rawValue: productTypeRawValue),
                    let product = self.parseProductData(productData: productData) {
-                    if productType.rawValue == "request" {
-                        if product.itemType == productType {
-                            print("Appending \(productType): \(product)")
-                            if product.sort == classification {
-                                self.allRequests.append(product)
-                            }
+                    dispatchGroup.enter()
+                    self.isSellerBlocked(product.seller.sellerID) { isBlocked in
+                        if !isBlocked && productType.rawValue == "request" && product.itemType == productType && product.sort == classification {
+                            self.allRequests.append(product)
+                        } else if productType.rawValue == "supply" && product.itemType == productType && product.sort == classification {
+                            self.allSupplies.append(product)
                         }
-                    } else if productType.rawValue == "supply" {
-                        if product.itemType == productType {
-                            print("Appending \(productType): \(product)")
-                            if product.sort == classification {
-                                self.allSupplies.append(product)
-                            }
-                        }
+                        dispatchGroup.leave()
                     }
                 } else {
                     print("Error parsing product type")
                 }
             }
-            if type == .request {
-                self.allRequests.sort(by: { $0.startTime < $1.startTime })
-            } else if type == .supply {
-                self.allSupplies.sort(by: { $0.startTime < $1.startTime })
+            dispatchGroup.notify(queue: .main) {
+                if type == .request {
+                    self.allRequests.sort(by: { $0.startTime < $1.startTime })
+                } else if type == .supply {
+                    self.allSupplies.sort(by: { $0.startTime < $1.startTime })
+                }
+                print("All requests: \(self.allRequests)")
+                print("All supplies: \(self.allSupplies)")
+                self.collectionView.reloadData()
+                self.collectionView.refreshControl?.endRefreshing()
             }
-            print("All requests: \(self.allRequests)")
-            print("All supplies: \(self.allSupplies)")
-            self.collectionView.reloadData()
-            self.collectionView.refreshControl?.endRefreshing()
         }
     }
+    func fetchRequestsForUser(type: ProductType, usification: String) {
+        let db = Firestore.firestore()
+        let productsCollection = db.collection("products").whereField("product.Use", isEqualTo: usification)
+
+        productsCollection.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                if self.currentButtonType == .request {
+                    self.allRequests.removeAll()
+                } else if self.currentButtonType == .supply {
+                    self.allSupplies.removeAll()
+                }
+                let dispatchGroup = DispatchGroup()
+                var uniqueProductID = Set<String>()
+                for document in querySnapshot!.documents {
+                    let productData = document.data()
+                    if let product = self.parseProductData(productData: productData) {
+                        dispatchGroup.enter()
+                        self.isSellerBlocked(product.seller.sellerID) { isBlocked in
+                            if !isBlocked && product.itemType == type && uniqueProductID.insert(product.productId).inserted{
+                                if type == .request {
+                                    self.allRequests.append(product)
+                                } else if type == .supply {
+                                    self.allSupplies.append(product)
+                                }
+                            }
+                            dispatchGroup.leave()
+                        }
+                    }
+                }
+                dispatchGroup.notify(queue: .main) {
+                    if type == .request {
+                        self.allRequests.sort(by: { $0.startTime < $1.startTime })
+                    } else if type == .supply {
+                        self.allSupplies.sort(by: { $0.startTime < $1.startTime })
+                    }
+
+                    print("All requests: \(self.allRequests)")
+                    print("All supplies: \(self.allSupplies)")
+                    self.collectionView.reloadData()
+                    self.collectionView.refreshControl?.endRefreshing()
+                }
+            }
+        }
+    }
+
+    func isSellerBlocked(_ sellerID: String, completion: @escaping (Bool) -> Void) {
+        if let currentUserID = Auth.auth().currentUser?.uid {
+            let blockedUsersCollection = Firestore.firestore().collection("blockedUsers")
+            blockedUsersCollection.document(currentUserID).getDocument { (document, error) in
+                if let document = document, document.exists {
+                    let data = document.data()
+                    if let isBlocked = data?[sellerID] as? Bool, isBlocked {
+                        completion(true)
+                    } else {
+                        completion(false)
+                    }
+                } else {
+                    completion(false)
+                }
+            }
+        } else {
+            completion(false)
+        }
+    }
+
 }

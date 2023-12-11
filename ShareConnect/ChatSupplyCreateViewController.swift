@@ -97,6 +97,10 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SupplyTableViewCell", for: indexPath) as! SupplyTableViewCell
+        cell.layer.cornerRadius = 10
+        cell.layer.masksToBounds = true
+        cell.contentView.layer.cornerRadius = 10
+        cell.contentView.layer.masksToBounds = true
         cell.backgroundColor = .black
         guard indexPath.row < products.count else {
             cell.requestNameLabel.text = "N/A"

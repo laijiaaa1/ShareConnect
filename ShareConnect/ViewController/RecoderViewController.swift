@@ -107,6 +107,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.returnButton.setTitle("Return", for: .normal)
         cell.layer.cornerRadius = 10
         cell.layer.masksToBounds = true
+        cell.contentView.backgroundColor = .black
         cell.backgroundColor = .black
         if rentalButton.isSelected {
             cell.returnButton.setTitle("Return", for: .normal)

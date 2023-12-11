@@ -47,7 +47,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         view.backgroundColor = .black
         tabBarController?.tabBar.backgroundColor = .black
-       
         let backPicture = UIImageView()
         backPicture.image = UIImage(named: "4")
         backPicture.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
@@ -187,10 +186,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyRequestCell", for: indexPath) as! MyRequestCell
         cell.layer.masksToBounds = true
         cell.layer.cornerRadius = 10
-        //inset between the cell
         cell.layer.borderWidth = 10
         cell.layer.borderColor = UIColor.black.cgColor
-       //iner raydius
         cell.contentView.layer.cornerRadius = 20
         cell.contentView.layer.masksToBounds = true
         cell.contentView.layer.borderWidth = 10

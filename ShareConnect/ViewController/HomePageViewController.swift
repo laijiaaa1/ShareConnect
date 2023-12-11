@@ -46,6 +46,11 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         browsingHistoryCollection.reloadData()
         let textAttributes = [NSAttributedString.Key.font:UIFont(name: "GeezaPro-Bold", size: 20)]
         view.backgroundColor = .black
+        let backPicture = UIImageView()
+        backPicture.image = UIImage(named: "9")
+        backPicture.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        view.addSubview(backPicture)
+        view.sendSubviewToBack(backPicture)
         searchProduct()
         groupClass()
         hotGroup()

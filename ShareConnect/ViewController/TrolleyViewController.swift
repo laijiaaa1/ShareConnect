@@ -60,7 +60,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             tableView.widthAnchor.constraint(equalToConstant: view.frame.width)
         ])
         let checkoutButton = UIButton(type: .system)
-        checkoutButton.setTitle("CONFIRM ORDER", for: .normal)
+        checkoutButton.setTitle("Confirm Order", for: .normal)
         checkoutButton.setTitleColor(.white, for: .normal)
         checkoutButton.backgroundColor = UIColor(named: "G3")
         checkoutButton.layer.cornerRadius = 10
