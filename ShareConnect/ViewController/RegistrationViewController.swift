@@ -67,7 +67,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
     func setupUI() {
         let backPicture = UIImageView()
         backPicture.image = UIImage(named: "7")
-        backPicture.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        backPicture.frame = CGRect(x: 0, y: 20, width: view.frame.width, height: view.frame.height - 40)
         view.addSubview(backPicture)
         view.sendSubviewToBack(backPicture)
         view.addSubview(emailTextField)
@@ -91,6 +91,12 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         addImageLabel.text = "Tap to add your image"
         addImageLabel.textColor = .white
         addImageLabel.translatesAutoresizingMaskIntoConstraints = false
+        let cancelButton = UIButton()
+        cancelButton.setTitle("Cancel", for: .normal)
+        cancelButton.setTitleColor(.systemBlue, for: .normal)
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(cancelButton)
         NSLayoutConstraint.activate([
             emailTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
             emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
@@ -110,11 +116,20 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
             profileImageView.heightAnchor.constraint(equalToConstant: 140),
             addImageLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: -75),
             addImageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            registerButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 60),
+            registerButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 40),
             registerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             registerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
-            registerButton.heightAnchor.constraint(equalToConstant: 40)
+            registerButton.heightAnchor.constraint(equalToConstant: 50),
+            cancelButton.topAnchor.constraint(equalTo: registerButton.bottomAnchor, constant: 20),
+            cancelButton.centerXAnchor.constraint(equalTo: registerButton.centerXAnchor),
+            cancelButton.heightAnchor.constraint(equalToConstant: 50),
+            cancelButton.widthAnchor.constraint(equalToConstant: 70)
         ])
+    }
+    @objc func cancelButtonTapped() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
+            self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)

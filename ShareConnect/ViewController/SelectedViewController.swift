@@ -115,7 +115,7 @@ class SelectedViewController: UIViewController {
         priceLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         priceLabel.textColor = .white
         infoView.addSubview(priceLabel)
-        availabilityView.backgroundColor = UIColor(named: "G2")
+        availabilityView.backgroundColor = .white /*UIColor(named: "G2")*/
         availabilityView.layer.cornerRadius = 10
         infoView.addSubview(availabilityView)
         availabilityView.translatesAutoresizingMaskIntoConstraints = false
@@ -127,7 +127,7 @@ class SelectedViewController: UIViewController {
         ])
         let dateImage = UIImageView()
         availabilityView.addSubview(dateImage)
-        dateImage.image = UIImage(named: "icons8-today-72(@3×)")
+        dateImage.image = UIImage(named: "icons8-today-72(@3×)-1")
         dateImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             dateImage.centerYAnchor.constraint(equalTo: availabilityView.centerYAnchor),
@@ -137,7 +137,7 @@ class SelectedViewController: UIViewController {
         ])
         availabilityView.addSubview(availability)
         availability.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        availability.textColor = .white
+        availability.textColor = .black
         availability.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             availability.centerYAnchor.constraint(equalTo: availabilityView.centerYAnchor),
@@ -152,7 +152,7 @@ class SelectedViewController: UIViewController {
             itemLabel.topAnchor.constraint(equalTo: availabilityView.bottomAnchor, constant: 60),
             itemLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
         ])
-        itemView.backgroundColor = UIColor(named: "G2")
+        itemView.backgroundColor = .white /*UIColor(named: "G2")*/
         itemView.layer.cornerRadius = 10
         infoView.addSubview(itemView)
         itemView.translatesAutoresizingMaskIntoConstraints = false
@@ -164,7 +164,7 @@ class SelectedViewController: UIViewController {
         ])
         itemView.addSubview(itemInfo)
         itemInfo.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        itemInfo.textColor = .white
+        itemInfo.textColor = .black
         itemInfo.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             itemInfo.centerYAnchor.constraint(equalTo: itemView.centerYAnchor),
@@ -243,7 +243,7 @@ class SelectedViewController: UIViewController {
         trolleyButton.addTarget(self, action: #selector(trolleyButtonTapped), for: .touchUpInside)
         closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         closeButton.imageView?.tintColor = .white
-        closeButton.backgroundColor = UIColor(named: "G2")
+        closeButton.backgroundColor = UIColor(named: "G3")
         closeButton.layer.cornerRadius = 30
         closeButton.layer.masksToBounds = true
         view.addSubview(closeButton)

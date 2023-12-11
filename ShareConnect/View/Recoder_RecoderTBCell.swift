@@ -28,7 +28,7 @@ extension RecoderViewController {
         let backView = UIView()
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             super.init(style: style, reuseIdentifier: reuseIdentifier)
-            backView.backgroundColor = CustomColors.B1
+            backView.backgroundColor = .white
             contentView.layer.cornerRadius = 10
             contentView.layer.masksToBounds = true
 //            contentView.layer.borderWidth = 1
@@ -56,6 +56,7 @@ extension RecoderViewController {
             ])
             nameLabel.text = "Product Name"
             nameLabel.font = UIFont.systemFont(ofSize: 16)
+            nameLabel.textColor = .black
             backView.addSubview(nameLabel)
             nameLabel.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
@@ -66,10 +67,11 @@ extension RecoderViewController {
             ])
             if returnButton.isSelected {
                 returnButton.setTitle("Return", for: .normal)
-                returnButton.setTitleColor(.black, for: .normal)
+                returnButton.setTitleColor(UIColor(named: "G5"), for: .normal)
                 returnButton.backgroundColor = .white
                 returnButton.layer.cornerRadius = 5
                 returnButton.layer.borderWidth = 1
+                returnButton.layer.borderColor = UIColor(named: "G3")?.cgColor
                 returnButton.layer.masksToBounds = true
                 backView.addSubview(returnButton)
                 returnButton.translatesAutoresizingMaskIntoConstraints = false
@@ -81,11 +83,12 @@ extension RecoderViewController {
                 ])
             } else {
                 returnButton.setTitle("Remind", for: .normal)
-                returnButton.setTitleColor(.black, for: .normal)
+                returnButton.setTitleColor(UIColor(named: "G5"), for: .normal)
                 returnButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
                 returnButton.backgroundColor = .white
                 returnButton.layer.cornerRadius = 5
                 returnButton.layer.borderWidth = 1
+                returnButton.layer.borderColor = UIColor(named: "G3")?.cgColor
                 returnButton.layer.masksToBounds = true
                 backView.addSubview(returnButton)
                 returnButton.translatesAutoresizingMaskIntoConstraints = false

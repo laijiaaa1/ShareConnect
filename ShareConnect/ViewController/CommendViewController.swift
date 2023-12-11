@@ -110,8 +110,8 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             submitButton.topAnchor.constraint(equalTo: backView.bottomAnchor, constant: 20),
-            submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             submitButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         submitButton.backgroundColor = UIColor(named: "G3")

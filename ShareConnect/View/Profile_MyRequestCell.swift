@@ -26,7 +26,7 @@ class MyRequestCell: UITableViewCell {
         contentView.layer.cornerRadius = 10
         contentView.clipsToBounds = true
         contentView.layer.borderWidth = 1
-        contentView.backgroundColor = CustomColors.B1
+        contentView.backgroundColor = .white
         requestImageView.translatesAutoresizingMaskIntoConstraints = false
         requestNameLabel.translatesAutoresizingMaskIntoConstraints = false
         requestDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -36,7 +36,7 @@ class MyRequestCell: UITableViewCell {
             requestImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             requestImageView.heightAnchor.constraint(equalToConstant: 80),
             requestImageView.widthAnchor.constraint(equalToConstant: 80),
-            requestNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
+            requestNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
             requestNameLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),
             requestDescriptionLabel.topAnchor.constraint(equalTo: requestNameLabel.bottomAnchor, constant: 10),
             requestDescriptionLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),
@@ -46,9 +46,12 @@ class MyRequestCell: UITableViewCell {
             requestDateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
         ])
         requestNameLabel.numberOfLines = 0
+//        requestNameLabel.textColor = .white
         requestImageView.layer.cornerRadius = 10
         requestImageView.layer.masksToBounds = true
         requestDescriptionLabel.numberOfLines = 0
+//        requestDescriptionLabel.textColor = .white
+//        requestDateLabel.textColor = .white
         requestDateLabel.numberOfLines = 0
     }
     required init?(coder: NSCoder) {

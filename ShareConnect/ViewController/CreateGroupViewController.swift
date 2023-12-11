@@ -40,7 +40,7 @@ class CreateGroupViewController: CreateRequestViewController {
         cell.requestLabel.text = "name"
         cell.addBtn.setBackgroundImage(UIImage(systemName: "plus"), for: .normal)
         cell.addBtn.tintColor = .white
-        cell.backgroundColor = UIColor(named: "G2")
+        cell.backgroundColor = .black
         cell.requestLabel.numberOfLines = 0
         cell.requestLabel.textColor = .white
         cell.textField.textColor = .white

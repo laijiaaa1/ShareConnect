@@ -134,7 +134,7 @@ class DetailViewController: UIViewController {
         ])
         shareButton.addTarget(self, action: #selector(share), for: .touchUpInside)
         view.addSubview(availabilityView)
-        availabilityView.backgroundColor = UIColor(named: "G2")
+        availabilityView.backgroundColor = .white /*UIColor(named: "G2")*/
         availabilityView.layer.cornerRadius = 10
         availabilityView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -146,7 +146,7 @@ class DetailViewController: UIViewController {
         availabilityView.addSubview(availability)
         availability.text = "Availability"
         availability.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        availability.textColor = .white
+        availability.textColor = .black
         availability.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             availability.centerYAnchor.constraint(equalTo: availabilityView.centerYAnchor),
@@ -154,7 +154,7 @@ class DetailViewController: UIViewController {
         ])
         let dateImage = UIImageView()
         availabilityView.addSubview(dateImage)
-        dateImage.image = UIImage(named: "icons8-today-72(@3×)")
+        dateImage.image = UIImage(named: "icons8-today-72(@3×)-1")
         dateImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             dateImage.centerYAnchor.constraint(equalTo: availability.centerYAnchor),
@@ -166,7 +166,7 @@ class DetailViewController: UIViewController {
         dateImage.isUserInteractionEnabled = true
         dateImage.addGestureRecognizer(tapGesture)
         view.addSubview(descriptionView)
-        descriptionView.backgroundColor = UIColor(named: "G2")
+        descriptionView.backgroundColor = .white /*UIColor(named: "G2")*/
         descriptionView.layer.cornerRadius = 10
         descriptionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -179,7 +179,7 @@ class DetailViewController: UIViewController {
         descriptionLabel.text = "Product details"
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        descriptionLabel.textColor = .white
+        descriptionLabel.textColor = .black
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             descriptionLabel.centerYAnchor.constraint(equalTo: descriptionView.centerYAnchor),
@@ -198,7 +198,7 @@ class DetailViewController: UIViewController {
         descriptionButton.isUserInteractionEnabled = true
         descriptionButton.addGestureRecognizer(tap)
         view.addSubview(otherView)
-        otherView.backgroundColor = UIColor(named: "G2")
+        otherView.backgroundColor = .white /*UIColor(named: "G2")*/
         otherView.layer.cornerRadius = 10
         otherView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -210,7 +210,7 @@ class DetailViewController: UIViewController {
         otherView.addSubview(otherLabel)
         otherLabel.text = "Other remark"
         otherLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
-        otherLabel.textColor = .white
+        otherLabel.textColor = .black
         otherLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             otherLabel.centerYAnchor.constraint(equalTo: otherView.centerYAnchor),

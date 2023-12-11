@@ -11,8 +11,9 @@ import FirebaseStorage
 import FirebaseCore
 import FirebaseFirestore
 import Kingfisher
+import FirebaseDatabase
 
-class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     var requests: [Request] = []
     var products: [Product] = []
     var groups: [Group] = []
@@ -66,6 +67,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             profileImageView.widthAnchor.constraint(equalToConstant: 100),
             profileImageView.heightAnchor.constraint(equalToConstant: 100)
         ])
+        //change profile image
+        profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
+        
+        profileImageView.isUserInteractionEnabled = true
+     
         view.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.text = "Luna"
@@ -171,6 +177,54 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         ])
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: settingProfileButton)
     }
+    @objc func handleSelectProfileImageView() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+    //select the image and upload to profileImageView
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        var selectedImageFormPicker: UIImage?
+        if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+            selectedImageFormPicker = editedImage
+        } else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            selectedImageFormPicker = originalImage
+        }
+        if let selectedImage = selectedImageFormPicker {
+            profileImageView.image = selectedImage
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    func uploadFirebase() {
+        guard let image = profileImageView.image else { return }
+        guard let uploadData = image.jpegData(compressionQuality: 0.3) else { return }
+        let filename = NSUUID().uuidString
+        let storageRef = Storage.storage().reference().child("profile_image").child(filename)
+        storageRef.putData(uploadData, metadata: nil) { (metadata, error) in
+            if let error = error {
+                print("Failed to upload image to storage", error)
+                return
+            }
+            storageRef.downloadURL(completion: { (downloadURL, error) in
+                if let error = error {
+                    print("Failed to fetch downloadURL", error)
+                    return
+                }
+                guard let profileImageUrl = downloadURL?.absoluteString else { return }
+                let dictionaryValues = ["profileImageUrl": profileImageUrl]
+                let values = [self.userId: dictionaryValues]
+                Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (error, ref) in
+                    if let error = error {
+                        print("Failed to save user info into db", error)
+                        return
+                    }
+                    print("Successfully saved user info to db")
+                })
+            })
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if selectedButton == groupButton  {
             return groups.count

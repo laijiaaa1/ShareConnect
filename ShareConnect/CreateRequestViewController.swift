@@ -47,16 +47,16 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         view.addGestureRecognizer(tapGesture)
         view.backgroundColor = .black
         navigationItem.title = "Create Demand"
-        uploadButton.backgroundColor = UIColor(named: "G2")
+        uploadButton.backgroundColor = .black
         uploadButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(uploadButton)
         uploadButton.setTitle("+", for: .normal)
         uploadButton.startAnimatingPressActions()
-        uploadButton.setTitleColor(UIColor(named: "G3"), for: .normal)
+        uploadButton.setTitleColor(UIColor(named: "G5"), for: .normal)
         uploadButton.titleLabel?.font = UIFont.systemFont(ofSize: 40)
         uploadButton.layer.cornerRadius = 10
         uploadButton.layer.borderWidth = 1
-        uploadButton.layer.borderColor = UIColor.black.cgColor
+        uploadButton.layer.borderColor = UIColor(named: "G5")?.cgColor
         uploadButton.layer.masksToBounds = true
         uploadButton.addTarget(self, action: #selector(uploadButtonTapped), for: .touchUpInside)
         NSLayoutConstraint.activate([
@@ -70,8 +70,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         requestSelectSegment.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(requestSelectSegment)
         requestSelectSegment.selectedSegmentIndex = 0
-        requestSelectSegment.backgroundColor = UIColor(named: "G2")
-        requestSelectSegment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "G3")!], for: .selected)
+        requestSelectSegment.backgroundColor = UIColor(named: "G5")
+        requestSelectSegment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "G5")], for: .selected)
         requestSelectSegment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
         requestSelectSegment.layer.cornerRadius = 10
         requestSelectSegment.addTarget(self, action: #selector(requestSelectSegmentTapped), for: .valueChanged)
@@ -86,6 +86,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         requestTableView.delegate = self
         requestTableView.dataSource = self
         requestTableView.layer.cornerRadius = 10
+        requestTableView.layer.masksToBounds = true
+        requestTableView.layer.borderWidth = 1
+        requestTableView.layer.borderColor = UIColor(named: "G5")?.cgColor
         requestTableView.backgroundColor = .black
         requestTableView.register(UITableViewCell.self, forCellReuseIdentifier: "requestCell")
         NSLayoutConstraint.activate([
@@ -94,6 +97,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             requestTableView.widthAnchor.constraint(equalToConstant: 320),
             requestTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90)
         ])
+        requestTableView.footerView(forSection: 0)?.backgroundColor = .white
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(doneButton)
         doneButton.backgroundColor = UIColor(named: "G3")
@@ -297,26 +301,32 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     func updateSelectedGroupUI(groupId: String, groupName: String) {
         selectedGroupID = groupId
         selectedGroup = groupName
-        if let selectedGroupID = selectedGroupID, let selectedGroup = selectedGroup {
-            groupHeaderLabel.text = "Selected Group: \(selectedGroup)"
-            if requestTableView.tableHeaderView == nil {
-                requestTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: requestTableView.bounds.size.width, height: 50))
-                requestTableView.tableHeaderView?.addSubview(groupHeaderLabel)
-                groupHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate([
-                    groupHeaderLabel.leadingAnchor.constraint(equalTo: requestTableView.tableHeaderView!.leadingAnchor, constant: 16),
-                    groupHeaderLabel.trailingAnchor.constraint(equalTo: requestTableView.tableHeaderView!.trailingAnchor, constant: -16),
-                    groupHeaderLabel.topAnchor.constraint(equalTo: requestTableView.tableHeaderView!.topAnchor),
-                    groupHeaderLabel.bottomAnchor.constraint(equalTo: requestTableView.tableHeaderView!.bottomAnchor, constant: -16)
-                ])
-                groupHeaderLabel.textAlignment = .center
-                groupHeaderLabel.textColor = .white
-                groupHeaderLabel.backgroundColor = .black
-                groupHeaderLabel.font = UIFont.systemFont(ofSize: 14)
+        if selectedGroupID != nil {
+            if let selectedGroupID = selectedGroupID, let selectedGroup = selectedGroup {
+                groupHeaderLabel.text = "Selected Group: \(selectedGroup)"
+                if requestTableView.tableHeaderView == nil {
+                    requestTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: requestTableView.bounds.size.width, height: 50))
+                    requestTableView.tableHeaderView?.addSubview(groupHeaderLabel)
+                    groupHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
+                    NSLayoutConstraint.activate([
+                        groupHeaderLabel.leadingAnchor.constraint(equalTo: requestTableView.tableHeaderView!.leadingAnchor, constant: 16),
+                        groupHeaderLabel.trailingAnchor.constraint(equalTo: requestTableView.tableHeaderView!.trailingAnchor, constant: -16),
+                        groupHeaderLabel.topAnchor.constraint(equalTo: requestTableView.tableHeaderView!.topAnchor),
+                        groupHeaderLabel.bottomAnchor.constraint(equalTo: requestTableView.tableHeaderView!.bottomAnchor, constant: -16)
+                    ])
+                    groupHeaderLabel.textAlignment = .center
+                    groupHeaderLabel.textColor = .white
+                    groupHeaderLabel.backgroundColor = .black
+                    groupHeaderLabel.font = UIFont.systemFont(ofSize: 14)
+                }
+                
+                else {
+                    groupHeaderLabel.text = ""
+                    requestTableView.tableHeaderView = nil
+                }
             }
-        } else {
-            requestTableView.tableHeaderView = nil
         }
+        
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return selectedGroupID != nil ? 9 : 8
@@ -326,7 +336,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         cell.requestLabel.text = "name"
         cell.addBtn.setBackgroundImage(UIImage(systemName: "plus"), for: .normal)
         cell.addBtn.tintColor = .white
-        cell.backgroundColor = UIColor(named: "G2")
+        cell.addBtn.startAnimatingPressActions()
+        cell.backgroundColor = .black
         cell.textField.delegate = self
         cell.textField.textColor = .white
 
@@ -355,8 +366,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         return cell
     }
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 50
+        return 100
     }
+    
     @objc func timePickerChanged(sender: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"

@@ -65,7 +65,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
     @objc func rentalButtonTapped() {
         rentalButton.isSelected = true
         loanButton.isSelected = false
-        rentalButton.setTitleColor(UIColor(named: "G3"), for: .normal)
+        rentalButton.setTitleColor(UIColor(named: "G5"), for: .normal)
         rentalButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         loanButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         loanButton.setTitleColor(.lightGray, for: .normal)
@@ -77,7 +77,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         rentalButton.setTitleColor(.lightGray, for: .normal)
         loanButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         rentalButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        loanButton.setTitleColor(UIColor(named: "G3"), for: .normal)
+        loanButton.setTitleColor(UIColor(named: "G5"), for: .normal)
         fetchOrdersFromFirestore(isRenter: false)
     }
     func fetchOrdersFromFirestore(isRenter: Bool) {
@@ -127,15 +127,15 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
                 DispatchQueue.main.async {
                     if hasReview {
                         cell.returnButton.setTitle("Done", for: .normal)
-                        cell.returnButton.backgroundColor = .black
-                        cell.returnButton.layer.borderColor = UIColor.black.cgColor
+                        cell.returnButton.backgroundColor = UIColor(named: "G3")
+                        cell.returnButton.layer.borderColor = UIColor(named: "G3")?.cgColor
                         cell.returnButton.setTitleColor(.white, for: .normal)
                         cell.returnButton.isEnabled = false
                     } else {
                         cell.returnButton.setTitle("Return", for: .normal)
                         cell.returnButton.backgroundColor = .white
-                        cell.returnButton.layer.borderColor = UIColor.black.cgColor
-                        cell.returnButton.setTitleColor(.black, for: .normal)
+                        cell.returnButton.layer.borderColor = UIColor(named: "G3")?.cgColor
+                        cell.returnButton.setTitleColor(UIColor(named: "G3"), for: .normal)
                         cell.returnButton.isEnabled = true
                     }
                 }
