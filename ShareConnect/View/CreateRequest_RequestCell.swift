@@ -12,7 +12,6 @@ import FirebaseAuth
 import FirebaseCore
 import FirebaseStorage
 import DatePicker
-//import JGProgressHUD
 
 class RequestCell: UITableViewCell {
     let requestLabel = UILabel()
@@ -23,12 +22,16 @@ class RequestCell: UITableViewCell {
             updateCellHeight()
         }
     }
+    let pickerView = UIPickerView()
+    var pickerData: [String] = [String]()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         requestLabel.translatesAutoresizingMaskIntoConstraints = false
         addBtn.translatesAutoresizingMaskIntoConstraints = false
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.isHidden = true
+        textField.isUserInteractionEnabled = true
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.lightGray.cgColor
         textField.layer.cornerRadius = 10
@@ -49,7 +52,7 @@ class RequestCell: UITableViewCell {
             textField.topAnchor.constraint(equalTo: requestLabel.bottomAnchor, constant: 10),
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            textField.heightAnchor.constraint(equalToConstant: 40)
+            textField.heightAnchor.constraint(equalToConstant: 80)
         ])
         addBtn.addTarget(self, action: #selector(addBtnTapped), for: .touchUpInside)
     }
@@ -57,7 +60,7 @@ class RequestCell: UITableViewCell {
         isExpanded = !isExpanded
     }
     private func updateCellHeight() {
-        let newHeight: CGFloat = isExpanded ? 100 : 50
+        let newHeight: CGFloat = isExpanded ? 200 : 50
         frame.size.height = newHeight
         textField.isHidden = !isExpanded
     }
