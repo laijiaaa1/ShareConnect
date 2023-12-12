@@ -125,16 +125,12 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         let imageName = UUID().uuidString
         let productId = UUID().uuidString
         let storageRef = storage.reference().child("images/\(imageName).jpg")
-
         if let imageURL = self.uploadButton.backgroundImage(for: .normal),
            let imageData = imageURL.jpegData(compressionQuality: 0.1) {
-
-            // Asynchronously upload image data to Firebase Storage
             storageRef.putData(imageData, metadata: nil) { (metadata, error) in
                 if let error = error {
                     print("Error uploading image: \(error)")
                 } else {
-                    // Successfully uploaded image, now get the download URL
                     storageRef.downloadURL { [self] (url, error) in
                         if let error = error {
                             print("Error getting download URL: \(error)")
@@ -146,8 +142,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 "sellerID": user?.uid ?? "",
                                 "sellerName": user?.email ?? ""
                             ]
-
-                            // Iterate through tableView cells to get user input
                             DispatchQueue.main.async {
                                 for i in 0..<requestTableView.numberOfSections {
                                     for j in 0..<requestTableView.numberOfRows(inSection: i) {
@@ -159,15 +153,11 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                         }
                                     }
                                 }
-
-                                // Check if a group is selected
                                 if let selectedGroupID = self.selectedGroupID,
                                    let selectedGroupName = self.selectedGroup {
                                     productData["groupID"] = selectedGroupID
                                     productData["groupName"] = selectedGroupName
                                 }
-
-                                // Create a Product instance
                                 let demandProduct = Product(
                                     productId: productData["productId"] as? String ?? "",
                                     name: productData["Name"] as? String ?? "",
@@ -185,11 +175,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                     ),
                                     itemType: .request
                                 )
-
-                                // Determine the collection name based on group selection
                                 let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
-
-                                // Add the document to Firestore
                                 db.collection(collectionName).addDocument(data: [
                                     "type": ProductType.request.rawValue,
                                     "product": productData
@@ -199,8 +185,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                     } else {
                                         print("Document successfully written!")
                                     }
-
-                                    // Perform UI updates on the main thread
                                     DispatchQueue.main.async {
                                         ProgressHUD.succeed("Success", delay: 1.5)
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -261,7 +245,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         let db = Firestore.firestore()
         db.collection("users").document(user.uid).getDocument { [weak self] (document, error) in
             guard let self = self else { return }
-            
             if let document = document, document.exists {
                 let data = document.data()
                 if let groupIDs = data?["groups"] as? [String] {
@@ -297,17 +280,14 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     }
     func showGroupOptions() {
         let alertController = UIAlertController(title: "Select Group", message: nil, preferredStyle: .actionSheet)
-        
         for (groupId, groupName) in groupOptions {
             let action = UIAlertAction(title: groupName, style: .default) { [weak self] _ in
                 self?.updateSelectedGroupUI(groupId: groupId, groupName: groupName)
             }
             alertController.addAction(action)
         }
-        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
-        
         present(alertController, animated: true, completion: nil)
     }
     func updateSelectedGroupUI(groupId: String, groupName: String) {
@@ -331,14 +311,12 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                     groupHeaderLabel.backgroundColor = .black
                     groupHeaderLabel.font = UIFont.systemFont(ofSize: 14)
                 }
-                
                 else {
                     groupHeaderLabel.text = ""
                     requestTableView.tableHeaderView = nil
                 }
             }
         }
-        
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return selectedGroupID != nil ? 9 : 8
@@ -352,7 +330,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         cell.backgroundColor = .black
         cell.textField.delegate = self
         cell.textField.textColor = .white
-        
         let requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Quantity", "Use", "Price"]
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
@@ -367,11 +344,10 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 sortPicker.delegate = self
                 sortPicker.dataSource = self
                 sortPicker.tag = indexPath.row
-                
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = sortPicker
                 let sortOptions = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
-                sortPicker.selectRow(sortOptions.firstIndex(of: cell.textField.text ?? "") ?? 0, inComponent: 0, animated: false)
+                sortPicker.selectRow(sortOptions.firstIndex(of: cell.textField.text ?? "Others") ?? 0, inComponent: 0, animated: false)
             }
             if indexPath.row == 6 {
                 let usePicker = UIPickerView()
@@ -381,9 +357,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = usePicker
                 let useOptions = ["place", "product"]
-                usePicker.selectRow(useOptions.firstIndex(of: cell.textField.text ?? "") ?? 0, inComponent: 0, animated: false)
+                usePicker.selectRow(useOptions.firstIndex(of: cell.textField.text ?? "product") ?? 0, inComponent: 0, animated: false)
             }
-            
             if indexPath.row == 3 || indexPath.row == 4 {
                 let timePicker = UIDatePicker()
                 timePicker.datePickerMode = .dateAndTime
@@ -411,7 +386,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
         let timeString = formatter.string(from: sender.date)
         print(timeString)
-        
         if sender.tag == 3, let startCell = findCellWithTag(3) {
             startCell.textField.text = timeString
         } else if sender.tag == 4, let endCell = findCellWithTag(4) {
@@ -431,12 +405,10 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     }
 }
 // MARK: - UIPickerViewDelegate and UIPickerViewDataSource
-
 extension CreateRequestViewController {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView.tag == 6 {
             let useOptions = ["place", "product"]
@@ -447,7 +419,6 @@ extension CreateRequestViewController {
         }
         return 0
     }
-    
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView.tag == 6 {
             let useOptions = ["place", "product"]
@@ -460,7 +431,6 @@ extension CreateRequestViewController {
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let textFieldTag = pickerView.tag
-        
         if textFieldTag == 2 {
             let sortOptions = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
             if let cell = findCellWithTag(textFieldTag) {
