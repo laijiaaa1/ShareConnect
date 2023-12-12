@@ -36,7 +36,7 @@ class MyRequestCell: UITableViewCell {
             requestImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             requestImageView.heightAnchor.constraint(equalToConstant: 80),
             requestImageView.widthAnchor.constraint(equalToConstant: 80),
-            requestNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            requestNameLabel.topAnchor.constraint(equalTo: requestImageView.topAnchor, constant: 5),
             requestNameLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),
             requestDescriptionLabel.topAnchor.constraint(equalTo: requestNameLabel.bottomAnchor, constant: 10),
             requestDescriptionLabel.leadingAnchor.constraint(equalTo: requestImageView.trailingAnchor, constant: 20),

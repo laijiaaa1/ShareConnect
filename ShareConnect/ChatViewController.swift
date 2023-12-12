@@ -660,7 +660,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.backView.bottomAnchor, constant: -5),
                 cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.backView.leadingAnchor, constant: -20)
             ])
-            cell.backView.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
+            cell.backView.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G4") : UIColor(named: "G5")
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "textCell", for: indexPath) as! TextCell
@@ -668,8 +668,8 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             cell.backgroundColor = .black
             cell.configure(with: chatMessage)
             cell.messageLabel.text = chatMessage.text
-            cell.messageLabel.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .black : .white
-            cell.messageLabel.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .right : .left
+            cell.messageLabel.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .white : .white
+            cell.messageLabel.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .center : .center
             //        let isMe = Auth.auth().currentUser?.uid
             //            if isMe == chatMessage.buyerID{
             NSLayoutConstraint.activate([
@@ -680,7 +680,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.image.widthAnchor.constraint(equalToConstant: 30),
                 cell.image.heightAnchor.constraint(equalToConstant: 30),
                 cell.messageLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5),
-                cell.messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150),
+                cell.messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 180),
                 cell.messageLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
                 cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
                 cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor),
@@ -701,7 +701,36 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             //                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
             //                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
             //            }
-            cell.messageLabel.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G1") : UIColor(named: "G2")
+            
+//            cell.messageLabel.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G4") : UIColor(named: "G5")
+
+            // 清除或重置 backgroundViewCloud，以防止重複使用時的問題
+            for subview in cell.subviews {
+                if subview is UIImageView {
+                    subview.removeFromSuperview()
+                }
+            }
+
+            let backgroundViewCloud = UIImageView()
+            backgroundViewCloud.contentMode = .scaleToFill
+            cell.addSubview(backgroundViewCloud)
+            cell.sendSubviewToBack(backgroundViewCloud)
+            backgroundViewCloud.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                backgroundViewCloud.topAnchor.constraint(equalTo: cell.messageLabel.topAnchor),
+                backgroundViewCloud.leadingAnchor.constraint(equalTo: cell.messageLabel.leadingAnchor, constant: -15),
+                backgroundViewCloud.bottomAnchor.constraint(equalTo: cell.messageLabel.bottomAnchor),
+                backgroundViewCloud.trailingAnchor.constraint(equalTo: cell.messageLabel.trailingAnchor, constant: 15)
+            ])
+
+            // 使用不同的圖片，這裡假設 "S1" 和 "S2" 是您的圖片名稱
+            if chatMessage.buyerID == Auth.auth().currentUser?.uid {
+                backgroundViewCloud.image = UIImage(named: "S3")
+            } else {
+                backgroundViewCloud.image = UIImage(named: "S1")
+            }
+
             cell.messageLabel.numberOfLines = 0
             cell.messageLabel.layer.cornerRadius = 10
             cell.messageLabel.layer.masksToBounds = true
@@ -730,7 +759,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         let font = UIFont.systemFont(ofSize: 15)
         let boundingBox = CGSize(width: tableView.bounds.width - 40, height: .greatestFiniteMagnitude)
         let size = content.boundingRect(with: boundingBox, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSAttributedString.Key.font: font], context: nil)
-        return ceil(size.height) + 35
+        return ceil(size.height) + 50
     }
 }
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {

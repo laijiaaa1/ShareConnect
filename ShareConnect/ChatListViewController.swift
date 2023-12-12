@@ -27,7 +27,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     var currentUserRole: CurrentUserRole = .seller
     lazy var roleToggleButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Roll Seller", for: .normal)
+        button.setTitle("Roll", for: .normal)
         button.startAnimatingPressActions()
         button.addTarget(self, action: #selector(toggleRole), for: .touchUpInside)
         return button
@@ -35,6 +35,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        currentUserRole == .seller ? (sellerID = Auth.auth().currentUser!.uid) : (buyerID = Auth.auth().currentUser!.uid)
         fetchChatData()
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.tintColor = .white
@@ -87,8 +88,10 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
     func updateButtonTitle() {
         if currentUserRole == .seller {
             roleToggleButton.setTitle("Switch to Buyer", for: .normal)
+            chatItems.removeAll()
         } else {
             roleToggleButton.setTitle("Switch to Seller", for: .normal)
+            chatItems.removeAll()
         }
     }
     func fetchChatData() {

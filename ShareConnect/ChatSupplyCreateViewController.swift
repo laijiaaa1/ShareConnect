@@ -93,7 +93,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         return products.count
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
+        return 120
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SupplyTableViewCell", for: indexPath) as! SupplyTableViewCell
