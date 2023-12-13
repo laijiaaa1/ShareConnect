@@ -41,8 +41,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
-//        fetchGroups(userId: userId ?? "")
-        fetchCollections(userId: userId!)
+        fetchGroups(userId: userId ?? "")
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,14 +66,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             profileImageView.widthAnchor.constraint(equalToConstant: 100),
             profileImageView.heightAnchor.constraint(equalToConstant: 100)
         ])
-        //change profile image
         profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
-        
         profileImageView.isUserInteractionEnabled = true
-     
         view.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.text = "Luna"
+        nameLabel.text = "Name"
         nameLabel.textColor = .white
         nameLabel.font = UIFont.boldSystemFont(ofSize: 20)
         nameLabel.textAlignment = .center
@@ -117,14 +113,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         collectionButton.addTarget(self, action: #selector(collectionButtonTapped), for: .touchUpInside)
         requestButton.addTarget(self, action: #selector(requestButtonTapped), for: .touchUpInside)
         supplyButton.addTarget(self, action: #selector(supplyButtonTapped), for: .touchUpInside)
-        view.addSubview(lineView)
-        lineView.backgroundColor = .black
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            lineView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 10),
-            lineView.heightAnchor.constraint(equalToConstant: 1),
-            lineView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
-        ])
         view.addSubview(groupTableView)
         groupTableView.separatorStyle = .none
         groupTableView.showsVerticalScrollIndicator = false
@@ -161,10 +149,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: #selector(recoderButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .white
         fetchUserData(userId: userId!)
-        fetchCollections(userId: userId!)
         fetchGroups(userId: userId!)
-        fetchRequests(userId: userId!, dataType: "request")
-        fetchRequests(userId: userId!, dataType: "supply")
         view.addSubview(settingProfileButton)
         settingProfileButton.translatesAutoresizingMaskIntoConstraints = false
         settingProfileButton.setImage(UIImage(named: "icons8-setting-96(@3×)"), for: .normal)
@@ -183,7 +168,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
-    //select the image and upload to profileImageView
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         var selectedImageFormPicker: UIImage?
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
@@ -224,7 +208,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             })
         }
     }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if selectedButton == groupButton  {
             return groups.count
@@ -384,34 +367,26 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     @objc func groupButtonTapped() {
         animateLineViewTransition(to: groupButton)
-        animateViewTransition(to: groupTableView)
         fetchGroups(userId: userId ?? "")
     }
     @objc func collectionButtonTapped() {
         animateLineViewTransition(to: collectionButton)
-        animateViewTransition(to: collectionCollectionView)
         fetchCollections(userId: userId ?? "")
     }
     @objc func requestButtonTapped() {
         animateLineViewTransition(to: requestButton)
-        animateViewTransition(to: groupTableView)
         fetchRequests(userId: userId ?? "", dataType: "request")
     }
     @objc func supplyButtonTapped() {
         animateLineViewTransition(to: supplyButton)
-        animateViewTransition(to: groupTableView)
         fetchRequests(userId: userId ?? "", dataType: "supply")
     }
     func animateLineViewTransition(to button: UIButton) {
         button.isSelected.toggle()
         if button.isSelected {
-            selectedButton?.setTitleColor(.black, for: .normal)
             button.setTitleColor(.white, for: .normal)
             button.backgroundColor = UIColor(named: "G3")
             selectedButton = button
-            UIView.animate(withDuration: 0.3) {
-                self.lineView.frame.origin.x = button.frame.origin.x
-            }
             if button == groupButton {
                 collectionButton.setTitleColor(.black, for: .normal)
                 collectionButton.backgroundColor = .white
@@ -444,21 +419,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         } else if !button.isSelected {
             button.setTitleColor(.black, for: .normal)
             button.backgroundColor = .white
-        }
-    }
-    func animateViewTransition(to newView: UIView) {
-        UIView.animate(withDuration: 0.3) {
-            self.groupTableView.alpha = 0
-            self.collectionCollectionView.alpha = 0
-            self.requestTableView.alpha = 0
-            self.supplyTableView.alpha = 0
-        } completion: { _ in
-            self.groupTableView.isHidden = true
-            self.collectionCollectionView.isHidden = true
-            self.requestTableView.isHidden = true
-            self.supplyTableView.isHidden = true
-            newView.alpha = 1
-            newView.isHidden = false
         }
     }
 }
