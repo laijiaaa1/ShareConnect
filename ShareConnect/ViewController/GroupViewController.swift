@@ -56,12 +56,6 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         leftView.addSubview(imageView)
         searchTextField.leftView = leftView
         searchTextField.leftViewMode = .always
-        let rightView = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
-        let rightImageView = UIImageView(frame: CGRect(x: 10, y: 12, width: 18, height: 18))
-        rightImageView.image = UIImage(named: "icons8-filter-48(@3×)")
-        rightView.addSubview(rightImageView)
-        searchTextField.rightView = rightView
-        searchTextField.rightViewMode = .always
         searchTextField.backgroundColor = .white
         view.addSubview(searchTextField)
         searchTextField.addTarget(self, action: #selector(searchTextFieldDidChange), for: .editingChanged)

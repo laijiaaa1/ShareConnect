@@ -41,7 +41,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
-        fetchCollections(userId: userId!)
+        fetchGroups(userId: userId ?? "")
     }
     override func viewDidLoad() {
         super.viewDidLoad()
