@@ -610,6 +610,9 @@ PODS:
     - FirebaseAnalytics (~> 10.9.0)
   - Firebase/CoreOnly (10.9.0):
     - FirebaseCore (= 10.9.0)
+  - Firebase/Crashlytics (10.9.0):
+    - Firebase/CoreOnly
+    - FirebaseCrashlytics (~> 10.9.0)
   - Firebase/Firestore (10.9.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.9.0)
@@ -648,6 +651,14 @@ PODS:
     - FirebaseCore (~> 10.0)
   - FirebaseCoreInternal (10.17.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
+  - FirebaseCrashlytics (10.9.0):
+    - FirebaseCore (~> 10.5)
+    - FirebaseInstallations (~> 10.0)
+    - FirebaseSessions (~> 10.5)
+    - GoogleDataTransport (~> 9.2)
+    - GoogleUtilities/Environment (~> 7.8)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - PromisesObjC (~> 2.1)
   - FirebaseDatabase (10.18.0):
     - FirebaseAppCheckInterop (~> 10.17)
     - FirebaseCore (~> 10.0)
@@ -685,6 +696,14 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - FirebaseSessions (10.19.0):
+    - FirebaseCore (~> 10.5)
+    - FirebaseCoreExtension (~> 10.0)
+    - FirebaseInstallations (~> 10.0)
+    - GoogleDataTransport (~> 9.2)
+    - GoogleUtilities/Environment (~> 7.10)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - PromisesSwift (~> 2.1)
   - FirebaseSharedSwift (10.19.0)
   - FirebaseStorage (10.17.0):
     - FirebaseAppCheckInterop (~> 10.0)
@@ -804,12 +823,15 @@ PODS:
   - nanopb/encode (2.30909.1)
   - ProgressHUD (14.1.0)
   - PromisesObjC (2.3.1)
+  - PromisesSwift (2.3.1):
+    - PromisesObjC (= 2.3.1)
   - RecaptchaInterop (100.0.0)
   - SwiftLint (0.54.0)
 
 DEPENDENCIES:
   - DatePicker (~> 1.3.0)
   - Firebase/Core (~> 10.9.0)
+  - Firebase/Crashlytics
   - Firebase/Firestore (~> 10.9.0)
   - FirebaseAnalytics
   - FirebaseAuth
@@ -837,11 +859,13 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreExtension
     - FirebaseCoreInternal
+    - FirebaseCrashlytics
     - FirebaseDatabase
     - FirebaseFirestore
     - FirebaseFirestoreSwift
     - FirebaseInstallations
     - FirebaseMessaging
+    - FirebaseSessions
     - FirebaseSharedSwift
     - FirebaseStorage
     - GoogleAppMeasurement
@@ -858,6 +882,7 @@ SPEC REPOS:
     - nanopb
     - ProgressHUD
     - PromisesObjC
+    - PromisesSwift
     - RecaptchaInterop
     - SwiftLint
 
@@ -874,11 +899,13 @@ SPEC CHECKSUMS:
   FirebaseCore: b68d3616526ec02e4d155166bbafb8eca64af557
   FirebaseCoreExtension: 47720bb330d7041047c0935a34a3a4b92f818074
   FirebaseCoreInternal: 2cf9202e226e3f78d2bf6d56c472686b935bfb7f
+  FirebaseCrashlytics: b60329455285aff853e54139d8ddbfe1e5f2b9f9
   FirebaseDatabase: ac770bf7525ff0340b105166037036c0e46c2c7e
   FirebaseFirestore: 584d0e1b0f7f1666c516c5157ff06e785bd8836f
   FirebaseFirestoreSwift: a7a0c64b8e16b14dfca3405e447c647182318709
   FirebaseInstallations: 9387bf15abfc69a714f54e54f74a251264fdb79b
   FirebaseMessaging: 9bc34a98d2e0237e1b121915120d4d48ddcf301e
+  FirebaseSessions: e5f4caa188dc8bc6142abc974355be75b042215e
   FirebaseSharedSwift: f34eeb7d3ea87a34497629b6ca41657beadef76a
   FirebaseStorage: 4af6f9ea67b6a8e4e3cbd75e006b4776a50e8b12
   GoogleAppMeasurement: 373bcbead1bb6a85be7a64d5d8f96284b762ea9c
@@ -895,9 +922,10 @@ SPEC CHECKSUMS:
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   ProgressHUD: c4a55f108815c46a6bf082407d2f806840b7a869
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
+  PromisesSwift: 28dca69a9c40779916ac2d6985a0192a5cb4a265
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   SwiftLint: c1de071d9d08c8aba837545f6254315bc900e211
 
-PODFILE CHECKSUM: d9998bf198d7695842a6d9a2c569b9565a0d0245
+PODFILE CHECKSUM: 18e4b13e15cef06d649bab7a5722467b920e060c
 
 COCOAPODS: 1.13.0
