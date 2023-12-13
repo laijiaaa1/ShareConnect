@@ -79,7 +79,7 @@ class TextCell: UITableViewCell {
 //            timestampLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
 //            nameLabel.centerXAnchor.constraint(equalTo: image.centerXAnchor).isActive = true
 //            nameLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5).isActive = true
-//            
+//
 //        } else {
 //            messageLabel.textAlignment = .left
 //            image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
@@ -147,10 +147,12 @@ class ImageCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+      
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     private func setupUI() {
         contentView.addSubview(timestampLabel)
         contentView.addSubview(nameLabel)
@@ -192,11 +194,15 @@ class ImageCell: UITableViewCell {
         self.chatMessage = chatMessage
         nameLabel.text = chatMessage.name
         image.kf.setImage(with: URL(string: chatMessage.profileImageUrl))
+        imageURLpost.kf.setImage(with: URL(string: chatMessage.imageURL ?? ""))
+
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
         timestampLabel.textColor = .gray
+        imageURLpost.isUserInteractionEnabled = true
     }
+ 
 }
 class MapCell: UITableViewCell {
     let messageLabel: UILabel = {

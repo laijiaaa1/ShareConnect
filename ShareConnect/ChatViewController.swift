@@ -293,7 +293,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                     print("Download URL: \(audioURL)")
                     let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL, audioURL: audioURL)
                     self.chatMessages.append(chatMessage)
-                   
                 }
             }
             self.chatMessages.sort { $0.timestamp.dateValue() < $1.timestamp.dateValue() }
@@ -454,7 +453,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         imageView.image = nil
     }
     func uploadFixedImage(_ image: UIImage, completion: @escaping (String) -> Void) {
-        guard let resizedImage = image.resized(toSize: CGSize(width: 50, height: 50)) else {
+        guard let resizedImage = image.resized(toSize: CGSize(width: 300, height: 300)) else {
             completion("")
             return
         }
@@ -597,6 +596,51 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatMessages.count
     }
+
+    @objc func imageTapped(_ gesture: UITapGestureRecognizer) {
+        guard
+            let cell = gesture.view?.superview?.superview as? ImageCell,
+            let chatMessage = cell.chatMessage,
+            let imageUrl = chatMessage.imageURL,
+            let originalImage = cell.imageURLpost.image
+        else { return }
+
+        let newImageView = UIImageView(image: originalImage)
+        newImageView.frame = UIScreen.main.bounds
+        newImageView.backgroundColor = .black
+        newImageView.contentMode = .scaleAspectFit
+        newImageView.isUserInteractionEnabled = true
+        let promptLabel = UILabel()
+        promptLabel.text = "Tap to dismiss"
+        promptLabel.textColor = UIColor(named: "G3")
+        promptLabel.font = UIFont(name: "PingFangTC", size: 16)
+        newImageView.addSubview(promptLabel)
+        promptLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            promptLabel.bottomAnchor.constraint(equalTo: newImageView.bottomAnchor, constant: -180),
+            promptLabel.centerXAnchor.constraint(equalTo: newImageView.centerXAnchor)
+        ])
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))
+        newImageView.addGestureRecognizer(tap)
+
+        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handleZoomGesture(_:)))
+        newImageView.addGestureRecognizer(pinch)
+
+        view.addSubview(newImageView)
+    }
+
+    @objc func dismissFullscreenImage(_ sender: UITapGestureRecognizer) {
+        sender.view?.removeFromSuperview()
+    }
+
+    @objc func handleZoomGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
+        guard let view = gestureRecognizer.view else { return }
+
+        if gestureRecognizer.state == .changed || gestureRecognizer.state == .ended {
+            view.transform = view.transform.scaledBy(x: gestureRecognizer.scale, y: gestureRecognizer.scale)
+            gestureRecognizer.scale = 1.0
+        }
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let chatMessage = chatMessages[indexPath.row]
         if chatMessages[indexPath.row].imageURL != "" {
@@ -604,9 +648,13 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             let chatMessage = chatMessages[indexPath.row]
             cell.backgroundColor = .black
             cell.configure(with: chatMessage)
+          
             if let imagePost = URL(string: chatMessage.imageURL ?? "") {
                 cell.imageURLpost.kf.setImage(with: imagePost)
             }
+            let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
+            cell.imageURLpost.addGestureRecognizer(tap)
+          
             //            let isMe = chatMessage.buyerID == Auth.auth().currentUser?.uid
             //            if isMe == true {
             cell.timestampLabel.textAlignment = .right
@@ -723,14 +771,11 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
                 backgroundViewCloud.bottomAnchor.constraint(equalTo: cell.messageLabel.bottomAnchor),
                 backgroundViewCloud.trailingAnchor.constraint(equalTo: cell.messageLabel.trailingAnchor, constant: 15)
             ])
-
-            // 使用不同的圖片，這裡假設 "S1" 和 "S2" 是您的圖片名稱
             if chatMessage.buyerID == Auth.auth().currentUser?.uid {
                 backgroundViewCloud.image = UIImage(named: "S3")
             } else {
                 backgroundViewCloud.image = UIImage(named: "S1")
             }
-
             cell.messageLabel.numberOfLines = 0
             cell.messageLabel.layer.cornerRadius = 10
             cell.messageLabel.layer.masksToBounds = true
@@ -742,6 +787,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             return cell
         }
     }
+    
     @objc func openMap(_ gesture: UITapGestureRecognizer) {
         //gesture.view 獲取到正確的
         guard let tappedCell = gesture.view as? UILabel, let mapLink = tappedCell.text, let url = URL(string: mapLink) else {
@@ -749,6 +795,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
+  
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let minHeight: CGFloat = 80
         let dynamicHeight = calculateDynamicHeight(for: indexPath)
