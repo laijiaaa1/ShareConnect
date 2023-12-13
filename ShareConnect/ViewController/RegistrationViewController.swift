@@ -116,6 +116,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
             profileImageView.heightAnchor.constraint(equalToConstant: 140),
             addImageLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: -75),
             addImageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            addImageLabel.widthAnchor.constraint(equalToConstant: 200),
             registerButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 40),
             registerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
             registerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
@@ -144,6 +145,9 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             profileImageView.image = pickedImage
+            profileImageView.contentMode = .scaleAspectFill
+            profileImageView.clipsToBounds = true
+            
         }
         picker.dismiss(animated: true, completion: nil)
     }
@@ -155,6 +159,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
               let profileImage = profileImageView.image else {
             return
         }
+        ProgressHUD.animate("Please wait...", .ballVerticalBounce)
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
             guard let self = self else { return }
             if let error = error {
