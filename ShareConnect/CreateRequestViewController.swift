@@ -24,7 +24,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     var selectedGroupName: String?
     var selectedGroup: String?
     var data: [String] = Array(repeating: "", count: 9)
-
+    let sortOptions = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
+    let useOptions = ["place", "product"]
+//    var selectedIndexPath: IndexPath?
     private lazy var groupHeaderLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -114,6 +116,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             doneButton.widthAnchor.constraint(equalToConstant: 320),
             doneButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+        
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -338,7 +341,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             cell.textField.placeholder = "Enter \(info)"
             cell.textField.tag = indexPath.row
             cell.textField.isEnabled = true
-
+            cell.textField.delegate = self
             if indexPath.row == 2 {
                 let sortPicker = UIPickerView()
                 sortPicker.delegate = self
@@ -346,9 +349,11 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 sortPicker.tag = indexPath.row
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = sortPicker
-                let sortOptions = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
-                sortPicker.selectRow(sortOptions.firstIndex(of: cell.textField.text ?? "Others") ?? 0, inComponent: 0, animated: false)
+//                let row = sortPicker.selectRow(0, inComponent: 0, animated: false)
+//                cell.textField.text = sortOptions.first ?? "product"
+                print("sort:\(cell.textField.text)")
             }
+
             if indexPath.row == 6 {
                 let usePicker = UIPickerView()
                 usePicker.delegate = self
@@ -356,8 +361,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 usePicker.tag = indexPath.row
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = usePicker
-                let useOptions = ["place", "product"]
-                usePicker.selectRow(useOptions.firstIndex(of: cell.textField.text ?? "product") ?? 0, inComponent: 0, animated: false)
+//                let row = usePicker.selectRow(0, inComponent: 0, animated: false)
+//                cell.textField.text = useOptions.first ?? "product"
+                print("use:\(cell.textField.text)")
             }
             if indexPath.row == 3 || indexPath.row == 4 {
                 let timePicker = UIDatePicker()
@@ -381,6 +387,35 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 100
     }
+    //textViewDidChange
+//    func textViewDidChange(_ textView: UITextView) {
+//        let fixedWidth = textView.frame.size.width
+//        let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+//        textView.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
+//        requestTableView.beginUpdates()
+//    }
+//    func requestCellDidChange(_ cell: RequestCell) {
+//        guard let indexPath = requestTableView.indexPath(for: cell) else { return }
+//        selectedIndexPath = indexPath
+//        let bottomInset = cell.isExpanded ? cell.expandedHeight : 0
+//        requestTableView.contentInset.bottom = CGFloat(bottomInset)
+//        requestTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+//        
+//        
+//    }
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        textField.resignFirstResponder()
+//        return true
+//    }
+    
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        let row = indexPath.row
+//        tableView.estimatedRowHeight = 60
+//        tableView.rowHeight = UITableView.automaticDimension
+//
+//        return tableView.rowHeight
+//    }
+
     @objc func timePickerChanged(sender: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
@@ -411,20 +446,16 @@ extension CreateRequestViewController {
     }
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView.tag == 6 {
-            let useOptions = ["place", "product"]
             return useOptions.count
         } else if pickerView.tag == 2 {
-            let sortOptions = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
             return sortOptions.count
         }
         return 0
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView.tag == 6 {
-            let useOptions = ["place", "product"]
             return useOptions[row]
         } else if pickerView.tag == 2 {
-            let sortOptions = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
             return sortOptions[row]
         }
         return ""
@@ -432,18 +463,22 @@ extension CreateRequestViewController {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let textFieldTag = pickerView.tag
         if textFieldTag == 2 {
-            let sortOptions = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
             if let cell = findCellWithTag(textFieldTag) {
                 let selectedSort = sortOptions[row]
                 cell.textField.text = selectedSort
                 requestTableView.reloadRows(at: [IndexPath(row: textFieldTag, section: 0)], with: .automatic)
+                print("selectedSort: \(selectedSort)")
+                let sortCell = findCellWithTag(2)
+               sortCell?.textField.text = selectedSort
             }
         } else if textFieldTag == 6 {
-            let useOptions = ["place", "product"]
             if let cell = findCellWithTag(textFieldTag) {
                 let selectedUse = useOptions[row]
                 cell.textField.text = selectedUse
                 requestTableView.reloadRows(at: [IndexPath(row: textFieldTag, section: 0)], with: .automatic)
+                print("selectedUse: \(selectedUse)")
+                let useCell = findCellWithTag(6)
+                useCell?.textField.text = selectedUse
             }
         }
     }

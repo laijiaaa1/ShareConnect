@@ -24,7 +24,7 @@ class RequestCell: UITableViewCell {
     }
     let pickerView = UIPickerView()
     var pickerData: [String] = [String]()
-
+//    var expandedHeight: CGFloat = 200
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         requestLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -58,6 +58,8 @@ class RequestCell: UITableViewCell {
     }
     @objc func addBtnTapped() {
         isExpanded = !isExpanded
+        
+        
     }
     private func updateCellHeight() {
         let newHeight: CGFloat = isExpanded ? 200 : 50
