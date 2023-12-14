@@ -26,7 +26,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     var data: [String] = Array(repeating: "", count: 9)
     let sortOptions = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
     let useOptions = ["place", "product"]
-//    var selectedIndexPath: IndexPath?
+    var selectedIndexPath: IndexPath?
+    var enterData: [String] = Array(repeating: "", count: 9)
+    
     private lazy var groupHeaderLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -146,14 +148,12 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 "sellerName": user?.email ?? ""
                             ]
                             DispatchQueue.main.async {
-                                for i in 0..<requestTableView.numberOfSections {
-                                    for j in 0..<requestTableView.numberOfRows(inSection: i) {
-                                        let indexPath = IndexPath(row: j, section: i)
-                                        if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
-                                            let key = cell.requestLabel.text ?? ""
-                                            let value = cell.textField.text ?? ""
-                                            productData[key] = value
-                                        }
+                                for i in enterData.indices {
+                                    let indexPath = IndexPath(row: i, section: 0)
+                                    if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
+                                        let key = cell.requestLabel.text ?? ""
+                                        let value = enterData[i]
+                                        productData[key] = value
                                     }
                                 }
                                 if let selectedGroupID = self.selectedGroupID,
@@ -202,7 +202,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             }
         }
     }
-
+    
     @objc func uploadButtonTapped() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
@@ -349,11 +349,11 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 sortPicker.tag = indexPath.row
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = sortPicker
-//                let row = sortPicker.selectRow(0, inComponent: 0, animated: false)
-//                cell.textField.text = sortOptions.first ?? "product"
+                //                let row = sortPicker.selectRow(0, inComponent: 0, animated: false)
+                //                cell.textField.text = sortOptions.first ?? "product"
                 print("sort:\(cell.textField.text)")
             }
-
+            
             if indexPath.row == 6 {
                 let usePicker = UIPickerView()
                 usePicker.delegate = self
@@ -361,8 +361,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 usePicker.tag = indexPath.row
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = usePicker
-//                let row = usePicker.selectRow(0, inComponent: 0, animated: false)
-//                cell.textField.text = useOptions.first ?? "product"
+                //                let row = usePicker.selectRow(0, inComponent: 0, animated: false)
+                //                cell.textField.text = useOptions.first ?? "product"
                 print("use:\(cell.textField.text)")
             }
             if indexPath.row == 3 || indexPath.row == 4 {
@@ -382,40 +382,43 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             }
         }
         cell.addBtn.tag = indexPath.row
+        cell.addBtn.addTarget(self, action: #selector(addBtnTapped(_:)), for: .touchUpInside)
         return cell
+    }
+    @objc func addBtnTapped(_ sender: UIButton) {
+        let indexPath = IndexPath(row: sender.tag, section: 0)
+        if let cell = requestTableView.cellForRow(at: indexPath) as? RequestCell {
+            enterData[indexPath.row] = cell.textField.text ?? ""
+        }
     }
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 100
     }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+    }
     //textViewDidChange
-//    func textViewDidChange(_ textView: UITextView) {
-//        let fixedWidth = textView.frame.size.width
-//        let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
-//        textView.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
-//        requestTableView.beginUpdates()
-//    }
-//    func requestCellDidChange(_ cell: RequestCell) {
-//        guard let indexPath = requestTableView.indexPath(for: cell) else { return }
-//        selectedIndexPath = indexPath
-//        let bottomInset = cell.isExpanded ? cell.expandedHeight : 0
-//        requestTableView.contentInset.bottom = CGFloat(bottomInset)
-//        requestTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-//        
-//        
-//    }
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        textField.resignFirstResponder()
-//        return true
-//    }
+    //    func textViewDidChange(_ textView: UITextView) {
+    //        let fixedWidth = textView.frame.size.width
+    //        let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+    //        textView.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
+    //        requestTableView.beginUpdates()
+    //    }
+    //    func requestCellDidChange(_ cell: RequestCell) {
+    //        guard let indexPath = requestTableView.indexPath(for: cell) else { return }
+    //        selectedIndexPath = indexPath
+    //        let bottomInset = cell.isExpanded ? cell.expandedHeight : 0
+    //        requestTableView.contentInset.bottom = CGFloat(bottomInset)
+    //        requestTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+    //
+    //
+    //    }
+    //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    //        textField.resignFirstResponder()
+    //        return true
+    //    }
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        let row = indexPath.row
-//        tableView.estimatedRowHeight = 60
-//        tableView.rowHeight = UITableView.automaticDimension
-//
-//        return tableView.rowHeight
-//    }
-
+    
     @objc func timePickerChanged(sender: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
@@ -469,7 +472,7 @@ extension CreateRequestViewController {
                 requestTableView.reloadRows(at: [IndexPath(row: textFieldTag, section: 0)], with: .automatic)
                 print("selectedSort: \(selectedSort)")
                 let sortCell = findCellWithTag(2)
-               sortCell?.textField.text = selectedSort
+                sortCell?.textField.text = selectedSort
             }
         } else if textFieldTag == 6 {
             if let cell = findCellWithTag(textFieldTag) {
