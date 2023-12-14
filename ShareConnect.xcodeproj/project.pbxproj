@@ -584,6 +584,8 @@
 				DEVELOPMENT_TEAM = K53C9AZMMU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareConnect/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Share Connect";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -615,6 +617,8 @@
 				DEVELOPMENT_TEAM = K53C9AZMMU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareConnect/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Share Connect";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
