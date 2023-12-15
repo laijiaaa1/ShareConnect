@@ -493,7 +493,7 @@ extension CreateRequestViewController {
             if let cell = findCellWithTag(textFieldTag) {
                 let selectedSort = sortOptions[row]
                 cell.textField.text = selectedSort
-                requestTableView.reloadRows(at: [IndexPath(row: 0, section: textFieldTag)], with: .automatic)
+//                requestTableView.reloadRows(at: [IndexPath(row: 0, section: textFieldTag)], with: .automatic)
                 print("selectedSort: \(selectedSort)")
                 let sortCell = findCellWithTag(2)
                 sortCell?.textField.text = selectedSort
@@ -502,7 +502,7 @@ extension CreateRequestViewController {
             if let cell = findCellWithTag(textFieldTag) {
                 let selectedUse = useOptions[row]
                 cell.textField.text = selectedUse
-                requestTableView.reloadRows(at: [IndexPath(row: 0, section: textFieldTag)], with: .automatic)
+//                requestTableView.reloadRows(at: [IndexPath(row: 0, section: textFieldTag)], with: .automatic)
                 print("selectedUse: \(selectedUse)")
                 let useCell = findCellWithTag(6)
                 useCell?.textField.text = selectedUse
