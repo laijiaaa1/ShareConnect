@@ -35,7 +35,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     let supplyTableView = UITableView()
     var selectedButton: UIButton?
     var selectedCollection: Collection?
-    let userId = Auth.auth().currentUser?.uid
+    var userId = Auth.auth().currentUser?.uid
     let profileImageView = UIImageView()
     let settingProfileButton = UIButton()
     override func viewWillAppear(_ animated: Bool) {

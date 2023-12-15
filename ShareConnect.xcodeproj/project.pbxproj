@@ -56,6 +56,7 @@
 		34D67F002B20A72000DE879B /* ChatListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFF2B20A72000DE879B /* ChatListCell.swift */; };
 		34D67F022B20A99D00DE879B /* TrolleyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F012B20A99D00DE879B /* TrolleyCell.swift */; };
 		34D67F052B20AC3C00DE879B /* CreateRequest_RequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F042B20AC3C00DE879B /* CreateRequest_RequestCell.swift */; };
+		34D8C7F82B2C27C9006F5B7D /* AppleInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D8C7F72B2C27C9006F5B7D /* AppleInfoViewController.swift */; };
 		CC99D844D6CD00D0115262BD /* Pods_ShareConnect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19192464EEB9831E46A38D35 /* Pods_ShareConnect.framework */; };
 /* End PBXBuildFile section */
 
@@ -113,6 +114,7 @@
 		34D67EFF2B20A72000DE879B /* ChatListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCell.swift; sourceTree = "<group>"; };
 		34D67F012B20A99D00DE879B /* TrolleyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrolleyCell.swift; sourceTree = "<group>"; };
 		34D67F042B20AC3C00DE879B /* CreateRequest_RequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRequest_RequestCell.swift; sourceTree = "<group>"; };
+		34D8C7F72B2C27C9006F5B7D /* AppleInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleInfoViewController.swift; sourceTree = "<group>"; };
 		D7AAC5A05BCEF95BCA4A2B9B /* Pods-ShareConnect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareConnect.release.xcconfig"; path = "Target Support Files/Pods-ShareConnect/Pods-ShareConnect.release.xcconfig"; sourceTree = "<group>"; };
 		E0D3BC877A1806FFBEA6A27A /* Pods-ShareConnect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareConnect.debug.xcconfig"; path = "Target Support Files/Pods-ShareConnect/Pods-ShareConnect.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -212,6 +214,7 @@
 				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
 				346DE7CD2B063616008D411A /* LoginViewController.swift */,
 				346687A72B182C8800723302 /* RegistrationViewController.swift */,
+				34D8C7F72B2C27C9006F5B7D /* AppleInfoViewController.swift */,
 				3410D9692B07665700D32744 /* SelectedViewController.swift */,
 				3410D96B2B08747200D32744 /* TrolleyViewController.swift */,
 				3401F6822B0F17050092E564 /* ProvideViewController.swift */,
@@ -393,6 +396,7 @@
 				3410D9792B08ECBB00D32744 /* CartManager.swift in Sources */,
 				3410D9682B07129800D32744 /* DetailViewController.swift in Sources */,
 				34D67F002B20A72000DE879B /* ChatListCell.swift in Sources */,
+				34D8C7F82B2C27C9006F5B7D /* AppleInfoViewController.swift in Sources */,
 				346DE7CE2B063616008D411A /* LoginViewController.swift in Sources */,
 				346687B82B1C6DDC00723302 /* SellerInfo_CommendTBCell.swift in Sources */,
 				3410D96C2B08747200D32744 /* TrolleyViewController.swift in Sources */,
