@@ -240,6 +240,9 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         if requestSelectSegment.selectedSegmentIndex == 0 {
             print("public")
             selectedGroupID = nil
+            groupHeaderLabel.text = ""
+            groupHeaderLabel.isHidden = true
+            requestTableView.tableHeaderView = nil
         } else {
             print("group")
             fetchUserGroups()
@@ -325,6 +328,10 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                     requestTableView.tableHeaderView = nil
                 }
             }
+        } else {
+            //hide the group header label
+            groupHeaderLabel.text = ""
+            requestTableView.tableHeaderView = nil
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
