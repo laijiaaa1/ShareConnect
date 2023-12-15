@@ -150,6 +150,7 @@ class CreateGroupViewController: CreateRequestViewController {
             print("Error: User is not authenticated.")
             return
         }
+        ProgressHUD.animate("Please wait...", .ballVerticalBounce)
         let groupsRef = Firestore.firestore().collection("groups")
         let userGroups = Firestore.firestore().collection("users").document(user.uid)
         groupData = [

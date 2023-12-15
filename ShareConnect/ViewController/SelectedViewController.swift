@@ -81,7 +81,6 @@ class SelectedViewController: UIViewController {
                 }
             }
         }
-      
     }
     func saveCartToFirestore(_ cart: [Seller: [Product]]) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
@@ -182,7 +181,6 @@ class SelectedViewController: UIViewController {
         numberLabel.text = "1"
         numberLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         numberLabel.textColor = .white
-//        nameLabel.backgroundColor = .white
         numberLabel.layer.cornerRadius = 10
         numberLabel.layer.masksToBounds = true
         numberLabel.textAlignment = .center

@@ -214,13 +214,11 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         } else {
             let chatList = ChatListViewController()
             chatList.sellerID = sellerID
-            //        chatList.sellerName = "seller"
             let checkoutVC = ChatViewController()
             checkoutVC.cart = self.cart
             checkoutVC.sellerID = sellerID
             checkoutVC.buyerID = Auth.auth().currentUser?.uid ?? ""
             checkoutVC.chatRoomID = chatRoomID
-            
             createOrderRecord { [weak self] orderID in
                 guard let self = self else { return }
                 let orderConfirmationVC = RecoderViewController()

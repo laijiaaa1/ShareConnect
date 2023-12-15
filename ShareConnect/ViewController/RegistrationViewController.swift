@@ -81,7 +81,6 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         emailTextField.borderStyle = .none
         passwordTextField.borderStyle = .none
         nameTextField.borderStyle = .none
-//        profileImageView.image = UIImage(named: "icons8-user-48(@3×)")
         profileImageView.layer.cornerRadius = 70
         profileImageView.layer.masksToBounds = true
         profileImageView.tintColor = .gray
@@ -147,7 +146,6 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
             profileImageView.image = pickedImage
             profileImageView.contentMode = .scaleAspectFill
             profileImageView.clipsToBounds = true
-            
         }
         picker.dismiss(animated: true, completion: nil)
     }

@@ -39,9 +39,7 @@ class LoginViewController: UIViewController {
                 if let user = Auth.auth().currentUser {
                     print("User is already registered with UID: \(user.uid)")
                     if let buyerID = Auth.auth().currentUser?.uid {
-                        //                        Messaging.messaging().subscribe(toTopic: buyerID)
                     }
-                    
                 }
             }
         }
@@ -57,7 +55,6 @@ class LoginViewController: UIViewController {
         signInWithAppleBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         signInWithAppleBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -70).isActive = true
     }
-    
     func chooseAppleButtonStyle() -> ASAuthorizationAppleIDButton.Style {
         return (UITraitCollection.current.userInterfaceStyle == .light) ? .black : .white // 淺色模式就顯示黑色的按鈕，深色模式就顯示白色的按鈕
     }
@@ -68,7 +65,6 @@ class LoginViewController: UIViewController {
         let request = appleIDProvider.createRequest()
         request.requestedScopes = [.fullName, .email]
         request.nonce = sha256(nonce)
-        
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
         authorizationController.delegate = self
         authorizationController.presentationContextProvider = self
@@ -79,7 +75,6 @@ class LoginViewController: UIViewController {
         let charset: Array<Character> = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
         var result = ""
         var remainingLength = length
-        
         while(remainingLength > 0) {
             let randoms: [UInt8] = (0 ..< 16).map { _ in
                 var random: UInt8 = 0
@@ -89,12 +84,10 @@ class LoginViewController: UIViewController {
                 }
                 return random
             }
-            
             randoms.forEach { random in
                 if (remainingLength == 0) {
                     return
                 }
-                
                 if (random < charset.count) {
                     result.append(charset[Int(random)])
                     remainingLength -= 1
@@ -103,7 +96,6 @@ class LoginViewController: UIViewController {
         }
         return result
     }
-    
     private func sha256(_ input: String) -> String {
         let inputData = Data(input.utf8)
         let hashedData = SHA256.hash(data: inputData)
@@ -115,26 +107,23 @@ class LoginViewController: UIViewController {
 }
 extension LoginViewController: ASAuthorizationControllerDelegate {
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-           // Handle successful authorization
-           if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-               self.appleIDCredential = appleIDCredential
-               guard let nonce = currentNonce else {
-                   fatalError("Invalid state: A login callback was received, but no login request was sent.")
-               }
-               
-               // Get user information
-               let uid = appleIDCredential.user
-               let name = appleIDCredential.fullName
-               let email = appleIDCredential.email
-               
-               // Create Apple ID login credential
-               let idTokenString = String(data: appleIDCredential.identityToken!, encoding: .utf8)!
-               let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
-               
-               // Sign in with Apple ID
-               firebaseSignInWithApple(credential: credential, uid: uid, name: name, email: email)
-           }
-       }
+        // Handle successful authorization
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            self.appleIDCredential = appleIDCredential
+            guard let nonce = currentNonce else {
+                fatalError("Invalid state: A login callback was received, but no login request was sent.")
+            }
+            // Get user information
+            let uid = appleIDCredential.user
+            let name = appleIDCredential.fullName
+            let email = appleIDCredential.email
+            // Create Apple ID login credential
+            let idTokenString = String(data: appleIDCredential.identityToken!, encoding: .utf8)!
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
+            // Sign in with Apple ID
+            firebaseSignInWithApple(credential: credential, uid: uid, name: name, email: email)
+        }
+    }
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         // 登入失敗，處理 Error
         switch error {
@@ -167,44 +156,31 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
 extension LoginViewController {
     // MARK: - 透過 Credential 與 Firebase Auth 串接
     func firebaseSignInWithApple(credential: AuthCredential, uid: String, name: PersonNameComponents?, email: String?) {
-           Auth.auth().signIn(with: credential) { authResult, error in
-               guard error == nil else {
-                   CustomFunc.customAlert(title: "Sign In Error", message: "\(String(describing: error!.localizedDescription))", vc: self, actionHandler: nil)
-                   return
-               }
-//               
-//               // Store user information in Firestore
-//               self.db.collection("users").document(uid).setData([
-////                   "email": email ?? "",
-////                   "name": name?.givenName ?? "",
-////                   "profileImageUrl": ""
-//               ]) { error in
-//                   if let error = error {
-//                       print("Error adding user to Firestore: \(error.localizedDescription)")
-//                   } else {
-//                       print("User added to Firestore successfully")
-               if let buyerID = self.appleIDCredential?.user {
-                           Messaging.messaging().subscribe(toTopic: buyerID)
-                       }
-               if let appleID = self.appleIDCredential?.user {
-                           self.db.collection("users").document(appleID).getDocument { (document, error) in
-                               if let document = document, document.exists {
-                                   let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                                   if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
-                                       self.navigationController?.pushViewController(tabBarController, animated: true)
-                                   }
-                               } else {
-                                   let appleInfoViewController = AppleInfoViewController()
-                                   appleInfoViewController.appleIDCredential = self.appleIDCredential
-                                   self.navigationController?.pushViewController(appleInfoViewController, animated: true)
-                               }
-                           }
-                       }
-                   }
-               }
-           }
-//       }
-//}
+        Auth.auth().signIn(with: credential) { authResult, error in
+            guard error == nil else {
+                CustomFunc.customAlert(title: "Sign In Error", message: "\(String(describing: error!.localizedDescription))", vc: self, actionHandler: nil)
+                return
+            }
+            if let buyerID = Auth.auth().currentUser?.uid{
+                Messaging.messaging().subscribe(toTopic: buyerID)
+            }
+            if let appleID = Auth.auth().currentUser?.uid {
+                self.db.collection("users").document(appleID).getDocument { (document, error) in
+                    if let document = document, document.exists {
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                            self.navigationController?.pushViewController(tabBarController, animated: true)
+                        }
+                    } else {
+                        let appleInfoViewController = AppleInfoViewController()
+                        appleInfoViewController.appleIDCredential = self.appleIDCredential
+                        self.navigationController?.pushViewController(appleInfoViewController, animated: true)
+                    }
+                }
+            }
+        }
+    }
+}
 class CustomFunc {
     class func customAlert(title: String, message: String, vc: UIViewController, actionHandler: (() -> Void)?) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)

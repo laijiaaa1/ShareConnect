@@ -118,7 +118,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             doneButton.widthAnchor.constraint(equalToConstant: 320),
             doneButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -132,10 +131,12 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         let storageRef = storage.reference().child("images/\(imageName).jpg")
         if let imageURL = self.uploadButton.backgroundImage(for: .normal),
            let imageData = imageURL.jpegData(compressionQuality: 0.1) {
+            ProgressHUD.animate("Please wait...", .ballVerticalBounce)
             storageRef.putData(imageData, metadata: nil) { (metadata, error) in
                 if let error = error {
                     print("Error uploading image: \(error)")
                 } else {
+                    
                     storageRef.downloadURL { [self] (url, error) in
                         if let error = error {
                             print("Error getting download URL: \(error)")
@@ -147,6 +148,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 "sellerID": user?.uid ?? "",
                                 "sellerName": user?.email ?? ""
                             ]
+                            
                             DispatchQueue.main.async {
                                 for i in enterData.indices {
                                     let indexPath = IndexPath(row: i, section: 0)
@@ -178,11 +180,11 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                     ),
                                     itemType: .request
                                 )
-                                guard enterData.allSatisfy({ !$0.isEmpty }) else {
-                                       // 顯示錯誤，某些數據尚未填寫
-                                       print("Please fill in all required data.")
-                                       return
-                                   }
+//                                guard enterData.allSatisfy({ !$0.isEmpty }) else {
+//                                       // 顯示錯誤，某些數據尚未填寫
+//                                       print("Please fill in all required data.")
+//                                       return
+//                                   }
                                 let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
                                 db.collection(collectionName).addDocument(data: [
                                     "type": ProductType.request.rawValue,
@@ -207,7 +209,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             }
         }
     }
-    
     @objc func uploadButtonTapped() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
@@ -384,7 +385,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                     //                cell.textField.text = sortOptions.first ?? "product"
                     print("sort:\(cell.textField.text)")
                 }
-                
                 if indexPath.row == 6 {
                     let usePicker = UIPickerView()
                     usePicker.delegate = self
