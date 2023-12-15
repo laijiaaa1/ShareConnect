@@ -24,7 +24,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     var selectedGroupName: String?
     var selectedGroup: String?
     var data: [String] = Array(repeating: "", count: 9)
-    let sortOptions = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
+    var sortOptions = ["Camping", "Tableware", "Activity", "Party", "Sports", "Arts", "Others"]
     let useOptions = ["place", "product"]
     var selectedIndexPath: IndexPath?
     var enterData: [String] = Array(repeating: "", count: 9)
@@ -178,6 +178,11 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                     ),
                                     itemType: .request
                                 )
+                                guard enterData.allSatisfy({ !$0.isEmpty }) else {
+                                       // 顯示錯誤，某些數據尚未填寫
+                                       print("Please fill in all required data.")
+                                       return
+                                   }
                                 let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
                                 db.collection(collectionName).addDocument(data: [
                                     "type": ProductType.request.rawValue,
@@ -334,53 +339,81 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         cell.textField.delegate = self
         cell.textField.textColor = .white
         let requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Quantity", "Use", "Price"]
+//        let grouptLabels = ["Name", "Description", "Start Time", "End Time", "Quantity", "Price"]
         if indexPath.row < requestLabels.count {
-            let info = requestLabels[indexPath.row]
-            cell.requestLabel.text = info
-            cell.requestLabel.textColor = .white
-            cell.textField.placeholder = "Enter \(info)"
-            cell.textField.tag = indexPath.row
-            cell.textField.isEnabled = true
-            cell.textField.delegate = self
-            if indexPath.row == 2 {
-                let sortPicker = UIPickerView()
-                sortPicker.delegate = self
-                sortPicker.dataSource = self
-                sortPicker.tag = indexPath.row
+//            if selectedGroupID != nil {
+//                var info = grouptLabels[indexPath.row]
+//                cell.requestLabel.text = info
+//                cell.requestLabel.textColor = .white
+//                cell.textField.placeholder = "Enter \(info)"
+//                cell.textField.tag = indexPath.row
+//                cell.textField.isEnabled = true
+//                cell.textField.delegate = self
+//                if indexPath.row == 2 || indexPath.row == 3 {
+//                    let timePicker = UIDatePicker()
+//                    timePicker.datePickerMode = .dateAndTime
+//                    timePicker.preferredDatePickerStyle = .wheels
+//                    timePicker.addTarget(self, action: #selector(timePickerChanged), for: .valueChanged)
+//                    timePicker.tag = indexPath.row
+//                    cell.textField.tag = indexPath.row
+//                    cell.textField.inputView = timePicker
+//                }
+//                if indexPath.row == 7 && selectedGroupID != nil {
+//                    cell.requestLabel.text = "Group"
+//                    cell.textField.text = selectedGroupName
+//                    cell.textField.isEnabled = false
+//                    cell.addBtn.isHidden = true
+//                }
+//            } else {
+                var info = requestLabels[indexPath.row]
+                
+                cell.requestLabel.text = info
+                cell.requestLabel.textColor = .white
+                cell.textField.placeholder = "Enter \(info)"
                 cell.textField.tag = indexPath.row
-                cell.textField.inputView = sortPicker
-                //                let row = sortPicker.selectRow(0, inComponent: 0, animated: false)
-                //                cell.textField.text = sortOptions.first ?? "product"
-                print("sort:\(cell.textField.text)")
+                cell.textField.isEnabled = true
+                cell.textField.delegate = self
+                if indexPath.row == 2 {
+                    let sortPicker = UIPickerView()
+                    sortPicker.delegate = self
+                    sortPicker.dataSource = self
+                    sortPicker.tag = indexPath.row
+                    cell.textField.tag = indexPath.row
+                    cell.textField.inputView = sortPicker
+                    //                let row = sortPicker.selectRow(0, inComponent: 0, animated: false)
+                    //                cell.textField.text = sortOptions.first ?? "product"
+                    print("sort:\(cell.textField.text)")
+                }
+                
+                if indexPath.row == 6 {
+                    let usePicker = UIPickerView()
+                    usePicker.delegate = self
+                    usePicker.dataSource = self
+                    usePicker.tag = indexPath.row
+                    cell.textField.tag = indexPath.row
+                    cell.textField.inputView = usePicker
+                    //                let row = usePicker.selectRow(0, inComponent: 0, animated: false)
+                    //                cell.textField.text = useOptions.first ?? "product"
+                    print("use:\(cell.textField.text)")
+                }
+                if indexPath.row == 3 || indexPath.row == 4 {
+                    let timePicker = UIDatePicker()
+                    timePicker.datePickerMode = .dateAndTime
+                    timePicker.preferredDatePickerStyle = .wheels
+                    timePicker.addTarget(self, action: #selector(timePickerChanged), for: .valueChanged)
+                    timePicker.tag = indexPath.row
+                    cell.textField.tag = indexPath.row
+                    cell.textField.inputView = timePicker
+                }
+                if indexPath.row == 8 && selectedGroupID != nil {
+                    cell.requestLabel.text = "Group"
+                    cell.textField.text = selectedGroupName
+                    cell.textField.isEnabled = false
+                    cell.addBtn.isHidden = true
+                } else {
+                }
             }
-            
-            if indexPath.row == 6 {
-                let usePicker = UIPickerView()
-                usePicker.delegate = self
-                usePicker.dataSource = self
-                usePicker.tag = indexPath.row
-                cell.textField.tag = indexPath.row
-                cell.textField.inputView = usePicker
-                //                let row = usePicker.selectRow(0, inComponent: 0, animated: false)
-                //                cell.textField.text = useOptions.first ?? "product"
-                print("use:\(cell.textField.text)")
-            }
-            if indexPath.row == 3 || indexPath.row == 4 {
-                let timePicker = UIDatePicker()
-                timePicker.datePickerMode = .dateAndTime
-                timePicker.preferredDatePickerStyle = .wheels
-                timePicker.addTarget(self, action: #selector(timePickerChanged), for: .valueChanged)
-                timePicker.tag = indexPath.row
-                cell.textField.tag = indexPath.row
-                cell.textField.inputView = timePicker
-            }
-            if indexPath.row == 8 && selectedGroupID != nil {
-                cell.requestLabel.text = "Group"
-                cell.textField.text = selectedGroupName
-                cell.textField.isEnabled = false
-                cell.addBtn.isHidden = true
-            }
-        }
+        
         cell.addBtn.tag = indexPath.row
         cell.addBtn.addTarget(self, action: #selector(addBtnTapped(_:)), for: .touchUpInside)
         return cell
@@ -391,44 +424,28 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             enterData[indexPath.row] = cell.textField.text ?? ""
         }
     }
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 100
     }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        
-    }
-    //textViewDidChange
-    //    func textViewDidChange(_ textView: UITextView) {
-    //        let fixedWidth = textView.frame.size.width
-    //        let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
-    //        textView.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
-    //        requestTableView.beginUpdates()
-    //    }
-    //    func requestCellDidChange(_ cell: RequestCell) {
-    //        guard let indexPath = requestTableView.indexPath(for: cell) else { return }
-    //        selectedIndexPath = indexPath
-    //        let bottomInset = cell.isExpanded ? cell.expandedHeight : 0
-    //        requestTableView.contentInset.bottom = CGFloat(bottomInset)
-    //        requestTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-    //
-    //
-    //    }
-    //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    //        textField.resignFirstResponder()
-    //        return true
-    //    }
-    
-    
     @objc func timePickerChanged(sender: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
         let timeString = formatter.string(from: sender.date)
         print(timeString)
-        if sender.tag == 3, let startCell = findCellWithTag(3) {
-            startCell.textField.text = timeString
-        } else if sender.tag == 4, let endCell = findCellWithTag(4) {
-            endCell.textField.text = timeString
-        }
+//        if selectedGroupID != nil {
+//            if sender.tag == 2, let startCell = findCellWithTag(2) {
+//                startCell.textField.text = timeString
+//            } else if sender.tag == 3, let endCell = findCellWithTag(3) {
+//                endCell.textField.text = timeString
+//            }
+//        } else {
+            if sender.tag == 3, let startCell = findCellWithTag(3) {
+                startCell.textField.text = timeString
+            } else if sender.tag == 4, let endCell = findCellWithTag(4) {
+                endCell.textField.text = timeString
+            }
+//        }
     }
     func findCellWithTag(_ tag: Int) -> RequestCell? {
         for i in 0..<requestTableView.numberOfSections {
@@ -469,7 +486,7 @@ extension CreateRequestViewController {
             if let cell = findCellWithTag(textFieldTag) {
                 let selectedSort = sortOptions[row]
                 cell.textField.text = selectedSort
-                requestTableView.reloadRows(at: [IndexPath(row: textFieldTag, section: 0)], with: .automatic)
+                requestTableView.reloadRows(at: [IndexPath(row: 0, section: textFieldTag)], with: .automatic)
                 print("selectedSort: \(selectedSort)")
                 let sortCell = findCellWithTag(2)
                 sortCell?.textField.text = selectedSort
@@ -478,7 +495,7 @@ extension CreateRequestViewController {
             if let cell = findCellWithTag(textFieldTag) {
                 let selectedUse = useOptions[row]
                 cell.textField.text = selectedUse
-                requestTableView.reloadRows(at: [IndexPath(row: textFieldTag, section: 0)], with: .automatic)
+                requestTableView.reloadRows(at: [IndexPath(row: 0, section: textFieldTag)], with: .automatic)
                 print("selectedUse: \(selectedUse)")
                 let useCell = findCellWithTag(6)
                 useCell?.textField.text = selectedUse

@@ -16,6 +16,8 @@ import ProgressHUD
 class CreateGroupViewController: CreateRequestViewController {
     var isGroupPublic: Bool = true
     var groupData: [String: Any] = [:]
+    var groupClass = ["product", "place", "course", "food"]
+    let groupPicker = UIPickerView()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Create Group"
@@ -33,7 +35,7 @@ class CreateGroupViewController: CreateRequestViewController {
         }
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 8
+        return 6
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "requestCell", for: indexPath) as? RequestCell ?? RequestCell()
@@ -45,50 +47,58 @@ class CreateGroupViewController: CreateRequestViewController {
         cell.requestLabel.textColor = .white
         cell.textField.textColor = .white
         cell.requestLabel.frame = cell.contentView.bounds
-        var requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Require", "No. of people", "Invite Code(Private必填)"]
+        cell.requestLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        var requestLabels = ["Name", "Description", "Sort", "Require", "No. of people", "Invite Code(Private必填)"]
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info
-        }
-        if indexPath.row == 1 {
-            cell.textField.tag = 3
-        } else if indexPath.row == 2 {
-            cell.textField.tag = 4
-        } else if indexPath.row == 5 {
-            cell.textField.tag = 5
-        } else if indexPath.row == 7 {
-            cell.textField.tag = 7
-        }
-        if indexPath.row == 3 || indexPath.row == 4 {
-            let timePicker = UIDatePicker()
-            timePicker.datePickerMode = .dateAndTime
-            timePicker.preferredDatePickerStyle = .wheels
-            timePicker.addTarget(self, action: #selector(timePickerChanged), for: .valueChanged)
-            timePicker.tag = indexPath.row
+            cell.requestLabel.textColor = .white
+            cell.textField.placeholder = "Enter \(info)"
             cell.textField.tag = indexPath.row
-            cell.textField.inputView = timePicker
+            cell.textField.isEnabled = true
+            cell.textField.delegate = self
+            if indexPath.row == 2 {
+               
+                groupPicker.delegate = self
+                groupPicker.dataSource = self
+                groupPicker.tag = indexPath.row
+                cell.textField.tag = indexPath.row
+                cell.textField.inputView = groupPicker
+                print("sort:\(cell.textField.text)")
+            }
+            
         }
-        if indexPath.row == 6 {
+        if indexPath.row == 0 {
+            cell.textField.tag = 0
+        } else if indexPath.row == 1 {
+            cell.textField.tag = 1
+        } else if indexPath.row == 2 {
+            cell.textField.tag = 2
+        } else if indexPath.row == 3 {
+            cell.textField.tag = 3
+            
+        }
+        if indexPath.row == 4 {
             let stepper = UIStepper()
             stepper.minimumValue = 0
             stepper.maximumValue = 1000
             stepper.stepValue = 1
             stepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
             cell.textField.inputView = stepper
-            cell.textField.tag = 6
+            cell.textField.tag = 4
             cell.textField.text = "10"
         } else {
             cell.textField.keyboardType = .default
         }
-        if !isGroupPublic && indexPath.row == 7 {
+        if !isGroupPublic && indexPath.row == 5 {
             cell.textField.placeholder = "Enter Invitation Code"
-            cell.textField.tag = 7
+            cell.textField.tag = 5
         }
         cell.addBtn.tag = indexPath.row
         return cell
     }
     @objc func stepperValueChanged(sender: UIStepper) {
-        if let cell = findCellWithTag(6) {
+        if let cell = findCellWithTag(4) {
             cell.textField.text = "\(Int(sender.value))"
         }
     }
@@ -100,13 +110,14 @@ class CreateGroupViewController: CreateRequestViewController {
         }
     }
     func isValidInvitationCode() -> Bool {
-        let code = findCellWithTag(7)?.textField.text ?? ""
-        let minLength = 6
+        let code = findCellWithTag(5)?.textField.text ?? ""
+        let minLength = 3
         if !code.isEmpty && code.count >= minLength{
             return true
         }
         return false
     }
+
     func uploadGroupImageAndSaveToFirebase() {
         guard let user = Auth.auth().currentUser else {
             print("Error: User is not authenticated.")
@@ -143,12 +154,12 @@ class CreateGroupViewController: CreateRequestViewController {
         let userGroups = Firestore.firestore().collection("users").document(user.uid)
         groupData = [
             "name": findCellWithTag(0)?.textField.text ?? "",
-            "description": findCellWithTag(3)?.textField.text ?? "",
-            "sort": findCellWithTag(4)?.textField.text ?? "",
-            "startTime": findCellWithTag(1)?.textField.text ?? "",
-            "endTime": findCellWithTag(2)?.textField.text ?? "",
-            "require": findCellWithTag(5)?.textField.text ?? "",
-            "numberOfPeople": Int(findCellWithTag(6)?.textField.text ?? "") ?? 1,
+            "description": findCellWithTag(1)?.textField.text ?? "",
+            "sort": findCellWithTag(2)?.textField.text ?? "",
+            "startTime": "",
+            "endTime":  "",
+            "require": findCellWithTag(3)?.textField.text ?? "",
+            "numberOfPeople": Int(findCellWithTag(4)?.textField.text ?? "") ?? 1,
             "owner": user.uid,
             "isPublic": isGroupPublic,
             "members": [user.uid],
@@ -156,7 +167,7 @@ class CreateGroupViewController: CreateRequestViewController {
             "created": Date()
         ]
         if !isGroupPublic {
-            groupData["invitationCode"] = findCellWithTag(7)?.textField.text ?? ""
+            groupData["invitationCode"] = findCellWithTag(5)?.textField.text ?? ""
         }
         var newGroupDocRef: DocumentReference?
         newGroupDocRef = groupsRef.addDocument(data: groupData) { error in
@@ -178,6 +189,32 @@ class CreateGroupViewController: CreateRequestViewController {
             ProgressHUD.succeed("Success", delay: 1.5)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 self.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
+
+    override func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if groupPicker.tag == 2 {
+            return groupClass.count
+        }
+        return 0
+    }
+    override func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if groupPicker.tag == 2 {
+            return groupClass[row]
+        }
+        return nil
+    }
+    override func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let textFieldTag = groupPicker.tag
+        if textFieldTag == 2 {
+            if let cell = findCellWithTag(textFieldTag) {
+                let selectedSort = groupClass[row]
+                cell.textField.text = selectedSort
+                requestTableView.reloadRows(at: [IndexPath(row: 0, section: textFieldTag)], with: .automatic)
+                print("selectedSort: \(selectedSort)")
+                let sortCell = findCellWithTag(2)
+                sortCell?.textField.text = selectedSort
             }
         }
     }
