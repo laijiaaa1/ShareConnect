@@ -273,10 +273,24 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         } else {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-            vc.productID = browsingHistoryItems[sender.tag].2
-            navigationController?.pushViewController(vc, animated: true)
+            let productID = browsingHistoryItems[sender.tag].2
+
+            // Fetch product details using the productID
+            fetchProductDetails(for: productID) { product in
+                vc.product = product
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
         }
     }
+
+    func fetchProductDetails(for productID: String, completion: @escaping (Product?) -> Void) {
+        // Use your Firestore or other data fetching mechanism to get product details
+        // Replace the code below with your actual implementation
+        FirestoreService.shared.getProductDetails(productID: productID) { product in
+            completion(product)
+        }
+    }
+
     func searchProductByName(searchString: String, completion: @escaping ([Product]) -> Void) {
         let db = Firestore.firestore()
         let groupsCollection = db.collection("products")

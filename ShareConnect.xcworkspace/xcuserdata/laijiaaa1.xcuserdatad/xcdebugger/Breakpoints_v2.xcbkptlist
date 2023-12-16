@@ -1758,5 +1758,149 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1B8F0991-67FB-49EA-854D-ED7BC9592B76"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ViewController/HomePageViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "280"
+            endingLineNumber = "280"
+            landmarkName = "imageButtonClick(sender:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "76E16DF5-AB03-4A0E-95AE-9129DF9C9C3C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ViewController/HomePageViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "279"
+            endingLineNumber = "279"
+            landmarkName = "imageButtonClick(sender:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "76E16DF5-AB03-4A0E-95AE-9129DF9C9C3C - 98ae848f2f21be6e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "279"
+                  endingLineNumber = "279"
+                  offsetFromSymbolStart = "1636">
+               </Location>
+               <Location
+                  uuid = "76E16DF5-AB03-4A0E-95AE-9129DF9C9C3C - d083ad247751b232"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; () in ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "280"
+                  endingLineNumber = "280"
+                  offsetFromSymbolStart = "64">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ViewController/HomePageViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "289"
+            endingLineNumber = "289"
+            landmarkName = "fetchProductDetails(for:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01 - 454e0b298c5aeb2b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.HomePageViewController.fetchProductDetails(for: Swift.String, completion: (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "289"
+                  endingLineNumber = "289"
+                  offsetFromSymbolStart = "72">
+               </Location>
+               <Location
+                  uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01 - b3e26cd297714522"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; () in ShareConnect.HomePageViewController.fetchProductDetails(for: Swift.String, completion: (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "290"
+                  endingLineNumber = "290"
+                  offsetFromSymbolStart = "60">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "45ABE5C0-55D1-4D71-AB2A-011992650AC5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ViewController/HomePageViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "276"
+            endingLineNumber = "276"
+            landmarkName = "imageButtonClick(sender:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9C7FDE0D-4D1C-4DE4-A564-EAA981325BD1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/Module/FirestoreService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
+            landmarkName = "getProductDetails(productID:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
