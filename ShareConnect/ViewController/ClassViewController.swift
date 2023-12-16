@@ -79,6 +79,24 @@ class ClassViewController: UIViewController {
             productLabel.widthAnchor.constraint(equalTo: view.widthAnchor),
             productLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+//        // 创建一个 UIImageView 用于显示动画的背景图像
+//                let animatedBackgroundImageView = UIImageView(image: UIImage(named: "1-4"))
+//                animatedBackgroundImageView.frame = CGRect(x: -view.bounds.width, y: 0, width: view.bounds.width / 3, height: view.bounds.height / 3)
+//                animatedBackgroundImageView.contentMode = .scaleAspectFit
+//        backPicture.insertSubview(animatedBackgroundImageView, at: 0)
+//
+//                // 创建一个 CABasicAnimation 实现从左到右的平移动画
+//                let animation = CABasicAnimation(keyPath: "position.x")
+//                animation.fromValue = -view.bounds.width / 2
+//                animation.toValue = view.bounds.width * 1.5
+//                animation.duration = 10.0 // 持续时间
+//                animation.repeatCount = Float.infinity // 无限循环
+//
+//                // 将动画应用到图像视图的 layer
+//                animatedBackgroundImageView.layer.add(animation, forKey: "positionAnimation")
+        // 创建一个 UIImageView 用于显示动画的背景图像
+    
+
     }
     @objc func classPlaceButtonAction() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

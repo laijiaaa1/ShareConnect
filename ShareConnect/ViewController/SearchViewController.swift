@@ -53,7 +53,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                 fetchRequestsForUser(type: currentButtonType, usification: "place")
             }
         }
-    
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = false
@@ -64,7 +63,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         view.backgroundColor = .black
         super.viewDidLoad()
         loadSavedCollections()
-//        tabBarController?.tabBar.backgroundColor = CustomColors.B1
         collectionView.showsVerticalScrollIndicator = false
         setupUI()
         navigationItem.title = "SHARECONNECT"
@@ -108,7 +106,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         selectedIndexPath = indexPath
         if collectionView == classCollectionView {
             let cell = collectionView.cellForItem(at: indexPath) as? ClassCollectionViewCell
-            cell?.updateUI()
+//            cell?.updateUI()
         }
         if collectionView == self.collectionView {
             if let cell = collectionView.cellForItem(at: indexPath) as? SearchCollectionViewCell {
@@ -159,7 +157,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "classCell", for: indexPath) as! ClassCollectionViewCell
             cell.currentButtonType = currentButtonType
             cell.delegate = self
-            cell.updateUI()
+//            cell.updateUI()
             return cell
         }
         if collectionView == collectionView {
@@ -196,7 +194,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func button1Action() {
         currentButtonType = .request
-        let position = button1.frame.origin.x
+        let position = stackView.frame.origin.x
         UIView.animate(withDuration: 0.3) {
             self.lineView.frame.origin.x = position
         }
@@ -208,11 +206,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             fetchRequestsForUser(type: .request, usification: "place")
         }
-        collectionView.reloadData()
+//        collectionView.reloadData()
     }
     @objc func button2Action() {
         currentButtonType = .supply
-        let position = button2.frame.origin.x
+        let position = stackView.frame.origin.x + stackView.frame.width / 2
         UIView.animate(withDuration: 0.3) {
             self.lineView.frame.origin.x = position
         }
@@ -224,7 +222,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             fetchRequestsForUser(type: .supply, usification: "product")
         }
-        collectionView.reloadData()
+//        collectionView.reloadData()
     }
     func setupUI() {
         stackView.axis = .horizontal
@@ -253,7 +251,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         view.addSubview(lineView)
         NSLayoutConstraint.activate([
             lineView.topAnchor.constraint(equalTo: stackView.bottomAnchor),
-            lineView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            lineView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2),
             lineView.heightAnchor.constraint(equalToConstant: 2)
         ])

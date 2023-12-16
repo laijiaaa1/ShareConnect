@@ -113,9 +113,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             button.addTarget(self, action: #selector(buttonClick), for: .touchUpInside)
             view.addSubview(button)
         }
-//        let line = UIView(frame: CGRect(x: 0, y: 280, width: view.frame.width, height: 1))
-//        line.backgroundColor = .lightGray
-//        view.addSubview(line)
     }
     func hotGroup() {
         let hotCollectionLabel = UILabel(frame: CGRect(x: 30, y: 310, width: 160, height: 20))
