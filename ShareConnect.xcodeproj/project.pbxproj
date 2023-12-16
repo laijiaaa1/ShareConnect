@@ -49,6 +49,7 @@
 		346DE7D02B065DA2008D411A /* CreateSupplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */; };
 		346DE7D22B065DB1008D411A /* CreateGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */; };
 		3481ACB22B2375CD00BFDCDE /* ChatRoomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3481ACB12B2375CD00BFDCDE /* ChatRoomCell.swift */; };
+		349B02272B2D550400379F3C /* ShimmerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349B02262B2D550400379F3C /* ShimmerView.swift */; };
 		34B530EF2B1F3FA100A4C222 /* ExtentionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B530EE2B1F3FA100A4C222 /* ExtentionButton.swift */; };
 		34B530F12B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B530F02B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift */; };
 		34B530F32B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */; };
@@ -107,6 +108,7 @@
 		346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSupplyViewController.swift; sourceTree = "<group>"; };
 		346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupViewController.swift; sourceTree = "<group>"; };
 		3481ACB12B2375CD00BFDCDE /* ChatRoomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomCell.swift; sourceTree = "<group>"; };
+		349B02262B2D550400379F3C /* ShimmerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerView.swift; sourceTree = "<group>"; };
 		34B530EE2B1F3FA100A4C222 /* ExtentionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtentionButton.swift; sourceTree = "<group>"; };
 		34B530F02B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPage_ClassCollectionViewCell.swift; sourceTree = "<group>"; };
 		34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPage_SearchCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				3410D9702B0888E800D32744 /* Data.swift */,
 				3410D9722B08890300D32744 /* Setting.swift */,
 				34B530EE2B1F3FA100A4C222 /* ExtentionButton.swift */,
+				349B02262B2D550400379F3C /* ShimmerView.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -402,6 +405,7 @@
 				3410D96C2B08747200D32744 /* TrolleyViewController.swift in Sources */,
 				3401F6892B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift in Sources */,
 				346DE7CB2B05FE48008D411A /* SearchViewController.swift in Sources */,
+				349B02272B2D550400379F3C /* ShimmerView.swift in Sources */,
 				346DE7C72B05AB5C008D411A /* CreateViewController.swift in Sources */,
 				3401F6832B0F17050092E564 /* ProvideViewController.swift in Sources */,
 				34408F1C2B0EE73B005F8E03 /* ClassViewController.swift in Sources */,

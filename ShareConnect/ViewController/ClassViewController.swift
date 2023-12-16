@@ -22,6 +22,14 @@ class ClassViewController: UIViewController {
     let alphaView = UIView()
     let placeLabel = UILabel()
     let productLabel = UILabel()
+    let shimmerView: UIView = {
+           let view = UIView()
+           view.backgroundColor = .white
+           view.layer.cornerRadius = 125
+           view.layer.masksToBounds = true
+           view.translatesAutoresizingMaskIntoConstraints = false
+           return view
+       }()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = false
@@ -79,24 +87,18 @@ class ClassViewController: UIViewController {
             productLabel.widthAnchor.constraint(equalTo: view.widthAnchor),
             productLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-//        // 创建一个 UIImageView 用于显示动画的背景图像
-//                let animatedBackgroundImageView = UIImageView(image: UIImage(named: "1-4"))
-//                animatedBackgroundImageView.frame = CGRect(x: -view.bounds.width, y: 0, width: view.bounds.width / 3, height: view.bounds.height / 3)
-//                animatedBackgroundImageView.contentMode = .scaleAspectFit
-//        backPicture.insertSubview(animatedBackgroundImageView, at: 0)
-//
-//                // 创建一个 CABasicAnimation 实现从左到右的平移动画
-//                let animation = CABasicAnimation(keyPath: "position.x")
-//                animation.fromValue = -view.bounds.width / 2
-//                animation.toValue = view.bounds.width * 1.5
-//                animation.duration = 10.0 // 持续时间
-//                animation.repeatCount = Float.infinity // 无限循环
-//
-//                // 将动画应用到图像视图的 layer
-//                animatedBackgroundImageView.layer.add(animation, forKey: "positionAnimation")
-        // 创建一个 UIImageView 用于显示动画的背景图像
-    
+        // 将 G2 图片添加到视图层次结构中
+        let g2ImageView = Class_Space(frame: CGRect(x: 300, y: 120, width: 400, height: 250))
+             g2ImageView.translatesAutoresizingMaskIntoConstraints = false
+             view.addSubview(g2ImageView)
 
+             // 添加约束
+             NSLayoutConstraint.activate([
+                 g2ImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 110),
+                 g2ImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -160),
+                 g2ImageView.widthAnchor.constraint(equalToConstant: 400),
+                 g2ImageView.heightAnchor.constraint(equalToConstant: 400)
+             ])
     }
     @objc func classPlaceButtonAction() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

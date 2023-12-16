@@ -18,71 +18,38 @@ class CreateViewController: UIViewController {
     let createGroupView = UIImageView()
     let createGroupLabel = UILabel()
     let createGroupButton = UIButton()
+    let backPicture = UIImageView()
     override func viewDidLoad() {
         view.backgroundColor = .black
-        let backPicture = UIImageView()
         backPicture.image = UIImage(named: "1")
         backPicture.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         view.addSubview(backPicture)
         super.viewDidLoad()
         navigationItem.title = "SHARECONNECT"
         myRequestView.layer.cornerRadius = 50
-//        myRequestView.image = UIImage(named: "request")
         myRequestView.contentMode = .scaleAspectFill
         myRequestView.layer.masksToBounds = true
         myRequestView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(myRequestView)
         mySupplyView.layer.cornerRadius = 50
-//        mySupplyView.image = UIImage(named: "supply")
         mySupplyView.contentMode = .scaleAspectFill
         mySupplyView.layer.masksToBounds = true
         mySupplyView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mySupplyView)
         createGroupView.layer.cornerRadius = 50
-//        createGroupView.image = UIImage(named: "group")
         createGroupView.contentMode = .scaleAspectFill
         createGroupView.layer.masksToBounds = true
         createGroupView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(createGroupView)
-//        myRequestButton.setTitle("My Demand", for: .normal)
         myRequestButton.startAnimatingPressActions()
         myRequestButton.backgroundColor = .clear
-//        myRequestButton.setTitleColor(.white, for: .normal)
-//        myRequestButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-//        myRequestButton.layer.cornerRadius = 25
-//        myRequestButton.layer.borderWidth = 1
-//        myRequestButton.layer.borderColor = UIColor.black.cgColor
-//        myRequestButton.layer.shadowColor = UIColor.black.cgColor
-//        myRequestButton.layer.shadowOffset = CGSize(width: 0, height: 2)
-//        myRequestButton.layer.shadowRadius = 4
-//        myRequestButton.layer.shadowOpacity = 0.5
         myRequestButton.translatesAutoresizingMaskIntoConstraints = false
-//        mySupplyButton.setTitle("My Supply", for: .normal)
         mySupplyButton.startAnimatingPressActions()
         mySupplyButton.backgroundColor = .clear
-//        mySupplyButton.setTitleColor(.white, for: .normal)
-//        mySupplyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-//        mySupplyButton.layer.cornerRadius = 25
         mySupplyButton.translatesAutoresizingMaskIntoConstraints = false
-//        mySupplyButton.layer.borderWidth = 1
-//        mySupplyButton.layer.borderColor = UIColor.black.cgColor
-//        mySupplyButton.layer.shadowColor = UIColor.black.cgColor
-//        mySupplyButton.layer.shadowOffset = CGSize(width: 0, height: 2)
-//        mySupplyButton.layer.shadowRadius = 4
-//        mySupplyButton.layer.shadowOpacity = 0.5
-//        createGroupButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-//        createGroupButton.layer.cornerRadius = 25
         createGroupButton.translatesAutoresizingMaskIntoConstraints = false
-//        createGroupButton.setTitle("Create Group", for: .normal)
         createGroupButton.startAnimatingPressActions()
         createGroupButton.backgroundColor = .clear
-//        createGroupButton.setTitleColor(.white, for: .normal)
-//        createGroupButton.layer.borderWidth = 1
-//        createGroupButton.layer.borderColor = UIColor.black.cgColor
-//        createGroupButton.layer.shadowColor = UIColor.black.cgColor
-//        createGroupButton.layer.shadowOffset = CGSize(width: 0, height: 2)
-//        createGroupButton.layer.shadowRadius = 4
-//        createGroupButton.layer.shadowOpacity = 0.5
         createGroupButton.addTarget(self, action: #selector(createGroupButtonTapped), for: .touchUpInside)
         myRequestButton.addTarget(self, action: #selector(myRequestButtonTapped), for: .touchUpInside)
         mySupplyButton.addTarget(self, action: #selector(mySupplyButtonTapped), for: .touchUpInside)
@@ -95,29 +62,32 @@ class CreateViewController: UIViewController {
             myRequestView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
             myRequestView.heightAnchor.constraint(equalToConstant: 150),
             myRequestButton.centerXAnchor.constraint(equalTo: myRequestView.centerXAnchor),
-            myRequestButton.topAnchor.constraint(equalTo: myRequestView.bottomAnchor, constant: -40),
-            myRequestButton.widthAnchor.constraint(equalTo: myRequestView.widthAnchor, multiplier: 0.8),
+            myRequestButton.topAnchor.constraint(equalTo: myRequestView.topAnchor, constant: 30),
+            myRequestButton.widthAnchor.constraint(equalTo: myRequestView.widthAnchor),
             myRequestButton.heightAnchor.constraint(equalToConstant: 120),
             mySupplyView.topAnchor.constraint(equalTo: myRequestView.bottomAnchor, constant: 60),
             mySupplyView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             mySupplyView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
             mySupplyView.heightAnchor.constraint(equalToConstant: 150),
             mySupplyButton.centerXAnchor.constraint(equalTo: mySupplyView.centerXAnchor),
-            mySupplyButton.topAnchor.constraint(equalTo: mySupplyView.bottomAnchor, constant: -40),
-            mySupplyButton.widthAnchor.constraint(equalTo: mySupplyView.widthAnchor, multiplier: 0.8),
+            mySupplyButton.topAnchor.constraint(equalTo: mySupplyView.topAnchor, constant: 30),
+            mySupplyButton.widthAnchor.constraint(equalTo: mySupplyView.widthAnchor),
             mySupplyButton.heightAnchor.constraint(equalToConstant: 120),
             createGroupView.topAnchor.constraint(equalTo: mySupplyView.bottomAnchor, constant: 60),
             createGroupView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             createGroupView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
             createGroupView.heightAnchor.constraint(equalToConstant: 150),
             createGroupButton.centerXAnchor.constraint(equalTo: createGroupView.centerXAnchor),
-            createGroupButton.topAnchor.constraint(equalTo: createGroupView.bottomAnchor, constant: -40),
-            createGroupButton.widthAnchor.constraint(equalTo: createGroupView.widthAnchor, multiplier: 0.8),
+            createGroupButton.topAnchor.constraint(equalTo: createGroupView.topAnchor, constant: 30),
+            createGroupButton.widthAnchor.constraint(equalTo: createGroupView.widthAnchor),
             createGroupButton.heightAnchor.constraint(equalToConstant: 120)
         ])
+        animationStart()
+    }
+    func animationStart(){
         //圖片上下浮動動畫
         let animatedBackgroundImageView = UIImageView(image: UIImage(named: "Create_Green"))
-        animatedBackgroundImageView.frame = CGRect(x: 250, y: -10, width: view.bounds.width / 3, height: view.bounds.height / 3)
+        animatedBackgroundImageView.frame = CGRect(x: 250, y: -20, width: view.bounds.width / 3, height: view.bounds.height / 3)
         animatedBackgroundImageView.contentMode = .scaleAspectFit
         backPicture.insertSubview(animatedBackgroundImageView, at: 0)
         // 啟動上下浮動
@@ -126,7 +96,7 @@ class CreateViewController: UIViewController {
             animatedBackgroundImageView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height / 20)
         }, completion: nil)
         let animatedOrange = UIImageView(image: UIImage(named: "Create_Orange"))
-        animatedOrange.frame = CGRect(x: 20, y: 200, width: view.bounds.width / 3, height: view.bounds.height / 3)
+        animatedOrange.frame = CGRect(x: 20, y: 190, width: view.bounds.width / 3, height: view.bounds.height / 3)
         animatedOrange.contentMode = .scaleAspectFit
         backPicture.insertSubview(animatedOrange, at: 0)
         UIView.animate(withDuration: 2.0, delay: 0.0, options: [.repeat, .autoreverse, .curveEaseInOut], animations: {
