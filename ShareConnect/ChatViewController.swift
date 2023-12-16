@@ -758,7 +758,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
                     subview.removeFromSuperview()
                 }
             }
-
             let backgroundViewCloud = UIImageView()
             backgroundViewCloud.contentMode = .scaleToFill
             cell.addSubview(backgroundViewCloud)

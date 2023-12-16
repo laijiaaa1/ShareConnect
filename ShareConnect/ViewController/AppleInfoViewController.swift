@@ -133,7 +133,8 @@ class AppleInfoViewController: UIViewController, UIImagePickerControllerDelegate
             }
             self.db.collection("users").document(uid).setData([
                 "name": name,
-                "profileImageUrl": imageUrl
+                "profileImageUrl": imageUrl,
+                "email": "",
             ]) { error in
                 if let error = error {
                     print("Error updating user data in Firestore: \(error.localizedDescription)")
