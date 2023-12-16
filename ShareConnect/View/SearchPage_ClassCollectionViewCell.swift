@@ -54,8 +54,10 @@ class ClassCollectionViewCell: UICollectionViewCell {
         for classification in productClassification {
             let button = UIButton()
             button.setTitle(classification, for: .normal)
+            button.startAnimatingPressActions()
             button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
             button.setTitleColor(.white, for: .normal)
+            button.setTitleColor(UIColor(named: "G3"), for: .selected)
             button.addTarget(self, action: #selector(classificationButtonTapped(_:)), for: .touchUpInside)
             buttonsStackView.addArrangedSubview(button)
         }
@@ -64,6 +66,12 @@ class ClassCollectionViewCell: UICollectionViewCell {
     @objc func classificationButtonTapped(_ sender: UIButton) {
         if let classificationText = sender.currentTitle {
             print("Tapped Classification: \(classificationText)")
+            
+            for case let button as UIButton in buttonsStackView.arrangedSubviews {
+                   button.isSelected = false
+                   button.setTitleColor(.white, for: .normal)  // Reset color for unselected state
+               }
+            sender.isSelected.toggle()
             if let delegate = delegate, let currentButtonType = currentButtonType {
                 if currentButtonType == .request {
                     delegate.didSelectClassification(classificationText, forType: currentButtonType)

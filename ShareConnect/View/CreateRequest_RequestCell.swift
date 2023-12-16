@@ -24,7 +24,6 @@ class RequestCell: UITableViewCell {
     }
     let pickerView = UIPickerView()
     var pickerData: [String] = [String]()
-//    var expandedHeight: CGFloat = 200
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         requestLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -52,17 +51,15 @@ class RequestCell: UITableViewCell {
             textField.topAnchor.constraint(equalTo: requestLabel.bottomAnchor, constant: 10),
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            textField.heightAnchor.constraint(equalToConstant: 80)
+            textField.heightAnchor.constraint(equalToConstant: 60)
         ])
         addBtn.addTarget(self, action: #selector(addBtnTapped), for: .touchUpInside)
     }
     @objc func addBtnTapped() {
         isExpanded = !isExpanded
-        
-        
     }
     private func updateCellHeight() {
-        let newHeight: CGFloat = isExpanded ? 200 : 50
+        let newHeight: CGFloat = isExpanded ? 120 : 50
         frame.size.height = newHeight
         textField.isHidden = !isExpanded
     }
