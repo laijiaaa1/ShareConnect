@@ -23,6 +23,18 @@ class GroupTableViewCell: UITableViewCell {
     let groupMemberNumberImage = UIImageView()
     let backView = UIView()
     let currrentUser = Auth.auth().currentUser?.uid
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        groupImage.image = nil
+        groupNameLabel.text = nil
+        groupMemberNumberLabel.text = nil
+        groupMemberNumberImage.image = nil
+        groupButton.setTitle("        +", for: .normal)
+        groupButton.setTitleColor(.black, for: .normal)
+        groupButton.backgroundColor = .white
+        groupButton.layer.borderWidth = 1
+        groupButton.layer.borderColor = UIColor.black.cgColor
+    }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         groupImage.layer.cornerRadius = 10

@@ -30,10 +30,10 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
     let sendButton = UIButton()
     let voiceButton = UIButton()
     var audioRecorder: AVAudioRecorder!
-        var audioPlayer: AVAudioPlayer!
-        var audioFileURL: URL!
-        var audioStorageRef: StorageReference!
-        var databaseRef: DatabaseReference!
+    var audioPlayer: AVAudioPlayer!
+    var audioFileURL: URL!
+    var audioStorageRef: StorageReference!
+    var databaseRef: DatabaseReference!
     var audioURL: String?
     var isRecording = false
     var chatMessages = [ChatMessage]()
@@ -58,6 +58,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
     private var locationManager: CLLocationManager?
     var currentLocation: CLLocationCoordinate2D?
     var existingChatRooms: [String: Bool] = [:]
+    private var currentImageURL: String?
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.tintColor = .white
@@ -77,7 +78,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         imagePicker?.allowsEditing = true
         tableView.separatorStyle = .none
         if let cart = cart {
-            convertCartToString(cart)
+            convertCartToImageAndSendMessage(cart: cart)
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
         chatListDelegate?.didSelectChatRoom(chatRoomID)
@@ -91,7 +92,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         tableView.register(ImageCell.self, forCellReuseIdentifier: "imageCell")
         tableView.register(MapCell.self, forCellReuseIdentifier: "mapCell")
         tableView.register(VoiceCell.self, forCellReuseIdentifier: "voiceCell")
-
+        
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -148,7 +149,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                     self.chatRoomDocument = document.reference
                     self.chatRoomID = chatRoomID
                     self.startListeningForChatMessages()
-                    self.sendMessageToFirestore(self.cartString, isMe: true)
+                    //                    self.sendMessageToFirestore(self.cartString, isMe: true)
                 } else {
                     print("Error: Existing chat room ID does not correspond to an existing chat room.")
                 }
@@ -193,7 +194,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                             self.chatRoomDocument = document.reference
                             self.chatRoomID = chatRoomID
                             self.startListeningForChatMessages()
-                            self.sendMessageToFirestore(self.cartString, isMe: true)
+                            //                            self.sendMessageToFirestore(self.cartString, isMe: true)
                         } else {
                             print("Error: Existing chat room ID does not correspond to an existing chat room.")
                         }
@@ -204,7 +205,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                     self.updateUserChatRoomData(usersCollection, userID: sellerID, chatRoomID: chatRoomID)
                     self.chatRoomDocument = chatRoomsCollection.document(chatRoomID)
                     self.startListeningForChatMessages()
-                    self.sendMessageToFirestore(self.cartString, isMe: true)
+                    //                    self.sendMessageToFirestore(self.cartString, isMe: true)
                     self.existingChatRooms[chatRoomID] = true
                     existingChatRoomIDs.insert(chatRoomID)
                 }
@@ -289,7 +290,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                    let chatRoomID = data["chatRoomID"] as? String,
                    let audioURL = data["audioURL"] as? String,
                    let imageURL = data["imageURL"] as? String
-                 {
+                {
                     print("Download URL: \(audioURL)")
                     let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL, audioURL: audioURL)
                     self.chatMessages.append(chatMessage)
@@ -306,7 +307,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         tableView.backgroundColor = .black
         view.addSubview(tableView)
         tableView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height - 100)
-        messageTextField.placeholder = "Type your message here..."
+        messageTextField.placeholder = "Type your message..."
         messageTextField.borderStyle = .roundedRect
         messageTextField.backgroundColor = .white
         messageTextField.frame = CGRect(x: 130, y: view.bounds.height - 80, width: view.bounds.width - 180, height: 40)
@@ -351,7 +352,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
             voiceButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
-           voiceButton.addGestureRecognizer(longPressGesture)
+        voiceButton.addGestureRecognizer(longPressGesture)
     }
     @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
         if gesture.state == .began {
@@ -368,48 +369,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
             startRecording()
         }
     }
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
-    }
-    func startRecording() {
-            let audioFilename = getDocumentsDirectory().appendingPathComponent("recording.wav")
-
-            let settings = [
-                AVFormatIDKey: Int(kAudioFormatLinearPCM),
-                AVSampleRateKey: 12000,
-                AVNumberOfChannelsKey: 1,
-                AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-            ]
-
-            do {
-                audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
-                audioRecorder.delegate = self
-                audioRecorder.record()
-                isRecording = true
-                updateUIForRecording(true)
-            } catch {
-                print("錄音失敗")
-            }
-        }
-
-        func stopRecording() {
-            audioRecorder.stop()
-            audioRecorder = nil
-            isRecording = false
-            updateUIForRecording(false)
-            audioFileURL = audioFileURL ?? getDocumentsDirectory().appendingPathComponent("recording.wav")
-        }
-
-        func updateUIForRecording(_ isRecording: Bool) {
-            if isRecording {
-                   voiceButton.setImage(UIImage(systemName: "mic.fill"), for: .normal)
-                   voiceButton.tintColor = .red
-               } else {
-                   voiceButton.setImage(UIImage(systemName: "mic"), for: .normal)
-                   voiceButton.tintColor = .white
-               }
-        }
+    
     @objc func locationButtonTapped() {
         let mapViewController = MapSelectionViewController()
         mapViewController.delegate = self
@@ -443,6 +403,8 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                 self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL, location: nil)
                 self?.selectedImage = nil
                 self?.imageView.image = nil
+                self?.currentImageURL = nil
+                
             }
         } else {
             sendMessageToFirestore(message, isMe: true, location: nil)
@@ -451,9 +413,10 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         currentLocation = nil
         selectedImage = nil
         imageView.image = nil
+        currentImageURL = nil
     }
     func uploadFixedImage(_ image: UIImage, completion: @escaping (String) -> Void) {
-        guard let resizedImage = image.resized(toSize: CGSize(width: 300, height: 300)) else {
+        guard let resizedImage = image.resized(toSize: CGSize(width: 400, height: 400)) else {
             completion("")
             return
         }
@@ -522,318 +485,94 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         let location = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
         sendMessageToFirestore("\(location)", isMe: true, location: coordinate)
     }
-    func convertCartToString(_ cart: [Seller: [Product]]) -> String {
-        for (seller, products) in cart {
-            cartString.append("Talk with: \(seller.sellerName)\n")
-            for product in products {
-                cartString.append(" - Product: \(product.name)\n")
-                cartString.append("   Quantity: \(product.quantity ?? 1)\n")
-                cartString.append("   Price: \(product.price)\n")
-            }
-            cartString.append("\n")
-        }
-        return cartString
-    }
-    func uploadAudioToFirebase() {
-        guard let audioFileURL = audioFileURL else {
-               print("Error: audioFileURL is nil.")
-               return
-           }
-
-           guard let audioData = try? Data(contentsOf: audioFileURL) else {
-               print("Error creating audio data.")
-               return
-           }
-let audioStorageRef = Storage.storage().reference().child("audio")
-        let audioRef = audioStorageRef.child(UUID().uuidString + ".wav")
-        audioRef.putData(audioData, metadata: nil) { [weak self] (metadata, error) in
-            guard let self = self else {
-                print("Self is nil.")
-                return
-            }
-            if let error = error {
-                print("Upload failed: \(error.localizedDescription)")
-                return
-            }
-            audioRef.downloadURL { (url, error) in
-                guard let downloadURL = url else {
-                    print("Unable to get download URL: \(error?.localizedDescription ?? "Unknown error")")
-                    return
-                }
-                self.saveAudioMessageToDatabase(downloadURL: downloadURL.absoluteString)
-            }
-        }
-    }
-    func saveAudioMessageToDatabase(downloadURL: String) {
-        guard let chatRoomDocument = chatRoomDocument else {
-            print("Chat room document is nil.")
+    //修改函數 convertCartToImage 以返回生成的圖像的 a UIImage 和相應的URL
+    func convertCartToImage(cart: [Seller: [Product]], completion: @escaping (UIImage?, String?) -> Void) {
+        let imageSize = CGSize(width: 400, height: 400)  // Adjust the size according to your needs
+        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
+        
+        guard let context = UIGraphicsGetCurrentContext() else {
+            completion(nil, nil)
             return
         }
-        let messagesCollection = chatRoomDocument.collection("messages")
-        let audioMessage = [
-            "text": downloadURL,
-            "audioURL": downloadURL,
-            "isMe": true,
-            "timestamp": FieldValue.serverTimestamp(),
-            "name": currentUser?.name ?? "",
-            "profileImageUrl": currentUser?.profileImageUrl ?? "",
-            "buyer": currentUser?.uid ?? "",
-            "seller": buyerID ?? "",
-            "chatRoomID": chatRoomID ?? "",
-            "imageURL": nil ?? "",
-        ] as [String : Any]
-        messagesCollection.addDocument(data: audioMessage) { [weak self] (error) in
-            if let error = error {
-                print("Error sending audio message: \(error.localizedDescription)")
-                return
-            }
-            self?.tableView.reloadData()
-        }
-    }
-
-}
-extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return chatMessages.count
-    }
-
-    @objc func imageTapped(_ gesture: UITapGestureRecognizer) {
-        guard
-            let cell = gesture.view?.superview?.superview as? ImageCell,
-            let chatMessage = cell.chatMessage,
-            let imageUrl = chatMessage.imageURL,
-            let originalImage = cell.imageURLpost.image
-        else { return }
-
-        let newImageView = UIImageView(image: originalImage)
-        newImageView.frame = UIScreen.main.bounds
-        newImageView.backgroundColor = .black
-        newImageView.contentMode = .scaleAspectFit
-        newImageView.isUserInteractionEnabled = true
-        let promptLabel = UILabel()
-        promptLabel.text = "Tap to dismiss"
-        promptLabel.textColor = UIColor(named: "G3")
-        promptLabel.font = UIFont(name: "PingFangTC", size: 16)
-        newImageView.addSubview(promptLabel)
-        promptLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            promptLabel.bottomAnchor.constraint(equalTo: newImageView.bottomAnchor, constant: -180),
-            promptLabel.centerXAnchor.constraint(equalTo: newImageView.centerXAnchor)
-        ])
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))
-        newImageView.addGestureRecognizer(tap)
-
-        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handleZoomGesture(_:)))
-        newImageView.addGestureRecognizer(pinch)
-
-        view.addSubview(newImageView)
-    }
-
-    @objc func dismissFullscreenImage(_ sender: UITapGestureRecognizer) {
-        sender.view?.removeFromSuperview()
-    }
-
-    @objc func handleZoomGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
-        guard let view = gestureRecognizer.view else { return }
-
-        if gestureRecognizer.state == .changed || gestureRecognizer.state == .ended {
-            view.transform = view.transform.scaledBy(x: gestureRecognizer.scale, y: gestureRecognizer.scale)
-            gestureRecognizer.scale = 1.0
-        }
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let chatMessage = chatMessages[indexPath.row]
-        if chatMessages[indexPath.row].imageURL != "" {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "imageCell", for: indexPath) as! ImageCell
-            let chatMessage = chatMessages[indexPath.row]
-            cell.backgroundColor = .black
-            cell.configure(with: chatMessage)
-          
-            if let imagePost = URL(string: chatMessage.imageURL ?? "") {
-                cell.imageURLpost.kf.setImage(with: imagePost)
-            }
-            let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
-            cell.imageURLpost.addGestureRecognizer(tap)
-          
-            //            let isMe = chatMessage.buyerID == Auth.auth().currentUser?.uid
-            //            if isMe == true {
-            cell.timestampLabel.textAlignment = .right
-            cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
-            cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40).isActive = true
-            cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.imageURLpost.leadingAnchor, constant: -20).isActive = true
-            cell.imageURLpost.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15).isActive = true
-            cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
-            cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-            cell.imageURLpost.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-            cell.imageURLpost.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
-            cell.imageURLpost.widthAnchor.constraint(equalToConstant: 80).isActive = true
-            cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
-            cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
-            //            } else {
-            //                cell.timestampLabel.textAlignment = .left
-            //                cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
-            //                cell.image.trailingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 40).isActive = true
-            //                cell.imageURLpost.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 15).isActive = true
-            //                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
-            //                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            //                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-            //                cell.timestampLabel.leadingAnchor.constraint(equalTo: cell.imageURLpost.trailingAnchor, constant: 20).isActive = true
-            //                cell.imageURLpost.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-            //                cell.imageURLpost.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
-            //                cell.imageURLpost.widthAnchor.constraint(equalToConstant: 80).isActive = true
-            //                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
-            //                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
-            //            }
-            return cell
-        } else if chatMessage.audioURL != "" {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "voiceCell", for: indexPath) as! VoiceCell
-            cell.backgroundColor = .black
-               let audioURL = chatMessage.audioURL
-            print("Audio URL: \(audioURL)")
-            cell.configure(with: audioURL, chatMessage: chatMessage)
-            NSLayoutConstraint.activate([
-                cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10),
-                cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40),
-                cell.image.widthAnchor.constraint(equalToConstant: 30),
-                cell.image.heightAnchor.constraint(equalToConstant: 30),
-                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor),
-                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5),
-                cell.backView.heightAnchor.constraint(equalToConstant: 50),
-                cell.backView.widthAnchor.constraint(equalToConstant: 200),
-                cell.backView.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor,constant: -20),
-                cell.backView.topAnchor.constraint(equalTo: cell.image.topAnchor, constant: 5),
-                cell.playButton.centerYAnchor.constraint(equalTo: cell.backView.centerYAnchor),
-                cell.playButton.leadingAnchor.constraint(equalTo: cell.backView.leadingAnchor, constant: 20),
-                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.backView.bottomAnchor, constant: -5),
-                cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.backView.leadingAnchor, constant: -20)
-            ])
-            cell.backView.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G4") : UIColor(named: "G5")
-            return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "textCell", for: indexPath) as! TextCell
-            let chatMessage = chatMessages[indexPath.row]
-            cell.backgroundColor = .black
-            cell.configure(with: chatMessage)
-            cell.messageLabel.text = chatMessage.text
-            cell.messageLabel.textColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .white : .white
-            cell.messageLabel.textAlignment = chatMessage.buyerID == Auth.auth().currentUser?.uid ? .center : .center
-            //        let isMe = Auth.auth().currentUser?.uid
-            //            if isMe == chatMessage.buyerID{
-            NSLayoutConstraint.activate([
-                cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10),
-                cell.image.leadingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -40),
-                cell.messageLabel.trailingAnchor.constraint(equalTo: cell.image.leadingAnchor, constant: -15),
-                cell.timestampLabel.trailingAnchor.constraint(equalTo: cell.messageLabel.leadingAnchor, constant: -20),
-                cell.image.widthAnchor.constraint(equalToConstant: 30),
-                cell.image.heightAnchor.constraint(equalToConstant: 30),
-                cell.messageLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5),
-                cell.messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 180),
-                cell.messageLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
-                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
-                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor),
-                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5),
-            ])
-            //            } else {
-            //                cell.messageLabel.textAlignment = .left
-            //                cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
-            //                cell.image.trailingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 40).isActive = true
-            //                cell.messageLabel.leadingAnchor.constraint(equalTo: cell.image.trailingAnchor, constant: 15).isActive = true
-            //                cell.timestampLabel.leadingAnchor.constraint(equalTo: cell.messageLabel.trailingAnchor, constant: 20).isActive = true
-            //                cell.image.widthAnchor.constraint(equalToConstant: 30).isActive = true
-            //                cell.image.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            //                cell.messageLabel.topAnchor.constraint(equalTo: cell.topAnchor, constant: 5).isActive = true
-            //                cell.messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
-            //                cell.messageLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-            //                cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5).isActive = true
-            //                cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor).isActive = true
-            //                cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5).isActive = true
-            //            }
+        
+        // Set background color
+        context.setFillColor(UIColor.black.cgColor)
+        context.fill(CGRect(origin: .zero, size: imageSize))
+        
+        for (seller, products) in cart {
+            // Text attributes for seller's greeting
+            let sellerGreetingAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.boldSystemFont(ofSize: 20),
+                .paragraphStyle: NSParagraphStyle(),
+                .foregroundColor: UIColor.white
+            ]
             
-//            cell.messageLabel.backgroundColor = chatMessage.buyerID == Auth.auth().currentUser?.uid ? UIColor(named: "G4") : UIColor(named: "G5")
-
-            // 清除或重置 backgroundViewCloud，以防止重複使用時的問題
-            for subview in cell.subviews {
-                if subview is UIImageView {
-                    subview.removeFromSuperview()
+            // Seller's greeting text
+            let sellerGreeting = "Hi, \(seller.sellerName).\n I'm interested in the following product:"
+            (sellerGreeting as NSString).draw(at: CGPoint(x: 20, y: 20), withAttributes: sellerGreetingAttributes)
+            
+            var yOffset: CGFloat = 180
+            
+            for product in products {
+                // Text attributes for product information
+                let productAttributes: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.systemFont(ofSize: 20),
+                    .foregroundColor: UIColor.white
+                ]
+                // Product information text
+                let productText = "   Product: \(product.name)\n   Quantity: \(product.quantity ?? 1)\n   Price: \(product.price)"
+                (productText as NSString).draw(at: CGPoint(x: 200, y: yOffset), withAttributes: productAttributes)
+                // Fixed image size and position
+                let imageRect = CGRect(x: 20, y: 100, width: 150, height: 150)  // Adjust the image size and position
+                
+                // Load and draw the product image with rounded corners
+                if let imageURL = URL(string: product.imageString) {
+                    KingfisherManager.shared.retrieveImage(with: imageURL, options: nil, progressBlock: nil) { result in
+                        switch result {
+                        case .success(let imageResult):
+                            let productImage = imageResult.image
+                            let roundedPath = UIBezierPath(roundedRect: imageRect, cornerRadius: 10.0).cgPath
+                            context.addPath(roundedPath)
+                            context.clip()
+                            productImage.draw(in: imageRect)
+                            // Notify completion with the generated image and a unique URL
+                            let imageUUID = UUID().uuidString
+                            let imageURL = "https://your-image-hosting-service.com/\(imageUUID).png"
+                            
+                            // Store the current image URL
+                            self.currentImageURL = imageURL
+                            completion(UIGraphicsGetImageFromCurrentImageContext(), imageURL)
+                        case .failure(let error):
+                            print("Error loading product image: \(error.localizedDescription)")
+                            completion(nil, nil)
+                        }
+                    }
                 }
+                // Adjust the vertical spacing between product and next product
+                yOffset += 90
             }
-            let backgroundViewCloud = UIImageView()
-            backgroundViewCloud.contentMode = .scaleToFill
-            cell.addSubview(backgroundViewCloud)
-            cell.sendSubviewToBack(backgroundViewCloud)
-            backgroundViewCloud.translatesAutoresizingMaskIntoConstraints = false
-
-            NSLayoutConstraint.activate([
-                backgroundViewCloud.topAnchor.constraint(equalTo: cell.messageLabel.topAnchor),
-                backgroundViewCloud.leadingAnchor.constraint(equalTo: cell.messageLabel.leadingAnchor, constant: -15),
-                backgroundViewCloud.bottomAnchor.constraint(equalTo: cell.messageLabel.bottomAnchor),
-                backgroundViewCloud.trailingAnchor.constraint(equalTo: cell.messageLabel.trailingAnchor, constant: 15)
-            ])
-            if chatMessage.buyerID == Auth.auth().currentUser?.uid {
-                backgroundViewCloud.image = UIImage(named: "S3")
-            } else {
-                backgroundViewCloud.image = UIImage(named: "S1")
-            }
-            cell.messageLabel.numberOfLines = 0
-            cell.messageLabel.layer.cornerRadius = 10
-            cell.messageLabel.layer.masksToBounds = true
-            if let mapLink = cell.messageLabel.text, let url = URL(string: mapLink) {
-                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openMap(_:)))
-                cell.messageLabel.isUserInteractionEnabled = true
-                cell.messageLabel.addGestureRecognizer(tapGesture)
-            }
-            return cell
         }
+        // End the graphics context
+        UIGraphicsEndImageContext()
+        // Set the current image URL to nil after the image is generated
+        currentImageURL = nil
     }
     
-    @objc func openMap(_ gesture: UITapGestureRecognizer) {
-        //gesture.view 獲取到正確的
-        guard let tappedCell = gesture.view as? UILabel, let mapLink = tappedCell.text, let url = URL(string: mapLink) else {
-            return
+    func convertCartToImageAndSendMessage(cart: [Seller: [Product]]) {
+        convertCartToImage(cart: cart) { [weak self] image, imageURL in
+            // Ensure that the image URL matches the current image URL
+            guard let currentImageURL = self?.currentImageURL, currentImageURL == imageURL else {
+                // Image URL does not match the current one, ignore the completion
+                return
+            }
+            if let image = image {
+                // 新增此行
+                self?.uploadFixedImage(image) { storageImageURL in
+                    self?.sendMessageToFirestore("", isMe: true, imageURL: storageImageURL, location: nil)
+                }
+            } else {
+                // 處理圖像轉換失敗的情況
+            }
         }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-    }
-  
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let minHeight: CGFloat = 80
-        let dynamicHeight = calculateDynamicHeight(for: indexPath)
-        return max(dynamicHeight, minHeight)
-    }
-    private func calculateDynamicHeight(for indexPath: IndexPath) -> CGFloat {
-        let content = chatMessages[indexPath.row].text
-        let font = UIFont.systemFont(ofSize: 15)
-        let boundingBox = CGSize(width: tableView.bounds.width - 40, height: .greatestFiniteMagnitude)
-        let size = content.boundingRect(with: boundingBox, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSAttributedString.Key.font: font], context: nil)
-        return ceil(size.height) + 50
-    }
-}
-extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        if let editedImage = info[.editedImage] as? UIImage {
-            selectedImage = editedImage
-            imageView.image = editedImage
-        } else if let originalImage = info[.originalImage] as? UIImage {
-            selectedImage = originalImage
-            imageView.image = originalImage
-        }
-        dismiss(animated: true, completion: nil)
-    }
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
-}
-extension ChatViewController: MapSelectionDelegate {
-    func didSelectLocation(_ coordinate: CLLocationCoordinate2D) {
-        sendLocationToFirestore(coordinate)
-    }
-}
-extension ChatViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last?.coordinate else { return }
-        currentLocation = location
-    }
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location error: \(error.localizedDescription)")
     }
 }
