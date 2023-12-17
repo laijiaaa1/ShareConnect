@@ -16,7 +16,7 @@ import FirebaseMessaging
 import UserNotifications
 
 extension RecoderViewController {
-    class RecoderTableViewCell: UITableViewCell{
+    class RecoderTableViewCell: UITableViewCell {
         var order: Order? {
             didSet {
                 updateUI()
@@ -31,7 +31,6 @@ extension RecoderViewController {
             backView.backgroundColor = .white
             contentView.layer.cornerRadius = 10
             contentView.layer.masksToBounds = true
-//            contentView.layer.borderWidth = 1
             contentView.backgroundColor = .black
             backView.layer.cornerRadius = 10
             backView.layer.masksToBounds = true

@@ -92,7 +92,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         tableView.register(ImageCell.self, forCellReuseIdentifier: "imageCell")
         tableView.register(MapCell.self, forCellReuseIdentifier: "mapCell")
         tableView.register(VoiceCell.self, forCellReuseIdentifier: "voiceCell")
-        
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -149,7 +148,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                     self.chatRoomDocument = document.reference
                     self.chatRoomID = chatRoomID
                     self.startListeningForChatMessages()
-                    //                    self.sendMessageToFirestore(self.cartString, isMe: true)
                 } else {
                     print("Error: Existing chat room ID does not correspond to an existing chat room.")
                 }
@@ -194,7 +192,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                             self.chatRoomDocument = document.reference
                             self.chatRoomID = chatRoomID
                             self.startListeningForChatMessages()
-                            //                            self.sendMessageToFirestore(self.cartString, isMe: true)
                         } else {
                             print("Error: Existing chat room ID does not correspond to an existing chat room.")
                         }
@@ -205,7 +202,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                     self.updateUserChatRoomData(usersCollection, userID: sellerID, chatRoomID: chatRoomID)
                     self.chatRoomDocument = chatRoomsCollection.document(chatRoomID)
                     self.startListeningForChatMessages()
-                    //                    self.sendMessageToFirestore(self.cartString, isMe: true)
                     self.existingChatRooms[chatRoomID] = true
                     existingChatRoomIDs.insert(chatRoomID)
                 }
@@ -289,8 +285,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                    let sellerID = data["seller"] as? String,
                    let chatRoomID = data["chatRoomID"] as? String,
                    let audioURL = data["audioURL"] as? String,
-                   let imageURL = data["imageURL"] as? String
-                {
+                   let imageURL = data["imageURL"] as? String {
                     print("Download URL: \(audioURL)")
                     let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL, audioURL: audioURL)
                     self.chatMessages.append(chatMessage)
@@ -369,7 +364,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
             startRecording()
         }
     }
-    
     @objc func locationButtonTapped() {
         let mapViewController = MapSelectionViewController()
         mapViewController.delegate = self
@@ -404,7 +398,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                 self?.selectedImage = nil
                 self?.imageView.image = nil
                 self?.currentImageURL = nil
-                
             }
         } else {
             sendMessageToFirestore(message, isMe: true, location: nil)
@@ -494,11 +487,9 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
             completion(nil, nil)
             return
         }
-        
         // Set background color
         context.setFillColor(UIColor.black.cgColor)
         context.fill(CGRect(origin: .zero, size: imageSize))
-        
         for (seller, products) in cart {
             // Text attributes for seller's greeting
             let sellerGreetingAttributes: [NSAttributedString.Key: Any] = [
@@ -506,13 +497,10 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                 .paragraphStyle: NSParagraphStyle(),
                 .foregroundColor: UIColor.white
             ]
-            
             // Seller's greeting text
             let sellerGreeting = "Hi, \(seller.sellerName).\n I'm interested in the following product:"
             (sellerGreeting as NSString).draw(at: CGPoint(x: 20, y: 20), withAttributes: sellerGreetingAttributes)
-            
             var yOffset: CGFloat = 180
-            
             for product in products {
                 // Text attributes for product information
                 let productAttributes: [NSAttributedString.Key: Any] = [
@@ -524,7 +512,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                 (productText as NSString).draw(at: CGPoint(x: 200, y: yOffset), withAttributes: productAttributes)
                 // Fixed image size and position
                 let imageRect = CGRect(x: 20, y: 100, width: 150, height: 150)  // Adjust the image size and position
-                
                 // Load and draw the product image with rounded corners
                 if let imageURL = URL(string: product.imageString) {
                     KingfisherManager.shared.retrieveImage(with: imageURL, options: nil, progressBlock: nil) { result in
@@ -538,7 +525,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                             // Notify completion with the generated image and a unique URL
                             let imageUUID = UUID().uuidString
                             let imageURL = "https://your-image-hosting-service.com/\(imageUUID).png"
-                            
                             // Store the current image URL
                             self.currentImageURL = imageURL
                             completion(UIGraphicsGetImageFromCurrentImageContext(), imageURL)
@@ -557,7 +543,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         // Set the current image URL to nil after the image is generated
         currentImageURL = nil
     }
-    
     func convertCartToImageAndSendMessage(cart: [Seller: [Product]]) {
         convertCartToImage(cart: cart) { [weak self] image, imageURL in
             // Ensure that the image URL matches the current image URL

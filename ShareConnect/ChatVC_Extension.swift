@@ -21,7 +21,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatMessages.count
     }
-    
     @objc func imageTapped(_ gesture: UITapGestureRecognizer) {
         guard
             let cell = gesture.view?.superview?.superview as? ImageCell,
@@ -29,7 +28,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
             let imageUrl = chatMessage.imageURL,
             let originalImage = cell.imageURLpost.image
         else { return }
-        
         let newImageView = UIImageView(image: originalImage)
         newImageView.frame = UIScreen.main.bounds
         newImageView.backgroundColor = .black
@@ -47,20 +45,15 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         ])
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))
         newImageView.addGestureRecognizer(tap)
-        
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handleZoomGesture(_:)))
         newImageView.addGestureRecognizer(pinch)
-        
         view.addSubview(newImageView)
     }
-    
     @objc func dismissFullscreenImage(_ sender: UITapGestureRecognizer) {
         sender.view?.removeFromSuperview()
     }
-    
     @objc func handleZoomGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
         guard let view = gestureRecognizer.view else { return }
-        
         if gestureRecognizer.state == .changed || gestureRecognizer.state == .ended {
             view.transform = view.transform.scaledBy(x: gestureRecognizer.scale, y: gestureRecognizer.scale)
             gestureRecognizer.scale = 1.0
@@ -221,7 +214,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let minHeight: CGFloat = 200 // 設定最小高度為 200
         let chatMessage = chatMessages[indexPath.row]
-        
         if ((chatMessage.imageURL?.isEmpty) == false) {
             return minHeight // 如果是圖片消息，直接返回最小高度
         } else {

@@ -1560,8 +1560,8 @@
             filePath = "ShareConnect/ChatViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
             landmarkName = "createOrGetChatRoomDocument()"
             landmarkType = "7">
             <Locations>
@@ -1877,8 +1877,8 @@
             filePath = "ShareConnect/View/Recoder_RecoderTBCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
             landmarkName = "init(style:reuseIdentifier:)"
             landmarkType = "7">
             <Locations>
@@ -1941,8 +1941,8 @@
             filePath = "ShareConnect/ChatVC_Extension.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
             <Locations>
@@ -2004,8 +2004,8 @@
             filePath = "ShareConnect/ChatVC_Extension.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
             <Locations>
@@ -2100,8 +2100,8 @@
             filePath = "ShareConnect/ChatVC_Extension.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "216"
-            endingLineNumber = "216"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
             landmarkName = "openMap(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2116,8 +2116,8 @@
             filePath = "ShareConnect/ChatVC_Extension.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "214"
-            endingLineNumber = "214"
+            startingLineNumber = "207"
+            endingLineNumber = "207"
             landmarkName = "openMap(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2132,8 +2132,8 @@
             filePath = "ShareConnect/ChatVC_Extension.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
             <Locations>

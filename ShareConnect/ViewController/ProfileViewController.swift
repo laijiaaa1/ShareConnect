@@ -425,7 +425,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 requestButton.backgroundColor = .white
                 supplyButton.setTitleColor(.black, for: .normal)
                 supplyButton.backgroundColor = .white
-            }else if button == collectionButton {
+            } else if button == collectionButton {
                 groupButton.setTitleColor(.black, for: .normal)
                 groupButton.backgroundColor = .white
                 requestButton.setTitleColor(.black, for: .normal)
