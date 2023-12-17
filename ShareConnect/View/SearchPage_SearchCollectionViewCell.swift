@@ -93,7 +93,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
     }
     @objc func addCollection() {
         isCollected.toggle()
-
+        
         guard let currentUserID = Auth.auth().currentUser?.uid,
               let productID = product?.productId,
               let productName = product?.name,
@@ -103,7 +103,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
         }
         let db = Firestore.firestore()
         let userCollectionReference = db.collection("collections").document(currentUserID)
-
+        
         userCollectionReference.getDocument { (document, error) in
             if let document = document, document.exists {
                 updateCollection()

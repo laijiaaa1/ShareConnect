@@ -131,9 +131,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         hotCollection.backgroundColor = .clear
         hotScrollView.showsHorizontalScrollIndicator = false
         hotCollection.showsHorizontalScrollIndicator = false
-//        let line2 = UIView(frame: CGRect(x: 0, y: 530, width: view.frame.width, height: 1))
-//        line2.backgroundColor = .lightGray
-//        view.addSubview(line2)
+        //        let line2 = UIView(frame: CGRect(x: 0, y: 530, width: view.frame.width, height: 1))
+        //        line2.backgroundColor = .lightGray
+        //        view.addSubview(line2)
     }
     func browsHistory() {
         browsingHistory.frame = CGRect(x: 30, y: 560, width: 160, height: 20)
@@ -171,7 +171,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             }
         }
     }
-
+    
     @objc func buttonClick(sender: UIButton) {
         let groupViewController = GroupViewController()
         switch sender.tag {
@@ -274,7 +274,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
             let productID = browsingHistoryItems[sender.tag].2
-
+            
             // Fetch product details using the productID
             fetchProductDetails(for: productID) { product in
                 vc.product = product
@@ -282,7 +282,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             }
         }
     }
-
+    
     func fetchProductDetails(for productID: String, completion: @escaping (Product?) -> Void) {
         // Use your Firestore or other data fetching mechanism to get product details
         // Replace the code below with your actual implementation
@@ -290,7 +290,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             completion(product)
         }
     }
-
+    
     func searchProductByName(searchString: String, completion: @escaping ([Product]) -> Void) {
         let db = Firestore.firestore()
         let groupsCollection = db.collection("products")
@@ -377,7 +377,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             }
         }
     }
-
+    
 }
 
 class HistoryCell: UICollectionViewCell {

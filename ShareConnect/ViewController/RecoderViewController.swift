@@ -117,7 +117,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.returnButton.setTitle("Remind", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(remindButtonTapped), for: .touchUpInside)
         }
-
+        
         if orderID[indexPath.row].isCompleted {
             cell.returnButton.setTitle("Completed", for: .normal)
             cell.returnButton.backgroundColor = .lightGray
@@ -141,16 +141,16 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
         }
-
+        
         return cell
     }
-
+    
     func fetchReviewFromFireStore(for orderID: String, completion: @escaping (Bool) -> Void) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
             completion(false)
             return
         }
-
+        
         let reviewsCollection = Firestore.firestore().collection("reviews")
         reviewsCollection.whereField("userID", isEqualTo: currentUserID).whereField("productID", isEqualTo: orderID).getDocuments { (querySnapshot, error) in
             if let error = error {
@@ -158,12 +158,12 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
                 completion(false)
                 return
             }
-
-            let hasReview = !(querySnapshot?.documents.isEmpty ?? false) 
+            
+            let hasReview = !(querySnapshot?.documents.isEmpty ?? false)
             completion(hasReview)
         }
     }
-
+    
     @objc func remindButtonTapped() {
         if let orderID = order?.orderID {
             scheduleLocalNotification(for: orderID)

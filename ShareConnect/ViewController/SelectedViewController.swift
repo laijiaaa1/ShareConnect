@@ -34,10 +34,10 @@ class SelectedViewController: UIViewController {
     let trolleyButton = UIButton()
     let closeButton = UIButton()
     var selectedQuantity: Int = 1 {
-            didSet {
-                numberLabel.text = "\(selectedQuantity)"
-            }
+        didSet {
+            numberLabel.text = "\(selectedQuantity)"
         }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()

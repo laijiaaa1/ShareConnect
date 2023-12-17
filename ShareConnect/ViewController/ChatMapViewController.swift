@@ -76,7 +76,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             returnToUserLocationButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         let initialLocation = CLLocationCoordinate2D(latitude: 25.0422, longitude: 121.5354)
-        let userLocation = locationManager.location?.coordinate 
+        let userLocation = locationManager.location?.coordinate
         let regionRadius: CLLocationDistance = 1000
         let coordinateRegion = MKCoordinateRegion(
             center: initialLocation,
@@ -101,7 +101,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-
+    
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
@@ -113,7 +113,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-
+    
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo else { return }
         guard let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }

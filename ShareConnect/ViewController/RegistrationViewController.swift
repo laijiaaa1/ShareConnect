@@ -129,7 +129,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
     @objc func cancelButtonTapped() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
-            self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)

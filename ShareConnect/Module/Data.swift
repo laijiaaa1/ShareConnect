@@ -236,7 +236,7 @@ struct Order {
     let createdAt: Date
     let cart: [[String: Any]]
     let isCompleted: Bool
-
+    
     init?(document: QueryDocumentSnapshot) {
         guard let data = document.data() as? [String: Any],
               let orderID = document.documentID as? String,

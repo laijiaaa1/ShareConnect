@@ -193,7 +193,7 @@ class ImageCell: UITableViewCell {
         nameLabel.text = chatMessage.name
         image.kf.setImage(with: URL(string: chatMessage.profileImageUrl))
         imageURLpost.kf.setImage(with: URL(string: chatMessage.imageURL ?? ""))
-
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
@@ -256,7 +256,7 @@ class LeftImageCell: UITableViewCell {
         nameLabel.text = chatMessage.name
         image.kf.setImage(with: URL(string: chatMessage.profileImageUrl))
         imageURLpost.kf.setImage(with: URL(string: chatMessage.imageURL ?? ""))
-
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
@@ -335,7 +335,7 @@ class VoiceCell: UITableViewCell {
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
-
+    
     @objc func playButtonTapped() {
         if let audioPlayer = audioPlayer {
             if audioPlayer.isPlaying {
@@ -369,7 +369,7 @@ class VoiceCell: UITableViewCell {
             }.resume()
         }
     }
-
+    
     func setupAudioPlayer(with fileURL: URL) {
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
@@ -471,7 +471,7 @@ class LeftVoiceCell: UITableViewCell {
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
-
+    
     @objc func playButtonTapped() {
         if let audioPlayer = audioPlayer {
             if audioPlayer.isPlaying {
@@ -505,7 +505,7 @@ class LeftVoiceCell: UITableViewCell {
             }.resume()
         }
     }
-
+    
     func setupAudioPlayer(with fileURL: URL) {
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: fileURL)

@@ -102,17 +102,17 @@ class CreateViewController: UIViewController {
         UIView.animate(withDuration: 2.0, delay: 0.0, options: [.repeat, .autoreverse, .curveEaseInOut], animations: {
             animatedOrange.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height / 20)
         }, completion: nil)
-                let animatedWhite = UIImageView(image: UIImage(named: "Create_White"))
+        let animatedWhite = UIImageView(image: UIImage(named: "Create_White"))
         animatedWhite.frame = CGRect(x: 0, y: 400, width: view.bounds.width/1.1, height: view.bounds.height/1.1)
         animatedWhite.contentMode = .scaleAspectFit
         backPicture.insertSubview(animatedWhite, at: 0)
-                // CABasicAnimation 從左到右平移動畫
-                let animation = CABasicAnimation(keyPath: "position.x")
-                animation.fromValue = -view.bounds.width / 2
-                animation.toValue = view.bounds.width * 1.5
-                animation.duration = 10.0
-                animation.repeatCount = Float.infinity // 無限循環
-                // 將動畫加上視圖層
+        // CABasicAnimation 從左到右平移動畫
+        let animation = CABasicAnimation(keyPath: "position.x")
+        animation.fromValue = -view.bounds.width / 2
+        animation.toValue = view.bounds.width * 1.5
+        animation.duration = 10.0
+        animation.repeatCount = Float.infinity // 無限循環
+        // 將動畫加上視圖層
         animatedWhite.layer.add(animation, forKey: "positionAnimation")
     }
     @objc func myRequestButtonTapped() {

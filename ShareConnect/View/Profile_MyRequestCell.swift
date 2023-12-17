@@ -46,12 +46,12 @@ class MyRequestCell: UITableViewCell {
             requestDateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
         ])
         requestNameLabel.numberOfLines = 0
-//        requestNameLabel.textColor = .white
+        //        requestNameLabel.textColor = .white
         requestImageView.layer.cornerRadius = 10
         requestImageView.layer.masksToBounds = true
         requestDescriptionLabel.numberOfLines = 0
-//        requestDescriptionLabel.textColor = .white
-//        requestDateLabel.textColor = .white
+        //        requestDescriptionLabel.textColor = .white
+        //        requestDateLabel.textColor = .white
         requestDateLabel.numberOfLines = 0
     }
     required init?(coder: NSCoder) {

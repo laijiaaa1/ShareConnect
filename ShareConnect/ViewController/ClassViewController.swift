@@ -23,13 +23,13 @@ class ClassViewController: UIViewController {
     let placeLabel = UILabel()
     let productLabel = UILabel()
     let shimmerView: UIView = {
-           let view = UIView()
-           view.backgroundColor = .white
-           view.layer.cornerRadius = 125
-           view.layer.masksToBounds = true
-           view.translatesAutoresizingMaskIntoConstraints = false
-           return view
-       }()
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 125
+        view.layer.masksToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = false
@@ -89,16 +89,16 @@ class ClassViewController: UIViewController {
         ])
         // 将 G2 图片添加到视图层次结构中
         let g2ImageView = Class_Space(frame: CGRect(x: 300, y: 120, width: 400, height: 250))
-             g2ImageView.translatesAutoresizingMaskIntoConstraints = false
-             view.addSubview(g2ImageView)
-
-             // 添加约束
-             NSLayoutConstraint.activate([
-                 g2ImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 110),
-                 g2ImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -160),
-                 g2ImageView.widthAnchor.constraint(equalToConstant: 400),
-                 g2ImageView.heightAnchor.constraint(equalToConstant: 400)
-             ])
+        g2ImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(g2ImageView)
+        
+        // 添加约束
+        NSLayoutConstraint.activate([
+            g2ImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 110),
+            g2ImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -160),
+            g2ImageView.widthAnchor.constraint(equalToConstant: 400),
+            g2ImageView.heightAnchor.constraint(equalToConstant: 400)
+        ])
     }
     @objc func classPlaceButtonAction() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

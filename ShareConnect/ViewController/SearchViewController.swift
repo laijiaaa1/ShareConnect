@@ -49,10 +49,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     func fetchData() {
         if usification == "product" {
             fetchRequestsForUser(type: currentButtonType, usification: "product")
-            } else if usification == "place" {
-                fetchRequestsForUser(type: currentButtonType, usification: "place")
-            }
+        } else if usification == "place" {
+            fetchRequestsForUser(type: currentButtonType, usification: "place")
         }
+    }
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = false
@@ -73,13 +73,13 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         let userID = Auth.auth().currentUser?.uid ?? ""
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-//        if usification == "product" {
-//            fetchRequestsForUser(type: .request, usification: "product")
-//            fetchRequestsForUser(type: .supply, usification: "product")
-//        } else if usification == "place" {
-//            fetchRequestsForUser(type: .request, usification: "place")
-//            fetchRequestsForUser(type: .supply, usification: "place")
-//        }
+        //        if usification == "product" {
+        //            fetchRequestsForUser(type: .request, usification: "product")
+        //            fetchRequestsForUser(type: .supply, usification: "product")
+        //        } else if usification == "place" {
+        //            fetchRequestsForUser(type: .request, usification: "place")
+        //            fetchRequestsForUser(type: .supply, usification: "place")
+        //        }
     }
     func loadSavedCollections() {
         let savedCollections = UserDefaults.standard.array(forKey: "SavedCollections") as? [[String: Any]] ?? []
@@ -106,7 +106,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         selectedIndexPath = indexPath
         if collectionView == classCollectionView {
             let cell = collectionView.cellForItem(at: indexPath) as? ClassCollectionViewCell
-//            cell?.updateUI()
+            //            cell?.updateUI()
         }
         if collectionView == self.collectionView {
             if let cell = collectionView.cellForItem(at: indexPath) as? SearchCollectionViewCell {
@@ -157,7 +157,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "classCell", for: indexPath) as! ClassCollectionViewCell
             cell.currentButtonType = currentButtonType
             cell.delegate = self
-//            cell.updateUI()
+            //            cell.updateUI()
             return cell
         }
         if collectionView == collectionView {
@@ -206,7 +206,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             fetchRequestsForUser(type: .request, usification: "place")
         }
-//        collectionView.reloadData()
+        //        collectionView.reloadData()
     }
     @objc func button2Action() {
         currentButtonType = .supply
@@ -222,7 +222,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             fetchRequestsForUser(type: .supply, usification: "product")
         }
-//        collectionView.reloadData()
+        //        collectionView.reloadData()
     }
     func setupUI() {
         stackView.axis = .horizontal
@@ -251,7 +251,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         view.addSubview(lineView)
         NSLayoutConstraint.activate([
             lineView.topAnchor.constraint(equalTo: stackView.bottomAnchor),
-//            lineView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            //            lineView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2),
             lineView.heightAnchor.constraint(equalToConstant: 2)
         ])
@@ -330,7 +330,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     func fetchDataForSort(classification: String, type: ProductType, usification: String) {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products").whereField("product.Use", isEqualTo: usification)
-
+        
         productsCollection.getDocuments { (querySnapshot, error) in
             if self.currentButtonType == .request {
                 self.allRequests.removeAll()
@@ -372,7 +372,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     func fetchRequestsForUser(type: ProductType, usification: String) {
         let db = Firestore.firestore()
         let productsCollection = db.collection("products").whereField("product.Use", isEqualTo: usification)
-
+        
         productsCollection.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error)")
@@ -406,7 +406,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                     } else if type == .supply {
                         self.allSupplies.sort(by: { $0.startTime < $1.startTime })
                     }
-
+                    
                     print("All requests: \(self.allRequests)")
                     print("All supplies: \(self.allSupplies)")
                     self.collectionView.reloadData()
@@ -415,7 +415,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             }
         }
     }
-
+    
     func isSellerBlocked(_ sellerID: String, completion: @escaping (Bool) -> Void) {
         if let currentUserID = Auth.auth().currentUser?.uid {
             let blockedUsersCollection = Firestore.firestore().collection("blockedUsers")
@@ -435,5 +435,5 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             completion(false)
         }
     }
-
+    
 }

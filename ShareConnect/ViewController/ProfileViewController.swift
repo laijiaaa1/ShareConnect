@@ -281,10 +281,10 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 completionHandler(true)
             } else {
                 let product = self.products[indexPath.row]
-                           self.deleteProductFromDatabase(product)
-                           self.products.remove(at: indexPath.row)
-                           tableView.deleteRows(at: [indexPath], with: .automatic)
-                           completionHandler(true)
+                self.deleteProductFromDatabase(product)
+                self.products.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                completionHandler(true)
             }
         }
         deleteAction.image = UIImage(systemName: "trash.fill")
@@ -309,7 +309,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
-
+    
     @objc func longPressToDeleteCollection(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             let point = sender.location(in: collectionCollectionView)

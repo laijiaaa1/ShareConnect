@@ -19,7 +19,6 @@ class CartManager {
     }
     func convertCartToDictionary(_ cart: [Seller: [Product]]) -> [Seller: [[String: Any]]] {
         var cartDictionary: [Seller: [[String: Any]]] = [:]
-        
         for (seller, products) in cart {
             let productDictionaries = products.map { $0.toDictionary() }
             cartDictionary[seller] = productDictionaries

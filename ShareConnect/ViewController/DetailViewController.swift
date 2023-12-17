@@ -360,7 +360,7 @@ class DetailViewController: UIViewController {
                     break
                 }
             }
-
+            
         } else {
             print("Failed to get availability or create image URL")
         }

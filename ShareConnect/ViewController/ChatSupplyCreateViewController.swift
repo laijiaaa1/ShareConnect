@@ -86,7 +86,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         headerView.backgroundColor = .black
         return headerView
     }
-  func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

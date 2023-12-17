@@ -58,7 +58,7 @@ class CreateGroupViewController: CreateRequestViewController {
             cell.textField.isEnabled = true
             cell.textField.delegate = self
             if indexPath.row == 2 {
-               
+                
                 groupPicker.delegate = self
                 groupPicker.dataSource = self
                 groupPicker.tag = indexPath.row
@@ -117,7 +117,7 @@ class CreateGroupViewController: CreateRequestViewController {
         }
         return false
     }
-
+    
     func uploadGroupImageAndSaveToFirebase() {
         guard let user = Auth.auth().currentUser else {
             print("Error: User is not authenticated.")
@@ -193,7 +193,7 @@ class CreateGroupViewController: CreateRequestViewController {
             }
         }
     }
-
+    
     override func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if groupPicker.tag == 2 {
             return groupClass.count

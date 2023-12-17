@@ -82,17 +82,17 @@ class FirestoreService {
     }
     func getProductDetails(productID: String, completion: @escaping (Product?) -> Void) {
         let productsCollection = db.collection("products")
-
+        
         // Use a where clause to filter by productID
         let query = productsCollection.whereField("product.productId", isEqualTo: productID)
-
+        
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error getting product document: \(error.localizedDescription)")
                 completion(nil)
             } else if let document = querySnapshot?.documents.first {
                 let data = document.data()
-
+                
                 // Parse product data and create a Product object
                 if let product = self.parseProductData(productData: data) {
                     completion(product)
@@ -105,7 +105,7 @@ class FirestoreService {
             }
         }
     }
-
+    
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
               let productId = product["productId"] as? String,
