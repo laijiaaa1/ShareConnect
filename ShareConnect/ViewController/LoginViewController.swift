@@ -184,11 +184,9 @@ extension LoginViewController {
 class CustomFunc {
     class func customAlert(title: String, message: String, vc: UIViewController, actionHandler: (() -> Void)?) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
         let okAction = UIAlertAction(title: "OK", style: .default) { _ in
             actionHandler?()
         }
-        
         alertController.addAction(okAction)
         vc.present(alertController, animated: true, completion: nil)
     }

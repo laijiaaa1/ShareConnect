@@ -90,8 +90,12 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         view.addGestureRecognizer(tapGesture)
         tableView.register(TextCell.self, forCellReuseIdentifier: "textCell")
         tableView.register(ImageCell.self, forCellReuseIdentifier: "imageCell")
-        tableView.register(MapCell.self, forCellReuseIdentifier: "mapCell")
         tableView.register(VoiceCell.self, forCellReuseIdentifier: "voiceCell")
+        tableView.register(LeftImageCell.self, forCellReuseIdentifier: "leftImageCell")
+        tableView.register(LeftVoiceCell.self, forCellReuseIdentifier: "leftVoiceCell")
+        tableView.register(LeftTextCell.self, forCellReuseIdentifier: "lefttextCell")
+        tableView.rowHeight = UITableView.automaticDimension
+
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -478,11 +482,10 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         let location = GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude)
         sendMessageToFirestore("\(location)", isMe: true, location: coordinate)
     }
-    //修改函數 convertCartToImage 以返回生成的圖像的 a UIImage 和相應的URL
+    //修改函數 convertCartToImage 以返回生成的圖像和相應的URL
     func convertCartToImage(cart: [Seller: [Product]], completion: @escaping (UIImage?, String?) -> Void) {
-        let imageSize = CGSize(width: 400, height: 400)  // Adjust the size according to your needs
+        let imageSize = CGSize(width: 400, height: 400)
         UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
-        
         guard let context = UIGraphicsGetCurrentContext() else {
             completion(nil, nil)
             return
@@ -499,7 +502,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
             ]
             // Seller's greeting text
             let sellerGreeting = "Hi, \(seller.sellerName).\n I'm interested in the following product:"
-            (sellerGreeting as NSString).draw(at: CGPoint(x: 20, y: 20), withAttributes: sellerGreetingAttributes)
+            (sellerGreeting as NSString).draw(at: CGPoint(x: 20, y: 30), withAttributes: sellerGreetingAttributes)
             var yOffset: CGFloat = 180
             for product in products {
                 // Text attributes for product information
@@ -511,7 +514,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                 let productText = "   Product: \(product.name)\n   Quantity: \(product.quantity ?? 1)\n   Price: \(product.price)"
                 (productText as NSString).draw(at: CGPoint(x: 200, y: yOffset), withAttributes: productAttributes)
                 // Fixed image size and position
-                let imageRect = CGRect(x: 20, y: 100, width: 150, height: 150)  // Adjust the image size and position
+                let imageRect = CGRect(x: 20, y: 140, width: 150, height: 150)  // Adjust the image size and position
                 // Load and draw the product image with rounded corners
                 if let imageURL = URL(string: product.imageString) {
                     KingfisherManager.shared.retrieveImage(with: imageURL, options: nil, progressBlock: nil) { result in
