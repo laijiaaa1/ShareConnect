@@ -97,6 +97,7 @@ class DetailViewController: UIViewController {
         addCartButton.setImage(UIImage(named: "icons8-cart-90"), for: .normal)
         addCartButton.translatesAutoresizingMaskIntoConstraints = false
         addCartButton.addTarget(self, action: #selector(goSelectedPage), for: .touchUpInside)
+        addCartButton.startAnimatingPressActions()
         NSLayoutConstraint.activate([
             addCartButton.centerYAnchor.constraint(equalTo: price.centerYAnchor),
             addCartButton.leadingAnchor.constraint(equalTo: price.trailingAnchor, constant: 120),
@@ -106,6 +107,7 @@ class DetailViewController: UIViewController {
         view.addSubview(chatButton)
         chatButton.addTarget(self, action: #selector(goChatPage), for: .touchUpInside)
         chatButton.setImage(UIImage(named: "icons8-customer-support-90 (1)"), for: .normal)
+        chatButton.startAnimatingPressActions()
         chatButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             chatButton.centerYAnchor.constraint(equalTo: price.centerYAnchor),
@@ -123,6 +125,7 @@ class DetailViewController: UIViewController {
             collectionButton.widthAnchor.constraint(equalToConstant: 30)
         ])
         collectionButton.addTarget(self, action: #selector(addCollection), for: .touchUpInside)
+        collectionButton.startAnimatingPressActions()
         view.addSubview(shareButton)
         shareButton.setImage(UIImage(named: "icons8-share-96"), for: .normal)
         shareButton.translatesAutoresizingMaskIntoConstraints = false
@@ -133,6 +136,7 @@ class DetailViewController: UIViewController {
             shareButton.widthAnchor.constraint(equalToConstant: 30)
         ])
         shareButton.addTarget(self, action: #selector(share), for: .touchUpInside)
+        shareButton.startAnimatingPressActions()
         view.addSubview(availabilityView)
         availabilityView.backgroundColor = .white /*UIColor(named: "G2")*/
         availabilityView.layer.cornerRadius = 10
@@ -236,9 +240,11 @@ class DetailViewController: UIViewController {
             backButton.widthAnchor.constraint(equalToConstant: 40)
         ])
         backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
+        backButton.startAnimatingPressActions()
         view.addSubview(sellerButton)
         sellerButton.translatesAutoresizingMaskIntoConstraints = false
         sellerButton.backgroundColor = .black
+        sellerButton.startAnimatingPressActions()
         sellerButton.setImage(UIImage(named: "icons8-comment-48(@2×)"), for: .normal)
         NSLayoutConstraint.activate([
             sellerButton.centerYAnchor.constraint(equalTo: addCartButton.centerYAnchor),

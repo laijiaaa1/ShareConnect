@@ -201,6 +201,7 @@ class SelectedViewController: UIViewController {
         addButton.layer.borderWidth = 1
         infoView.addSubview(addButton)
         addButton.addTarget(self, action: #selector(add), for: .touchUpInside)
+        addButton.startAnimatingPressActions()
         addButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             addButton.centerYAnchor.constraint(equalTo: quantity.centerYAnchor),
@@ -218,6 +219,7 @@ class SelectedViewController: UIViewController {
         minusButton.layer.borderWidth = 1
         infoView.addSubview(minusButton)
         minusButton.translatesAutoresizingMaskIntoConstraints = false
+        minusButton.startAnimatingPressActions()
         NSLayoutConstraint.activate([
             minusButton.centerYAnchor.constraint(equalTo: quantity.centerYAnchor),
             minusButton.leadingAnchor.constraint(equalTo: numberLabel.leadingAnchor),
@@ -230,6 +232,7 @@ class SelectedViewController: UIViewController {
         trolleyButton.layer.cornerRadius = 10
         trolleyButton.layer.masksToBounds = true
         trolleyButton.layer.borderWidth = 1
+        trolleyButton.startAnimatingPressActions()
         infoView.addSubview(trolleyButton)
         trolleyButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -253,6 +256,7 @@ class SelectedViewController: UIViewController {
             closeButton.widthAnchor.constraint(equalToConstant: 60)
         ])
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.startAnimatingPressActions()
     }
     @objc func add() {
         selectedQuantity += 1

@@ -138,6 +138,7 @@ class ProvideViewController: SelectedViewController {
         addButton.layer.cornerRadius = 10
         addButton.layer.masksToBounds = true
         addButton.layer.borderWidth = 1
+        addButton.startAnimatingPressActions()
         infoView.addSubview(addButton)
         addButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -154,6 +155,7 @@ class ProvideViewController: SelectedViewController {
         minusButton.layer.cornerRadius = 10
         minusButton.layer.masksToBounds = true
         minusButton.layer.borderWidth = 1
+        minusButton.startAnimatingPressActions()
         infoView.addSubview(minusButton)
         minusButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -169,6 +171,7 @@ class ProvideViewController: SelectedViewController {
         trolleyButton.layer.cornerRadius = 10
         trolleyButton.layer.masksToBounds = true
         trolleyButton.layer.borderWidth = 1
+        trolleyButton.startAnimatingPressActions()
         infoView.addSubview(trolleyButton)
         trolleyButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -192,6 +195,7 @@ class ProvideViewController: SelectedViewController {
             closeButton.widthAnchor.constraint(equalToConstant: 60)
         ])
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.startAnimatingPressActions()
     }
     @objc override func trolleyButtonTapped() {
         guard let seller = product?.seller, let product = product else {

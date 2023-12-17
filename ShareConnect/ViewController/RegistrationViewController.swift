@@ -97,7 +97,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(cancelButton)
         NSLayoutConstraint.activate([
-            emailTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
+            emailTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 125),
             emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             emailTextField.heightAnchor.constraint(equalToConstant: 40),
@@ -105,7 +105,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
             passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             passwordTextField.heightAnchor.constraint(equalToConstant: 40),
-            nameTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 25),
+            nameTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 22),
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             nameTextField.heightAnchor.constraint(equalToConstant: 40),

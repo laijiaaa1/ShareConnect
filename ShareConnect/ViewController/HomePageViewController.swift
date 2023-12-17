@@ -156,7 +156,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     func chatList() {
         chatListButton.setImage(UIImage(named: "icons8-message-24(@1×)"), for: .normal)
         chatListButton.frame.size = CGSize(width: 30, height: 30)
-        
+        chatListButton.startAnimatingPressActions()
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: chatListButton)
         chatListButton.addTarget(self, action: #selector(chatListButtonClick), for: .touchUpInside)
         view.addSubview(chatListButton)
@@ -174,6 +174,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     @objc func buttonClick(sender: UIButton) {
         let groupViewController = GroupViewController()
+        sender.startAnimatingPressActions()
         switch sender.tag {
         case 0:
             groupViewController.sort = "product"
@@ -258,6 +259,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 imageButton.backgroundColor = UIColor(named: "G3")
                 imageButton.titleLabel?.font = UIFont(name: "GeezaPro-Bold", size: 15)
                 imageButton.tag = indexPath.row
+                imageButton.startAnimatingPressActions()
                 imageButton.addTarget(self, action: #selector(imageButtonClick), for: .touchUpInside)
                 cell.addSubview(imageButton)
                 return cell

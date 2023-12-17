@@ -283,10 +283,10 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UO0-aG-u6z">
-                                <rect key="frame" x="80" y="364" width="230" height="40"/>
+                                <rect key="frame" x="65" y="364" width="265" height="48"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="BuM-vQ-z6Y"/>
+                                    <constraint firstAttribute="height" constant="48" id="BuM-vQ-z6Y"/>
                                 </constraints>
                                 <color key="tintColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Button"/>
@@ -315,8 +315,8 @@
                         <viewLayoutGuide key="safeArea" id="hqy-14-tUK"/>
                         <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="UO0-aG-u6z" firstAttribute="centerX" secondItem="9kF-u2-6q2" secondAttribute="centerX" id="1EW-sn-65e"/>
-                            <constraint firstItem="UO0-aG-u6z" firstAttribute="leading" secondItem="hqy-14-tUK" secondAttribute="leading" constant="80" id="5aC-NA-SNR"/>
+                            <constraint firstItem="UO0-aG-u6z" firstAttribute="centerX" secondItem="9kF-u2-6q2" secondAttribute="centerX" constant="2.5" id="1EW-sn-65e"/>
+                            <constraint firstItem="UO0-aG-u6z" firstAttribute="leading" secondItem="hqy-14-tUK" secondAttribute="leading" constant="65" id="5aC-NA-SNR"/>
                             <constraint firstItem="Xy4-ub-94W" firstAttribute="top" secondItem="tKF-mm-xzx" secondAttribute="bottom" constant="26" id="63N-Hh-oWj"/>
                             <constraint firstItem="tKF-mm-xzx" firstAttribute="leading" secondItem="hqy-14-tUK" secondAttribute="leading" constant="65" id="6kg-8V-DWL"/>
                             <constraint firstItem="hqy-14-tUK" firstAttribute="trailing" secondItem="tKF-mm-xzx" secondAttribute="trailing" constant="84" id="AuN-ZG-Qsl"/>
@@ -327,9 +327,9 @@
                             <constraint firstItem="tKF-mm-xzx" firstAttribute="leading" secondItem="Xy4-ub-94W" secondAttribute="leading" id="gvc-CJ-x1H"/>
                             <constraint firstItem="tKF-mm-xzx" firstAttribute="trailing" secondItem="Xy4-ub-94W" secondAttribute="trailing" id="hd6-rP-4j8"/>
                             <constraint firstItem="UO0-aG-u6z" firstAttribute="top" secondItem="Xy4-ub-94W" secondAttribute="bottom" constant="68" id="jLU-nH-shx"/>
-                            <constraint firstItem="UO0-aG-u6z" firstAttribute="centerX" secondItem="ZOt-hS-KOb" secondAttribute="centerX" id="m3L-a3-5cc"/>
+                            <constraint firstItem="UO0-aG-u6z" firstAttribute="centerX" secondItem="ZOt-hS-KOb" secondAttribute="centerX" constant="2.5" id="m3L-a3-5cc"/>
                             <constraint firstItem="ZOt-hS-KOb" firstAttribute="top" secondItem="aXg-Df-vAd" secondAttribute="top" id="mXx-ED-QAR"/>
-                            <constraint firstItem="9kF-u2-6q2" firstAttribute="top" secondItem="UO0-aG-u6z" secondAttribute="bottom" constant="30" id="s9H-Vl-dpt"/>
+                            <constraint firstItem="9kF-u2-6q2" firstAttribute="top" secondItem="UO0-aG-u6z" secondAttribute="bottom" constant="22" id="s9H-Vl-dpt"/>
                             <constraint firstItem="9kF-u2-6q2" firstAttribute="leading" secondItem="hqy-14-tUK" secondAttribute="leading" constant="120" id="wXl-iG-QAI"/>
                         </constraints>
                     </view>
