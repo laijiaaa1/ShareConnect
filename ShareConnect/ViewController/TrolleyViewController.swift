@@ -192,11 +192,11 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             cartItems.remove(at: indexPath.row)
             self?.cart[seller] = cartItems
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+//            tableView.deleteRows(at: [indexPath], with: .automatic)
             if cartItems.isEmpty {
                 let indexSet = IndexSet(integer: indexPath.section)
                 self?.cart.removeValue(forKey: seller)
-                tableView.deleteSections(indexSet, with: .automatic)
+//                tableView.deleteSections(indexSet, with: .automatic)
             }
             completionHandler(true)
         }

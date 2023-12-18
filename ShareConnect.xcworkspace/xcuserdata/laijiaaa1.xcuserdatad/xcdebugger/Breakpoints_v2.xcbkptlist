@@ -846,7 +846,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "3EF539A6-5335-4C45-977B-6E67EEDCB146"
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ShareConnect/ViewController/TrolleyViewController.swift"
@@ -887,53 +887,20 @@
                   endingLineNumber = "176"
                   offsetFromSymbolStart = "224">
                </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "42BB479F-69A0-48CC-BBD7-3DC847946900"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ShareConnect/ViewController/TrolleyViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
-            landmarkName = "checkoutButtonTapped()"
-            landmarkType = "7">
-            <Locations>
                <Location
-                  uuid = "42BB479F-69A0-48CC-BBD7-3DC847946900 - 55e53873f4408aee"
+                  uuid = "3EF539A6-5335-4C45-977B-6E67EEDCB146 - 5e1f1e7bb2a87b9f"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.TrolleyViewController.checkoutButtonTapped() -&gt; ()"
+                  symbolName = "ShareConnect.TrolleyViewController.tableView(_: __C.UITableView, trailingSwipeActionsConfigurationForRowAt: Foundation.IndexPath) -&gt; Swift.Optional&lt;__C.UISwipeActionsConfiguration&gt;"
                   moduleName = "ShareConnect"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/TrolleyViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "220"
-                  endingLineNumber = "220"
-                  offsetFromSymbolStart = "856">
-               </Location>
-               <Location
-                  uuid = "42BB479F-69A0-48CC-BBD7-3DC847946900 - 55e53873f4408aee"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.TrolleyViewController.checkoutButtonTapped() -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/TrolleyViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "220"
-                  endingLineNumber = "220"
-                  offsetFromSymbolStart = "912">
+                  startingLineNumber = "186"
+                  endingLineNumber = "186"
+                  offsetFromSymbolStart = "224">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1824,6 +1791,36 @@
                   endingLineNumber = "279"
                   offsetFromSymbolStart = "1592">
                </Location>
+               <Location
+                  uuid = "76E16DF5-AB03-4A0E-95AE-9129DF9C9C3C - 98ae848f2f21be28"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "281"
+                  endingLineNumber = "281"
+                  offsetFromSymbolStart = "1636">
+               </Location>
+               <Location
+                  uuid = "76E16DF5-AB03-4A0E-95AE-9129DF9C9C3C - d083ad247751b3f0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; () in ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "282"
+                  endingLineNumber = "282"
+                  offsetFromSymbolStart = "64">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -1870,6 +1867,36 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "290"
                   endingLineNumber = "290"
+                  offsetFromSymbolStart = "60">
+               </Location>
+               <Location
+                  uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01 - 454e0b298c5aece9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.HomePageViewController.fetchProductDetails(for: Swift.String, completion: (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "291"
+                  endingLineNumber = "291"
+                  offsetFromSymbolStart = "72">
+               </Location>
+               <Location
+                  uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01 - b3e26cd29771457c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; () in ShareConnect.HomePageViewController.fetchProductDetails(for: Swift.String, completion: (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "292"
+                  endingLineNumber = "292"
                   offsetFromSymbolStart = "60">
                </Location>
             </Locations>
@@ -1919,6 +1946,21 @@
                   startingLineNumber = "276"
                   endingLineNumber = "276"
                   offsetFromSymbolStart = "1288">
+               </Location>
+               <Location
+                  uuid = "45ABE5C0-55D1-4D71-AB2A-011992650AC5 - 98ae848f2f21be4f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "278"
+                  endingLineNumber = "278"
+                  offsetFromSymbolStart = "1332">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -2670,6 +2712,54 @@
                   startingLineNumber = "140"
                   endingLineNumber = "140"
                   offsetFromSymbolStart = "14232">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "194129DD-A9E0-4BB1-B0B9-5D618318CED0"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ViewController/TrolleyViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
+            landmarkName = "tableView(_:trailingSwipeActionsConfigurationForRowAt:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "194129DD-A9E0-4BB1-B0B9-5D618318CED0 - b5cc9c82efd5d3c3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.UIContextualAction, __C.UIView, (Swift.Bool) -&gt; ()) -&gt; () in ShareConnect.TrolleyViewController.tableView(_: __C.UITableView, trailingSwipeActionsConfigurationForRowAt: Foundation.IndexPath) -&gt; Swift.Optional&lt;__C.UISwipeActionsConfiguration&gt;"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/TrolleyViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "189"
+                  endingLineNumber = "189"
+                  offsetFromSymbolStart = "464">
+               </Location>
+               <Location
+                  uuid = "194129DD-A9E0-4BB1-B0B9-5D618318CED0 - b5cc9c82efd5d3c3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.UIContextualAction, __C.UIView, (Swift.Bool) -&gt; ()) -&gt; () in ShareConnect.TrolleyViewController.tableView(_: __C.UITableView, trailingSwipeActionsConfigurationForRowAt: Foundation.IndexPath) -&gt; Swift.Optional&lt;__C.UISwipeActionsConfiguration&gt;"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/TrolleyViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "189"
+                  endingLineNumber = "189"
+                  offsetFromSymbolStart = "388">
                </Location>
             </Locations>
          </BreakpointContent>
