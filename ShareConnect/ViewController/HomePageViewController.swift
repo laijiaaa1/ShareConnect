@@ -275,16 +275,20 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         } else {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+            let provideVC = storyboard.instantiateViewController(withIdentifier: "ProvideViewController") as! ProvideViewController
             let productID = browsingHistoryItems[sender.tag].2
-            
             // Fetch product details using the productID
             fetchProductDetails(for: productID) { product in
                 vc.product = product
-                self.navigationController?.pushViewController(vc, animated: true)
+                provideVC.product = product
+                if product?.itemType == .request {
+                    self.navigationController?.pushViewController(provideVC, animated: true)
+                } else if product?.itemType == .supply {
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
             }
         }
     }
-    
     func fetchProductDetails(for productID: String, completion: @escaping (Product?) -> Void) {
         // Use your Firestore or other data fetching mechanism to get product details
         // Replace the code below with your actual implementation
@@ -293,7 +297,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         }
     }
     
-    func searchProductByName(searchString: String, completion: @escaping ([Product]) -> Void) {
+    func searchProductByName(searchString: String, completion: @escaping (_ searchResults: [Product], _ searchSupply: [Product]) -> Void) {
         let db = Firestore.firestore()
         let groupsCollection = db.collection("products")
         let query = groupsCollection
@@ -302,17 +306,22 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         query.getDocuments { (snapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error)")
-                completion([])
+                completion([], [])
                 return
             } else {
                 var searchResults: [Product] = []
+                var searchSupply: [Product] = []
                 for document in snapshot!.documents {
                     let data = document.data()
                     if let product = self.parseProductData(productData: data) {
-                        searchResults.append(product)
+                        if product.itemType == .request {
+                            searchResults.append(product)
+                        } else if product.itemType == .supply {
+                            searchSupply.append(product)
+                        }
                     }
                 }
-                completion(searchResults)
+                completion(searchResults, searchSupply)
             }
         }
     }
@@ -393,9 +402,11 @@ class HistoryCell: UICollectionViewCell {
 extension HomePageViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let searchString = textField.text, !searchString.isEmpty {
-            searchProductByName(searchString: searchString) { [weak self] products in
+            searchProductByName(searchString: searchString) { [weak self] searchResults, searchSupply in
                 let searchResultsViewController = SearchResultsViewController()
-                searchResultsViewController.searchResults = products
+                searchResultsViewController.searchResults = searchResults
+                searchResultsViewController.searchSupply = searchSupply
+                
                 self?.navigationController?.pushViewController(searchResultsViewController, animated: true)
             }
         }

@@ -1747,51 +1747,6 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "76E16DF5-AB03-4A0E-95AE-9129DF9C9C3C - 98ae848f2f21be6e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "279"
-                  endingLineNumber = "279"
-                  offsetFromSymbolStart = "1636">
-               </Location>
-               <Location
-                  uuid = "76E16DF5-AB03-4A0E-95AE-9129DF9C9C3C - d083ad247751b232"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; () in ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "280"
-                  endingLineNumber = "280"
-                  offsetFromSymbolStart = "64">
-               </Location>
-               <Location
-                  uuid = "76E16DF5-AB03-4A0E-95AE-9129DF9C9C3C - 98ae848f2f21be6e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "279"
-                  endingLineNumber = "279"
-                  offsetFromSymbolStart = "1592">
-               </Location>
-               <Location
                   uuid = "76E16DF5-AB03-4A0E-95AE-9129DF9C9C3C - 98ae848f2f21be28"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
@@ -1804,7 +1759,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "281"
                   endingLineNumber = "281"
-                  offsetFromSymbolStart = "1636">
+                  offsetFromSymbolStart = "1892">
                </Location>
                <Location
                   uuid = "76E16DF5-AB03-4A0E-95AE-9129DF9C9C3C - d083ad247751b3f0"
@@ -1819,7 +1774,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "282"
                   endingLineNumber = "282"
-                  offsetFromSymbolStart = "64">
+                  offsetFromSymbolStart = "88">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1834,13 +1789,13 @@
             filePath = "ShareConnect/ViewController/HomePageViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "291"
-            endingLineNumber = "291"
+            startingLineNumber = "295"
+            endingLineNumber = "295"
             landmarkName = "fetchProductDetails(for:completion:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01 - 454e0b298c5aeb2b"
+                  uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01 - 454e0b298c5aec75"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1850,12 +1805,12 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "289"
-                  endingLineNumber = "289"
+                  startingLineNumber = "295"
+                  endingLineNumber = "295"
                   offsetFromSymbolStart = "72">
                </Location>
                <Location
-                  uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01 - b3e26cd297714522"
+                  uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01 - b3e26cd2977145f8"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -1865,102 +1820,9 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "290"
-                  endingLineNumber = "290"
+                  startingLineNumber = "296"
+                  endingLineNumber = "296"
                   offsetFromSymbolStart = "60">
-               </Location>
-               <Location
-                  uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01 - 454e0b298c5aece9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.HomePageViewController.fetchProductDetails(for: Swift.String, completion: (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "291"
-                  endingLineNumber = "291"
-                  offsetFromSymbolStart = "72">
-               </Location>
-               <Location
-                  uuid = "F08F7F08-4008-491C-A2B6-97B5B34DFC01 - b3e26cd29771457c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; () in ShareConnect.HomePageViewController.fetchProductDetails(for: Swift.String, completion: (Swift.Optional&lt;ShareConnect.Product&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "292"
-                  endingLineNumber = "292"
-                  offsetFromSymbolStart = "60">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "45ABE5C0-55D1-4D71-AB2A-011992650AC5"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ShareConnect/ViewController/HomePageViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "278"
-            endingLineNumber = "278"
-            landmarkName = "imageButtonClick(sender:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "45ABE5C0-55D1-4D71-AB2A-011992650AC5 - 98ae848f2f21be8d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "276"
-                  endingLineNumber = "276"
-                  offsetFromSymbolStart = "1332">
-               </Location>
-               <Location
-                  uuid = "45ABE5C0-55D1-4D71-AB2A-011992650AC5 - 98ae848f2f21be8d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "276"
-                  endingLineNumber = "276"
-                  offsetFromSymbolStart = "1288">
-               </Location>
-               <Location
-                  uuid = "45ABE5C0-55D1-4D71-AB2A-011992650AC5 - 98ae848f2f21be4f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.HomePageViewController.imageButtonClick(sender: __C.UIButton) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "278"
-                  endingLineNumber = "278"
-                  offsetFromSymbolStart = "1332">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1991,8 +1853,8 @@
             filePath = "ShareConnect/ViewController/RecoderViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
             landmarkName = "fetchReviewFromFireStore(for:completion:)"
             landmarkType = "7">
             <Locations>
@@ -2041,6 +1903,36 @@
                   endingLineNumber = "156"
                   offsetFromSymbolStart = "96">
                </Location>
+               <Location
+                  uuid = "65BF6586-9E50-4ED9-BC36-E748820F502C - 964c2801fa5fad3a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.RecoderViewController.fetchReviewFromFireStore(for: Swift.String, completion: (Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/RecoderViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "154"
+                  endingLineNumber = "154"
+                  offsetFromSymbolStart = "524">
+               </Location>
+               <Location
+                  uuid = "65BF6586-9E50-4ED9-BC36-E748820F502C - 5c2fe5135cd5332f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.RecoderViewController.fetchReviewFromFireStore(for: Swift.String, completion: (Swift.Bool) -&gt; ()) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/RecoderViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "155"
+                  endingLineNumber = "155"
+                  offsetFromSymbolStart = "96">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -2060,7 +1952,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "0D74DF7E-66E6-44C5-B3BD-D4781861CD1F - 37cee134e203dd09"
+                  uuid = "0D74DF7E-66E6-44C5-B3BD-D4781861CD1F - 37cee134e203dd28"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -2070,24 +1962,9 @@
                   urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/View/Recoder_RecoderTBCell.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "58"
-                  endingLineNumber = "58"
-                  offsetFromSymbolStart = "4512">
-               </Location>
-               <Location
-                  uuid = "0D74DF7E-66E6-44C5-B3BD-D4781861CD1F - 37cee134e203dd09"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.RecoderViewController.RecoderTableViewCell.init(style: __C.UITableViewCellStyle, reuseIdentifier: Swift.Optional&lt;Swift.String&gt;) -&gt; ShareConnect.RecoderViewController.RecoderTableViewCell"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/View/Recoder_RecoderTBCell.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "58"
-                  endingLineNumber = "58"
-                  offsetFromSymbolStart = "4540">
+                  startingLineNumber = "57"
+                  endingLineNumber = "57"
+                  offsetFromSymbolStart = "4592">
                </Location>
                <Location
                   uuid = "0D74DF7E-66E6-44C5-B3BD-D4781861CD1F - 37cee134e203dd28"
@@ -2760,6 +2637,192 @@
                   startingLineNumber = "189"
                   endingLineNumber = "189"
                   offsetFromSymbolStart = "388">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EDFC0DAC-C249-4862-8B51-040EDB50C747"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/View/Recoder_RecoderTBCell.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "order"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "EDFC0DAC-C249-4862-8B51-040EDB50C747 - 50e32fc275258ce6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.RecoderViewController.RecoderTableViewCell.order.getter : Swift.Optional&lt;ShareConnect.Order&gt;"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/View/Recoder_RecoderTBCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "0">
+               </Location>
+               <Location
+                  uuid = "EDFC0DAC-C249-4862-8B51-040EDB50C747 - a13f4670411f09a2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.RecoderViewController.RecoderTableViewCell.order.setter : Swift.Optional&lt;ShareConnect.Order&gt;"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/%3Ccompiler-generated%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  uuid = "EDFC0DAC-C249-4862-8B51-040EDB50C747 - 266839e5ad772bfb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.RecoderViewController.RecoderTableViewCell.order.modify : Swift.Optional&lt;ShareConnect.Order&gt;"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/View/Recoder_RecoderTBCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "0">
+               </Location>
+               <Location
+                  uuid = "EDFC0DAC-C249-4862-8B51-040EDB50C747 - 1e2e58ea4ac5b875"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.RecoderViewController.RecoderTableViewCell.order.modify : Swift.Optional&lt;ShareConnect.Order&gt; with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/%3Ccompiler-generated%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "20">
+               </Location>
+               <Location
+                  uuid = "EDFC0DAC-C249-4862-8B51-040EDB50C747 - 37cee134e203c613"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.RecoderViewController.RecoderTableViewCell.init(style: __C.UITableViewCellStyle, reuseIdentifier: Swift.Optional&lt;Swift.String&gt;) -&gt; ShareConnect.RecoderViewController.RecoderTableViewCell"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/View/Recoder_RecoderTBCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "120">
+               </Location>
+               <Location
+                  uuid = "EDFC0DAC-C249-4862-8B51-040EDB50C747 - 3d7a386c2e47dc99"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.RecoderViewController.RecoderTableViewCell.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;ShareConnect.RecoderViewController.RecoderTableViewCell&gt;"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/View/Recoder_RecoderTBCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "116">
+               </Location>
+               <Location
+                  uuid = "EDFC0DAC-C249-4862-8B51-040EDB50C747 - 37cee134e203c613"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.RecoderViewController.RecoderTableViewCell.init(style: __C.UITableViewCellStyle, reuseIdentifier: Swift.Optional&lt;Swift.String&gt;) -&gt; ShareConnect.RecoderViewController.RecoderTableViewCell"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/View/Recoder_RecoderTBCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "112">
+               </Location>
+               <Location
+                  uuid = "EDFC0DAC-C249-4862-8B51-040EDB50C747 - 3d7a386c2e47dc99"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.RecoderViewController.RecoderTableViewCell.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;ShareConnect.RecoderViewController.RecoderTableViewCell&gt;"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/View/Recoder_RecoderTBCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "108">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F1C16F8F-5244-4632-843B-BA39E1FAF301"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ShareConnect/ViewController/HomePageViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "320"
+            endingLineNumber = "320"
+            landmarkName = "searchProductByName(searchString:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F1C16F8F-5244-4632-843B-BA39E1FAF301 - 78099799f8d7d841"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.HomePageViewController.searchProductByName(searchString: Swift.String, completion: (Swift.Array&lt;ShareConnect.Product&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "320"
+                  endingLineNumber = "320"
+                  offsetFromSymbolStart = "1532">
+               </Location>
+               <Location
+                  uuid = "F1C16F8F-5244-4632-843B-BA39E1FAF301 - 55cb29e47de88e90"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRQuerySnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.HomePageViewController.searchProductByName(searchString: Swift.String, completion: (Swift.Array&lt;ShareConnect.Product&gt;, Swift.Array&lt;ShareConnect.Product&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ViewController/HomePageViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "320"
+                  endingLineNumber = "320"
+                  offsetFromSymbolStart = "1600">
                </Location>
             </Locations>
          </BreakpointContent>

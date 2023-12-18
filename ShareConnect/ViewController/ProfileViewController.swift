@@ -294,14 +294,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func deleteProductFromDatabase(_ product: Product) {
         let db = Firestore.firestore()
-        let collectionName: String
-        switch product.itemType {
-        case .request:
-            collectionName = "products"
-        case .supply:
-            collectionName = "products"
-        }
-        db.collection(collectionName).document(product.productId).delete { error in
+        db.collection("products").document(product.productId).delete { error in
             if let error = error {
                 print("Error deleting document: \(error)")
             } else {
@@ -309,7 +302,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
-    
     @objc func longPressToDeleteCollection(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             let point = sender.location(in: collectionCollectionView)

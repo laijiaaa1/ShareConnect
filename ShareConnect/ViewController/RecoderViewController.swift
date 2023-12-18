@@ -117,7 +117,6 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.returnButton.setTitle("Remind", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(remindButtonTapped), for: .touchUpInside)
         }
-        
         if orderID[indexPath.row].isCompleted {
             cell.returnButton.setTitle("Completed", for: .normal)
             cell.returnButton.backgroundColor = .lightGray

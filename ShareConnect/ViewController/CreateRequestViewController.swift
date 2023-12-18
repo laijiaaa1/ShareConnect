@@ -135,7 +135,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 if let error = error {
                     print("Error uploading image: \(error)")
                 } else {
-                    
                     storageRef.downloadURL { [self] (url, error) in
                         if let error = error {
                             print("Error getting download URL: \(error)")
@@ -147,7 +146,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 "sellerID": user?.uid ?? "",
                                 "sellerName": user?.email ?? ""
                             ]
-                            
                             DispatchQueue.main.async {
                                 for i in enterData.indices {
                                     let indexPath = IndexPath(row: i, section: 0)

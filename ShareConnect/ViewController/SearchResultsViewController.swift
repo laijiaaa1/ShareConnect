@@ -9,6 +9,7 @@ import Kingfisher
 
 class SearchResultsViewController: SearchViewController {
     var searchResults: [Product] = []
+    var searchSupply: [Product] = []
     var products: [Product] = []
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,11 +47,11 @@ class SearchResultsViewController: SearchViewController {
         if collectionView == classCollectionView {
             return 1
         }
-        if collectionView == collectionView {
+        if collectionView == self.collectionView {
             if currentButtonType == .request {
                 return searchResults.count
             } else if currentButtonType == .supply {
-                return searchResults.count
+                return searchSupply.count
             }
             return 0
         }
@@ -64,12 +65,12 @@ class SearchResultsViewController: SearchViewController {
             cell.updateUI()
             return cell
         }
-        if collectionView == collectionView {
+        if collectionView == self.collectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! SearchCollectionViewCell
             if currentButtonType == .request {
                 cell.product = searchResults[indexPath.item]
             } else if currentButtonType == .supply {
-                cell.product = searchResults[indexPath.item]
+                cell.product = searchSupply[indexPath.item]
             }
             return cell
         }

@@ -54,6 +54,11 @@ class SelectedViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     @objc func trolleyButtonTapped() {
+        if cart.isEmpty {
+            print("Cart is empty")
+        } else {
+            alertUserOnlyAddOneProduct()
+        }
         guard var product = product else {
             print("Product is nil")
             return
@@ -81,6 +86,16 @@ class SelectedViewController: UIViewController {
                 }
             }
         }
+    }
+    func alertUserOnlyAddOneProduct() {
+        //if cart is already have product, alert user if they want to add and cover the existing one
+        let alert = UIAlertController(title: "Add Product", message: "You already have other product in your cart. Do you want to add and cover it?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+            self.trolleyButtonTapped()
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        present(alert, animated: true)
+        
     }
     func saveCartToFirestore(_ cart: [Seller: [Product]]) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {
