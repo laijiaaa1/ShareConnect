@@ -95,7 +95,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         tableView.register(LeftVoiceCell.self, forCellReuseIdentifier: "leftVoiceCell")
         tableView.register(LeftTextCell.self, forCellReuseIdentifier: "lefttextCell")
         tableView.rowHeight = UITableView.automaticDimension
-        
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
