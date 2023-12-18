@@ -28,6 +28,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     let button2 = UIButton()
     var usification: String?
     var currentButtonType: ProductType = .request
+    var lineViewLeadingConstraint: NSLayoutConstraint!
     let classCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -101,6 +102,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             }
         }
         collectionView.reloadData()
+        classCollectionView.reloadData()
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedIndexPath = indexPath
@@ -194,11 +196,12 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     @objc func button1Action() {
         currentButtonType = .request
-        let position = stackView.frame.origin.x
-        UIView.animate(withDuration: 0.3) {
-            self.lineView.frame.origin.x = position
-        }
-        self.lineView.layoutIfNeeded()
+          let position = stackView.frame.origin.x
+          self.lineViewLeadingConstraint.constant = position
+          UIView.animate(withDuration: 0.3) {
+              self.view.layoutIfNeeded()
+          }
+//        self.lineView.layoutIfNeeded()
         button1.setTitleColor(.white, for: .normal)
         button2.setTitleColor(.lightGray, for: .normal)
         if usification == "product" {
@@ -206,15 +209,14 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             fetchRequestsForUser(type: .request, usification: "place")
         }
-        //        collectionView.reloadData()
     }
     @objc func button2Action() {
         currentButtonType = .supply
-        let position = stackView.frame.origin.x + stackView.frame.width / 2
-        UIView.animate(withDuration: 0.3) {
-            self.lineView.frame.origin.x = position
-        }
-        self.lineView.layoutIfNeeded()
+           let position = stackView.frame.origin.x + stackView.frame.width / 2
+           self.lineViewLeadingConstraint.constant = position
+           UIView.animate(withDuration: 0.3) {
+               self.view.layoutIfNeeded()
+           }
         button1.setTitleColor(.lightGray, for: .normal)
         button2.setTitleColor(.white, for: .normal)
         if usification == "place" {
@@ -222,7 +224,6 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             fetchRequestsForUser(type: .supply, usification: "product")
         }
-        //        collectionView.reloadData()
     }
     func setupUI() {
         stackView.axis = .horizontal
@@ -251,10 +252,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         view.addSubview(lineView)
         NSLayoutConstraint.activate([
             lineView.topAnchor.constraint(equalTo: stackView.bottomAnchor),
-            //            lineView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2),
-            lineView.heightAnchor.constraint(equalToConstant: 2)
+            lineView.heightAnchor.constraint(equalToConstant: 2),
+            lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2)
         ])
+        lineViewLeadingConstraint = lineView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
+        lineViewLeadingConstraint.isActive = true
         classCollectionView.backgroundColor = .black
         classCollectionView.tintColor = .white
         classCollectionView.translatesAutoresizingMaskIntoConstraints = false
