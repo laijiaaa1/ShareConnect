@@ -48,7 +48,18 @@
 		346DE7CE2B063616008D411A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7CD2B063616008D411A /* LoginViewController.swift */; };
 		346DE7D02B065DA2008D411A /* CreateSupplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */; };
 		346DE7D22B065DB1008D411A /* CreateGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */; };
+		3481ACB22B2375CD00BFDCDE /* ChatRoomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3481ACB12B2375CD00BFDCDE /* ChatRoomCell.swift */; };
+		349B02272B2D550400379F3C /* ShimmerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349B02262B2D550400379F3C /* ShimmerView.swift */; };
+		349B02322B2E974F00379F3C /* ChatVC_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349B02312B2E974F00379F3C /* ChatVC_Extension.swift */; };
+		349B02342B2E97B400379F3C /* ChatVC_Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349B02332B2E97B400379F3C /* ChatVC_Audio.swift */; };
 		34B530EF2B1F3FA100A4C222 /* ExtentionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B530EE2B1F3FA100A4C222 /* ExtentionButton.swift */; };
+		34B530F12B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B530F02B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift */; };
+		34B530F32B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */; };
+		34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */; };
+		34D67F002B20A72000DE879B /* ChatListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFF2B20A72000DE879B /* ChatListCell.swift */; };
+		34D67F022B20A99D00DE879B /* TrolleyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F012B20A99D00DE879B /* TrolleyCell.swift */; };
+		34D67F052B20AC3C00DE879B /* CreateRequest_RequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F042B20AC3C00DE879B /* CreateRequest_RequestCell.swift */; };
+		34D8C7F82B2C27C9006F5B7D /* AppleInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D8C7F72B2C27C9006F5B7D /* AppleInfoViewController.swift */; };
 		CC99D844D6CD00D0115262BD /* Pods_ShareConnect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19192464EEB9831E46A38D35 /* Pods_ShareConnect.framework */; };
 /* End PBXBuildFile section */
 
@@ -98,7 +109,18 @@
 		346DE7CD2B063616008D411A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSupplyViewController.swift; sourceTree = "<group>"; };
 		346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupViewController.swift; sourceTree = "<group>"; };
+		3481ACB12B2375CD00BFDCDE /* ChatRoomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomCell.swift; sourceTree = "<group>"; };
+		349B02262B2D550400379F3C /* ShimmerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerView.swift; sourceTree = "<group>"; };
+		349B02312B2E974F00379F3C /* ChatVC_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC_Extension.swift; sourceTree = "<group>"; };
+		349B02332B2E97B400379F3C /* ChatVC_Audio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC_Audio.swift; sourceTree = "<group>"; };
 		34B530EE2B1F3FA100A4C222 /* ExtentionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtentionButton.swift; sourceTree = "<group>"; };
+		34B530F02B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPage_ClassCollectionViewCell.swift; sourceTree = "<group>"; };
+		34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPage_SearchCollectionViewCell.swift; sourceTree = "<group>"; };
+		34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPage_GroupTableViewCell.swift; sourceTree = "<group>"; };
+		34D67EFF2B20A72000DE879B /* ChatListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCell.swift; sourceTree = "<group>"; };
+		34D67F012B20A99D00DE879B /* TrolleyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrolleyCell.swift; sourceTree = "<group>"; };
+		34D67F042B20AC3C00DE879B /* CreateRequest_RequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRequest_RequestCell.swift; sourceTree = "<group>"; };
+		34D8C7F72B2C27C9006F5B7D /* AppleInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleInfoViewController.swift; sourceTree = "<group>"; };
 		D7AAC5A05BCEF95BCA4A2B9B /* Pods-ShareConnect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareConnect.release.xcconfig"; path = "Target Support Files/Pods-ShareConnect/Pods-ShareConnect.release.xcconfig"; sourceTree = "<group>"; };
 		E0D3BC877A1806FFBEA6A27A /* Pods-ShareConnect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareConnect.debug.xcconfig"; path = "Target Support Files/Pods-ShareConnect/Pods-ShareConnect.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -119,10 +141,10 @@
 			isa = PBXGroup;
 			children = (
 				3410D9842B0B5EAE00D32744 /* FirestoreService.swift */,
-				3401F6842B0F1C6A0092E564 /* ChatManager.swift */,
-				3410D9782B08ECBB00D32744 /* CartManager.swift */,
 				3410D9702B0888E800D32744 /* Data.swift */,
 				3410D9722B08890300D32744 /* Setting.swift */,
+				34B530EE2B1F3FA100A4C222 /* ExtentionButton.swift */,
+				349B02262B2D550400379F3C /* ShimmerView.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -149,40 +171,12 @@
 			isa = PBXGroup;
 			children = (
 				3401F6912B123E370092E564 /* ShareConnect.entitlements */,
-				3410D9752B08B39900D32744 /* Module */,
 				341E9B8B2B03629800997FE9 /* AppDelegate.swift */,
 				341E9B8D2B03629800997FE9 /* SceneDelegate.swift */,
-				34B530EE2B1F3FA100A4C222 /* ExtentionButton.swift */,
-				341E9B8F2B03629800997FE9 /* HomePageViewController.swift */,
-				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
-				3401F6922B13627A0092E564 /* SubGroupViewController.swift */,
-				3401F6822B0F17050092E564 /* ProvideViewController.swift */,
-				346DE7C62B05AB5C008D411A /* CreateViewController.swift */,
-				34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */,
-				3410D9652B07125600D32744 /* GroupViewController.swift */,
-				3410D9672B07129800D32744 /* DetailViewController.swift */,
-				3401F68F2B11BE1B0092E564 /* SellerInfoViewController.swift */,
-				346687B72B1C6DDC00723302 /* SellerInfo_CommendTBCell.swift */,
-				3410D97A2B0916C700D32744 /* ProfileViewController.swift */,
-				346687B52B1C6D5E00723302 /* Profile_CollectionCell.swift */,
-				346687B32B1C6CB100723302 /* Profile_MyRequestCell.swift */,
-				346687B12B1C6B2E00723302 /* Profile_FetchData.swift */,
-				346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */,
-				3401F6862B0F4B010092E564 /* RecoderViewController.swift */,
-				346687B92B1C6E6600723302 /* Recoder_RecoderTBCell.swift */,
-				3401F68D2B1192200092E564 /* CommendViewController.swift */,
-				3410D9692B07665700D32744 /* SelectedViewController.swift */,
-				3410D96B2B08747200D32744 /* TrolleyViewController.swift */,
-				3410D97C2B09BA0400D32744 /* ChatViewController.swift */,
-				346687A92B1AF94F00723302 /* ChatMapViewController.swift */,
-				3410D9862B0C42C600D32744 /* ChatListViewController.swift */,
-				346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */,
-				346687A52B14657800723302 /* SearchResultsViewController.swift */,
-				346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */,
-				3401F6882B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift */,
-				346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */,
-				346DE7CD2B063616008D411A /* LoginViewController.swift */,
-				346687A72B182C8800723302 /* RegistrationViewController.swift */,
+				3410D9752B08B39900D32744 /* Module */,
+				34B530F42B20A42C00A4C222 /* View */,
+				34B530F52B20A4AF00A4C222 /* ViewController */,
+				34D67F032B20AAC900DE879B /* Manager */,
 				341E9B912B03629800997FE9 /* Main.storyboard */,
 				341E9B942B03629900997FE9 /* Assets.xcassets */,
 				341E9B962B03629900997FE9 /* LaunchScreen.storyboard */,
@@ -190,6 +184,69 @@
 				341E9BA12B0367B000997FE9 /* GoogleService-Info.plist */,
 			);
 			path = ShareConnect;
+			sourceTree = "<group>";
+		};
+		34B530F42B20A42C00A4C222 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */,
+				34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */,
+				34B530F02B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift */,
+				34D67F042B20AC3C00DE879B /* CreateRequest_RequestCell.swift */,
+				34D67F012B20A99D00DE879B /* TrolleyCell.swift */,
+				346687B72B1C6DDC00723302 /* SellerInfo_CommendTBCell.swift */,
+				346687B92B1C6E6600723302 /* Recoder_RecoderTBCell.swift */,
+				346687B32B1C6CB100723302 /* Profile_MyRequestCell.swift */,
+				346687B52B1C6D5E00723302 /* Profile_CollectionCell.swift */,
+				34D67EFF2B20A72000DE879B /* ChatListCell.swift */,
+				349B02312B2E974F00379F3C /* ChatVC_Extension.swift */,
+				3481ACB12B2375CD00BFDCDE /* ChatRoomCell.swift */,
+				349B02332B2E97B400379F3C /* ChatVC_Audio.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		34B530F52B20A4AF00A4C222 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				346DE7CD2B063616008D411A /* LoginViewController.swift */,
+				346687A72B182C8800723302 /* RegistrationViewController.swift */,
+				34D8C7F72B2C27C9006F5B7D /* AppleInfoViewController.swift */,
+				341E9B8F2B03629800997FE9 /* HomePageViewController.swift */,
+				346687A52B14657800723302 /* SearchResultsViewController.swift */,
+				3410D9652B07125600D32744 /* GroupViewController.swift */,
+				3401F6922B13627A0092E564 /* SubGroupViewController.swift */,
+				34408F1B2B0EE73B005F8E03 /* ClassViewController.swift */,
+				346DE7CA2B05FE48008D411A /* SearchViewController.swift */,
+				3410D9672B07129800D32744 /* DetailViewController.swift */,
+				3410D9692B07665700D32744 /* SelectedViewController.swift */,
+				3401F6822B0F17050092E564 /* ProvideViewController.swift */,
+				346DE7C62B05AB5C008D411A /* CreateViewController.swift */,
+				346DE7C82B05AE4D008D411A /* CreateRequestViewController.swift */,
+				346DE7CF2B065DA2008D411A /* CreateSupplyViewController.swift */,
+				346DE7D12B065DB1008D411A /* CreateGroupViewController.swift */,
+				3410D96B2B08747200D32744 /* TrolleyViewController.swift */,
+				3401F68F2B11BE1B0092E564 /* SellerInfoViewController.swift */,
+				3410D97A2B0916C700D32744 /* ProfileViewController.swift */,
+				3401F6862B0F4B010092E564 /* RecoderViewController.swift */,
+				3401F68D2B1192200092E564 /* CommendViewController.swift */,
+				346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */,
+				3410D9862B0C42C600D32744 /* ChatListViewController.swift */,
+				3410D97C2B09BA0400D32744 /* ChatViewController.swift */,
+				346687A92B1AF94F00723302 /* ChatMapViewController.swift */,
+				3401F6882B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		34D67F032B20AAC900DE879B /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				3401F6842B0F1C6A0092E564 /* ChatManager.swift */,
+				3410D9782B08ECBB00D32744 /* CartManager.swift */,
+				346687B12B1C6B2E00723302 /* Profile_FetchData.swift */,
+			);
+			path = Manager;
 			sourceTree = "<group>";
 		};
 		566C17A71A2A2E1594CD68CD /* Frameworks */ = {
@@ -344,13 +401,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				3401F6852B0F1C6A0092E564 /* ChatManager.swift in Sources */,
+				349B02342B2E97B400379F3C /* ChatVC_Audio.swift in Sources */,
+				3481ACB22B2375CD00BFDCDE /* ChatRoomCell.swift in Sources */,
 				3410D9792B08ECBB00D32744 /* CartManager.swift in Sources */,
 				3410D9682B07129800D32744 /* DetailViewController.swift in Sources */,
+				34D67F002B20A72000DE879B /* ChatListCell.swift in Sources */,
+				34D8C7F82B2C27C9006F5B7D /* AppleInfoViewController.swift in Sources */,
 				346DE7CE2B063616008D411A /* LoginViewController.swift in Sources */,
 				346687B82B1C6DDC00723302 /* SellerInfo_CommendTBCell.swift in Sources */,
 				3410D96C2B08747200D32744 /* TrolleyViewController.swift in Sources */,
 				3401F6892B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift in Sources */,
 				346DE7CB2B05FE48008D411A /* SearchViewController.swift in Sources */,
+				349B02272B2D550400379F3C /* ShimmerView.swift in Sources */,
 				346DE7C72B05AB5C008D411A /* CreateViewController.swift in Sources */,
 				3401F6832B0F17050092E564 /* ProvideViewController.swift in Sources */,
 				34408F1C2B0EE73B005F8E03 /* ClassViewController.swift in Sources */,
@@ -361,15 +423,21 @@
 				3410D9852B0B5EAE00D32744 /* FirestoreService.swift in Sources */,
 				3410D9732B08890300D32744 /* Setting.swift in Sources */,
 				346687AA2B1AF94F00723302 /* ChatMapViewController.swift in Sources */,
+				349B02322B2E974F00379F3C /* ChatVC_Extension.swift in Sources */,
 				34B530EF2B1F3FA100A4C222 /* ExtentionButton.swift in Sources */,
+				34B530F32B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift in Sources */,
 				341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */,
 				3410D9872B0C42C600D32744 /* ChatListViewController.swift in Sources */,
+				34B530F12B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift in Sources */,
+				34D67F022B20A99D00DE879B /* TrolleyCell.swift in Sources */,
 				346687B02B1C1E3200723302 /* SettingProfileViewController.swift in Sources */,
 				3410D9662B07125600D32744 /* GroupViewController.swift in Sources */,
 				3410D9712B0888E800D32744 /* Data.swift in Sources */,
 				346687BA2B1C6E6600723302 /* Recoder_RecoderTBCell.swift in Sources */,
+				34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */,
 				3401F6902B11BE1B0092E564 /* SellerInfoViewController.swift in Sources */,
 				3410D97D2B09BA0400D32744 /* ChatViewController.swift in Sources */,
+				34D67F052B20AC3C00DE879B /* CreateRequest_RequestCell.swift in Sources */,
 				341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */,
 				346687B42B1C6CB100723302 /* Profile_MyRequestCell.swift in Sources */,
 				3401F6932B13627A0092E564 /* SubGroupViewController.swift in Sources */,
@@ -532,11 +600,14 @@
 				DEVELOPMENT_TEAM = K53C9AZMMU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareConnect/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Share Connect";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -562,11 +633,14 @@
 				DEVELOPMENT_TEAM = K53C9AZMMU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareConnect/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Share Connect";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
