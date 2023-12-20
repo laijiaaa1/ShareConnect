@@ -10,6 +10,7 @@ import FirebaseCore
 import Firebase
 import UserNotifications
 import IQKeyboardManagerSwift
+import FirebaseAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -28,7 +29,6 @@ var window: UIWindow?
                        print("Local notifications are not enabled")
                    }
                }
-
                application.registerForRemoteNotifications()
 
                return true
