@@ -34,6 +34,7 @@ class GroupTableViewCell: UITableViewCell {
         groupButton.backgroundColor = .white
         groupButton.layer.borderWidth = 1
         groupButton.layer.borderColor = UIColor.black.cgColor
+        
     }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

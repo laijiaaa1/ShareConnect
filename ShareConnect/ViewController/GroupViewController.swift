@@ -164,32 +164,51 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     private func updateUserInFirestore(userId: String, updatedGroup: Group) {
         let userRef = Firestore.firestore().collection("users").document(userId)
         let groupId = "groupId"
-        let userGroupsData: [String: Any] = [
-            groupId: [
-                "groupId": updatedGroup.documentId,
-                "groupName": updatedGroup.name,
-                "groupImage": updatedGroup.image,
-                "groupDescription": updatedGroup.description,
-                "groupSort": updatedGroup.sort,
-                "groupOwner": updatedGroup.owner,
-                "groupStartTime": updatedGroup.startTime,
-                "groupEndTime": updatedGroup.endTime,
-                "groupRequire": updatedGroup.require,
-                "groupNumberOfPeople": updatedGroup.numberOfPeople,
-                "groupIsPublic": updatedGroup.isPublic,
-                "groupMembers": updatedGroup.members,
-                "groupCreated": updatedGroup.created,
-                "groupInvitationCode": updatedGroup.invitationCode ?? ""
-            ]
+        
+        // Create a dictionary with group data
+        let groupData: [String: Any] = [
+            "groupId": updatedGroup.documentId,
+            "groupName": updatedGroup.name,
+            "groupImage": updatedGroup.image,
+            "groupDescription": updatedGroup.description,
+            "groupSort": updatedGroup.sort,
+            "groupOwner": updatedGroup.owner,
+            "groupStartTime": updatedGroup.startTime,
+            "groupEndTime": updatedGroup.endTime,
+            "groupRequire": updatedGroup.require,
+            "groupNumberOfPeople": updatedGroup.numberOfPeople,
+            "groupIsPublic": updatedGroup.isPublic,
+            "groupMembers": updatedGroup.members,
+            "groupCreated": updatedGroup.created,
+            "groupInvitationCode": updatedGroup.invitationCode ?? ""
         ]
-        userRef.updateData(["groups": userGroupsData], completion: { error in
+        
+        // Check if the "groups" field exists in the user's document
+        userRef.getDocument { (document, error) in
             if let error = error {
-                print("Error updating user in Firestore: \(error.localizedDescription)")
+                print("Error getting user document: \(error.localizedDescription)")
+            } else if let document = document, document.exists {
+                // The document exists, update the "groups" field
+                userRef.updateData(["groups.\(groupId)": groupData], completion: { error in
+                    if let error = error {
+                        print("Error updating user in Firestore: \(error.localizedDescription)")
+                    } else {
+                        print("User updated successfully in Firestore.")
+                    }
+                })
             } else {
-                print("User updated successfully in Firestore.")
+                // The document doesn't exist, create the "groups" field
+                userRef.setData(["groups": [groupId: groupData]], merge: true) { error in
+                    if let error = error {
+                        print("Error creating user in Firestore: \(error.localizedDescription)")
+                    } else {
+                        print("User created successfully in Firestore.")
+                    }
+                }
             }
-        })
+        }
     }
+
     func searchGroupsByName(searchString: String, completion: @escaping ([Group]) -> Void) {
         let db = Firestore.firestore()
         let groupsCollection = db.collection("groups")
