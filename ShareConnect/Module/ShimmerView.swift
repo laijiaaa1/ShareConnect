@@ -79,14 +79,11 @@ class Class_Space: ShimmerImageView {
         image = UIImage(named: "Class_Space") // 请替换为您的图片名称
         contentMode = .scaleAspectFit
         clipsToBounds = true
-        
         // 添加一个定期动画
         startCloudAnimation()
     }
-    
     private func startCloudAnimation() {
         guard animationTimer == nil else { return }
-        
         animationTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
             // 在这里设置动画的最终位置
             UIView.animate(withDuration: 1.5, delay: 0.0, options: [.curveEaseInOut], animations: {

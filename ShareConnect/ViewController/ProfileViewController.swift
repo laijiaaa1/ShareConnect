@@ -294,11 +294,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func deleteProductFromDatabase(_ product: Product) {
         let db = Firestore.firestore()
-        db.collection("products").document(product.productId).delete { error in
+        db.collection("products").whereField("product.productId", isEqualTo: product.productId).getDocuments { (snapshot, error) in
             if let error = error {
-                print("Error deleting document: \(error)")
+                print("Error getting documents: \(error)")
             } else {
-                print("Document successfully deleted!")
+                for document in snapshot!.documents {
+                    db.collection("products").document(document.documentID).delete()
+                }
             }
         }
     }
@@ -326,8 +328,18 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func deleteCollectionFromDatabase(_ collection: Collection) {
         let db = Firestore.firestore()
-        db.collection("collections").document(userId ?? "").updateData(["collectedProducts": FieldValue.arrayRemove([collection.productId])])
+
+        db.collection("collections").document(userId ?? "").updateData([
+            "collectedProducts": FieldValue.arrayRemove([collection.productId])
+        ]) { error in
+            if let error = error {
+                print("Error updating document: \(error)")
+            } else {
+                print("Document successfully updated")
+            }
+        }
     }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if selectedButton == groupButton {
             let selectedGroup = groups[indexPath.row]

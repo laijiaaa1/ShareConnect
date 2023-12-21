@@ -68,7 +68,6 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         ])
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        
     }
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -104,7 +103,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
             cell.groupButton.alpha = 0.5
             cell.groupButton.isEnabled = false
         } else {
-            groupButton.setTitle("        +", for: .normal)
+            cell.groupButton.setTitle("        +", for: .normal)
         }
         return cell
     }
@@ -133,21 +132,26 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let sort = sort
         let groupsRef = Firestore.firestore().collection("groups")
         let query = groupsRef.whereField("isPublic", isEqualTo: true).whereField("sort", isEqualTo: sort)
-        query.getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error fetching public groups: \(error.localizedDescription)")
-            } else {
-                self.groups.removeAll()
-                for document in querySnapshot!.documents {
-                    let data = document.data()
-                    if let group = Group(data: data, documentId: document.documentID) {
-                        self.groups.append(group)
+        DispatchQueue.global(qos: .background).async {
+            query.getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Error fetching public groups: \(error.localizedDescription)")
+                } else {
+                    self.groups.removeAll()
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        if let group = Group(data: data, documentId: document.documentID) {
+                            self.groups.append(group)
+                        }
+                    }
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
                     }
                 }
-                self.tableView.reloadData()
             }
         }
     }
+
     private func updateGroupInFirestore(groupId: String, updatedGroup: Group) {
         let groupsRef = Firestore.firestore().collection("groups")
         let updatedData: [String: Any] = [
@@ -208,7 +212,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
     }
-
+    
     func searchGroupsByName(searchString: String, completion: @escaping ([Group]) -> Void) {
         let db = Firestore.firestore()
         let groupsCollection = db.collection("groups")
@@ -227,7 +231,9 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
                         searchResults.append(group)
                     }
                 }
-                completion(searchResults)
+                DispatchQueue.main.async {
+                    completion(searchResults)
+                }
             }
         }
     }
@@ -294,8 +300,10 @@ extension GroupViewController {
                 completion(false)
             }
         }
-        alertController.addAction(cancelAction)
-        alertController.addAction(joinAction)
-        present(alertController, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            alertController.addAction(cancelAction)
+            alertController.addAction(joinAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
 }
