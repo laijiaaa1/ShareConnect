@@ -42,7 +42,7 @@ class RequestCell: UITableViewCell {
         NSLayoutConstraint.activate([
             requestLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             requestLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            requestLabel.widthAnchor.constraint(equalToConstant: 100),
+            requestLabel.widthAnchor.constraint(equalToConstant: 250),
             requestLabel.heightAnchor.constraint(equalToConstant: 20),
             addBtn.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             addBtn.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
