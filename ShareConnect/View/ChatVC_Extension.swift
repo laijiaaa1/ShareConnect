@@ -302,19 +302,18 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        if let editedImage = info[.editedImage] as? UIImage {
-            selectedImage = editedImage
-            imageView.image = editedImage
-        } else if let originalImage = info[.originalImage] as? UIImage {
-            selectedImage = originalImage
-            imageView.image = originalImage
-        }
-        dismiss(animated: true, completion: nil)
-    }
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+          if let selectedImage = info[.editedImage] as? UIImage {
+              uploadFixedImage(selectedImage) { [weak self] imageURL in
+                  self?.sendMessageToFirestore("", isMe: true, imageURL: imageURL, location: nil)
+              }
+          }
+          picker.dismiss(animated: true, completion: nil)
+      }
+
+      func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+          picker.dismiss(animated: true, completion: nil)
+      }
 }
 extension ChatViewController: MapSelectionDelegate {
     func didSelectLocation(_ coordinate: CLLocationCoordinate2D) {
