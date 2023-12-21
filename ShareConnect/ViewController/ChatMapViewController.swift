@@ -84,8 +84,8 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             longitudinalMeters: regionRadius
         )
         mapView.setRegion(coordinateRegion, animated: true)
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        mapView.addGestureRecognizer(longPressGesture)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        mapView.addGestureRecognizer(tapGesture)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -133,21 +133,15 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             print("No location selected.")
         }
     }
-    @objc func handleLongPress(sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
+    @objc func handleTap(sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
             let locationInView = sender.location(in: mapView)
             let tappedCoordinate = mapView.convert(locationInView, toCoordinateFrom: mapView)
             let annotation = MKPointAnnotation()
             annotation.coordinate = tappedCoordinate
+            mapView.removeAnnotations(mapView.annotations)
             mapView.addAnnotation(annotation)
             selectedCoordinate = tappedCoordinate
-            let alertController = UIAlertController(
-                title: "Location Tapped",
-                message: "Coordinates: \(tappedCoordinate.latitude), \(tappedCoordinate.longitude)",
-                preferredStyle: .alert
-            )
-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            present(alertController, animated: true, completion: nil)
         }
     }
 }
