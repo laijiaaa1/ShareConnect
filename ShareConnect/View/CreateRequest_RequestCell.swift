@@ -26,6 +26,9 @@ class RequestCell: UITableViewCell {
     var pickerData: [String] = [String]()
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+    func setupUI() {
         requestLabel.translatesAutoresizingMaskIntoConstraints = false
         addBtn.translatesAutoresizingMaskIntoConstraints = false
         textField.translatesAutoresizingMaskIntoConstraints = false

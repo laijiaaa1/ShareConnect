@@ -28,6 +28,9 @@ extension RecoderViewController {
         let backView = UIView()
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             super.init(style: style, reuseIdentifier: reuseIdentifier)
+            setupUI()
+        }
+        func setupUI() {
             backView.backgroundColor = .white
             contentView.layer.cornerRadius = 10
             contentView.layer.masksToBounds = true

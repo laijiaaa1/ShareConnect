@@ -55,6 +55,9 @@
 		34B530EF2B1F3FA100A4C222 /* ExtentionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B530EE2B1F3FA100A4C222 /* ExtentionButton.swift */; };
 		34B530F12B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B530F02B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift */; };
 		34B530F32B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */; };
+		34CEF0CB2B355AD500BAF8DA /* ProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0CA2B355AD500BAF8DA /* ProductData.swift */; };
+		34CEF0CD2B35946900BAF8DA /* CollectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0CC2B35946900BAF8DA /* CollectionManager.swift */; };
+		34CEF0CF2B35E71200BAF8DA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0CE2B35E71200BAF8DA /* AudioManager.swift */; };
 		34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */; };
 		34D67F002B20A72000DE879B /* ChatListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFF2B20A72000DE879B /* ChatListCell.swift */; };
 		34D67F022B20A99D00DE879B /* TrolleyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F012B20A99D00DE879B /* TrolleyCell.swift */; };
@@ -116,6 +119,9 @@
 		34B530EE2B1F3FA100A4C222 /* ExtentionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtentionButton.swift; sourceTree = "<group>"; };
 		34B530F02B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPage_ClassCollectionViewCell.swift; sourceTree = "<group>"; };
 		34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPage_SearchCollectionViewCell.swift; sourceTree = "<group>"; };
+		34CEF0CA2B355AD500BAF8DA /* ProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductData.swift; sourceTree = "<group>"; };
+		34CEF0CC2B35946900BAF8DA /* CollectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionManager.swift; sourceTree = "<group>"; };
+		34CEF0CE2B35E71200BAF8DA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPage_GroupTableViewCell.swift; sourceTree = "<group>"; };
 		34D67EFF2B20A72000DE879B /* ChatListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCell.swift; sourceTree = "<group>"; };
 		34D67F012B20A99D00DE879B /* TrolleyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrolleyCell.swift; sourceTree = "<group>"; };
@@ -142,6 +148,7 @@
 			children = (
 				3410D9842B0B5EAE00D32744 /* FirestoreService.swift */,
 				3410D9702B0888E800D32744 /* Data.swift */,
+				34CEF0CA2B355AD500BAF8DA /* ProductData.swift */,
 				3410D9722B08890300D32744 /* Setting.swift */,
 				34B530EE2B1F3FA100A4C222 /* ExtentionButton.swift */,
 				349B02262B2D550400379F3C /* ShimmerView.swift */,
@@ -243,6 +250,8 @@
 			isa = PBXGroup;
 			children = (
 				3401F6842B0F1C6A0092E564 /* ChatManager.swift */,
+				34CEF0CC2B35946900BAF8DA /* CollectionManager.swift */,
+				34CEF0CE2B35E71200BAF8DA /* AudioManager.swift */,
 				3410D9782B08ECBB00D32744 /* CartManager.swift */,
 				346687B12B1C6B2E00723302 /* Profile_FetchData.swift */,
 			);
@@ -429,13 +438,16 @@
 				341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */,
 				3410D9872B0C42C600D32744 /* ChatListViewController.swift in Sources */,
 				34B530F12B20A3B300A4C222 /* SearchPage_ClassCollectionViewCell.swift in Sources */,
+				34CEF0CB2B355AD500BAF8DA /* ProductData.swift in Sources */,
 				34D67F022B20A99D00DE879B /* TrolleyCell.swift in Sources */,
 				346687B02B1C1E3200723302 /* SettingProfileViewController.swift in Sources */,
 				3410D9662B07125600D32744 /* GroupViewController.swift in Sources */,
 				3410D9712B0888E800D32744 /* Data.swift in Sources */,
 				346687BA2B1C6E6600723302 /* Recoder_RecoderTBCell.swift in Sources */,
 				34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */,
+				34CEF0CD2B35946900BAF8DA /* CollectionManager.swift in Sources */,
 				3401F6902B11BE1B0092E564 /* SellerInfoViewController.swift in Sources */,
+				34CEF0CF2B35E71200BAF8DA /* AudioManager.swift in Sources */,
 				3410D97D2B09BA0400D32744 /* ChatViewController.swift in Sources */,
 				34D67F052B20AC3C00DE879B /* CreateRequest_RequestCell.swift in Sources */,
 				341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */,

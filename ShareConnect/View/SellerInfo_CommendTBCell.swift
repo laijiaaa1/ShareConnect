@@ -21,6 +21,9 @@ extension SellerInfoViewController {
         let commendProductImage = UIImageView()
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             super.init(style: style, reuseIdentifier: reuseIdentifier)
+            setupUI()
+        }
+        func setupUI() {
             contentView.addSubview(commendName)
             commendName.text = "Name"
             commendName.font = UIFont(name: "PingFangTC-Semibold", size: 20)
@@ -28,7 +31,7 @@ extension SellerInfoViewController {
             commendName.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 commendName.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-                commendName.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+                commendName.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30)
             ])
             contentView.addSubview(commendRating)
             commendRating.text = "4"

@@ -18,6 +18,9 @@ extension ProfileViewController {
         let nameLabel = UILabel()
         override init(frame: CGRect) {
             super.init(frame: frame)
+            setupUI()
+        }
+        func setupUI() {
             contentView.addSubview(imageView)
             contentView.addSubview(nameLabel)
             nameLabel.font = UIFont.systemFont(ofSize: 12)

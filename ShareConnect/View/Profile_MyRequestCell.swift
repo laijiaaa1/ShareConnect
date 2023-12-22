@@ -19,6 +19,9 @@ class MyRequestCell: UITableViewCell {
     let requestDateLabel = UILabel()
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+    func setupUI() {
         contentView.addSubview(requestImageView)
         contentView.addSubview(requestNameLabel)
         contentView.addSubview(requestDescriptionLabel)

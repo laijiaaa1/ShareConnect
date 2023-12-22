@@ -68,7 +68,7 @@ class ClassCollectionViewCell: UICollectionViewCell {
             print("Tapped Classification: \(classificationText)")
             for case let button as UIButton in buttonsStackView.arrangedSubviews {
                 button.isSelected = false
-                button.setTitleColor(.white, for: .normal)  // Reset color for unselected state
+                button.setTitleColor(.white, for: .normal)
             }
             sender.isSelected.toggle()
             if let delegate = delegate, let currentButtonType = currentButtonType {

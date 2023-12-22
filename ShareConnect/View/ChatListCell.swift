@@ -18,6 +18,9 @@ class ChatListCell: UITableViewCell {
     let unreadLabel = UILabel()
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+    func setupUI() {
         timeLabel.text = "time"
         contentView.addSubview(timeLabel)
         timeLabel.textAlignment = .right

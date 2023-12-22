@@ -28,6 +28,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     let useOptions = ["place", "product"]
     var selectedIndexPath: IndexPath?
     var enterData: [String] = Array(repeating: "", count: 9)
+//    let productManager = ProductManager.shared
     private lazy var groupHeaderLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -177,11 +178,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                     ),
                                     itemType: .request
                                 )
-                                //                                guard enterData.allSatisfy({ !$0.isEmpty }) else {
-                                //                                       // 顯示錯誤，某些數據尚未填寫
-                                //                                       print("Please fill in all required data.")
-                                //                                       return
-                                //                                   }
                                 let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
                                 db.collection(collectionName).addDocument(data: [
                                     "type": ProductType.request.rawValue,

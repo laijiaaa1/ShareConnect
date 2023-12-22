@@ -92,66 +92,20 @@ class SearchCollectionViewCell: UICollectionViewCell {
         collectionButton.addTarget(self, action: #selector(addCollection), for: .touchUpInside)
     }
     @objc func addCollection() {
-        isCollected.toggle()
-        
-        guard let currentUserID = Auth.auth().currentUser?.uid,
-              let productID = product?.productId,
-              let productName = product?.name,
-              let productImageString = product?.imageString,
-              let productPrice = product?.price else {
-            return
-        }
-        let db = Firestore.firestore()
-        let userCollectionReference = db.collection("collections").document(currentUserID)
-        
-        userCollectionReference.getDocument { (document, error) in
-            if let document = document, document.exists {
-                updateCollection()
-            } else {
-                userCollectionReference.setData(["collectedProducts": []]) { error in
-                    if let error = error {
-                        print("Error creating document: \(error)")
-                    } else {
-                        print("Document successfully created.")
-                        updateCollection()
-                    }
-                }
-            }
-        }
-        func updateCollection() {
-            let productData: [String: Any] = [
-                "productId": productID,
-                "name": productName,
-                "imageString": productImageString,
-                "price": productPrice
-            ]
-            product?.isCollected = isCollected
-            if isCollected {
-                userCollectionReference.updateData([
-                    "collectedProducts": FieldValue.arrayUnion([productData])
-                ]) { error in
-                    if let error = error {
-                        print("Error updating document: \(error)")
-                    } else {
-                        print("Document successfully updated with new collection.")
-                        self.collectionButton.setImage(UIImage(named: "icons9-bookmark-72(@3×)"), for: .normal)
-                    }
-                }
-            } else {
-                let removedProductData: [String: Any] = ["productId": productID]
-                userCollectionReference.updateData([
-                    "collectedProducts": FieldValue.arrayRemove([removedProductData])
-                ]) { error in
-                    if let error = error {
-                        print("Error updating document: \(error)")
-                    } else {
-                        print("Document successfully updated with removed collection.")
-                        self.collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
-                    }
-                }
-            }
-        }
-    }
+           isCollected.toggle()
+           guard let currentUserID = Auth.auth().currentUser?.uid, let product = product else {
+               return
+           }
+           CollectionManager.shared.toggleCollectionStatus(for: currentUserID, product: product) { success, error in
+               DispatchQueue.main.async {
+                   if success {
+                       self.collectionButton.setImage(UIImage(named: self.isCollected ? "icons9-bookmark-72(@3×)" : "icons8-bookmark-72(@3×)"), for: .normal)
+                   } else {
+                       print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                   }
+               }
+           }
+       }
     func updateUI() {
         if let product = product {
             nameLabel.text = product.name

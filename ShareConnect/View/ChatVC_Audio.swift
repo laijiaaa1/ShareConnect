@@ -17,7 +17,7 @@ import AVKit
 import Firebase
 import FirebaseDatabase
 
-extension ChatViewController{
+extension ChatViewController {
     func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
