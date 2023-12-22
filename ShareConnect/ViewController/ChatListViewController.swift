@@ -245,7 +245,6 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
     }
-    
     func fetchRoom(chatRoomID: String) {
         firestore.collection("chatRooms").document(chatRoomID).collection("messages").getDocuments { [weak self] (querySnapshot, error) in
             guard let self = self else { return }

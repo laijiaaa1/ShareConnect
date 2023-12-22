@@ -60,7 +60,6 @@ class SelectedViewController: UIViewController {
         } else {
             alertUserOnlyAddOneProduct()
         }
-        
     }
     func addProductToCart() {
         guard var product = product else {

@@ -101,7 +101,6 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
             } else if currentButtonType == .supply {
                 return allSupplies.count
             }
-            
         }
         return 0
     }
@@ -113,7 +112,6 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
             } else if currentButtonType == .supply {
                 cell.product = allSupplies[indexPath.item]
             }
-            
             cell.isCollected = cell.product?.isCollected ?? false
             return cell
         }
@@ -174,7 +172,6 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 600, height: 40)
-        //        classCollectionView.collectionViewLayout = layout
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10
         view.addSubview(collectionView)

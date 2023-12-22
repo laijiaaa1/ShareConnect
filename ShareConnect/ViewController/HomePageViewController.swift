@@ -171,7 +171,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             }
         }
     }
-    
     @objc func buttonClick(sender: UIButton) {
         let groupViewController = GroupViewController()
         sender.startAnimatingPressActions()
@@ -296,7 +295,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             completion(product)
         }
     }
-    
     func searchProductByName(searchString: String, completion: @escaping (_ searchResults: [Product], _ searchSupply: [Product]) -> Void) {
         let db = Firestore.firestore()
         let groupsCollection = db.collection("products")
@@ -388,7 +386,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             }
         }
     }
-    
 }
 
 class HistoryCell: UICollectionViewCell {

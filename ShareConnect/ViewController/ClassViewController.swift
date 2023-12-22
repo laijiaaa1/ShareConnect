@@ -87,12 +87,9 @@ class ClassViewController: UIViewController {
             productLabel.widthAnchor.constraint(equalTo: view.widthAnchor),
             productLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        // 将 G2 图片添加到视图层次结构中
         let g2ImageView = Class_Space(frame: CGRect(x: 300, y: 120, width: 400, height: 250))
         g2ImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(g2ImageView)
-        
-        // 添加约束
         NSLayoutConstraint.activate([
             g2ImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 110),
             g2ImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -160),
