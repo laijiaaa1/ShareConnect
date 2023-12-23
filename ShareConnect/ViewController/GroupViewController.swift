@@ -73,10 +73,10 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         view.endEditing(true)
     }
     @objc func searchTextFieldDidChange() {
-        searchGroupsByName(searchString: searchTextField.text ?? "", completion: { (groups) in
-            self.groups = groups
-            self.tableView.reloadData()
-        })
+        GroupDataManager.shared.searchGroupsByName(searchString: searchTextField.text ?? "") { [weak self] groups in
+            self?.groups = groups
+            self?.tableView.reloadData()
+        }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return groups.count
@@ -129,148 +129,10 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     func fetchGroupData(sort: String) {
-        let sort = sort
-        let groupsRef = Firestore.firestore().collection("groups")
-        let query = groupsRef.whereField("isPublic", isEqualTo: true).whereField("sort", isEqualTo: sort)
-        DispatchQueue.global(qos: .background).async {
-            query.getDocuments { (querySnapshot, error) in
-                if let error = error {
-                    print("Error fetching public groups: \(error.localizedDescription)")
-                } else {
-                    self.groups.removeAll()
-                    for document in querySnapshot!.documents {
-                        let data = document.data()
-                        if let group = Group(data: data, documentId: document.documentID) {
-                            self.groups.append(group)
-                        }
-                    }
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-                }
-            }
+        GroupDataManager.shared.fetchGroups(sort: sort) { [weak self] groups in
+            self?.groups = groups
+            self?.tableView.reloadData()
         }
-    }
-
-    private func updateGroupInFirestore(groupId: String, updatedGroup: Group) {
-        let groupsRef = Firestore.firestore().collection("groups")
-        let updatedData: [String: Any] = [
-            "members": updatedGroup.members
-        ]
-        groupsRef.document(groupId).updateData(updatedData) { error in
-            if let error = error {
-                print("Error updating group in Firestore: \(error.localizedDescription)")
-            } else {
-                print("Group updated successfully in Firestore.")
-            }
-        }
-    }
-    private func updateUserInFirestore(userId: String, updatedGroup: Group) {
-        let userRef = Firestore.firestore().collection("users").document(userId)
-        let groupId = "groupId"
-        
-        // Create a dictionary with group data
-        let groupData: [String: Any] = [
-            "groupId": updatedGroup.documentId,
-            "groupName": updatedGroup.name,
-            "groupImage": updatedGroup.image,
-            "groupDescription": updatedGroup.description,
-            "groupSort": updatedGroup.sort,
-            "groupOwner": updatedGroup.owner,
-            "groupStartTime": updatedGroup.startTime,
-            "groupEndTime": updatedGroup.endTime,
-            "groupRequire": updatedGroup.require,
-            "groupNumberOfPeople": updatedGroup.numberOfPeople,
-            "groupIsPublic": updatedGroup.isPublic,
-            "groupMembers": updatedGroup.members,
-            "groupCreated": updatedGroup.created,
-            "groupInvitationCode": updatedGroup.invitationCode ?? ""
-        ]
-        
-        // Check if the "groups" field exists in the user's document
-        userRef.getDocument { (document, error) in
-            if let error = error {
-                print("Error getting user document: \(error.localizedDescription)")
-            } else if let document = document, document.exists {
-                // The document exists, update the "groups" field
-                userRef.updateData(["groups.\(groupId)": groupData], completion: { error in
-                    if let error = error {
-                        print("Error updating user in Firestore: \(error.localizedDescription)")
-                    } else {
-                        print("User updated successfully in Firestore.")
-                    }
-                })
-            } else {
-                // The document doesn't exist, create the "groups" field
-                userRef.setData(["groups": [groupId: groupData]], merge: true) { error in
-                    if let error = error {
-                        print("Error creating user in Firestore: \(error.localizedDescription)")
-                    } else {
-                        print("User created successfully in Firestore.")
-                    }
-                }
-            }
-        }
-    }
-    
-    func searchGroupsByName(searchString: String, completion: @escaping ([Group]) -> Void) {
-        let db = Firestore.firestore()
-        let groupsCollection = db.collection("groups")
-        let query = groupsCollection
-            .whereField("name", isGreaterThanOrEqualTo: searchString)
-            .whereField("name", isLessThan: searchString + "\u{f8ff}")
-        query.getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error searching groups: \(error.localizedDescription)")
-                completion([])
-            } else {
-                var searchResults: [Group] = []
-                for document in querySnapshot!.documents {
-                    let data = document.data()
-                    if let group = self.parseGroupData(data: data, documentId: document.documentID) {
-                        searchResults.append(group)
-                    }
-                }
-                DispatchQueue.main.async {
-                    completion(searchResults)
-                }
-            }
-        }
-    }
-    func parseGroupData(data: [String: Any], documentId: String) -> Group? {
-        guard
-            let name = data["name"] as? String,
-            let description = data["description"] as? String,
-            let sort = data["sort"] as? String,
-            let startTime = data["startTime"] as? String,
-            let endTime = data["endTime"] as? String,
-            let require = data["require"] as? String,
-            let numberOfPeople = data["numberOfPeople"] as? Int,
-            let owner = data["owner"] as? String,
-            let isPublic = data["isPublic"] as? Bool,
-            let members = data["members"] as? [String],
-            let image = data["image"] as? String,
-            let createdTimestamp = data["created"] as? Timestamp
-        else {
-            return nil
-        }
-        var group = Group(
-            documentId: documentId,
-            name: name,
-            description: description,
-            sort: sort,
-            startTime: startTime,
-            endTime: endTime,
-            require: require,
-            numberOfPeople: numberOfPeople,
-            owner: owner,
-            isPublic: isPublic,
-            members: members,
-            image: image,
-            created: createdTimestamp.dateValue()
-        )
-        group.invitationCode = data["invitationCode"] as? String
-        return group
     }
 }
 

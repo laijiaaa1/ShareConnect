@@ -78,7 +78,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         searchTextField.layer.borderWidth = 1
         searchTextField.layer.cornerRadius = 22
         searchTextField.layer.masksToBounds = true
-        searchTextField.frame = CGRect(x: 30, y: 100, width: 330, height: 44)
         let leftView = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
         let imageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 24, height: 24))
         imageView.image = UIImage(named: "icons8-search-90(@3×)")
@@ -86,32 +85,67 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         searchTextField.leftView = leftView
         searchTextField.leftViewMode = .always
         searchTextField.backgroundColor = .white
-        view.addSubview(searchTextField)
+        searchTextField.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(searchTextField)
+            NSLayoutConstraint.activate([
+                searchTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+                searchTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+                searchTextField.heightAnchor.constraint(equalToConstant: 44)
+            ])
     }
     func groupClass() {
         let views = [productView, placeView, courseView, foodView]
         let labels = ["Product", "Place", "Course", "Food"]
         let images = ["icons8-camping-tent-72(@3×)", "icons8-room-72(@3×)", "icons8-course-72(@3×)", "icons8-pizza-five-eighths-32"]
         for i in 0..<4 {
-            views[i].backgroundColor = .white
-            views[i].frame = CGRect(x: 30 + 88 * i, y: 170, width: 70, height: 70)
-            views[i].layer.cornerRadius = 10
-            views[i].layer.masksToBounds = true
-            views[i].layer.borderWidth = 1
-            view.addSubview(views[i])
-            let imageView = UIImageView(frame: CGRect(x: 15, y: 15, width: 40, height: 40))
+            let containerView = UIView()
+            containerView.backgroundColor = .white
+            containerView.layer.cornerRadius = 10
+            containerView.layer.masksToBounds = true
+            containerView.layer.borderWidth = 1
+            containerView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(containerView)
+            NSLayoutConstraint.activate([
+                containerView.widthAnchor.constraint(equalToConstant: 70),
+                containerView.heightAnchor.constraint(equalToConstant: 70),
+                containerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 170),
+                containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30 + CGFloat(88 * i))
+            ])
+            let imageView = UIImageView()
             imageView.image = UIImage(named: images[i])
-            views[i].addSubview(imageView)
-            let label = UILabel(frame: CGRect(x: 30 + 90 * i, y: 250, width: 70, height: 20))
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview(imageView)
+            NSLayoutConstraint.activate([
+                imageView.widthAnchor.constraint(equalToConstant: 40),
+                imageView.heightAnchor.constraint(equalToConstant: 40),
+                imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+            ])
+            let label = UILabel()
             label.text = labels[i]
             label.font = UIFont(name: "GeezaPro-Bold", size: 15)
             label.textAlignment = .center
             label.textColor = .white
+            label.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(label)
-            let button = UIButton(frame: CGRect(x: 30 + 88 * i, y: 170, width: 70, height: 70))
+            NSLayoutConstraint.activate([
+                label.widthAnchor.constraint(equalToConstant: 70),
+                label.heightAnchor.constraint(equalToConstant: 20),
+                label.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 10),
+                label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30 + CGFloat(88 * i))
+            ])
+            let button = UIButton()
             button.tag = i
             button.addTarget(self, action: #selector(buttonClick), for: .touchUpInside)
+            button.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(button)
+            NSLayoutConstraint.activate([
+                button.widthAnchor.constraint(equalToConstant: 70),
+                button.heightAnchor.constraint(equalToConstant: 70),
+                button.topAnchor.constraint(equalTo: view.topAnchor, constant: 170),
+                button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30 + CGFloat(88 * i))
+            ])
         }
     }
     func hotGroup() {
@@ -131,9 +165,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         hotCollection.backgroundColor = .clear
         hotScrollView.showsHorizontalScrollIndicator = false
         hotCollection.showsHorizontalScrollIndicator = false
-        //        let line2 = UIView(frame: CGRect(x: 0, y: 530, width: view.frame.width, height: 1))
-        //        line2.backgroundColor = .lightGray
-        //        view.addSubview(line2)
     }
     func browsHistory() {
         browsingHistory.frame = CGRect(x: 30, y: 560, width: 160, height: 20)
@@ -276,7 +307,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
             let provideVC = storyboard.instantiateViewController(withIdentifier: "ProvideViewController") as! ProvideViewController
             let productID = browsingHistoryItems[sender.tag].2
-            // Fetch product details using the productID
             fetchProductDetails(for: productID) { product in
                 vc.product = product
                 provideVC.product = product
@@ -289,8 +319,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         }
     }
     func fetchProductDetails(for productID: String, completion: @escaping (Product?) -> Void) {
-        // Use your Firestore or other data fetching mechanism to get product details
-        // Replace the code below with your actual implementation
         FirestoreService.shared.getProductDetails(productID: productID) { product in
             completion(product)
         }
@@ -366,28 +394,24 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         return newProduct
     }
     func fetchGroupData() {
-        DispatchQueue.global().async { [weak self] in
-            let groupsRef = Firestore.firestore().collection("groups").getDocuments { (querySnapshot, error) in
-                if let error = error {
-                    print("Error fetching public groups: \(error.localizedDescription)")
-                } else {
-                    self?.groups.removeAll()
-                    for document in querySnapshot!.documents {
-                        let data = document.data()
-                        if let group = Group(data: data, documentId: document.documentID) {
-                            self?.groups.append(group)
-                        }
-                    }
-                    self?.groups.sort(by: { $0.members.count > $1.members.count })
-                    DispatchQueue.main.async {
-                        self?.hotCollection.reloadData()
-                    }
-                }
+        Firestore.firestore().collection("groups").getDocuments { [weak self] (querySnapshot, error) in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error fetching public groups: \(error.localizedDescription)")
+                return
+            }
+            self.groups = querySnapshot?.documents.compactMap { document in
+                let data = document.data()
+                return Group(data: data, documentId: document.documentID)
+            } ?? []
+            self.groups.sort { $0.members.count > $1.members.count }
+
+            DispatchQueue.main.async {
+                self.hotCollection.reloadData()
             }
         }
     }
 }
-
 class HistoryCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)

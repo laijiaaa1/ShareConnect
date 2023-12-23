@@ -1708,8 +1708,8 @@
             filePath = "ShareConnect/ViewController/HomePageViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
+            startingLineNumber = "311"
+            endingLineNumber = "311"
             landmarkName = "imageButtonClick(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1724,8 +1724,8 @@
             filePath = "ShareConnect/ViewController/HomePageViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "280"
-            endingLineNumber = "280"
+            startingLineNumber = "310"
+            endingLineNumber = "310"
             landmarkName = "imageButtonClick(sender:)"
             landmarkType = "7">
             <Locations>
@@ -1787,8 +1787,8 @@
             filePath = "ShareConnect/ViewController/HomePageViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "294"
-            endingLineNumber = "294"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
             landmarkName = "fetchProductDetails(for:completion:)"
             landmarkType = "7">
             <Locations>
@@ -2523,8 +2523,8 @@
             filePath = "ShareConnect/ViewController/HomePageViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "318"
-            endingLineNumber = "318"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
             landmarkName = "searchProductByName(searchString:completion:)"
             landmarkType = "7">
             <Locations>
