@@ -100,30 +100,15 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         view.endEditing(true)
     }
     func fetchUserData() {
-        guard let userID = Auth.auth().currentUser?.uid else {
-            print("User not authenticated.")
-            return
-        }
-        let userCollection = Firestore.firestore().collection("users")
-        userCollection.document(userID).getDocument { [weak self] (documentSnapshot, error) in
+        FirebaseManager.shared.fetchUserData { [weak self] currentUser in
             guard let self = self else { return }
-            if let error = error {
-                print("Error fetching user data: \(error.localizedDescription)")
-                return
-            }
-            if let document = documentSnapshot, document.exists {
-                let userData = document.data()
-                if let uid = document.documentID as? String,
-                   let name = userData?["name"] as? String,
-                   let email = userData?["email"] as? String,
-                   let profileImageUrl = userData?["profileImageUrl"] as? String {
-                    self.currentUser = User(uid: uid, name: name, email: email, profileImageUrl: profileImageUrl)
-                    self.createOrGetChatRoomDocument()
-                }
-            } else {
-                print("User document does not exist.")
+            
+            if let currentUser = currentUser {
+                self.currentUser = currentUser
+                self.createOrGetChatRoomDocument()
             }
         }
+        
     }
     @objc func addButtonTapped() {
         let vc = ChatSupplyCreateViewController()
@@ -411,33 +396,12 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         imageView.image = nil
         currentImageURL = nil
     }
-    func uploadFixedImage(_ image: UIImage, completion: @escaping (String) -> Void) {
-        guard let resizedImage = image.resized(toSize: CGSize(width: 400, height: 400)) else {
-            completion("")
-            return
-        }
-        guard let imageData = resizedImage.jpegData(compressionQuality: 0.1) else {
-            completion("")
-            return
-        }
-        let imageName = UUID().uuidString
-        let storageRef = Storage.storage().reference().child("images/\(imageName).jpg")
-        storageRef.putData(imageData, metadata: nil) { (metadata, error) in
-            guard let _ = metadata else {
-                print("Error uploading image: \(error?.localizedDescription ?? "")")
-                completion("")
-                return
-            }
-            storageRef.downloadURL { (url, error) in
-                guard let downloadURL = url else {
-                    print("Error getting download URL: \(error?.localizedDescription ?? "")")
-                    completion("")
-                    return
-                }
-                completion(downloadURL.absoluteString)
-            }
+    func uploadFixedImage(_ image: UIImage, completion: @escaping (String?) -> Void) {
+        FirebaseManager.shared.uploadImage(image) { storageImageURL in
+            completion(storageImageURL)
         }
     }
+    
     func sendMessageToFirestore(_ message: String, isMe: Bool, imageURL: String? = nil, location: CLLocationCoordinate2D? = nil) {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")
@@ -553,8 +517,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                 return
             }
             if let image = image {
-                // 新增此行
-                self?.uploadFixedImage(image) { storageImageURL in
+                FirebaseManager.shared.uploadImage(image) { storageImageURL in
                     self?.sendMessageToFirestore("", isMe: true, imageURL: storageImageURL, location: nil)
                 }
             } else {

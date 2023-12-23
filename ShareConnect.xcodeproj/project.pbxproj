@@ -57,7 +57,7 @@
 		34B530F32B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */; };
 		34CEF0CB2B355AD500BAF8DA /* ProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0CA2B355AD500BAF8DA /* ProductData.swift */; };
 		34CEF0CD2B35946900BAF8DA /* CollectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0CC2B35946900BAF8DA /* CollectionManager.swift */; };
-		34CEF0CF2B35E71200BAF8DA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0CE2B35E71200BAF8DA /* AudioManager.swift */; };
+		34CEF0D22B366CC700BAF8DA /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0D12B366CC700BAF8DA /* FirebaseManager.swift */; };
 		34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */; };
 		34D67F002B20A72000DE879B /* ChatListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFF2B20A72000DE879B /* ChatListCell.swift */; };
 		34D67F022B20A99D00DE879B /* TrolleyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F012B20A99D00DE879B /* TrolleyCell.swift */; };
@@ -121,7 +121,7 @@
 		34B530F22B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPage_SearchCollectionViewCell.swift; sourceTree = "<group>"; };
 		34CEF0CA2B355AD500BAF8DA /* ProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductData.swift; sourceTree = "<group>"; };
 		34CEF0CC2B35946900BAF8DA /* CollectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionManager.swift; sourceTree = "<group>"; };
-		34CEF0CE2B35E71200BAF8DA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		34CEF0D12B366CC700BAF8DA /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPage_GroupTableViewCell.swift; sourceTree = "<group>"; };
 		34D67EFF2B20A72000DE879B /* ChatListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCell.swift; sourceTree = "<group>"; };
 		34D67F012B20A99D00DE879B /* TrolleyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrolleyCell.swift; sourceTree = "<group>"; };
@@ -183,6 +183,7 @@
 				3410D9752B08B39900D32744 /* Module */,
 				34B530F42B20A42C00A4C222 /* View */,
 				34B530F52B20A4AF00A4C222 /* ViewController */,
+				34CEF0D02B35FD3F00BAF8DA /* ChatRoom */,
 				34D67F032B20AAC900DE879B /* Manager */,
 				341E9B912B03629800997FE9 /* Main.storyboard */,
 				341E9B942B03629900997FE9 /* Assets.xcassets */,
@@ -206,9 +207,6 @@
 				346687B32B1C6CB100723302 /* Profile_MyRequestCell.swift */,
 				346687B52B1C6D5E00723302 /* Profile_CollectionCell.swift */,
 				34D67EFF2B20A72000DE879B /* ChatListCell.swift */,
-				349B02312B2E974F00379F3C /* ChatVC_Extension.swift */,
-				3481ACB12B2375CD00BFDCDE /* ChatRoomCell.swift */,
-				349B02332B2E97B400379F3C /* ChatVC_Audio.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -239,19 +237,29 @@
 				3401F68D2B1192200092E564 /* CommendViewController.swift */,
 				346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */,
 				3410D9862B0C42C600D32744 /* ChatListViewController.swift */,
-				3410D97C2B09BA0400D32744 /* ChatViewController.swift */,
-				346687A92B1AF94F00723302 /* ChatMapViewController.swift */,
-				3401F6882B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		34CEF0D02B35FD3F00BAF8DA /* ChatRoom */ = {
+			isa = PBXGroup;
+			children = (
+				3481ACB12B2375CD00BFDCDE /* ChatRoomCell.swift */,
+				3410D97C2B09BA0400D32744 /* ChatViewController.swift */,
+				346687A92B1AF94F00723302 /* ChatMapViewController.swift */,
+				349B02312B2E974F00379F3C /* ChatVC_Extension.swift */,
+				349B02332B2E97B400379F3C /* ChatVC_Audio.swift */,
+				3401F6882B0FAA7E0092E564 /* ChatSupplyCreateViewController.swift */,
+			);
+			path = ChatRoom;
 			sourceTree = "<group>";
 		};
 		34D67F032B20AAC900DE879B /* Manager */ = {
 			isa = PBXGroup;
 			children = (
 				3401F6842B0F1C6A0092E564 /* ChatManager.swift */,
+				34CEF0D12B366CC700BAF8DA /* FirebaseManager.swift */,
 				34CEF0CC2B35946900BAF8DA /* CollectionManager.swift */,
-				34CEF0CE2B35E71200BAF8DA /* AudioManager.swift */,
 				3410D9782B08ECBB00D32744 /* CartManager.swift */,
 				346687B12B1C6B2E00723302 /* Profile_FetchData.swift */,
 			);
@@ -409,6 +417,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34CEF0D22B366CC700BAF8DA /* FirebaseManager.swift in Sources */,
 				3401F6852B0F1C6A0092E564 /* ChatManager.swift in Sources */,
 				349B02342B2E97B400379F3C /* ChatVC_Audio.swift in Sources */,
 				3481ACB22B2375CD00BFDCDE /* ChatRoomCell.swift in Sources */,
@@ -447,7 +456,6 @@
 				34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */,
 				34CEF0CD2B35946900BAF8DA /* CollectionManager.swift in Sources */,
 				3401F6902B11BE1B0092E564 /* SellerInfoViewController.swift in Sources */,
-				34CEF0CF2B35E71200BAF8DA /* AudioManager.swift in Sources */,
 				3410D97D2B09BA0400D32744 /* ChatViewController.swift in Sources */,
 				34D67F052B20AC3C00DE879B /* CreateRequest_RequestCell.swift in Sources */,
 				341E9B8C2B03629800997FE9 /* AppDelegate.swift in Sources */,

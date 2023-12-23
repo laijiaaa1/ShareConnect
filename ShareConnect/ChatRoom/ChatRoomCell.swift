@@ -193,7 +193,6 @@ class ImageCell: UITableViewCell {
         nameLabel.text = chatMessage.name
         image.kf.setImage(with: URL(string: chatMessage.profileImageUrl))
         imageURLpost.kf.setImage(with: URL(string: chatMessage.imageURL ?? ""))
-        
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())
@@ -256,7 +255,6 @@ class LeftImageCell: UITableViewCell {
         nameLabel.text = chatMessage.name
         image.kf.setImage(with: URL(string: chatMessage.profileImageUrl))
         imageURLpost.kf.setImage(with: URL(string: chatMessage.imageURL ?? ""))
-        
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         timestampLabel.text = formatter.string(from: chatMessage.timestamp.dateValue())

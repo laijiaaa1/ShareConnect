@@ -116,7 +116,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "voiceCell", for: indexPath) as! VoiceCell
                 cell.backgroundColor = .black
                 let audioURL = chatMessage.audioURL
-                print("Audio URL: \(audioURL)")
                 cell.configure(with: audioURL, chatMessage: chatMessage)
                 NSLayoutConstraint.activate([
                     cell.image.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10),
@@ -140,7 +139,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "leftVoiceCell", for: indexPath) as! LeftVoiceCell
                 cell.backgroundColor = .black
                 let audioURL = chatMessage.audioURL
-                print("Audio URL: \(audioURL)")
                 cell.configure(with: audioURL, chatMessage: chatMessage)
                 NSLayoutConstraint.activate([
                     cell.image.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10),
