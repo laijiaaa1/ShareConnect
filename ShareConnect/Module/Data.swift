@@ -225,7 +225,7 @@ struct Commend {
     var productID: String
     var time: String
 }
-struct ChatItem {
+struct ChatItem: Codable {
     var name: String
     var time: Date
     var message: String
@@ -239,4 +239,12 @@ struct ChatItem {
 enum CurrentUserRole {
     case seller
     case buyer
+}
+struct BrowsingRecord {
+    let name: String
+    let image: String
+    let price: String
+    let type: String
+    let timestamp: Date
+    let productId: String
 }

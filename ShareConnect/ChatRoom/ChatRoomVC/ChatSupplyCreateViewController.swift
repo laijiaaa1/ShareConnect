@@ -141,6 +141,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             vc.buyerID = self?.buyer
             vc.sellerID = Auth.auth().currentUser!.uid
             vc.cart = [seller: productArray]
+            vc.convertCartToImageAndSendMessage(cart: [seller: productArray])
             self?.navigationController?.popViewController(animated: true)
         }
     }

@@ -37,7 +37,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
     var audioURL: String?
     var isRecording = false
     var chatMessages = [ChatMessage]()
-    var cartString = ""
     var firestore: Firestore = Firestore.firestore()
     var chatRoomDocument: DocumentReference!
     var chatRoomListener: ListenerRegistration!
@@ -124,6 +123,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         let chatRoomID = sortedUserIDs.joined(separator: "_")
         var existingChatRoomIDs = Set(existingChatRooms.keys)
         if existingChatRoomIDs.contains(chatRoomID) {
+            // documentSnapshot檢查文件是否存在並檢索其數據
             chatRoomsCollection.document(chatRoomID).getDocument { [weak self] (documentSnapshot, error) in
                 guard let self = self else { return }
                 if let error = error {
@@ -133,6 +133,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                 if let document = documentSnapshot, document.exists {
                     self.chatRoomDocument = document.reference
                     self.chatRoomID = chatRoomID
+                    // 啟動監聽此聊天室中新訊息
                     self.startListeningForChatMessages()
                 } else {
                     print("Error: Existing chat room ID does not correspond to an existing chat room.")
@@ -387,16 +388,16 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
     }
     @objc func sendButtonTapped() {
         guard let message = messageTextField.text else { return }
-        if let selectedImage = selectedImage {
-            uploadFixedImage(selectedImage) { [weak self] (imageURL) in
-                self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL, location: nil)
-                self?.selectedImage = nil
-                self?.imageView.image = nil
-                self?.currentImageURL = nil
-            }
-        } else {
+//        if let selectedImage = selectedImage {
+//            uploadFixedImage(selectedImage) { [weak self] (imageURL) in
+//                self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL, location: nil)
+//                self?.selectedImage = nil
+//                self?.imageView.image = nil
+//                self?.currentImageURL = nil
+//            }
+//        } else {
             sendMessageToFirestore(message, isMe: true, location: nil)
-        }
+//        }
         messageTextField.text = ""
         currentLocation = nil
         selectedImage = nil
@@ -454,6 +455,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
     //修改函數 convertCartToImage 以返回生成的圖像和相應的URL
     func convertCartToImage(cart: [Seller: [Product]], completion: @escaping (UIImage?, String?) -> Void) {
         let imageSize = CGSize(width: 400, height: 400)
+        // imageSize/opaque非不透明的/scale裝置的主螢幕比例
         UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
         guard let context = UIGraphicsGetCurrentContext() else {
             completion(nil, nil)
@@ -483,13 +485,14 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                 let productText = "   Product: \(product.name)\n   Quantity: \(product.quantity )\n   Price: \(product.price)"
                 (productText as NSString).draw(at: CGPoint(x: 200, y: yOffset), withAttributes: productAttributes)
                 // Fixed image size and position
-                let imageRect = CGRect(x: 20, y: 140, width: 150, height: 150)  // Adjust the image size and position
+                let imageRect = CGRect(x: 20, y: 140, width: 150, height: 150)
                 // Load and draw the product image with rounded corners
                 if let imageURL = URL(string: product.imageString) {
                     KingfisherManager.shared.retrieveImage(with: imageURL, options: nil, progressBlock: nil) { result in
                         switch result {
                         case .success(let imageResult):
                             let productImage = imageResult.image
+                            // UIBezierPath用路徑繪圖
                             let roundedPath = UIBezierPath(roundedRect: imageRect, cornerRadius: 10.0).cgPath
                             context.addPath(roundedPath)
                             context.clip()
@@ -519,7 +522,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
         convertCartToImage(cart: cart) { [weak self] image, imageURL in
             // Ensure that the image URL matches the current image URL
             guard let currentImageURL = self?.currentImageURL, currentImageURL == imageURL else {
-                // Image URL does not match the current one, ignore the completion
                 return
             }
             if let image = image {
@@ -527,7 +529,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                     self?.sendMessageToFirestore("", isMe: true, imageURL: storageImageURL, location: nil)
                 }
             } else {
-                // 處理圖像轉換失敗的情況
+                print("error converting cart to image")
             }
         }
     }

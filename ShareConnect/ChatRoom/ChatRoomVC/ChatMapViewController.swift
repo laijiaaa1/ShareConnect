@@ -9,6 +9,9 @@ import UIKit
 import CoreLocation
 import MapKit
 
+protocol MapSelectionDelegate: AnyObject {
+    func didSelectLocation(_ coordinate: CLLocationCoordinate2D)
+}
 class MapSelectionViewController: UIViewController, MKMapViewDelegate {
     weak var delegate: MapSelectionDelegate?
     var mapView: MKMapView!
@@ -35,7 +38,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         locationManager.startUpdatingLocation()
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false   // 模糊
         searchController.searchBar.showsCancelButton = false
         navigationItem.searchController = searchController
         definesPresentationContext = true
@@ -77,6 +80,7 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         ])
         let initialLocation = CLLocationCoordinate2D(latitude: 25.0422, longitude: 121.5354)
         let userLocation = locationManager.location?.coordinate
+        // 地圖在初始位置周圍可見的程度
         let regionRadius: CLLocationDistance = 1000
         let coordinateRegion = MKCoordinateRegion(
             center: initialLocation,
@@ -86,12 +90,13 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         mapView.setRegion(coordinateRegion, animated: true)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         mapView.addGestureRecognizer(tapGesture)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     @objc func returnToUserLocationButtonTapped() {
         if CLLocationManager.locationServicesEnabled() {
             switch locationManager.authorizationStatus {
+                // 為選擇時、無權使用定位服務、拒絕應用的位置服務
             case .notDetermined, .restricted, .denied:
                 print("Location services disabled")
             case .authorizedAlways, .authorizedWhenInUse:
@@ -112,17 +117,17 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-    @objc func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo else { return }
-        guard let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-        let keyboardHeight = keyboardFrame.height
-        confirmButton.frame.origin.y -= keyboardHeight
-        searchController.searchBar.frame.origin.y -= keyboardHeight
-    }
-    @objc func keyboardWillHide(notification: NSNotification) {
-        confirmButton.frame.origin.y = view.frame.height - confirmButton.frame.height - 20
-        searchController.searchBar.frame.origin.y = view.safeAreaInsets.top
-    }
+//    @objc func keyboardWillShow(notification: NSNotification) {
+//        guard let userInfo = notification.userInfo else { return }
+//        guard let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+//        let keyboardHeight = keyboardFrame.height
+//        confirmButton.frame.origin.y -= keyboardHeight
+//        searchController.searchBar.frame.origin.y -= keyboardHeight
+//    }
+//    @objc func keyboardWillHide(notification: NSNotification) {
+//        confirmButton.frame.origin.y = view.frame.height - confirmButton.frame.height - 20
+//        searchController.searchBar.frame.origin.y = view.safeAreaInsets.top
+//    }
     @objc func confirmButtonTapped() {
         if let selectedCoordinate = selectedCoordinate {
             delegate?.didSelectLocation(selectedCoordinate)
@@ -134,17 +139,16 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
     @objc func handleTap(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             let locationInView = sender.location(in: mapView)
+            // 點擊位置轉換為地理座標
             let tappedCoordinate = mapView.convert(locationInView, toCoordinateFrom: mapView)
             let annotation = MKPointAnnotation()
             annotation.coordinate = tappedCoordinate
+            // 確保一次只顯示一個大頭針
             mapView.removeAnnotations(mapView.annotations)
             mapView.addAnnotation(annotation)
             selectedCoordinate = tappedCoordinate
         }
     }
-}
-protocol MapSelectionDelegate: AnyObject {
-    func didSelectLocation(_ coordinate: CLLocationCoordinate2D)
 }
 
 extension MapSelectionViewController: CLLocationManagerDelegate {
@@ -164,6 +168,7 @@ extension MapSelectionViewController: UISearchResultsUpdating {
             mapView.removeAnnotations(mapView.annotations)
             return
         }
+        // 區域設置為地圖的當前可見區域 (MKMapView.region)
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = searchText
         request.region = mapView.region
@@ -175,6 +180,7 @@ extension MapSelectionViewController: UISearchResultsUpdating {
                 return
             }
             self.mapView.removeAnnotations(self.mapView.annotations)
+            // 迴圈搜尋結果都標上大頭針
             for item in response?.mapItems ?? [] {
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = item.placemark.coordinate
@@ -193,9 +199,11 @@ extension MapSelectionViewController {
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
+    // 為每個地圖註記提供檢視，重用大頭針
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let identifier = "CustomAnnotation"
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        // 如果不是nil，則作為新的大頭針
         if annotationView == nil {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true

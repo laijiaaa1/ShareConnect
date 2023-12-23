@@ -311,6 +311,7 @@
 				3401F6862B0F4B010092E564 /* RecoderViewController.swift */,
 				3401F68D2B1192200092E564 /* CommendViewController.swift */,
 				346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */,
+				346687B12B1C6B2E00723302 /* Profile_FetchData.swift */,
 			);
 			path = ProfileVC;
 			sourceTree = "<group>";
@@ -361,7 +362,6 @@
 				34CEF0D32B3690E800BAF8DA /* RegistrationManager.swift */,
 				34CEF0CC2B35946900BAF8DA /* CollectionManager.swift */,
 				3410D9782B08ECBB00D32744 /* CartManager.swift */,
-				346687B12B1C6B2E00723302 /* Profile_FetchData.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";

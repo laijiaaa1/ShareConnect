@@ -104,7 +104,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         let userCartDocument = cartCollection.document(currentUserID)
         let cartData = cart.map { (seller, products) in
             let encodedProducts = try? JSONEncoder().encode(products)
-            return ["sellerID": seller.sellerID, "products": encodedProducts as Any]
+            return ["sellerID": seller.sellerID, "products": encodedProducts]
         }
         userCartDocument.setData(["buyerID": currentUserID, "cart": cartData])
     }
