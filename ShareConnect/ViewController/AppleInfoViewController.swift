@@ -124,59 +124,17 @@ class AppleInfoViewController: UIViewController, UIImagePickerControllerDelegate
               let appleIDCredential = self.appleIDCredential else {
             return
         }
-        ProgressHUD.animate("Please wait...", .ballVerticalBounce)
-        uploadProfileImage(profileImage) { imageUrl in
-            let uid = Auth.auth().currentUser?.uid ?? ""
-            guard !uid.isEmpty else {
-                print("Unable to get UID from Apple Sign In")
-                return
-            }
-            self.db.collection("users").document(uid).setData([
-                "name": name,
-                "profileImageUrl": imageUrl,
-                "email": ""
-            ]) { error in
-                if let error = error {
-                    print("Error updating user data in Firestore: \(error.localizedDescription)")
-                } else {
-                    print("User data updated in Firestore successfully")
-                    if let buyerID = Auth.auth().currentUser?.uid {
-                        Messaging.messaging().subscribe(toTopic: buyerID)
-                    }
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
-                        self.navigationController?.pushViewController(tabBarController, animated: true)
-                    }
-                    DispatchQueue.main.async {
-                        ProgressHUD.succeed("Success", delay: 1.5)
-                    }
+        RegistrationManager.shared.registerUser(email: "", password: "", name: name, profileImage: profileImage) { success in
+            if success {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                    self.navigationController?.pushViewController(tabBarController, animated: true)
                 }
-            }
-        }
-    }
-    func uploadProfileImage(_ image: UIImage, completion: @escaping (String) -> Void) {
-        guard let imageData = image.jpegData(compressionQuality: 0.5) else {
-            return
-        }
-        let imageName = UUID().uuidString
-        let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg")
-        storageRef.putData(imageData, metadata: nil) { metadata, error in
-            if let error = error {
-                print("Error uploading profile image: \(error.localizedDescription)")
-                completion("") // Pass an empty string to indicate failure
+                DispatchQueue.main.async {
+                    ProgressHUD.succeed("Success", delay: 1.5)
+                }
             } else {
-                storageRef.downloadURL { url, error in
-                    if let error = error {
-                        print("Error getting download URL: \(error.localizedDescription)")
-                        completion("") // Pass an empty string to indicate failure
-                    } else {
-                        guard let url = url else {
-                            completion("") // Pass an empty string to indicate failure
-                            return
-                        }
-                        completion(url.absoluteString)
-                    }
-                }
+                print("Registration failed")
             }
         }
     }

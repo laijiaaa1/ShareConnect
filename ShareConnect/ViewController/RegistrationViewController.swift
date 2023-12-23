@@ -157,62 +157,18 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
               let profileImage = profileImageView.image else {
             return
         }
-        ProgressHUD.animate("Please wait...", .ballVerticalBounce)
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
-            guard let self = self else { return }
-            if let error = error {
-                print("Error creating user: \(error.localizedDescription)")
-            } else {
-                self.uploadProfileImage(profileImage) { imageUrl in
-                    guard let uid = Auth.auth().currentUser?.uid else {
-                        return
-                    }
-                    self.db.collection("users").document(uid).setData([
-                        "email": email,
-                        "name": name,
-                        "profileImageUrl": imageUrl
-                    ]) { error in
-                        if let error = error {
-                            print("Error adding user to Firestore: \(error.localizedDescription)")
-                        } else {
-                            print("User added to Firestore successfully")
-                            if let buyerID = Auth.auth().currentUser?.uid {
-                                Messaging.messaging().subscribe(toTopic: buyerID)
-                            }
-                            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                            let vc = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
-                            DispatchQueue.main.async {
-                                ProgressHUD.succeed("Regist Success", delay: 1.5)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                    self.navigationController?.pushViewController(vc, animated: true)
-                                }
-                            }
-                        }
+        RegistrationManager.shared.registerUser(email: email, password: password, name: name, profileImage: profileImage) { success in
+            if success {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
+                DispatchQueue.main.async {
+                    ProgressHUD.succeed("Regist Success", delay: 1.5)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.navigationController?.pushViewController(vc, animated: true)
                     }
                 }
-            }
-        }
-    }
-    func uploadProfileImage(_ image: UIImage, completion: @escaping (String) -> Void) {
-        guard let imageData = image.jpegData(compressionQuality: 0.5) else {
-            return
-        }
-        let imageName = UUID().uuidString
-        let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg")
-        storageRef.putData(imageData, metadata: nil) { metadata, error in
-            if let error = error {
-                print("Error uploading profile image: \(error.localizedDescription)")
             } else {
-                storageRef.downloadURL { url, error in
-                    if let error = error {
-                        print("Error getting download URL: \(error.localizedDescription)")
-                    } else {
-                        guard let url = url else {
-                            return
-                        }
-                        completion(url.absoluteString)
-                    }
-                }
+                print("Registration failed")
             }
         }
     }

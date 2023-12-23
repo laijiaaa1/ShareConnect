@@ -102,13 +102,11 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
     func fetchUserData() {
         FirebaseManager.shared.fetchUserData { [weak self] currentUser in
             guard let self = self else { return }
-            
             if let currentUser = currentUser {
                 self.currentUser = currentUser
                 self.createOrGetChatRoomDocument()
             }
         }
-        
     }
     @objc func addButtonTapped() {
         let vc = ChatSupplyCreateViewController()

@@ -68,7 +68,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
         let vc = CreateSupplyViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-    //add table headerView to say
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         let headerLabel = UILabel()

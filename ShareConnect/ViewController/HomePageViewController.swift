@@ -403,7 +403,6 @@ extension HomePageViewController: UITextFieldDelegate {
                 let searchResultsViewController = SearchResultsViewController()
                 searchResultsViewController.searchResults = searchResults
                 searchResultsViewController.searchSupply = searchSupply
-                
                 self?.navigationController?.pushViewController(searchResultsViewController, animated: true)
             }
         }

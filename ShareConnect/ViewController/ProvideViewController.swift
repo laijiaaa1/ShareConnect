@@ -204,7 +204,7 @@ class ProvideViewController: SelectedViewController {
         }
         let sellerID = seller.sellerID
         let productArray = [product]
-        chatManager.createOrGetChatRoomDocument(buyerID: Auth.auth().currentUser!.uid, sellerID: sellerID) { [weak self] (documentReference, error) in
+        ChatManager.shared.createOrGetChatRoomDocument(buyerID: Auth.auth().currentUser!.uid, sellerID: sellerID) { [weak self] (documentReference, error) in
             if let error = error {
                 print("Error creating chat room document: \(error.localizedDescription)")
                 return
@@ -215,7 +215,10 @@ class ProvideViewController: SelectedViewController {
             }
             self?.chatRoomDocument = documentReference
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
+            guard let vc = storyboard.instantiateViewController(withIdentifier: "ChatViewController") as? ChatViewController else {
+                print("Failed to instantiate ChatViewController.")
+                return
+            }
             vc.chatRoomDocument = documentReference
             vc.chatRoomID = documentReference.documentID
             vc.buyerID = sellerID
