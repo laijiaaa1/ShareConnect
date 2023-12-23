@@ -151,66 +151,22 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         dismiss(animated: true, completion: nil)
     }
     @objc func submitReview() {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
-            return
-        }
-        let textComment = commentTextView.text
-        let uploadedImage = imageView.image
-        let starRating = starRatingView.rating
-        let reviewsCollection = Firestore.firestore().collection("reviews")
-        let reviewID = reviewsCollection.document().documentID
-        let imageStorageRef = Storage.storage().reference().child("review_images/\(reviewID).jpg")
-        if let image = uploadedImage, let imageData = image.jpegData(compressionQuality: 0.5) {
-            imageStorageRef.putData(imageData, metadata: nil) { (_, error) in
-                if let error = error {
-                    print("Error uploading image: \(error.localizedDescription)")
-                    return
-                }
-                imageStorageRef.downloadURL { (url, error) in
-                    guard let imageUrl = url?.absoluteString else {
-                        print("Error getting image URL: \(error?.localizedDescription ?? "")")
-                        return
-                    }
-                    let reviewData: [String: Any] = [
-                        "userID": currentUserID,
-                        "productID": self.productID ?? "",
-                        "comment": textComment ?? "",
-                        "rating": starRating,
-                        "image": imageUrl,
-                        "timestamp": Date(),
-                        "sellerID": self.sellerID
-                    ]
-                    reviewsCollection.document(reviewID).setData(reviewData) { error in
-                        if let error = error {
-                            print("Error adding review: \(error.localizedDescription)")
-                        } else {
-                            print("Review added successfully!")
-                            self.navigationController?.popViewController(animated: true)
-                        }
+        ReviewManager.shared.submitReview(
+            for: productID ?? "",
+            sellerID: sellerID,
+            comment: commentTextView.text,
+            rating: Double(starRatingView.rating),
+            image: imageView.image
+        ) { success in
+            if success {
+                DispatchQueue.main.async {
+                    ProgressHUD.succeed("Comment Success", delay: 1.5)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.navigationController?.popViewController(animated: true)
                     }
                 }
-            }
-        } else {
-            let reviewData: [String: Any] = [
-                "userID": currentUserID,
-                "productID": productID ?? "",
-                "comment": textComment ?? "",
-                "rating": starRating,
-                "timestamp": Date(),
-                "sellerID": sellerID
-            ]
-            reviewsCollection.document(reviewID).setData(reviewData) { error in
-                if let error = error {
-                    print("Error adding review: \(error.localizedDescription)")
-                } else {
-                    print("Review added successfully!")
-                }
-            }
-        }
-        DispatchQueue.main.async {
-            ProgressHUD.succeed("Comment Success", delay: 1.5)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.navigationController?.popViewController(animated: true)
+            } else {
+                print("Failed to submit review.")
             }
         }
     }

@@ -61,6 +61,7 @@
 		34CEF0D42B3690E800BAF8DA /* RegistrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0D32B3690E800BAF8DA /* RegistrationManager.swift */; };
 		34CEF0D62B369EFD00BAF8DA /* GroupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0D52B369EFC00BAF8DA /* GroupManager.swift */; };
 		34CEF0E52B36C30200BAF8DA /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0E42B36C30200BAF8DA /* ReviewManager.swift */; };
+		34CEF0E72B36C9B100BAF8DA /* ProductManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0E62B36C9B100BAF8DA /* ProductManager.swift */; };
 		34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */; };
 		34D67F002B20A72000DE879B /* ChatListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFF2B20A72000DE879B /* ChatListCell.swift */; };
 		34D67F022B20A99D00DE879B /* TrolleyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F012B20A99D00DE879B /* TrolleyCell.swift */; };
@@ -128,6 +129,7 @@
 		34CEF0D32B3690E800BAF8DA /* RegistrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationManager.swift; sourceTree = "<group>"; };
 		34CEF0D52B369EFC00BAF8DA /* GroupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupManager.swift; sourceTree = "<group>"; };
 		34CEF0E42B36C30200BAF8DA /* ReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewManager.swift; sourceTree = "<group>"; };
+		34CEF0E62B36C9B100BAF8DA /* ProductManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductManager.swift; sourceTree = "<group>"; };
 		34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPage_GroupTableViewCell.swift; sourceTree = "<group>"; };
 		34D67EFF2B20A72000DE879B /* ChatListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCell.swift; sourceTree = "<group>"; };
 		34D67F012B20A99D00DE879B /* TrolleyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrolleyCell.swift; sourceTree = "<group>"; };
@@ -353,6 +355,7 @@
 				3410D9842B0B5EAE00D32744 /* FirestoreService.swift */,
 				3401F6842B0F1C6A0092E564 /* ChatManager.swift */,
 				34CEF0E42B36C30200BAF8DA /* ReviewManager.swift */,
+				34CEF0E62B36C9B100BAF8DA /* ProductManager.swift */,
 				34CEF0D12B366CC700BAF8DA /* FirebaseManager.swift */,
 				34CEF0D52B369EFC00BAF8DA /* GroupManager.swift */,
 				34CEF0D32B3690E800BAF8DA /* RegistrationManager.swift */,
@@ -565,6 +568,7 @@
 				3401F6872B0F4B010092E564 /* RecoderViewController.swift in Sources */,
 				3410D96A2B07665700D32744 /* SelectedViewController.swift in Sources */,
 				346DE7D22B065DB1008D411A /* CreateGroupViewController.swift in Sources */,
+				34CEF0E72B36C9B100BAF8DA /* ProductManager.swift in Sources */,
 				346687A82B182C8800723302 /* RegistrationViewController.swift in Sources */,
 				346DE7C92B05AE4D008D411A /* CreateRequestViewController.swift in Sources */,
 				346DE7D02B065DA2008D411A /* CreateSupplyViewController.swift in Sources */,

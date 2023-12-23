@@ -185,45 +185,15 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         scrollView.contentSize = CGSize(width: view.frame.width, height: collectionView.frame.height)
     }
     func fetchRequestsForUser(type: ProductType) {
-        guard let groupId = group?.documentId else {
-            print("Group ID is nil.")
-            return
-        }
-        let db = Firestore.firestore()
-        let productsCollection = db.collection("productsGroup").whereField("product.groupID", isEqualTo: groupId)
-        productsCollection.getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error getting documents: \(error)")
-            } else {
-                if self.currentButtonType == .request {
-                    self.allRequests.removeAll()
-                } else if self.currentButtonType == .supply {
-                    self.allSupplies.removeAll()
-                }
-                for document in querySnapshot!.documents {
-                    let productData = document.data()
-                    if let productTypeRawValue = productData["type"] as? String,
-                       let productType = ProductType(rawValue: productTypeRawValue),
-                       let product = FirestoreService.shared.parseProductData(productData: productData){
-                        if productType == type && product.itemType == type {
-                            print("Appending \(type): \(product)")
-                            if type == .request {
-                                self.allRequests.append(product)
-                            } else if type == .supply {
-                                self.allSupplies.append(product)
-                            }
-                        }
-                    } else {
-                        print("Error parsing product type")
-                    }
-                }
-                if type == .request {
-                    self.allRequests.sort(by: { $0.startTime < $1.startTime })
-                } else if type == .supply {
-                    self.allSupplies.sort(by: { $0.startTime < $1.startTime })
-                }
-                print("All requests: \(self.allRequests)")
-                print("All supplies: \(self.allSupplies)")
+        if type == .request {
+            ProductManager.shared.fetchProductsForGroup(type: .request, groupId: group?.documentId) { products in
+                self.allRequests = products
+                self.collectionView.reloadData()
+                self.collectionView.refreshControl?.endRefreshing()
+            }
+        } else if type == .supply {
+            ProductManager.shared.fetchProductsForGroup(type: .supply, groupId: group?.documentId) { products in
+                self.allSupplies = products
                 self.collectionView.reloadData()
                 self.collectionView.refreshControl?.endRefreshing()
             }

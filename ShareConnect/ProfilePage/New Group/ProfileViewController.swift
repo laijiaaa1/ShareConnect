@@ -66,7 +66,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             profileImageView.widthAnchor.constraint(equalToConstant: 100),
             profileImageView.heightAnchor.constraint(equalToConstant: 100)
         ])
-        //change profile image
+        // change profile image
         profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
         profileImageView.isUserInteractionEnabled = true
         view.addSubview(nameLabel)
@@ -150,9 +150,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         collectionCollectionView.dataSource = self
         collectionCollectionView.delegate = self
         collectionCollectionView.register(CollectionCell.self, forCellWithReuseIdentifier: "CollectionCell")
-        if let currentUser = Auth.auth().currentUser {
-            let userId = currentUser.uid
-        }
         let recoderButton = UIButton()
         view.addSubview(recoderButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: #selector(recoderButtonTapped))
@@ -209,7 +206,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if selectedButton == groupButton  {
+        if selectedButton == groupButton {
             return groups.count
         } else {
             return products.count
