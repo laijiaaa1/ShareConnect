@@ -101,7 +101,7 @@ extension ChatViewController {
             "buyer": currentUser?.uid ?? "",
             "seller": buyerID ?? "",
             "chatRoomID": chatRoomID ?? "",
-            "imageURL": nil ?? "",
+            "imageURL": nil ?? ""
         ] as [String : Any]
         messagesCollection.addDocument(data: audioMessage) { [weak self] (error) in
             if let error = error {

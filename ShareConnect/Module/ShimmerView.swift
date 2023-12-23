@@ -9,47 +9,37 @@ import Foundation
 import UIKit
 class ShimmerImageView: UIImageView {
     private let gradientLayer = CAGradientLayer()
-    
     // Adjusted wave height for a better shimmer effect
     private var waveHeight: CGFloat {
         return bounds.height / 2.5
     }
-    
     private var wavePath: UIBezierPath {
         let path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: bounds.height / 2))
-        
         for angle in stride(from: 0.0, to: Double(bounds.width), by: 0.1) {
             let x = angle
             let y = sin(angle * 2 * Double.pi / 100) * waveHeight + Double(bounds.height / 2)
             path.addLine(to: CGPoint(x: x, y: y))
         }
-        
         return path
     }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
-    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         commonInit()
     }
-    
     private func commonInit() {
         contentMode = .scaleAspectFit
         clipsToBounds = true
-        
         gradientLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.clear.cgColor]
         gradientLayer.locations = [0, 0.5, 1]
         gradientLayer.frame = bounds
         layer.mask = gradientLayer
-        
         startShimmerAnimation()
     }
-    
     func startShimmerAnimation() {
         let animation = CABasicAnimation(keyPath: "opacity")
         animation.fromValue = 0.3
@@ -63,23 +53,18 @@ class ShimmerImageView: UIImageView {
 
 class Class_Space: ShimmerImageView {
     private var animationTimer: Timer?
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
-    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         commonInit()
     }
-    
     private func commonInit() {
-        // 设置 Class_Space 图片的属性
-        image = UIImage(named: "Class_Space") // 请替换为您的图片名称
+        image = UIImage(named: "Class_Space")
         contentMode = .scaleAspectFit
         clipsToBounds = true
-        // 添加一个定期动画
         startCloudAnimation()
     }
     private func startCloudAnimation() {
@@ -97,7 +82,6 @@ class Class_Space: ShimmerImageView {
             }
         }
     }
-    
     deinit {
         // Invalidate the timer to prevent memory leaks
         animationTimer?.invalidate()

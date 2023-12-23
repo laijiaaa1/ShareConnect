@@ -48,7 +48,6 @@ class CollectionManager {
                   "itemType": product.itemType.rawValue,
               ]
         if product.isCollected {
-//            let removedProductData: [String: Any] = ["productId": product.productId]
             reference.updateData([
                 "collectedProducts": FieldValue.arrayRemove([productData])
             ]) { error in

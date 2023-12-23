@@ -138,7 +138,7 @@ class DetailViewController: UIViewController {
         shareButton.addTarget(self, action: #selector(share), for: .touchUpInside)
         shareButton.startAnimatingPressActions()
         view.addSubview(availabilityView)
-        availabilityView.backgroundColor = .white /*UIColor(named: "G2")*/
+        availabilityView.backgroundColor = .white
         availabilityView.layer.cornerRadius = 10
         availabilityView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -366,7 +366,6 @@ class DetailViewController: UIViewController {
                     break
                 }
             }
-            
         } else {
             print("Failed to get availability or create image URL")
         }

@@ -14,11 +14,8 @@ import ProgressHUD
 
 class RegistrationManager {
     static let shared = RegistrationManager()
-    
     let db = Firestore.firestore()
-    
     private init() {}
-    
     func registerUser(email: String?, password: String, name: String, profileImage: UIImage?, completion: @escaping (Bool) -> Void) {
         ProgressHUD.animate("Please wait...", .ballVerticalBounce)
         Auth.auth().createUser(withEmail: email ?? "", password: password) { authResult, error in
@@ -47,7 +44,6 @@ class RegistrationManager {
             completion(false)
             return
         }
-        
         var userData: [String: Any] = ["name": name]
         if let email = email, !email.isEmpty {
             userData["email"] = email
@@ -55,7 +51,6 @@ class RegistrationManager {
         if let imageUrl = imageUrl {
             userData["profileImageUrl"] = imageUrl
         }
-        
         db.collection("users").document(uid).setData(userData) { error in
             if let error = error {
                 print("Error updating user data: \(error.localizedDescription)")

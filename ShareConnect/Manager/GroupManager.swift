@@ -15,11 +15,9 @@ import Kingfisher
 class GroupDataManager {
     static let shared = GroupDataManager()
     private init() {}
-
     func fetchGroups(sort: String, completion: @escaping ([Group]) -> Void) {
         let groupsRef = Firestore.firestore().collection("groups")
         let query = groupsRef.whereField("isPublic", isEqualTo: true).whereField("sort", isEqualTo: sort)
-
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error fetching public groups: \(error.localizedDescription)")
@@ -36,14 +34,12 @@ class GroupDataManager {
             }
         }
     }
-
     func searchGroupsByName(searchString: String, completion: @escaping ([Group]) -> Void) {
         let db = Firestore.firestore()
         let groupsCollection = db.collection("groups")
         let query = groupsCollection
             .whereField("name", isGreaterThanOrEqualTo: searchString)
             .whereField("name", isLessThan: searchString + "\u{f8ff}")
-
         query.getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error searching groups: \(error.localizedDescription)")
@@ -60,8 +56,7 @@ class GroupDataManager {
             }
         }
     }
-
-    private func parseGroupData(data: [String: Any], documentId: String) -> Group? {
+    func parseGroupData(data: [String: Any], documentId: String) -> Group? {
         guard
             let name = data["name"] as? String,
             let description = data["description"] as? String,

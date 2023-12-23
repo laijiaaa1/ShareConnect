@@ -194,7 +194,6 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.addSubview(backgroundViewCloud)
                 cell.sendSubviewToBack(backgroundViewCloud)
                 backgroundViewCloud.translatesAutoresizingMaskIntoConstraints = false
-                
                 NSLayoutConstraint.activate([
                     backgroundViewCloud.topAnchor.constraint(equalTo: cell.messageLabel.topAnchor, constant: -10),
                     backgroundViewCloud.leadingAnchor.constraint(equalTo: cell.messageLabel.leadingAnchor, constant: -20),

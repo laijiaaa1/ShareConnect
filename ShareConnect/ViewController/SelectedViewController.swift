@@ -91,7 +91,6 @@ class SelectedViewController: UIViewController {
         }
     }
     func alertUserOnlyAddOneProduct() {
-        //if cart is already have product, alert user if they want to add and cover the existing one
         let alert = UIAlertController(title: "Add Product", message: "You already have other product in your cart. Do you want to add and cover it?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
             self.addProductToCart()

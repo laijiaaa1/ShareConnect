@@ -393,7 +393,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             enterData[indexPath.row] = cell.textField.text ?? ""
         }
     }
-    
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 100
     }

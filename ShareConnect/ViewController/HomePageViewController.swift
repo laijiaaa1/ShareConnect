@@ -339,7 +339,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 var searchSupply: [Product] = []
                 for document in snapshot!.documents {
                     let data = document.data()
-                    if let product = self.parseProductData(productData: data) {
+                    if let product = FirestoreService.shared.parseProductData(productData: data){
                         if product.itemType == .request {
                             searchResults.append(product)
                         } else if product.itemType == .supply {
@@ -350,48 +350,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 completion(searchResults, searchSupply)
             }
         }
-    }
-    func parseProductData(productData: [String: Any]) -> Product? {
-        guard let product = productData["product"] as? [String: Any],
-              let productId = product["productId"] as? String,
-              let name = product["Name"] as? String,
-              let price = product["Price"] as? String,
-              let imageString = product["image"] as? String,
-              let startTimeString = product["Start Time"] as? String,
-              let startTime = product["Start Time"] as? String,
-              let endTimeString = product["End Time"] as? String,
-              let endTime = product["End Time"] as? String else {
-            print("Error: Missing required fields in product data")
-            return nil
-        }
-        let sellerData = product["seller"] as? [String: Any]
-        guard let sellerID = sellerData?["sellerID"] as? String,
-              let sellerName = sellerData?["sellerName"] as? String,
-              let itemType = productData["type"] as? String
-        else {
-            print("Error: Failed to parse seller or itemType")
-            return nil
-        }
-        let description = product["Description"] as? String ?? ""
-        let sort = product["Sort"] as? String ?? ""
-        let quantity = product["Quantity"] as? Int ?? 0
-        let use = product["Use"] as? String ?? ""
-        let seller = Seller(sellerID: sellerID, sellerName: sellerName)
-        let newProduct = Product(
-            productId: productId,
-            name: name,
-            price: price,
-            startTime: startTime,
-            imageString: imageString,
-            description: description,
-            sort: sort,
-            quantity: quantity,
-            use: use,
-            endTime: endTime,
-            seller: seller,
-            itemType: ProductType(rawValue: itemType)!
-        )
-        return newProduct
     }
     func fetchGroupData() {
         Firestore.firestore().collection("groups").getDocuments { [weak self] (querySnapshot, error) in

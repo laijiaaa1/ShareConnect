@@ -503,7 +503,6 @@ class LeftVoiceCell: UITableViewCell {
             }.resume()
         }
     }
-    
     func setupAudioPlayer(with fileURL: URL) {
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: fileURL)

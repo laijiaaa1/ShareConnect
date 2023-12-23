@@ -399,7 +399,6 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
             completion(storageImageURL)
         }
     }
-    
     func sendMessageToFirestore(_ message: String, isMe: Bool, imageURL: String? = nil, location: CLLocationCoordinate2D? = nil) {
         guard let chatRoomDocument = chatRoomDocument else {
             print("Chat room document is nil.")

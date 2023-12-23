@@ -101,7 +101,6 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-    
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
@@ -113,7 +112,6 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-    
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo else { return }
         guard let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }

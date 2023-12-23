@@ -105,7 +105,6 @@ class FirestoreService {
             }
         }
     }
-    
     func parseProductData(productData: [String: Any]) -> Product? {
         guard let product = productData["product"] as? [String: Any],
               let productId = product["productId"] as? String,
