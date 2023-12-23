@@ -52,10 +52,12 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
     @objc func dismissFullscreenImage(_ sender: UITapGestureRecognizer) {
         sender.view?.removeFromSuperview()
     }
+    // 檢測到捏合手勢時被調用
     @objc func handleZoomGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
         guard let view = gestureRecognizer.view else { return }
         if gestureRecognizer.state == .changed || gestureRecognizer.state == .ended {
             view.transform = view.transform.scaledBy(x: gestureRecognizer.scale, y: gestureRecognizer.scale)
+            // 應用縮放變換后，手勢的縮放比例將重置為 1.0。這樣做是為了防止累積縮放，確保每個捏合手勢都得到獨立處理。
             gestureRecognizer.scale = 1.0
         }
     }
