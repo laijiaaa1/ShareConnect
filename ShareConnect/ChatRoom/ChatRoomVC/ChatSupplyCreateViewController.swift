@@ -170,37 +170,6 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
             }
         }
     }
-    func parseRequestData(_ data: [String: Any]) -> Request? {
-        guard
-            let requestID = data["requestID"] as? String,
-            let buyerID = data["buyerID"] as? String,
-            let itemsData = data["items"] as? [[String: Any]],
-            let selectedSellerID = data["selectedSellerID"] as? String,
-            let statusString = data["status"] as? String,
-            let status = RequestStatus(rawValue: statusString)
-        else {
-            return nil
-        }
-        let items = itemsData.compactMap { productData in
-            return FirestoreService.shared.parseProductData(productData: productData)
-        }
-        return Request(
-            requestID: requestID,
-            buyerID: buyerID,
-            items: items,
-            selectedSellerID: selectedSellerID,
-            status: status
-        )
-    }
-    func parseSellerData(_ data: [String: Any]) -> Seller? {
-        guard
-            let sellerID = data["sellerID"] as? String,
-            let sellerName = data["sellerName"] as? String
-        else {
-            return nil
-        }
-        return Seller(sellerID: sellerID, sellerName: sellerName)
-    }
 }
 class SupplyTableViewCell: MyRequestCell {
 }

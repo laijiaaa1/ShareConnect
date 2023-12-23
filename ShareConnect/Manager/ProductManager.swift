@@ -12,7 +12,7 @@ class ProductManager {
     static let shared = ProductManager()
     var allRequests: [Product] = []
     var allSupplies: [Product] = []
-
+    var products: [Product] = []
     private init() {}
 
     func fetchProductsForGroup(type: ProductType, groupId: String?, completion: @escaping ([Product]) -> Void) {
@@ -63,5 +63,27 @@ class ProductManager {
                 completion(type == .request ? self.allRequests : self.allSupplies)
             }
         }
+    }
+    func parseRequestData(_ data: [String: Any]) -> Request? {
+        guard
+            let requestID = data["requestID"] as? String,
+            let buyerID = data["buyerID"] as? String,
+            let itemsData = data["items"] as? [[String: Any]],
+            let selectedSellerID = data["selectedSellerID"] as? String,
+            let statusString = data["status"] as? String,
+            let status = RequestStatus(rawValue: statusString)
+        else {
+            return nil
+        }
+        let items = itemsData.compactMap { productData in
+            return FirestoreService.shared.parseProductData(productData: productData)
+        }
+        return Request(
+            requestID: requestID,
+            buyerID: buyerID,
+            items: items,
+            selectedSellerID: selectedSellerID,
+            status: status
+        )
     }
 }
