@@ -64,7 +64,7 @@ class RegistrationManager {
             }
         }
     }
-    private func uploadProfileImage(_ image: UIImage, completion: @escaping (String) -> Void) {
+    func uploadProfileImage(_ image: UIImage, completion: @escaping (String) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.5) else {
             return
         }

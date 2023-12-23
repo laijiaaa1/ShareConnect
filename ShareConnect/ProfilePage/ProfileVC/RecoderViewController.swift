@@ -122,7 +122,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.returnButton.backgroundColor = .lightGray
             cell.returnButton.isEnabled = false
         } else {
-            fetchReviewFromFireStore(for: orderID[indexPath.row].orderID) { hasReview in
+            ReviewManager.shared.hasUserReviewedProduct(orderID[indexPath.row].orderID) { hasReview in
                 DispatchQueue.main.async {
                     if hasReview {
                         cell.returnButton.setTitle("Done", for: .normal)
@@ -142,38 +142,10 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         return cell
     }
-    func fetchReviewFromFireStore(for orderID: String, completion: @escaping (Bool) -> Void) {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
-            completion(false)
-            return
-        }
-        let reviewsCollection = Firestore.firestore().collection("reviews")
-        reviewsCollection.whereField("userID", isEqualTo: currentUserID).whereField("productID", isEqualTo: orderID).getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error fetching reviews: \(error.localizedDescription)")
-                completion(false)
-                return
-            }
-            let hasReview = !(querySnapshot?.documents.isEmpty ?? false)
-            completion(hasReview)
-        }
-    }
     @objc func remindButtonTapped() {
         if let orderID = order?.orderID {
-            scheduleLocalNotification(for: orderID)
         }
     }
-    func scheduleLocalNotification(for orderID: String) {
-        let content = UNMutableNotificationContent()
-        content.title = "Reminder"
-        content.body = "Don't forget to return the item for order \(orderID)!"
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-        let request = UNNotificationRequest(identifier: "reminder_\(orderID)", content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: { error in
-            if let error = error {
-            }
-        }
-        )}
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }

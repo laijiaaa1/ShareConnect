@@ -193,29 +193,19 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func uploadFirebase() {
         guard let image = profileImageView.image else { return }
         guard let uploadData = image.jpegData(compressionQuality: 0.3) else { return }
-        let filename = NSUUID().uuidString
-        let storageRef = Storage.storage().reference().child("profile_image").child(filename)
-        storageRef.putData(uploadData, metadata: nil) { (metadata, error) in
-            if let error = error {
-                print("Failed to upload image to storage", error)
-                return
-            }
-            storageRef.downloadURL(completion: { (downloadURL, error) in
-                if let error = error {
-                    print("Failed to fetch downloadURL", error)
-                    return
-                }
-                guard let profileImageUrl = downloadURL?.absoluteString else { return }
-                let dictionaryValues = ["profileImageUrl": profileImageUrl]
-                let values = [self.userId: dictionaryValues]
-                Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (error, ref) in
+        RegistrationManager.shared.uploadProfileImage(image) { imageUrl in
+            let values = ["profileImageUrl": imageUrl]
+            if let userId = self.userId {
+                Database.database().reference().child("users").child(userId).updateChildValues(values) { (error, ref) in
                     if let error = error {
-                        print("Failed to save user info into db", error)
+                        print("Failed to save user info into db:", error)
                         return
                     }
                     print("Successfully saved user info to db")
-                })
-            })
+                }
+            } else {
+                print("User ID is nil.")
+            }
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -224,7 +214,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         } else {
             return products.count
         }
-        return 0
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
@@ -269,7 +258,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             cell.requestImageView.kf.setImage(with: imageURL)
             return cell
         }
-        return cell
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, completionHandler) in
@@ -347,10 +335,16 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             subGroupViewController.group = selectedGroup
             navigationController?.pushViewController(subGroupViewController, animated: true)
         } else {
-            let selectedProduct = products[indexPath.row]
-            let detailViewController = DetailViewController()
-            detailViewController.product = selectedProduct
-            navigationController?.pushViewController(detailViewController, animated: true)
+                let selectedProduct = products[indexPath.row]
+            if selectedProduct.itemType == .request {
+                let provideViewController = ProvideViewController()
+                provideViewController.product = selectedProduct
+                navigationController?.pushViewController(provideViewController, animated: true)
+            } else {
+                let detailViewController = DetailViewController()
+                detailViewController.product = selectedProduct
+                navigationController?.pushViewController(detailViewController, animated: true)
+            }
         }
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -373,7 +367,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedCollection = collections[indexPath.item]
         let detailViewController = DetailViewController()
-        detailViewController.product?.productId = selectedCollection.productId
+        let product = products.first(where: { $0.productId == selectedCollection.productId })
+        detailViewController.product = product
         navigationController?.pushViewController(detailViewController, animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {

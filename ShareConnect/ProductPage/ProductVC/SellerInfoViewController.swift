@@ -168,18 +168,8 @@ class SellerInfoViewController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
     func fetchReview() {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
-            return
-        }
-        let reviewsCollection = Firestore.firestore().collection("reviews")
-        reviewsCollection.whereField("sellerID", isEqualTo: sellerID).getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error fetching reviews: \(error.localizedDescription)")
-                return
-            }
-            self.commendList = querySnapshot?.documents.compactMap { document in
-                return Reviews(document: document)
-            } ?? []
+        ReviewManager.shared.fetchReviews(for: sellerID ?? "") { reviews in
+            self.commendList = reviews
             DispatchQueue.main.async {
                 self.commendTableView.reloadData()
             }

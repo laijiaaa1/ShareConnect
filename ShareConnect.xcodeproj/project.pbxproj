@@ -60,6 +60,7 @@
 		34CEF0D22B366CC700BAF8DA /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0D12B366CC700BAF8DA /* FirebaseManager.swift */; };
 		34CEF0D42B3690E800BAF8DA /* RegistrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0D32B3690E800BAF8DA /* RegistrationManager.swift */; };
 		34CEF0D62B369EFD00BAF8DA /* GroupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0D52B369EFC00BAF8DA /* GroupManager.swift */; };
+		34CEF0E52B36C30200BAF8DA /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0E42B36C30200BAF8DA /* ReviewManager.swift */; };
 		34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */; };
 		34D67F002B20A72000DE879B /* ChatListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFF2B20A72000DE879B /* ChatListCell.swift */; };
 		34D67F022B20A99D00DE879B /* TrolleyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F012B20A99D00DE879B /* TrolleyCell.swift */; };
@@ -126,6 +127,7 @@
 		34CEF0D12B366CC700BAF8DA /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		34CEF0D32B3690E800BAF8DA /* RegistrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationManager.swift; sourceTree = "<group>"; };
 		34CEF0D52B369EFC00BAF8DA /* GroupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupManager.swift; sourceTree = "<group>"; };
+		34CEF0E42B36C30200BAF8DA /* ReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewManager.swift; sourceTree = "<group>"; };
 		34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPage_GroupTableViewCell.swift; sourceTree = "<group>"; };
 		34D67EFF2B20A72000DE879B /* ChatListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCell.swift; sourceTree = "<group>"; };
 		34D67F012B20A99D00DE879B /* TrolleyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrolleyCell.swift; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 			children = (
 				3410D9842B0B5EAE00D32744 /* FirestoreService.swift */,
 				3401F6842B0F1C6A0092E564 /* ChatManager.swift */,
+				34CEF0E42B36C30200BAF8DA /* ReviewManager.swift */,
 				34CEF0D12B366CC700BAF8DA /* FirebaseManager.swift */,
 				34CEF0D52B369EFC00BAF8DA /* GroupManager.swift */,
 				34CEF0D32B3690E800BAF8DA /* RegistrationManager.swift */,
@@ -537,6 +540,7 @@
 				3410D9732B08890300D32744 /* Setting.swift in Sources */,
 				346687AA2B1AF94F00723302 /* ChatMapViewController.swift in Sources */,
 				349B02322B2E974F00379F3C /* ChatVC_Extension.swift in Sources */,
+				34CEF0E52B36C30200BAF8DA /* ReviewManager.swift in Sources */,
 				34B530EF2B1F3FA100A4C222 /* ExtentionButton.swift in Sources */,
 				34B530F32B20A3DB00A4C222 /* SearchPage_SearchCollectionViewCell.swift in Sources */,
 				341E9B902B03629800997FE9 /* HomePageViewController.swift in Sources */,

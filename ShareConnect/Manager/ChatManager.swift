@@ -74,27 +74,27 @@ class ChatManager {
             completion(chatMessages, nil)
         }
     }
-    func sendMessageToFirestore(chatRoomDocument: DocumentReference, message: String, isMe: Bool, completion: @escaping (Error?) -> Void) {
-        let messagesCollection = chatRoomDocument.collection("messages")
-        messagesCollection.addDocument(data: [
-            "text": message,
-            "isMe": isMe,
-            "timestamp": FieldValue.serverTimestamp(),
-            "name": isMe ? "Buyer" : seller?.sellerName ?? ""
-        ]) { error in
-            completion(error)
-        }
-    }
-    func convertCartToString(_ cart: [Seller: [Product]]) -> String {
-        for (seller, products) in cart {
-            cartString.append("Seller: \(seller.sellerName)\n")
-            for product in products {
-                cartString.append(" - Product: \(product.name)\n")
-                cartString.append("   Quantity: \(product.quantity ?? 1)\n")
-                cartString.append("   Price: \(product.price)\n")
-            }
-            cartString.append("\n")
-        }
-        return cartString
-    }
+//    func sendMessageToFirestore(chatRoomDocument: DocumentReference, message: String, isMe: Bool, completion: @escaping (Error?) -> Void) {
+//        let messagesCollection = chatRoomDocument.collection("messages")
+//        messagesCollection.addDocument(data: [
+//            "text": message,
+//            "isMe": isMe,
+//            "timestamp": FieldValue.serverTimestamp(),
+//            "name": isMe ? "Buyer" : seller?.sellerName ?? ""
+//        ]) { error in
+//            completion(error)
+//        }
+//    }
+//    func convertCartToString(_ cart: [Seller: [Product]]) -> String {
+//        for (seller, products) in cart {
+//            cartString.append("Seller: \(seller.sellerName)\n")
+//            for product in products {
+//                cartString.append(" - Product: \(product.name)\n")
+//                cartString.append("   Quantity: \(product.quantity ?? 1)\n")
+//                cartString.append("   Price: \(product.price)\n")
+//            }
+//            cartString.append("\n")
+//        }
+//        return cartString
+//    }
 }
