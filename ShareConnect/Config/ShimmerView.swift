@@ -70,7 +70,7 @@ class Class_Space: ShimmerImageView {
     private func startCloudAnimation() {
         guard animationTimer == nil else { return }
         animationTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
-            // 在这里设置动画的最终位置
+            // 動畫最終位置
             UIView.animate(withDuration: 1.5, delay: 0.0, options: [.curveEaseInOut], animations: {
                 self?.transform = CGAffineTransform(translationX: 20, y: 0)
                 self?.alpha = 0.7 // Adjust the alpha value for a subtle shimmer effect
