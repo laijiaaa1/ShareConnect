@@ -291,7 +291,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                 let productData = document.data()
                 if let productTypeRawValue = productData["type"] as? String,
                    let productType = ProductType(rawValue: productTypeRawValue),
-                   let product = FirestoreService.shared.parseProductData(productData: productData) {
+                   let product = FirestoreService.shared.parseProductData(productData: productData){
                     dispatchGroup.enter()
                     self.isSellerBlocked(product.seller.sellerID) { isBlocked in
                         if !isBlocked && productType.rawValue == "request" && product.itemType == productType && product.sort == classification {

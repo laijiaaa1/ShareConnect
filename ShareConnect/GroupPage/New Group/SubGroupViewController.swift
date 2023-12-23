@@ -25,6 +25,7 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
     var usification: String?
     var currentButtonType: ProductType = .request
     var group: Group?
+    var lineViewLeadingConstraint: NSLayoutConstraint!
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -124,7 +125,11 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     @objc func button1Action() {
         currentButtonType = .request
-        lineView.center.x = button1.center.x
+        let position = stackView.frame.origin.x
+        self.lineViewLeadingConstraint.constant = position
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
         button1.setTitleColor(.white, for: .normal)
         button2.setTitleColor(.lightGray, for: .normal)
         fetchRequestsForUser(type: .request)
@@ -132,7 +137,11 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     @objc func button2Action() {
         currentButtonType = .supply
-        lineView.center.x = button2.center.x
+        let position = stackView.frame.origin.x + stackView.frame.width / 2
+        self.lineViewLeadingConstraint.constant = position
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
         button1.setTitleColor(.lightGray, for: .normal)
         button2.setTitleColor(.white, for: .normal)
         fetchRequestsForUser(type: .supply)
@@ -150,25 +159,25 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
             stackView.heightAnchor.constraint(equalToConstant: 44)
         ])
         button1.setTitle("Required", for: .normal)
+        button1.startAnimatingPressActions()
         button1.setTitleColor(.white, for: .normal)
-        button1.backgroundColor = .black
         button1.addTarget(self, action: #selector(button1Action), for: .touchUpInside)
         button2.setTitle("Available", for: .normal)
+        button2.startAnimatingPressActions()
         button2.setTitleColor(.white, for: .normal)
-        button2.backgroundColor = .black
         button2.addTarget(self, action: #selector(button2Action), for: .touchUpInside)
         stackView.addArrangedSubview(button1)
         stackView.addArrangedSubview(button2)
         lineView.backgroundColor = .white
         lineView.translatesAutoresizingMaskIntoConstraints = false
-        lineView.center.x = button1.center.x
         view.addSubview(lineView)
         NSLayoutConstraint.activate([
             lineView.topAnchor.constraint(equalTo: stackView.bottomAnchor),
-            lineView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2),
-            lineView.heightAnchor.constraint(equalToConstant: 2)
+            lineView.heightAnchor.constraint(equalToConstant: 2),
+            lineView.widthAnchor.constraint(equalToConstant: view.frame.width / 2)
         ])
+        lineViewLeadingConstraint = lineView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor)
+        lineViewLeadingConstraint.isActive = true
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 600, height: 40)
