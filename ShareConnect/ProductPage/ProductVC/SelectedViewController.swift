@@ -106,7 +106,7 @@ class SelectedViewController: UIViewController {
         let userCartDocument = cartCollection.document(currentUserID)
         let cartData = cart.map { (seller, products) in
             let encodedProducts = try? JSONEncoder().encode(products)
-            return ["sellerID": seller.sellerID, "products": encodedProducts]
+            return ["sellerID": seller.sellerID, "products": encodedProducts as Any]
         }
         userCartDocument.setData(["buyerID": currentUserID, "cart": cartData])
     }

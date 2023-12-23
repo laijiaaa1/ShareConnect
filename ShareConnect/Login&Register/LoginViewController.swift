@@ -38,7 +38,7 @@ class LoginViewController: UIViewController {
             } else {
                 if let user = Auth.auth().currentUser {
                     print("User is already registered with UID: \(user.uid)")
-                    if let buyerID = Auth.auth().currentUser?.uid {
+                    if (Auth.auth().currentUser?.uid) != nil {
                     }
                 }
             }
@@ -129,19 +129,14 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
         switch error {
         case ASAuthorizationError.canceled:
             CustomFunc.customAlert(title: "使用者取消登入", message: "", vc: self, actionHandler: nil)
-            break
         case ASAuthorizationError.failed:
             CustomFunc.customAlert(title: "授權請求失敗", message: "", vc: self, actionHandler: nil)
-            break
         case ASAuthorizationError.invalidResponse:
             CustomFunc.customAlert(title: "授權請求無回應", message: "", vc: self, actionHandler: nil)
-            break
         case ASAuthorizationError.notHandled:
             CustomFunc.customAlert(title: "授權請求未處理", message: "", vc: self, actionHandler: nil)
-            break
         case ASAuthorizationError.unknown:
             CustomFunc.customAlert(title: "授權失敗，原因不知", message: "", vc: self, actionHandler: nil)
-            break
         default:
             break
         }
@@ -161,7 +156,7 @@ extension LoginViewController {
                 CustomFunc.customAlert(title: "Sign In Error", message: "\(String(describing: error!.localizedDescription))", vc: self, actionHandler: nil)
                 return
             }
-            if let buyerID = Auth.auth().currentUser?.uid{
+            if let buyerID = Auth.auth().currentUser?.uid {
                 Messaging.messaging().subscribe(toTopic: buyerID)
             }
             if let appleID = Auth.auth().currentUser?.uid {

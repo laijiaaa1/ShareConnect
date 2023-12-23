@@ -273,7 +273,16 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                    let audioURL = data["audioURL"] as? String,
                    let imageURL = data["imageURL"] as? String {
                     print("Download URL: \(audioURL)")
-                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL, audioURL: audioURL)
+                    let chatMessage = ChatMessage(text: text,
+                                                  isMe: isMe,
+                                                  timestamp: timestamp,
+                                                  profileImageUrl: profileImageUrl,
+                                                  name: name,
+                                                  chatRoomID: chatRoomID,
+                                                  sellerID: sellerID,
+                                                  buyerID: buyerID,
+                                                  imageURL: imageURL,
+                                                  audioURL: audioURL)
                     self.chatMessages.append(chatMessage)
                 }
             }
@@ -471,7 +480,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
                     .foregroundColor: UIColor.white
                 ]
                 // Product information text
-                let productText = "   Product: \(product.name)\n   Quantity: \(product.quantity ?? 1)\n   Price: \(product.price)"
+                let productText = "   Product: \(product.name)\n   Quantity: \(product.quantity )\n   Price: \(product.price)"
                 (productText as NSString).draw(at: CGPoint(x: 200, y: yOffset), withAttributes: productAttributes)
                 // Fixed image size and position
                 let imageRect = CGRect(x: 20, y: 140, width: 150, height: 150)  // Adjust the image size and position

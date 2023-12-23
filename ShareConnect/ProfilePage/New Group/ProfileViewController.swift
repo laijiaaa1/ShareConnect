@@ -174,7 +174,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
-    //select the image and upload to profileImageView
+    // select the image and upload to profileImageView
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         var selectedImageFormPicker: UIImage?
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
@@ -306,7 +306,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             db.collection("users").document(userId ?? "").updateData(["groups": FieldValue.arrayRemove([group.documentId])])
             fetchGroups(userId: userId ?? "")
         } else {
-            db.collection("groups").document(group.documentId).updateData(["members": FieldValue.arrayRemove([userId])])
+            db.collection("groups").document(group.documentId).updateData(["members": FieldValue.arrayRemove([userId as Any])])
             db.collection("users").document(userId ?? "").updateData(["groups": FieldValue.arrayRemove([group.documentId])])
             fetchGroups(userId: userId ?? "")
         }

@@ -20,23 +20,22 @@ var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         IQKeyboardManager.shared.enable = true
         FirebaseApp.configure()
-        UNUserNotificationCenter.current().delegate = self
-
-               UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-                   if granted {
-                       print("Local notifications are enabled")
-                   } else {
-                       print("Local notifications are not enabled")
-                   }
-               }
-               application.registerForRemoteNotifications()
+//        UNUserNotificationCenter.current().delegate = self
+//
+//               UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+//                   if granted {
+//                       print("Local notifications are enabled")
+//                   } else {
+//                       print("Local notifications are not enabled")
+//                   }
+//               }
+//               application.registerForRemoteNotifications()
 
                return true
     }
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-           completionHandler([.alert, .sound, .badge])
-       }
-
+//    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+//           completionHandler([.alert, .sound, .badge])
+//       }
 
     // MARK: UISceneSession Lifecycle
 
@@ -51,7 +50,4 @@ var window: UIWindow?
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
-
 }
-

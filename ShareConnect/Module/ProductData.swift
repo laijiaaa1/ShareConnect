@@ -28,7 +28,18 @@ struct Product: Codable, Equatable {
     static func == (lhs: Product, rhs: Product) -> Bool {
         return lhs.productId == rhs.productId
     }
-    init(productId: String, name: String, price: String, startTime: String, imageString: String, description: String, sort: String, quantity: Int, use: String, endTime: String, seller: Seller, itemType: ProductType) {
+    init(productId: String,
+         name: String,
+         price: String,
+         startTime: String,
+         imageString: String,
+         description: String,
+         sort: String,
+         quantity: Int,
+         use: String,
+         endTime: String,
+         seller: Seller,
+         itemType: ProductType) {
         self.productId = productId
         self.name = name
         self.price = price

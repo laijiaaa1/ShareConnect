@@ -158,7 +158,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
             if usification == "product" {
                 if currentButtonType == .request, allRequests.count > indexPath.item {
                     cell.product = allRequests[indexPath.item]
-                } else if currentButtonType == .supply, allSupplies.count > indexPath.item  {
+                } else if currentButtonType == .supply, allSupplies.count > indexPath.item {
                     cell.product = allSupplies[indexPath.item]
                 }
             } else if usification == "place" {
@@ -291,7 +291,7 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                 let productData = document.data()
                 if let productTypeRawValue = productData["type"] as? String,
                    let productType = ProductType(rawValue: productTypeRawValue),
-                   let product = FirestoreService.shared.parseProductData(productData: productData){
+                   let product = FirestoreService.shared.parseProductData(productData: productData) {
                     dispatchGroup.enter()
                     self.isSellerBlocked(product.seller.sellerID) { isBlocked in
                         if !isBlocked && productType.rawValue == "request" && product.itemType == productType && product.sort == classification {
@@ -334,10 +334,10 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
                 var uniqueProductID = Set<String>()
                 for document in querySnapshot!.documents {
                     let productData = document.data()
-                    if let product = FirestoreService.shared.parseProductData(productData: productData){
+                    if let product = FirestoreService.shared.parseProductData(productData: productData) {
                         dispatchGroup.enter()
                         self.isSellerBlocked(product.seller.sellerID) { isBlocked in
-                            if !isBlocked && product.itemType == type && uniqueProductID.insert(product.productId).inserted{
+                            if !isBlocked && product.itemType == type && uniqueProductID.insert(product.productId).inserted {
                                 if type == .request {
                                     self.allRequests.append(product)
                                 } else if type == .supply {

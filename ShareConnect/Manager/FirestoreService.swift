@@ -39,7 +39,7 @@ class FirestoreService {
                 print("Error adding document: \(error.localizedDescription)")
             }
             for document in snapshot!.documents {
-                self.db.collection("users").document(uid).collection("browsingHistory").document(document.documentID).delete{ error in
+                self.db.collection("users").document(uid).collection("browsingHistory").document(document.documentID).delete { error in
                     if let error = error {
                         print("Error delete document: \(error.localizedDescription)")
                     }
@@ -110,8 +110,7 @@ class FirestoreService {
               let endTimeString = product["End Time"] as? String,
               let endTime = product["End Time"] as? String else {
             print("Error: Missing required fields in product data")
-            return nil
-        }
+            return nil }
         let sellerData = product["seller"] as? [String: Any]
         guard let sellerID = sellerData?["sellerID"] as? String,
               let sellerName = sellerData?["sellerName"] as? String,

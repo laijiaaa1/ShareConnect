@@ -71,7 +71,7 @@ class ReviewManager {
         }
     }
     func fetchReviews(for sellerID: String, completion: @escaping ([Reviews]) -> Void) {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
+        guard (Auth.auth().currentUser?.uid) != nil else {
             completion([])
             return
         }

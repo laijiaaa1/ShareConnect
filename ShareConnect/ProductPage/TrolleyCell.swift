@@ -75,7 +75,7 @@ class TrolleyCell: UITableViewCell {
         priceLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-            priceLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            priceLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor)
         ])
         numberLabel.text = "\(number)"
         numberLabel.textAlignment = .center

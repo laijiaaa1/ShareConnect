@@ -53,7 +53,7 @@ extension ProfileViewController {
                 self.products.removeAll()
                 for document in querySnapshot!.documents {
                     let data = document.data()
-                    if let product = FirestoreService.shared.parseProductData(productData: data){
+                    if let product = FirestoreService.shared.parseProductData(productData: data) {
                         self.products.append(product)
                     }
                 }
@@ -84,7 +84,7 @@ extension ProfileViewController {
             } else {
                 for groupDocument in groupQuerySnapshot!.documents {
                     let groupData = groupDocument.data()
-                    if let product = FirestoreService.shared.parseProductData(productData: groupData){
+                    if let product = FirestoreService.shared.parseProductData(productData: groupData) {
                         self.products.append(product)
                     }
                 }
@@ -93,7 +93,7 @@ extension ProfileViewController {
         }
     }
     func fetchCollections(userId: String) {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
+        guard (Auth.auth().currentUser?.uid) != nil else {
             return
         }
         let db = Firestore.firestore()
@@ -115,7 +115,7 @@ extension ProfileViewController {
         }
     }
     func fetchGroups(userId: String) {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
+        guard (Auth.auth().currentUser?.uid) != nil else {
             return
         }
         let db = Firestore.firestore()

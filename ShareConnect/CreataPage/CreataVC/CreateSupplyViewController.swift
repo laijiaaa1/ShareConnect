@@ -44,11 +44,11 @@ class CreateSupplyViewController: CreateRequestViewController {
                                 "sellerName": user?.email ?? ""
                             ]
                             DispatchQueue.main.async {
-                                for i in enterData.indices {
+                                for i in self.enterData.indices {
                                     let indexPath = IndexPath(row: i, section: 0)
                                     if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
                                         let key = cell.requestLabel.text ?? ""
-                                        let value = enterData[i]
+                                        let value = self.enterData[i]
                                         productData[key] = value
                                     }
                                 }
@@ -74,7 +74,7 @@ class CreateSupplyViewController: CreateRequestViewController {
                                     ),
                                     itemType: .supply
                                 )
-                                let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
+                                let collectionName: String = self.selectedGroupID != nil ? "productsGroup" : "products"
                                 db.collection(collectionName).addDocument(data: [
                                     "type": ProductType.supply.rawValue,
                                     "product": productData

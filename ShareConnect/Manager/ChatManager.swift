@@ -68,7 +68,16 @@ class ChatManager {
                    let audioURL = data["audioURL"] as? String,
                    let imageURL = data["imageURL"] as? String {
                     print("Download URL: \(audioURL)")
-                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL, audioURL: audioURL)
+                    let chatMessage = ChatMessage(text: text,
+                                                  isMe: isMe,
+                                                  timestamp: timestamp,
+                                                  profileImageUrl: profileImageUrl,
+                                                  name: name,
+                                                  chatRoomID: chatRoomID,
+                                                  sellerID: sellerID,
+                                                  buyerID: buyerID,
+                                                  imageURL: imageURL,
+                                                  audioURL: audioURL)
                     chatMessages.append(chatMessage)
                 }
             }

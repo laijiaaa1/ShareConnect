@@ -104,7 +104,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         let userCartDocument = cartCollection.document(currentUserID)
         let cartData = cart.map { (seller, products) in
             let encodedProducts = try? JSONEncoder().encode(products)
-            return ["sellerID": seller.sellerID, "products": encodedProducts]
+            return ["sellerID": seller.sellerID, "products": encodedProducts as Any]
         }
         userCartDocument.setData(["buyerID": currentUserID, "cart": cartData])
     }
@@ -241,7 +241,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
         newOrderRef = ordersCollection.addDocument(data: [
             "buyerID": currentUserID,
             "sellerID": sellerID,
-            "image": cart.first.map { $0.value.first?.imageString },
+            "image": cart.first.map { $0.value.first?.imageString } as Any,
             "createdAt": FieldValue.serverTimestamp(),
             "cart": encodeCart()
         ]) { error in

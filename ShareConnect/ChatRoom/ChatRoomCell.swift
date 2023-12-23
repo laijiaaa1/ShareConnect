@@ -14,7 +14,7 @@ import MapKit
 import CoreLocation
 import AVFAudio
 
-class TextCell: UITableViewCell {
+class BaseCell: UITableViewCell {
     let timestampLabel: UILabel = {
         let timestampLabel = UILabel()
         timestampLabel.font = UIFont.systemFont(ofSize: 12)
@@ -36,6 +36,15 @@ class TextCell: UITableViewCell {
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        timestampLabel.text = ""
+        nameLabel.text = ""
+        image.image = nil
+    }
+}
+
+class TextCell: BaseCell {
     let messageLabel: UILabel = {
         let messageLabel = UILabel()
         messageLabel.font = UIFont.systemFont(ofSize: 15)
@@ -76,28 +85,7 @@ class TextCell: UITableViewCell {
         timestampLabel.textColor = .gray
     }
 }
-class LeftTextCell: UITableViewCell {
-    let timestampLabel: UILabel = {
-        let timestampLabel = UILabel()
-        timestampLabel.font = UIFont.systemFont(ofSize: 12)
-        timestampLabel.textColor = .gray
-        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
-        return timestampLabel
-    }()
-    let nameLabel: UILabel = {
-        let nameLabel = UILabel()
-        nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.textColor = .white
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        return nameLabel
-    }()
-    let image: UIImageView = {
-        let image = UIImageView()
-        image.layer.cornerRadius = 15
-        image.layer.masksToBounds = true
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
-    }()
+class LeftTextCell: BaseCell {
     let messageLabel: UILabel = {
         let messageLabel = UILabel()
         messageLabel.font = UIFont.systemFont(ofSize: 15)
@@ -138,28 +126,7 @@ class LeftTextCell: UITableViewCell {
         timestampLabel.textColor = .gray
     }
 }
-class ImageCell: UITableViewCell {
-    let timestampLabel: UILabel = {
-        let timestampLabel = UILabel()
-        timestampLabel.font = UIFont.systemFont(ofSize: 12)
-        timestampLabel.textColor = .gray
-        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
-        return timestampLabel
-    }()
-    let nameLabel: UILabel = {
-        let nameLabel = UILabel()
-        nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.textColor = .white
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        return nameLabel
-    }()
-    let image: UIImageView = {
-        let image = UIImageView()
-        image.layer.cornerRadius = 15
-        image.layer.masksToBounds = true
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
-    }()
+class ImageCell: BaseCell {
     let imageURLpost: UIImageView = {
         let image = UIImageView()
         image.layer.cornerRadius = 15
@@ -200,28 +167,7 @@ class ImageCell: UITableViewCell {
         imageURLpost.isUserInteractionEnabled = true
     }
 }
-class LeftImageCell: UITableViewCell {
-    let timestampLabel: UILabel = {
-        let timestampLabel = UILabel()
-        timestampLabel.font = UIFont.systemFont(ofSize: 12)
-        timestampLabel.textColor = .gray
-        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
-        return timestampLabel
-    }()
-    let nameLabel: UILabel = {
-        let nameLabel = UILabel()
-        nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.textColor = .white
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        return nameLabel
-    }()
-    let image: UIImageView = {
-        let image = UIImageView()
-        image.layer.cornerRadius = 15
-        image.layer.masksToBounds = true
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
-    }()
+class LeftImageCell: BaseCell {
     let imageURLpost: UIImageView = {
         let image = UIImageView()
         image.layer.cornerRadius = 15
@@ -262,7 +208,7 @@ class LeftImageCell: UITableViewCell {
         imageURLpost.isUserInteractionEnabled = true
     }
 }
-class VoiceCell: UITableViewCell {
+class VoiceCell: BaseCell {
     var audioPlayer: AVAudioPlayer?
     var playButton = UIButton()
     var audioURL: String? {
@@ -272,27 +218,6 @@ class VoiceCell: UITableViewCell {
             downloadFileFromURL(url: url!)
         }
     }
-    let timestampLabel: UILabel = {
-        let timestampLabel = UILabel()
-        timestampLabel.font = UIFont.systemFont(ofSize: 12)
-        timestampLabel.textColor = .gray
-        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
-        return timestampLabel
-    }()
-    let nameLabel: UILabel = {
-        let nameLabel = UILabel()
-        nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.textColor = .white
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        return nameLabel
-    }()
-    let image: UIImageView = {
-        let image = UIImageView()
-        image.layer.cornerRadius = 15
-        image.layer.masksToBounds = true
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
-    }()
     var chatMessage: ChatMessage?
     let backView: UIView = {
         let backView = UIView()
@@ -333,7 +258,6 @@ class VoiceCell: UITableViewCell {
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
-    
     @objc func playButtonTapped() {
         if let audioPlayer = audioPlayer {
             if audioPlayer.isPlaying {
@@ -367,7 +291,6 @@ class VoiceCell: UITableViewCell {
             }.resume()
         }
     }
-    
     func setupAudioPlayer(with fileURL: URL) {
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
@@ -398,7 +321,7 @@ extension VoiceCell: AVAudioPlayerDelegate {
         print("Audio decoding error: \(error?.localizedDescription ?? "Unknown error")")
     }
 }
-class LeftVoiceCell: UITableViewCell {
+class LeftVoiceCell: BaseCell {
     var audioPlayer: AVAudioPlayer?
     var playButton = UIButton()
     var audioURL: String? {
@@ -408,27 +331,6 @@ class LeftVoiceCell: UITableViewCell {
             downloadFileFromURL(url: url!)
         }
     }
-    let timestampLabel: UILabel = {
-        let timestampLabel = UILabel()
-        timestampLabel.font = UIFont.systemFont(ofSize: 12)
-        timestampLabel.textColor = .gray
-        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
-        return timestampLabel
-    }()
-    let nameLabel: UILabel = {
-        let nameLabel = UILabel()
-        nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.textColor = .white
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        return nameLabel
-    }()
-    let image: UIImageView = {
-        let image = UIImageView()
-        image.layer.cornerRadius = 15
-        image.layer.masksToBounds = true
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
-    }()
     var chatMessage: ChatMessage?
     let backView: UIView = {
         let backView = UIView()
@@ -469,7 +371,6 @@ class LeftVoiceCell: UITableViewCell {
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
-    
     @objc func playButtonTapped() {
         if let audioPlayer = audioPlayer {
             if audioPlayer.isPlaying {

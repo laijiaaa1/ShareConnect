@@ -154,7 +154,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UITableView
                 return
             }
             if (self.currentUserRole == .seller && sellerID == self.sellerID) || (self.currentUserRole == .buyer && buyerID == self.buyerID) {
-                let timestamp = timestampString.dateValue()
+                _ = timestampString.dateValue()
                 let message = ChatMessage(text: text,
                                           isMe: isMe,
                                           timestamp: timestampString,

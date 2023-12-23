@@ -48,7 +48,7 @@ class CreateGroupViewController: CreateRequestViewController {
         cell.textField.textColor = .white
         cell.requestLabel.frame = cell.contentView.bounds
         cell.requestLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        var requestLabels = ["Name", "Description", "Sort", "Require", "No. of people", "Invite Code(Private必填)"]
+        let requestLabels = ["Name", "Description", "Sort", "Require", "No. of people", "Invite Code(Private必填)"]
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info
@@ -63,7 +63,7 @@ class CreateGroupViewController: CreateRequestViewController {
                 groupPicker.tag = indexPath.row
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = groupPicker
-                print("sort:\(cell.textField.text)")
+                print("sort:\(String(describing: cell.textField.text))")
             }
         }
         if indexPath.row == 0 {
@@ -109,7 +109,7 @@ class CreateGroupViewController: CreateRequestViewController {
     func isValidInvitationCode() -> Bool {
         let code = findCellWithTag(5)?.textField.text ?? ""
         let minLength = 3
-        if !code.isEmpty && code.count >= minLength{
+        if !code.isEmpty && code.count >= minLength {
             return true
         }
         return false
@@ -172,7 +172,7 @@ class CreateGroupViewController: CreateRequestViewController {
                 print("Error creating group: \(error.localizedDescription)")
             } else {
                 let groupID = newGroupDocRef?.documentID
-                userGroups.updateData(["groups": FieldValue.arrayUnion([groupID])]) { error in
+                userGroups.updateData(["groups": FieldValue.arrayUnion([groupID as Any])]) { error in
                     if let error = error {
                         print("Error updating user's groups: \(error.localizedDescription)")
                     } else {

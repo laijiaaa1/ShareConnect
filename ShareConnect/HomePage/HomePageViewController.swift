@@ -176,7 +176,11 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         layout2.scrollDirection = .horizontal
         let historyScrollView = UIScrollView(frame: CGRect(x: 30, y: 600, width: view.frame.width - 60, height: 150))
         view.addSubview(historyScrollView)
-        self.browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: browsingHistoryItems.count * 320, height: Int(historyScrollView.frame.height)), collectionViewLayout: layout2)
+        self.browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0,
+                                                                        y: 0,
+                                                                        width: browsingHistoryItems.count * 320,
+                                                                        height: Int(historyScrollView.frame.height)),
+                                                          collectionViewLayout: layout2)
         historyScrollView.addSubview(browsingHistoryCollection)
         browsingHistoryCollection.backgroundColor = .clear
         browsingHistoryCollection.showsHorizontalScrollIndicator = false

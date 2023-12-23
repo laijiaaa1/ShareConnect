@@ -271,7 +271,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     @objc func openMap(_ gesture: UITapGestureRecognizer) {
-        //gesture.view 獲取到正確的
+        // gesture.view 獲取到正確的
         guard let tappedCell = gesture.view as? UILabel, let mapLink = tappedCell.text, let url = URL(string: mapLink) else {
             return
         }

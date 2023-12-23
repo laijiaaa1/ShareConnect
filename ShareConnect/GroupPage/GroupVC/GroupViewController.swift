@@ -111,7 +111,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return 250
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var group = groups[indexPath.row]
+        let group = groups[indexPath.row]
         if group.isPublic {
             let subGroupViewController = SubGroupViewController()
             subGroupViewController.group = group

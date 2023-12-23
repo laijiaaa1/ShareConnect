@@ -14,7 +14,13 @@ import FirebaseStorage
 import DatePicker
 import ProgressHUD
 
-class CreateRequestViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UIPickerViewDataSource {
+class CreateRequestViewController: UIViewController, 
+                                    UIImagePickerControllerDelegate & UINavigationControllerDelegate,
+                                   UITableViewDelegate,
+                                   UITableViewDataSource,
+                                   UIPickerViewDelegate,
+                                   UITextFieldDelegate,
+                                   UIPickerViewDataSource {
     let requestTableView = UITableView()
     let uploadButton = UIButton()
     let requestSelectSegment = UISegmentedControl()
@@ -147,8 +153,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                                 "sellerID": user?.uid ?? "",
                                 "sellerName": user?.email ?? ""
                             ]
-                            DispatchQueue.main.async {
-                                for i in enterData.indices {
+                            DispatchQueue.main.async { [self] in
+                                for i in self.enterData.indices {
                                     let indexPath = IndexPath(row: i, section: 0)
                                     if let cell = self.requestTableView.cellForRow(at: indexPath) as? RequestCell {
                                         let key = cell.requestLabel.text ?? ""
@@ -314,8 +320,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                     groupHeaderLabel.textAlignment = .center
                     groupHeaderLabel.textColor = .white
                     groupHeaderLabel.backgroundColor = .black
-                    groupHeaderLabel.font = UIFont.systemFont(ofSize: 14)
-                }
+                    groupHeaderLabel.font = UIFont.systemFont(ofSize: 14)}
                 else {
                     groupHeaderLabel.text = ""
                     requestTableView.tableHeaderView = nil
@@ -340,8 +345,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         cell.textField.textColor = .white
         let requestLabels = ["Name", "Description", "Sort", "Start Time", "End Time", "Quantity", "Use", "Price"]
         if indexPath.row < requestLabels.count {
-            var info = requestLabels[indexPath.row]
-            
+            let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info
             cell.requestLabel.textColor = .white
             cell.textField.placeholder = "Enter \(info)"
@@ -355,7 +359,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 sortPicker.tag = indexPath.row
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = sortPicker
-                print("sort:\(cell.textField.text)")
+                print("sort:\(String(describing: cell.textField.text))")
             }
             if indexPath.row == 6 {
                 let usePicker = UIPickerView()
@@ -364,7 +368,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 usePicker.tag = indexPath.row
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = usePicker
-                print("use:\(cell.textField.text)")
+                print("use:\(String(describing: cell.textField.text))")
             }
             if indexPath.row == 3 || indexPath.row == 4 {
                 let timePicker = UIDatePicker()

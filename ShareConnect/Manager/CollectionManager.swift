@@ -45,7 +45,7 @@ class CollectionManager {
                       "sellerID": product.seller.sellerID,
                       "sellerName": product.seller.sellerName
                   ],
-                  "itemType": product.itemType.rawValue,
+                  "itemType": product.itemType.rawValue
               ]
         if product.isCollected {
             reference.updateData([

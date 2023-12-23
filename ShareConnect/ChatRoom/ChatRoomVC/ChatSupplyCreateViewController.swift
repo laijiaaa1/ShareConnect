@@ -162,7 +162,7 @@ class ChatSupplyCreateViewController: UIViewController, UITableViewDelegate, UIT
                 self.products.removeAll()
                 for document in querySnapshot!.documents {
                     let data = document.data()
-                    if let product = FirestoreService.shared.parseProductData(productData: data){
+                    if let product = FirestoreService.shared.parseProductData(productData: data) {
                         self.products.append(product)
                     }
                 }
