@@ -4,153 +4,110 @@
 //
 //  Created by laijiaaa1 on 2023/12/3.
 //
-import UIKit
-import FirebaseAuth
-import FirebaseStorage
-import FirebaseCore
 import FirebaseFirestore
 import Kingfisher
+import FirebaseAuth
 
-extension ProfileViewController {
+protocol ProfileViewModelDelegate: AnyObject {
+    func viewModelDidUpdateData()
+}
+class ProfileViewModel {
+    weak var delegate: ProfileViewModelDelegate?
+    var products: [Product] = []
+    var groups: [Group] = []
+    var collections: [Collection] = []
+    var nameLabel: UILabel?
+    var profileImageView: UIImageView?
+    var groupTableView: UITableView?
+    var collectionCollectionView: UICollectionView?
+    var navigationController: UINavigationController?
+    private func notifyDelegate() {
+        delegate?.viewModelDidUpdateData()
+    }
+    func configureUIElements(nameLabel: UILabel, profileImageView: UIImageView, groupTableView: UITableView, collectionCollectionView: UICollectionView, navigationController: UINavigationController) {
+        self.nameLabel = nameLabel
+        self.profileImageView = profileImageView
+        self.groupTableView = groupTableView
+        self.collectionCollectionView = collectionCollectionView
+        self.navigationController = navigationController
+    }
+    // Fetch User Data
     func fetchUserData(userId: String) {
-        let db = Firestore.firestore()
-        let userCollection = db.collection("users")
-        userCollection.document(userId).getDocument { (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                let name = data?["name"] as? String ?? ""
-                let email = data?["email"] as? String ?? ""
-                let profileImageUrl = data?["profileImageUrl"] as? String ?? ""
-                self.nameLabel.text = name
-                self.profileImageView.kf.setImage(with: URL(string: profileImageUrl))
-            } else {
-                print("Document does not exist")
-            }
+        FirestoreService.shared.fetchUserData(userId: userId) { [weak self] (name, email, profileImageUrl) in
+            self?.updateUI(name: name, profileImageUrl: profileImageUrl)
         }
     }
+    private func updateUI(name: String, profileImageUrl: String) {
+        nameLabel?.text = name
+        profileImageView?.kf.setImage(with: URL(string: profileImageUrl))
+    }
+    // Fetch Requests
     func fetchRequests(userId: String, dataType: String) {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
-            return
-        }
-        let db = Firestore.firestore()
-        let productsCollection = db.collection("products")
-        var query: Query
-        if dataType == "request" {
-            query = productsCollection
-                .whereField("product.seller.sellerID", isEqualTo: userId)
-                .whereField("type", isEqualTo: "request")
-        } else if dataType == "supply" {
-            query = productsCollection
-                .whereField("product.seller.sellerID", isEqualTo: userId)
-                .whereField("type", isEqualTo: "supply")
-        } else {
-            return
-        }
-        query.getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error getting documents: \(error.localizedDescription)")
-            } else {
-                self.products.removeAll()
-                for document in querySnapshot!.documents {
-                    let data = document.data()
-                    if let product = FirestoreService.shared.parseProductData(productData: data) {
-                        self.products.append(product)
-                    }
-                }
-                self.fetchGroupProducts(for: userId, dataType: dataType, completion: {
-                    self.groupTableView.reloadData()
-                })
-            }
+        guard (Auth.auth().currentUser?.uid) != nil else { return }
+        FirestoreService.shared.fetchRequests(userId: userId, dataType: dataType) { [weak self] products in
+            self?.products = products
+            self?.fetchGroupProducts(for: userId, dataType: dataType, completion: {
+                self?.groupTableView?.reloadData()
+            })
         }
     }
+    // Fetch Group Products
     func fetchGroupProducts(for userId: String, dataType: String, completion: @escaping () -> Void) {
-        let db = Firestore.firestore()
-        let groupProductsCollection = db.collection("productsGroup")
-        var groupQuery: Query
-        if dataType == "request" {
-            groupQuery = groupProductsCollection
-                .whereField("product.seller.sellerID", isEqualTo: userId)
-                .whereField("type", isEqualTo: "request")
-        } else if dataType == "supply" {
-            groupQuery = groupProductsCollection
-                .whereField("product.seller.sellerID", isEqualTo: userId)
-                .whereField("type", isEqualTo: "supply")
-        } else {
-            return
-        }
-        groupQuery.getDocuments { (groupQuerySnapshot, groupError) in
-            if let groupError = groupError {
-                print("Error getting group documents: \(groupError.localizedDescription)")
-            } else {
-                for groupDocument in groupQuerySnapshot!.documents {
-                    let groupData = groupDocument.data()
-                    if let product = FirestoreService.shared.parseProductData(productData: groupData) {
-                        self.products.append(product)
-                    }
-                }
-                completion()
-            }
+        FirestoreService.shared.fetchGroupProducts(userId: userId, dataType: dataType) { [weak self] products in
+            self?.products += products
+            completion()
         }
     }
+    // Fetch Collections
     func fetchCollections(userId: String) {
-        guard (Auth.auth().currentUser?.uid) != nil else {
-            return
-        }
-        let db = Firestore.firestore()
-        let userCollectionReference = db.collection("collections").document(userId)
-        userCollectionReference.getDocument { (document, error) in
-            if let error = error {
-                print("Error getting document: \(error.localizedDescription)")
-            } else if let document = document, document.exists {
-                if let collectedProducts = document.data()?["collectedProducts"] as? [[String: Any]] {
-                    let collections = collectedProducts.compactMap { productData -> Collection? in
-                        return self.parseCollectionData(productData: productData)
-                    }
-                    self.collections = collections
-                    self.collectionCollectionView.reloadData()
-                }
-            } else {
-                print("Document does not exist or there was an error")
-            }
+        guard (Auth.auth().currentUser?.uid) != nil else { return }
+        FirestoreService.shared.fetchCollections(userId: userId) { [weak self] collections in
+            self?.collections = collections
+            self?.collectionCollectionView?.reloadData()
         }
     }
+    // Fetch Groups
     func fetchGroups(userId: String) {
-        guard (Auth.auth().currentUser?.uid) != nil else {
-            return
-        }
-        let db = Firestore.firestore()
-        let productsGroup = db.collection("groups").whereField("members", arrayContains: userId)
-        productsGroup.getDocuments { [weak self] (querySnapshot, error) in
-            guard let self = self else { return }
-            if let error = error {
-                print("Error getting documents: \(error.localizedDescription)")
-            } else {
-                self.groups.removeAll()
-                for document in querySnapshot!.documents {
-                    let data = document.data()
-                    if let group = GroupDataManager.shared.parseGroupData(data: data, documentId: document.documentID) {
-                        self.groups.append(group)
-                    }
-                }
-                self.groupTableView.reloadData()
-            }
+        FirestoreService.shared.fetchGroups(userId: userId) { [weak self] groups in
+            self?.groups = groups
+            self?.groupTableView?.reloadData()
         }
     }
+    // Parse Collection Data
     func parseCollectionData(productData: [String: Any]) -> Collection? {
-        guard
-            let productId = productData["productId"] as? String,
-            let name = productData["name"] as? String,
-            let price = productData["price"] as? String,
-            let imageString = productData["imageString"] as? String
-        else {
+        return FirestoreService.shared.parseCollectionData(productData: productData)
+    }
+    // Recorder Button Tapped
+    @objc func recorderButtonTapped() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "RecoderViewController") as? RecoderViewController else { return }
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    var productsCount: Int {
+        return products.count
+    }
+    var groupsCount: Int {
+        return groups.count
+    }
+    var collectionsCount: Int {
+        return collections.count
+    }
+    func product(at index: Int) -> Product? {
+        guard index < products.count else {
             return nil
         }
-        let collection = Collection(name: name, imageString: imageString , productId: productId)
-        return collection
+        return products[index]
     }
-    @objc func recoderButtonTapped() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "RecoderViewController") as! RecoderViewController
-        navigationController?.pushViewController(vc, animated: true)
+    func group(at index: Int) -> Group? {
+        guard index < groups.count else {
+            return nil
+        }
+        return groups[index]
+    }
+    func collection(at index: Int) -> Collection? {
+        guard index < collections.count else {
+            return nil
+        }
+        return collections[index]
     }
 }

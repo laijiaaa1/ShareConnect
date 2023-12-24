@@ -13,11 +13,8 @@ import FirebaseFirestore
 import Kingfisher
 import FirebaseDatabase
 
-class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate & UINavigationControllerDelegate, ProfileViewModelDelegate {
     var requests: [Request] = []
-    var products: [Product] = []
-    var groups: [Group] = []
-    var collections: [Collection] = []
     var supplies: [Supply] = []
     let headerImage = UIImageView()
     let nameLabel = UILabel()
@@ -38,13 +35,20 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var userId = Auth.auth().currentUser?.uid
     let profileImageView = UIImageView()
     let settingProfileButton = UIButton()
+    var viewModel: ProfileViewModel = ProfileViewModel()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
-        fetchGroups(userId: userId ?? "")
+        viewModel.fetchGroups(userId: userId ?? "")
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.delegate = self
+        viewModel.configureUIElements(nameLabel: nameLabel,
+                                      profileImageView: profileImageView,
+                                      groupTableView: groupTableView,
+                                      collectionCollectionView: collectionCollectionView,
+                                      navigationController: navigationController ?? UINavigationController())
         view.backgroundColor = .black
         tabBarController?.tabBar.backgroundColor = .black
         let backPicture = UIImageView()
@@ -154,8 +158,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         view.addSubview(recoderButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "list.bullet"), style: .plain, target: self, action: #selector(recoderButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .white
-        fetchUserData(userId: userId!)
-        fetchGroups(userId: userId!)
+        viewModel.fetchUserData(userId: userId!)
+        viewModel.fetchGroups(userId: userId!)
         view.addSubview(settingProfileButton)
         settingProfileButton.translatesAutoresizingMaskIntoConstraints = false
         settingProfileButton.setImage(UIImage(named: "icons8-setting-96(@3×)"), for: .normal)
@@ -168,12 +172,19 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         ])
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: settingProfileButton)
     }
+    @objc func recoderButtonTapped() {
+        viewModel.recorderButtonTapped()
+    }
     @objc func handleSelectProfileImageView() {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
+    func viewModelDidUpdateData() {
+        groupTableView.reloadData()
+        collectionCollectionView.reloadData()
+       }
     // select the image and upload to profileImageView
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         var selectedImageFormPicker: UIImage?
@@ -189,7 +200,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func uploadFirebase() {
         guard let image = profileImageView.image else { return }
-        guard let uploadData = image.jpegData(compressionQuality: 0.3) else { return }
+        guard image.jpegData(compressionQuality: 0.3) != nil else { return }
         RegistrationManager.shared.uploadProfileImage(image) { imageUrl in
             let values = ["profileImageUrl": imageUrl]
             if let userId = self.userId {
@@ -207,9 +218,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if selectedButton == groupButton {
-            return groups.count
+            return viewModel.groupsCount
         } else {
-            return products.count
+            return viewModel.productsCount
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -227,31 +238,31 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         cell.contentView.layer.borderColor = UIColor.black.cgColor
         cell.backgroundColor = .black
         if selectedButton == groupButton {
-            guard indexPath.row < groups.count else {
+            guard indexPath.row < viewModel.groupsCount else {
                 cell.requestNameLabel.text = "N/A"
                 cell.requestDescriptionLabel.text = "N/A"
                 cell.requestDateLabel.text = "N/A"
                 return cell
             }
-            let group = groups[indexPath.row]
-            cell.requestNameLabel.text = group.name
-            cell.requestDescriptionLabel.text = group.description
-            cell.requestDateLabel.text = group.startTime
-            let imageURL = URL(string: group.image)
+            let group = viewModel.group(at: indexPath.row)
+            cell.requestNameLabel.text = group?.name
+            cell.requestDescriptionLabel.text = group?.description
+            cell.requestDateLabel.text = group?.startTime
+            let imageURL = URL(string: group?.image ?? "")
             cell.requestImageView.kf.setImage(with: imageURL)
             return cell
         } else {
-            guard indexPath.row < products.count else {
+            guard indexPath.row < viewModel.productsCount else {
                 cell.requestNameLabel.text = "N/A"
                 cell.requestDescriptionLabel.text = "N/A"
                 cell.requestDateLabel.text = "N/A"
                 return cell
             }
-            let product = products[indexPath.row]
-            cell.requestNameLabel.text = product.name
-            cell.requestDescriptionLabel.text = product.sort
-            cell.requestDateLabel.text = product.startTime
-            let imageURL = URL(string: product.imageString)
+            let product = viewModel.product(at: indexPath.row)
+            cell.requestNameLabel.text = product?.name
+            cell.requestDescriptionLabel.text = product?.sort
+            cell.requestDateLabel.text = product?.startTime
+            let imageURL = URL(string: product?.imageString ?? "")
             cell.requestImageView.kf.setImage(with: imageURL)
             return cell
         }
@@ -259,15 +270,15 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, completionHandler) in
             if self.selectedButton == self.groupButton {
-                let group = self.groups[indexPath.row]
-                self.deleteGroupFromDatabase(group)
-                self.groups.remove(at: indexPath.row)
+                let group = self.viewModel.group(at: indexPath.row)
+                self.deleteGroupFromDatabase(group!)
+                self.viewModel.groups.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .automatic)
                 completionHandler(true)
             } else {
-                let product = self.products[indexPath.row]
-                self.deleteProductFromDatabase(product)
-                self.products.remove(at: indexPath.row)
+                let product =  self.viewModel.product(at: indexPath.row)
+                self.deleteProductFromDatabase(product!)
+                self.viewModel.products.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .automatic)
                 completionHandler(true)
             }
@@ -293,9 +304,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         if sender.state == .began {
             let point = sender.location(in: collectionCollectionView)
             guard let indexPath = collectionCollectionView.indexPathForItem(at: point) else { return }
-            let collection = collections[indexPath.row]
+            let collection = viewModel.collection(at: indexPath.row)!
             deleteCollectionFromDatabase(collection)
-            collections.remove(at: indexPath.row)
+            viewModel.collections.remove(at: indexPath.row)
             collectionCollectionView.deleteItems(at: [indexPath])
         }
     }
@@ -304,11 +315,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         if group.owner == userId {
             db.collection("groups").document(group.documentId).delete()
             db.collection("users").document(userId ?? "").updateData(["groups": FieldValue.arrayRemove([group.documentId])])
-            fetchGroups(userId: userId ?? "")
+            viewModel.fetchGroups(userId: userId ?? "")
         } else {
             db.collection("groups").document(group.documentId).updateData(["members": FieldValue.arrayRemove([userId as Any])])
             db.collection("users").document(userId ?? "").updateData(["groups": FieldValue.arrayRemove([group.documentId])])
-            fetchGroups(userId: userId ?? "")
+            viewModel.fetchGroups(userId: userId ?? "")
         }
     }
     func deleteCollectionFromDatabase(_ collection: Collection) {
@@ -327,13 +338,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if selectedButton == groupButton {
-            let selectedGroup = groups[indexPath.row]
+            let selectedGroup = viewModel.group(at: indexPath.row)
             let subGroupViewController = SubGroupViewController()
             subGroupViewController.group = selectedGroup
             navigationController?.pushViewController(subGroupViewController, animated: true)
         } else {
-                let selectedProduct = products[indexPath.row]
-            if selectedProduct.itemType == .request {
+                let selectedProduct = viewModel.product(at: indexPath.row)
+            if selectedProduct?.itemType == .request {
                 let provideViewController = ProvideViewController()
                 provideViewController.product = selectedProduct
                 navigationController?.pushViewController(provideViewController, animated: true)
@@ -345,15 +356,15 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collections.count
+        return viewModel.collectionsCount
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as! CollectionCell
         cell.layer.cornerRadius = 10
         cell.layer.masksToBounds = true
         cell.backgroundColor = .black
-        cell.nameLabel.text = collections[indexPath.item].name
-        cell.imageView.kf.setImage(with: URL(string: collections[indexPath.row].imageString))
+        cell.nameLabel.text = viewModel.collection(at: indexPath.row)?.name
+        cell.imageView.kf.setImage(with: URL(string: viewModel.collection(at: indexPath.row)?.imageString ?? ""))
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -362,17 +373,18 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         return CGSize(width: cellWidth, height: cellHigh)
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedCollection = collections[indexPath.item]
+        let selectedCollection = viewModel.collection(at: indexPath.row)
         let detailViewController = DetailViewController()
-        let product = products.first(where: { $0.productId == selectedCollection.productId })
+        let products = viewModel.products
+        let product = products.first(where: { $0.productId == selectedCollection?.productId })
         detailViewController.product = product
         navigationController?.pushViewController(detailViewController, animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let collection = collections[indexPath.item]
+        let collection = viewModel.collection(at: indexPath.row)!
         let deleteAction = UIAction(title: "Delete", image: UIImage(systemName: "trash.fill")) { (_) in
             self.deleteCollectionFromDatabase(collection)
-            self.collections.remove(at: indexPath.item)
+            self.viewModel.collections.remove(at: indexPath.row)
             self.collectionCollectionView.deleteItems(at: [indexPath])
         }
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { (_) -> UIMenu? in
@@ -387,22 +399,22 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     @objc func groupButtonTapped() {
         animateLineViewTransition(to: groupButton)
         animateViewTransition(to: groupTableView)
-        fetchGroups(userId: userId ?? "")
+        viewModel.fetchGroups(userId: userId ?? "")
     }
     @objc func collectionButtonTapped() {
         animateLineViewTransition(to: collectionButton)
         animateViewTransition(to: collectionCollectionView)
-        fetchCollections(userId: userId ?? "")
+        viewModel.fetchCollections(userId: userId ?? "")
     }
     @objc func requestButtonTapped() {
         animateLineViewTransition(to: requestButton)
         animateViewTransition(to: groupTableView)
-        fetchRequests(userId: userId ?? "", dataType: "request")
+        viewModel.fetchRequests(userId: userId ?? "", dataType: "request")
     }
     @objc func supplyButtonTapped() {
         animateLineViewTransition(to: supplyButton)
         animateViewTransition(to: groupTableView)
-        fetchRequests(userId: userId ?? "", dataType: "supply")
+        viewModel.fetchRequests(userId: userId ?? "", dataType: "supply")
     }
     func animateLineViewTransition(to button: UIButton) {
         button.isSelected.toggle()

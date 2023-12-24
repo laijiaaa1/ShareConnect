@@ -16,12 +16,12 @@ import UserNotifications
 
 class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var order: Order?
-    var orderID: [Order] = []
     let rentalButton = UIButton()
     let loanButton = UIButton()
     let stackView = UIStackView()
     let tableView = UITableView()
     var isCompleted = false
+    let viewModel = RecoderViewModel()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.tintColor = .white
@@ -81,29 +81,18 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         fetchOrdersFromFirestore(isRenter: false)
     }
     func fetchOrdersFromFirestore(isRenter: Bool) {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
-            return
-        }
-        let ordersCollection = Firestore.firestore().collection("orders")
-        let fieldToFilter = isRenter ? "buyerID" : "sellerID"
-        ordersCollection.whereField(fieldToFilter, isEqualTo: currentUserID).getDocuments { [weak self] (querySnapshot, error) in
-            guard let self = self, let querySnapshot = querySnapshot else {
-                return
+        viewModel.fetchOrdersFromFirestore(isRenter: isRenter) { [weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
             }
-            if let error = error {
-                print("Error fetching orders: \(error.localizedDescription)")
-                return
-            }
-            self.orderID = querySnapshot.documents.compactMap { Order(document: $0) }
-            self.tableView.reloadData()
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return orderID.count
+        return viewModel.numberOfRows
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! RecoderTableViewCell
-        cell.order = orderID[indexPath.row]
+        cell.order = viewModel.order(at: indexPath.row)
         cell.returnButton.setTitle("Return", for: .normal)
         cell.layer.cornerRadius = 10
         cell.layer.masksToBounds = true
@@ -112,17 +101,17 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         if rentalButton.isSelected {
             cell.returnButton.setTitle("Return", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(returnButtonTapped), for: .touchUpInside)
-            cell.returnButton.isEnabled = !orderID[indexPath.row].isCompleted
+            cell.returnButton.isEnabled = !viewModel.order(at: indexPath.row).isCompleted
         } else if loanButton.isSelected {
             cell.returnButton.setTitle("Remind", for: .normal)
             cell.returnButton.addTarget(self, action: #selector(remindButtonTapped), for: .touchUpInside)
         }
-        if orderID[indexPath.row].isCompleted {
+        if viewModel.order(at: indexPath.row).isCompleted {
             cell.returnButton.setTitle("Completed", for: .normal)
             cell.returnButton.backgroundColor = .lightGray
             cell.returnButton.isEnabled = false
         } else {
-            ReviewManager.shared.hasUserReviewedProduct(orderID[indexPath.row].orderID) { hasReview in
+            viewModel.hasUserReviewedItem(at: indexPath.row) { hasReview in
                 DispatchQueue.main.async {
                     if hasReview {
                         cell.returnButton.setTitle("Done", for: .normal)
@@ -143,15 +132,14 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
     @objc func remindButtonTapped() {
-        if let orderID = order?.orderID {
-        }
+        if (order?.orderID) != nil {}
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
     @objc func returnButtonTapped(_ sender: UIButton) {
         sender.startAnimatingPressActions()
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
+        guard (Auth.auth().currentUser?.uid) != nil else {
             return
         }
         guard let selectedIndexPath = tableView.indexPathForSelectedRow else {
@@ -159,7 +147,7 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "CommendViewController") as! CommendViewController
-        let selectedOrder = orderID[selectedIndexPath.row]
+        let selectedOrder = viewModel.order(at: selectedIndexPath.row)
         vc.viewModel.productName = selectedOrder.orderID
         vc.viewModel.productImage = selectedOrder.image
         vc.viewModel.productID = selectedOrder.orderID

@@ -220,7 +220,7 @@ class TrolleyViewController: UIViewController, UITableViewDelegate, UITableViewD
             createOrderRecord { [weak self] orderID in
                 guard let self = self else { return }
                 let orderConfirmationVC = RecoderViewController()
-                orderConfirmationVC.orderID = self.orderIDs
+                orderConfirmationVC.viewModel.orderID = self.orderIDs
                 self.clearShoppingCart()
             }
             DispatchQueue.main.async {

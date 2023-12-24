@@ -46,7 +46,7 @@ struct Commend {
     var time: String
 }
 
-struct BrowsingRecord {
+struct BrowsingRecord: Codable {
     let name: String
     let image: String
     let price: String

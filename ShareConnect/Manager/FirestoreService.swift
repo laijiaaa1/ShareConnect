@@ -132,4 +132,124 @@ class FirestoreService {
         )
         return newProduct
     }
+    func fetchUserData(userId: String, completion: @escaping (String, String, String) -> Void) {
+        let db = Firestore.firestore()
+        let userCollection = db.collection("users")
+        userCollection.document(userId).getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                let name = data?["name"] as? String ?? ""
+                let email = data?["email"] as? String ?? ""
+                let profileImageUrl = data?["profileImageUrl"] as? String ?? ""
+                completion(name, email, profileImageUrl)
+            } else {
+                print("Error fetching user data: \(error?.localizedDescription ?? "")")
+            }
+        }
+    }
+    // Fetch Requests
+    func fetchRequests(userId: String, dataType: String, completion: @escaping ([Product]) -> Void) {
+        let db = Firestore.firestore()
+        let productsCollection = db.collection("products")
+        var query: Query
+        if dataType == "request" {
+            query = productsCollection
+                .whereField("product.seller.sellerID", isEqualTo: userId)
+                .whereField("type", isEqualTo: "request")
+        } else if dataType == "supply" {
+            query = productsCollection
+                .whereField("product.seller.sellerID", isEqualTo: userId)
+                .whereField("type", isEqualTo: "supply")
+        } else {
+            return
+        }
+        query.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error fetching requests: \(error.localizedDescription)")
+                completion([])
+            } else {
+                let products = querySnapshot?.documents.compactMap { document in
+                    FirestoreService.shared.parseProductData(productData: document.data())
+                } ?? []
+                completion(products)
+            }
+        }
+    }
+    // Fetch Group Products
+    func fetchGroupProducts(userId: String, dataType: String, completion: @escaping ([Product]) -> Void) {
+        let db = Firestore.firestore()
+        let groupProductsCollection = db.collection("productsGroup")
+        var groupQuery: Query
+        if dataType == "request" {
+            groupQuery = groupProductsCollection
+                .whereField("product.seller.sellerID", isEqualTo: userId)
+                .whereField("type", isEqualTo: "request")
+        } else if dataType == "supply" {
+            groupQuery = groupProductsCollection
+                .whereField("product.seller.sellerID", isEqualTo: userId)
+                .whereField("type", isEqualTo: "supply")
+        } else {
+            return
+        }
+        groupQuery.getDocuments { (groupQuerySnapshot, groupError) in
+            if let groupError = groupError {
+                print("Error fetching group products: \(groupError.localizedDescription)")
+                completion([])
+            } else {
+                let products = groupQuerySnapshot?.documents.compactMap { document in
+                    FirestoreService.shared.parseProductData(productData: document.data())
+                } ?? []
+                completion(products)
+            }
+        }
+    }
+    // Fetch Collections
+    func fetchCollections(userId: String, completion: @escaping ([Collection]) -> Void) {
+        let db = Firestore.firestore()
+        let userCollectionReference = db.collection("collections").document(userId)
+        userCollectionReference.getDocument { (document, error) in
+            if let error = error {
+                print("Error fetching collections: \(error.localizedDescription)")
+                completion([])
+            } else if let document = document, document.exists {
+                if let collectedProducts = document.data()?["collectedProducts"] as? [[String: Any]] {
+                    let collections = collectedProducts.compactMap { productData -> Collection? in
+                        FirestoreService.shared.parseCollectionData(productData: productData)
+                    }
+                    completion(collections)
+                }
+            } else {
+                print("Collections document does not exist or there was an error")
+                completion([])
+            }
+        }
+    }
+    // Fetch Groups
+    func fetchGroups(userId: String, completion: @escaping ([Group]) -> Void) {
+        let db = Firestore.firestore()
+        let productsGroup = db.collection("groups").whereField("members", arrayContains: userId)
+        productsGroup.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error fetching groups: \(error.localizedDescription)")
+                completion([])
+            } else {
+                let groups = querySnapshot?.documents.compactMap { document in
+                    GroupDataManager.shared.parseGroupData(data: document.data(), documentId: document.documentID)
+                } ?? []
+                completion(groups)
+            }
+        }
+    }
+    // Parse Collection Data
+    func parseCollectionData(productData: [String: Any]) -> Collection? {
+        guard
+            let productId = productData["productId"] as? String,
+            let name = productData["name"] as? String,
+            let price = productData["price"] as? String,
+            let imageString = productData["imageString"] as? String
+        else {
+            return nil
+        }
+        return Collection(name: name, imageString: imageString , productId: productId)
+    }
 }

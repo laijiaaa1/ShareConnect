@@ -66,6 +66,7 @@
 		34CEF0EB2B373E7500BAF8DA /* SetProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0EA2B373E7500BAF8DA /* SetProfileViewModel.swift */; };
 		34CEF0ED2B37E1F400BAF8DA /* ChatData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0EC2B37E1F400BAF8DA /* ChatData.swift */; };
 		34CEF0EF2B37E24700BAF8DA /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0EE2B37E24700BAF8DA /* UserData.swift */; };
+		34CEF0F12B37FB0400BAF8DA /* RecoderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CEF0F02B37FB0400BAF8DA /* RecoderViewModel.swift */; };
 		34D67EFE2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */; };
 		34D67F002B20A72000DE879B /* ChatListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67EFF2B20A72000DE879B /* ChatListCell.swift */; };
 		34D67F022B20A99D00DE879B /* TrolleyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D67F012B20A99D00DE879B /* TrolleyCell.swift */; };
@@ -138,6 +139,7 @@
 		34CEF0EA2B373E7500BAF8DA /* SetProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetProfileViewModel.swift; sourceTree = "<group>"; };
 		34CEF0EC2B37E1F400BAF8DA /* ChatData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatData.swift; sourceTree = "<group>"; };
 		34CEF0EE2B37E24700BAF8DA /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		34CEF0F02B37FB0400BAF8DA /* RecoderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoderViewModel.swift; sourceTree = "<group>"; };
 		34D67EFD2B20A5A000DE879B /* GroupPage_GroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPage_GroupTableViewCell.swift; sourceTree = "<group>"; };
 		34D67EFF2B20A72000DE879B /* ChatListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCell.swift; sourceTree = "<group>"; };
 		34D67F012B20A99D00DE879B /* TrolleyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrolleyCell.swift; sourceTree = "<group>"; };
@@ -319,6 +321,7 @@
 			children = (
 				3410D97A2B0916C700D32744 /* ProfileViewController.swift */,
 				3401F6862B0F4B010092E564 /* RecoderViewController.swift */,
+				34CEF0F02B37FB0400BAF8DA /* RecoderViewModel.swift */,
 				3401F68D2B1192200092E564 /* CommendViewController.swift */,
 				34CEF0E82B372D2600BAF8DA /* CommendViewModel.swift */,
 				346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */,
@@ -551,6 +554,7 @@
 				3401F6832B0F17050092E564 /* ProvideViewController.swift in Sources */,
 				34408F1C2B0EE73B005F8E03 /* ClassViewController.swift in Sources */,
 				346687B22B1C6B2E00723302 /* Profile_FetchData.swift in Sources */,
+				34CEF0F12B37FB0400BAF8DA /* RecoderViewModel.swift in Sources */,
 				346687B62B1C6D5E00723302 /* Profile_CollectionCell.swift in Sources */,
 				3410D97B2B0916C700D32744 /* ProfileViewController.swift in Sources */,
 				346687A62B14657800723302 /* SearchResultsViewController.swift in Sources */,

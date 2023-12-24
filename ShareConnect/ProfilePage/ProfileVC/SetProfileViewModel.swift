@@ -19,7 +19,6 @@ class SettingProfileViewModel {
             completion(.failure(signOutError))
         }
     }
-
     func deleteAccount(completion: @escaping (Result<Void, Error>) -> Void) {
         let user = Auth.auth().currentUser
 
@@ -27,7 +26,6 @@ class SettingProfileViewModel {
             completion(.failure(NSError(domain: "", code: 0, userInfo: nil)))
             return
         }
-
         let db = Firestore.firestore()
         let userCollection = db.collection("users")
         let userDocument = userCollection.document(currentUser.uid)

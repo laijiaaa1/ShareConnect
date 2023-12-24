@@ -63,7 +63,6 @@ class CreateGroupViewController: CreateRequestViewController {
                 groupPicker.tag = indexPath.row
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = groupPicker
-                print("sort:\(String(describing: cell.textField.text))")
             }
         }
         if indexPath.row == 0 {
