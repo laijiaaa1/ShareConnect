@@ -277,47 +277,22 @@ class DetailViewController: UIViewController {
     @objc func addCollection() {
         isCollected.toggle()
         guard let currentUserID = Auth.auth().currentUser?.uid,
-              let productID = product?.productId,
-              let productName = product?.name,
-              let productImageString = product?.imageString,
-              let productPrice = product?.price else {
+              let product = product else {
             return
         }
-        let db = Firestore.firestore()
-        let userCollectionReference = db.collection("collections").document(currentUserID)
+        CollectionManager.shared.toggleCollectionStatus(for: currentUserID, product: product) { success, error in
+            if let error = error {
+                print("Error updating collection status: \(error)")
+            } else {
+                print("Collection status updated successfully.")
+            }
+        }
         if isCollected {
-            let collectedProductData: [String: Any] = [
-                "productId": productID,
-                "name": productName,
-                "imageString": productImageString,
-                "price": productPrice
-            ]
-            userCollectionReference.setData([
-                "collectedProducts": FieldValue.arrayUnion([collectedProductData])
-            ], merge: true) { error in
-                if let error = error {
-                    print("Error updating document: \(error)")
-                } else {
-                    print("Document successfully updated with new collection.")
-                }
-            }
             collectionButton.setImage(UIImage(named: "icons9-bookmark-72(@3×)"), for: .normal)
-            addToLocalStorage(productData: collectedProductData)
+            addToLocalStorage(productData: product.toDictionary())
         } else {
-            let removedProductData: [String: Any] = [
-                "productId": productID
-            ]
-            userCollectionReference.updateData([
-                "collectedProducts": FieldValue.arrayRemove([removedProductData])
-            ]) { error in
-                if let error = error {
-                    print("Error updating document: \(error)")
-                } else {
-                    print("Document successfully updated with removed collection.")
-                }
-            }
             collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
-            removeFromLocalStorage(productID: productID)
+            removeFromLocalStorage(productID: product.productId)
         }
     }
     func addToLocalStorage(productData: [String: Any]) {

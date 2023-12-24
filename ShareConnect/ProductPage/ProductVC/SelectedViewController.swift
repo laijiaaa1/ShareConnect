@@ -79,7 +79,6 @@ class SelectedViewController: UIViewController {
             cart[product.seller] = [product]
         }
         saveCartToFirestore(cart)
-        print("Product added to cart: \(product.name) - Quantity: \(selectedQuantity)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let trolleyViewController = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController {
             DispatchQueue.main.async {
