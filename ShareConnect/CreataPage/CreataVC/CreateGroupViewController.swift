@@ -99,7 +99,7 @@ class CreateGroupViewController: CreateRequestViewController {
             cell.textField.text = "\(Int(sender.value))"
         }
     }
-    @objc override func doneButtonTapped() {
+    @objc override func doneButtonTappedForRequest() {
         if isGroupPublic || (!isGroupPublic && isValidInvitationCode()) {
             uploadGroupImageAndSaveToFirebase()
         } else {

@@ -14,21 +14,18 @@ import FirebaseFirestore
 import ProgressHUD
 
 class CommendViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
-    var productName: String?
-    var productImage: String?
-    var productID: String?
-    var sellerID: String = ""
     let commentTextView = UITextView()
     let imageView = UIImageView()
     let starRatingView = StarRatingView()
     let submitButton = UIButton()
     let addImageButton = UIButton()
     let nameLable = UILabel()
+    var viewModel = CommendViewModel()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         navigationItem.title = "COMMENT"
-        imageView.kf.setImage(with: URL(string: productImage ?? ""))
+        imageView.kf.setImage(with: URL(string: viewModel.productImage ?? ""))
         submitButton.setTitle("Submit Commect", for: .normal)
         submitButton.addTarget(self, action: #selector(submitReview), for: .touchUpInside)
         setup()
@@ -100,7 +97,7 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         addImageButton.layer.masksToBounds = true
         addImageButton.layer.borderWidth = 1
         addImageButton.layer.borderColor = UIColor.black.cgColor
-        nameLable.text = productName
+        nameLable.text = viewModel.productName
         nameLable.textColor = .white
         nameLable.font = UIFont.boldSystemFont(ofSize: 16)
         nameLable.textAlignment = .left
@@ -151,22 +148,17 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         dismiss(animated: true, completion: nil)
     }
     @objc func submitReview() {
-        ReviewManager.shared.submitReview(
-            for: productID ?? "",
-            sellerID: sellerID,
-            comment: commentTextView.text,
-            rating: Double(starRatingView.rating),
-            image: imageView.image
-        ) { success in
+        viewModel.submitReview(comment: commentTextView.text, rating: Double(starRatingView.rating), image: imageView.image) {
+            success in
             if success {
                 DispatchQueue.main.async {
                     ProgressHUD.succeed("Comment Success", delay: 1.5)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        self.navigationController?.popViewController(animated: true)
+                        self.dismiss(animated: true, completion: nil)
                     }
                 }
             } else {
-                print("Failed to submit review.")
+                print("Comment Fail")
             }
         }
     }

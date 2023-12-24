@@ -160,10 +160,10 @@ class RecoderViewController: UIViewController, UITableViewDelegate, UITableViewD
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "CommendViewController") as! CommendViewController
         let selectedOrder = orderID[selectedIndexPath.row]
-        vc.productName = selectedOrder.orderID
-        vc.productImage = selectedOrder.image
-        vc.productID = selectedOrder.orderID
-        vc.sellerID = selectedOrder.sellerID
+        vc.viewModel.productName = selectedOrder.orderID
+        vc.viewModel.productImage = selectedOrder.image
+        vc.viewModel.productID = selectedOrder.orderID
+        vc.viewModel.sellerID = selectedOrder.sellerID
         navigationController?.pushViewController(vc, animated: true)
     }
 }

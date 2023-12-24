@@ -14,13 +14,7 @@ import FirebaseStorage
 import DatePicker
 import ProgressHUD
 
-class CreateRequestViewController: UIViewController, 
-                                    UIImagePickerControllerDelegate & UINavigationControllerDelegate,
-                                   UITableViewDelegate,
-                                   UITableViewDataSource,
-                                   UIPickerViewDelegate,
-                                   UITextFieldDelegate,
-                                   UIPickerViewDataSource {
+class CreateRequestViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UIPickerViewDataSource {
     let requestTableView = UITableView()
     let uploadButton = UIButton()
     let requestSelectSegment = UISegmentedControl()
@@ -34,7 +28,6 @@ class CreateRequestViewController: UIViewController,
     let useOptions = ["place", "product"]
     var selectedIndexPath: IndexPath?
     var enterData: [String] = Array(repeating: "", count: 9)
-//    let productManager = ProductManager.shared
     private lazy var groupHeaderLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -117,7 +110,7 @@ class CreateRequestViewController: UIViewController,
         doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         doneButton.layer.cornerRadius = 10
         doneButton.layer.masksToBounds = true
-        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        doneButton.addTarget(self, action: #selector(doneButtonTappedForRequest), for: .touchUpInside)
         NSLayoutConstraint.activate([
             doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             doneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -125,10 +118,13 @@ class CreateRequestViewController: UIViewController,
             doneButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
+    @objc func doneButtonTappedForRequest() {
+        doneButtonTapped(itemType: .request)
+    }
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-    @objc func doneButtonTapped() {
+    func doneButtonTapped(itemType: ProductType) {
         let db = Firestore.firestore()
         let storage = Storage.storage()
         let user = Auth.auth().currentUser
@@ -182,11 +178,11 @@ class CreateRequestViewController: UIViewController,
                                         sellerID: user?.uid ?? "",
                                         sellerName: user?.email ?? ""
                                     ),
-                                    itemType: .request
+                                    itemType: itemType
                                 )
                                 let collectionName: String = selectedGroupID != nil ? "productsGroup" : "products"
                                 db.collection(collectionName).addDocument(data: [
-                                    "type": ProductType.request.rawValue,
+                                    "type": itemType.rawValue,
                                     "product": productData
                                 ]) { error in
                                     if let error = error {
@@ -320,8 +316,7 @@ class CreateRequestViewController: UIViewController,
                     groupHeaderLabel.textAlignment = .center
                     groupHeaderLabel.textColor = .white
                     groupHeaderLabel.backgroundColor = .black
-                    groupHeaderLabel.font = UIFont.systemFont(ofSize: 14)}
-                else {
+                    groupHeaderLabel.font = UIFont.systemFont(ofSize: 14)} else {
                     groupHeaderLabel.text = ""
                     requestTableView.tableHeaderView = nil
                 }
