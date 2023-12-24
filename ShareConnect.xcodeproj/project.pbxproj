@@ -37,7 +37,7 @@
 		346687A82B182C8800723302 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A72B182C8800723302 /* RegistrationViewController.swift */; };
 		346687AA2B1AF94F00723302 /* ChatMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687A92B1AF94F00723302 /* ChatMapViewController.swift */; };
 		346687B02B1C1E3200723302 /* SettingProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */; };
-		346687B22B1C6B2E00723302 /* Profile_FetchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687B12B1C6B2E00723302 /* Profile_FetchData.swift */; };
+		346687B22B1C6B2E00723302 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687B12B1C6B2E00723302 /* ProfileViewModel.swift */; };
 		346687B42B1C6CB100723302 /* Profile_MyRequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687B32B1C6CB100723302 /* Profile_MyRequestCell.swift */; };
 		346687B62B1C6D5E00723302 /* Profile_CollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687B52B1C6D5E00723302 /* Profile_CollectionCell.swift */; };
 		346687B82B1C6DDC00723302 /* SellerInfo_CommendTBCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346687B72B1C6DDC00723302 /* SellerInfo_CommendTBCell.swift */; };
@@ -110,7 +110,7 @@
 		346687A72B182C8800723302 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		346687A92B1AF94F00723302 /* ChatMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMapViewController.swift; sourceTree = "<group>"; };
 		346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingProfileViewController.swift; sourceTree = "<group>"; };
-		346687B12B1C6B2E00723302 /* Profile_FetchData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile_FetchData.swift; sourceTree = "<group>"; };
+		346687B12B1C6B2E00723302 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		346687B32B1C6CB100723302 /* Profile_MyRequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile_MyRequestCell.swift; sourceTree = "<group>"; };
 		346687B52B1C6D5E00723302 /* Profile_CollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile_CollectionCell.swift; sourceTree = "<group>"; };
 		346687B72B1C6DDC00723302 /* SellerInfo_CommendTBCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellerInfo_CommendTBCell.swift; sourceTree = "<group>"; };
@@ -319,14 +319,14 @@
 		34CEF0E02B36AC2300BAF8DA /* ProfileVC */ = {
 			isa = PBXGroup;
 			children = (
-				3410D97A2B0916C700D32744 /* ProfileViewController.swift */,
 				3401F6862B0F4B010092E564 /* RecoderViewController.swift */,
 				34CEF0F02B37FB0400BAF8DA /* RecoderViewModel.swift */,
 				3401F68D2B1192200092E564 /* CommendViewController.swift */,
 				34CEF0E82B372D2600BAF8DA /* CommendViewModel.swift */,
 				346687AF2B1C1E3200723302 /* SettingProfileViewController.swift */,
 				34CEF0EA2B373E7500BAF8DA /* SetProfileViewModel.swift */,
-				346687B12B1C6B2E00723302 /* Profile_FetchData.swift */,
+				3410D97A2B0916C700D32744 /* ProfileViewController.swift */,
+				346687B12B1C6B2E00723302 /* ProfileViewModel.swift */,
 			);
 			path = ProfileVC;
 			sourceTree = "<group>";
@@ -553,7 +553,7 @@
 				34CEF0EF2B37E24700BAF8DA /* UserData.swift in Sources */,
 				3401F6832B0F17050092E564 /* ProvideViewController.swift in Sources */,
 				34408F1C2B0EE73B005F8E03 /* ClassViewController.swift in Sources */,
-				346687B22B1C6B2E00723302 /* Profile_FetchData.swift in Sources */,
+				346687B22B1C6B2E00723302 /* ProfileViewModel.swift in Sources */,
 				34CEF0F12B37FB0400BAF8DA /* RecoderViewModel.swift in Sources */,
 				346687B62B1C6D5E00723302 /* Profile_CollectionCell.swift in Sources */,
 				3410D97B2B0916C700D32744 /* ProfileViewController.swift in Sources */,

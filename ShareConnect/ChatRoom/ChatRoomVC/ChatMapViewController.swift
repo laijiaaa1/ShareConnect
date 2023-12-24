@@ -90,8 +90,6 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
         mapView.setRegion(coordinateRegion, animated: true)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         mapView.addGestureRecognizer(tapGesture)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     @objc func returnToUserLocationButtonTapped() {
         if CLLocationManager.locationServicesEnabled() {
@@ -117,17 +115,6 @@ class MapSelectionViewController: UIViewController, MKMapViewDelegate {
             }
         }
     }
-//    @objc func keyboardWillShow(notification: NSNotification) {
-//        guard let userInfo = notification.userInfo else { return }
-//        guard let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-//        let keyboardHeight = keyboardFrame.height
-//        confirmButton.frame.origin.y -= keyboardHeight
-//        searchController.searchBar.frame.origin.y -= keyboardHeight
-//    }
-//    @objc func keyboardWillHide(notification: NSNotification) {
-//        confirmButton.frame.origin.y = view.frame.height - confirmButton.frame.height - 20
-//        searchController.searchBar.frame.origin.y = view.safeAreaInsets.top
-//    }
     @objc func confirmButtonTapped() {
         if let selectedCoordinate = selectedCoordinate {
             delegate?.didSelectLocation(selectedCoordinate)

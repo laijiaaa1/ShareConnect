@@ -236,7 +236,7 @@ extension ChatViewController: UITableViewDataSource, UITableViewDelegate {
                     cell.messageLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
                     cell.timestampLabel.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -5),
                     cell.nameLabel.centerXAnchor.constraint(equalTo: cell.image.centerXAnchor),
-                    cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5),
+                    cell.nameLabel.topAnchor.constraint(equalTo: cell.image.bottomAnchor, constant: 5)
                 ])
                 // 清除或重置 backgroundViewCloud，以防止重複使用時的問題
                 for subview in cell.subviews {
