@@ -84,6 +84,21 @@ struct Product: Codable, Equatable {
         try container.encode(itemType, forKey: .itemType)
     }
 }
+enum ProductType: String, Codable {
+    case request
+    case supply
+}
+
+extension ProductType {
+    init?(rawValue: String) {
+        switch rawValue {
+        case "request": self = .request
+        case "supply": self = .supply
+        default: return nil
+        }
+    }
+}
+
 struct Seller: Hashable, Codable {
     var sellerID: String
     var sellerName: String
@@ -103,19 +118,5 @@ struct Seller: Hashable, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(sellerID, forKey: .sellerID)
         try container.encode(sellerName, forKey: .sellerName)
-    }
-}
-enum ProductType: String, Codable {
-    case request
-    case supply
-}
-
-extension ProductType {
-    init?(rawValue: String) {
-        switch rawValue {
-        case "request": self = .request
-        case "supply": self = .supply
-        default: return nil
-        }
     }
 }

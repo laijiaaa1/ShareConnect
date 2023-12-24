@@ -46,6 +46,15 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+    }
+    @objc func doneButtonTappedForRequest() {
+        doneButtonTapped(itemType: .request)
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    func setupUI() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         view.backgroundColor = .black
@@ -117,12 +126,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             doneButton.widthAnchor.constraint(equalToConstant: 320),
             doneButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-    }
-    @objc func doneButtonTappedForRequest() {
-        doneButtonTapped(itemType: .request)
-    }
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
     }
     func doneButtonTapped(itemType: ProductType) {
         let db = Firestore.firestore()
@@ -297,34 +300,41 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
     }
-    func updateSelectedGroupUI(groupId: String, groupName: String) {
+    func updateSelectedGroupUI(groupId: String?, groupName: String?) {
         selectedGroupID = groupId
         selectedGroup = groupName
-        if selectedGroupID != nil {
-            if let selectedGroupID = selectedGroupID, let selectedGroup = selectedGroup {
-                groupHeaderLabel.text = "Selected Group: \(selectedGroup)"
-                if requestTableView.tableHeaderView == nil {
-                    requestTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: requestTableView.bounds.size.width, height: 50))
-                    requestTableView.tableHeaderView?.addSubview(groupHeaderLabel)
-                    groupHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
-                    NSLayoutConstraint.activate([
-                        groupHeaderLabel.leadingAnchor.constraint(equalTo: requestTableView.tableHeaderView!.leadingAnchor, constant: 16),
-                        groupHeaderLabel.trailingAnchor.constraint(equalTo: requestTableView.tableHeaderView!.trailingAnchor, constant: -16),
-                        groupHeaderLabel.topAnchor.constraint(equalTo: requestTableView.tableHeaderView!.topAnchor),
-                        groupHeaderLabel.bottomAnchor.constraint(equalTo: requestTableView.tableHeaderView!.bottomAnchor, constant: -16)
-                    ])
-                    groupHeaderLabel.textAlignment = .center
-                    groupHeaderLabel.textColor = .white
-                    groupHeaderLabel.backgroundColor = .black
-                    groupHeaderLabel.font = UIFont.systemFont(ofSize: 14)} else {
-                    groupHeaderLabel.text = ""
-                    requestTableView.tableHeaderView = nil
-                }
-            }
-        } else {
-            groupHeaderLabel.text = ""
-            requestTableView.tableHeaderView = nil
+        guard let selectedGroupID = selectedGroupID, let selectedGroup = selectedGroup else {
+            clearGroupUI()
+            return
         }
+        setGroupHeaderLabel(selectedGroup: selectedGroup)
+        setupTableHeaderView()
+    }
+    func clearGroupUI() {
+        groupHeaderLabel.text = ""
+        requestTableView.tableHeaderView = nil
+    }
+    func setGroupHeaderLabel(selectedGroup: String) {
+        groupHeaderLabel.text = "Selected Group: \(selectedGroup)"
+        groupHeaderLabel.textAlignment = .center
+        groupHeaderLabel.textColor = .white
+        groupHeaderLabel.backgroundColor = .black
+        groupHeaderLabel.font = UIFont.systemFont(ofSize: 14)
+    }
+    func setupTableHeaderView() {
+        guard requestTableView.tableHeaderView == nil else {
+            return
+        }
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: requestTableView.bounds.size.width, height: 50))
+        headerView.addSubview(groupHeaderLabel)
+        groupHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            groupHeaderLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            groupHeaderLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            groupHeaderLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+            groupHeaderLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -16)
+        ])
+        requestTableView.tableHeaderView = headerView
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return selectedGroupID != nil ? 9 : 8
@@ -354,7 +364,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 sortPicker.tag = indexPath.row
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = sortPicker
-                print("sort:\(String(describing: cell.textField.text))")
             }
             if indexPath.row == 6 {
                 let usePicker = UIPickerView()
@@ -363,7 +372,6 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 usePicker.tag = indexPath.row
                 cell.textField.tag = indexPath.row
                 cell.textField.inputView = usePicker
-                print("use:\(String(describing: cell.textField.text))")
             }
             if indexPath.row == 3 || indexPath.row == 4 {
                 let timePicker = UIDatePicker()
