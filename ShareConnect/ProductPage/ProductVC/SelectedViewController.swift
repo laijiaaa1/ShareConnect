@@ -66,6 +66,19 @@ class SelectedViewController: UIViewController {
             print("Product is nil")
             return
         }
+       updateCart(with: &product)
+        saveCartToFirestore(cart)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let trolleyViewController = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController {
+            DispatchQueue.main.async {
+                ProgressHUD.succeed("Add Success", delay: 1.5)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.navigationController?.pushViewController(trolleyViewController, animated: true)
+                }
+            }
+        }
+    }
+    func updateCart(with product: inout Product) {
         if var sellerProducts = cart[product.seller] {
             if let existingProductIndex = sellerProducts.firstIndex(where: { $0.productId == product.productId }) {
                 sellerProducts[existingProductIndex].quantity += selectedQuantity
@@ -77,16 +90,6 @@ class SelectedViewController: UIViewController {
         } else {
             product.quantity = selectedQuantity
             cart[product.seller] = [product]
-        }
-        saveCartToFirestore(cart)
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let trolleyViewController = storyboard.instantiateViewController(identifier: "TrolleyViewController") as? TrolleyViewController {
-            DispatchQueue.main.async {
-                ProgressHUD.succeed("Add Success", delay: 1.5)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    self.navigationController?.pushViewController(trolleyViewController, animated: true)
-                }
-            }
         }
     }
     func alertUserOnlyAddOneProduct() {
