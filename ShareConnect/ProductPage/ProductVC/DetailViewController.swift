@@ -335,7 +335,7 @@ class DetailViewController: UIViewController {
             print("startTimeString:", startTimeString)
             let dateFormats = ["MM月 dd, yyyy", "yyyy-MM-dd", "your-other-date-format"]
             for format in dateFormats {
-                if let startTime = DateFormatter.customDateFormat.date(from: startTimeString) {
+                if DateFormatter.customDateFormat.date(from: startTimeString) != nil {
                     vc.product = product
                     self.navigationController?.pushViewController(vc, animated: true)
                     break

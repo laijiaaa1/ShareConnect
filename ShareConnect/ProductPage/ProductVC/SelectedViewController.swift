@@ -132,7 +132,7 @@ class SelectedViewController: UIViewController {
         priceLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
         priceLabel.textColor = .white
         infoView.addSubview(priceLabel)
-        availabilityView.backgroundColor = .white /*UIColor(named: "G2")*/
+        availabilityView.backgroundColor = .white
         availabilityView.layer.cornerRadius = 10
         infoView.addSubview(availabilityView)
         availabilityView.translatesAutoresizingMaskIntoConstraints = false
