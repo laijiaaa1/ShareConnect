@@ -83,7 +83,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         view.addSubview(requestSelectSegment)
         requestSelectSegment.selectedSegmentIndex = 0
         requestSelectSegment.backgroundColor = UIColor(named: "G5")
-        requestSelectSegment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "G5")], for: .selected)
+        requestSelectSegment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "G5")!], for: .selected)
         requestSelectSegment.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
         requestSelectSegment.layer.cornerRadius = 10
         requestSelectSegment.addTarget(self, action: #selector(requestSelectSegmentTapped), for: .valueChanged)
@@ -137,7 +137,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         if let imageURL = self.uploadButton.backgroundImage(for: .normal),
            let imageData = imageURL.jpegData(compressionQuality: 0.1) {
             ProgressHUD.animate("Please wait...", .ballVerticalBounce)
-            storageRef.putData(imageData, metadata: nil) { (metadata, error) in
+            storageRef.putData(imageData, metadata: nil) { (_, error) in
                 if let error = error {
                     print("Error uploading image: \(error)")
                 } else {
@@ -304,7 +304,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         selectedGroupID = groupId
         selectedGroup = groupName
         if selectedGroupID != nil {
-            if let selectedGroupID = selectedGroupID, let selectedGroup = selectedGroup {
+            if selectedGroupID == selectedGroupID, let selectedGroup = selectedGroup {
                 groupHeaderLabel.text = "Selected Group: \(selectedGroup)"
                 if requestTableView.tableHeaderView == nil {
                     requestTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: requestTableView.bounds.size.width, height: 50))

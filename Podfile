@@ -21,4 +21,9 @@ target 'ShareConnect' do
  pod 'FirebaseFirestoreSwift'
  pod 'ProgressHUD'
  pod 'Firebase/Crashlytics'
+ 
+ target 'ShareConnectTests' do
+   pod 'Firebase'
+   pod 'FirebaseAuth'
+   end
 end

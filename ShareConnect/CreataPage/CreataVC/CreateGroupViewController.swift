@@ -114,7 +114,7 @@ class CreateGroupViewController: CreateRequestViewController {
         return false
     }
     func uploadGroupImageAndSaveToFirebase() {
-        guard let user = Auth.auth().currentUser else {
+        guard Auth.auth().currentUser != nil else {
             print("Error: User is not authenticated.")
             return
         }
@@ -125,7 +125,7 @@ class CreateGroupViewController: CreateRequestViewController {
         }
         let imageName = UUID().uuidString
         let imageRef = Storage.storage().reference().child("group_images/\(imageName).jpg")
-        imageRef.putData(imageData, metadata: nil) { (metadata, error) in
+        imageRef.putData(imageData, metadata: nil) { (_, error) in
             if let error = error {
                 print("Error uploading image: \(error)")
             } else {

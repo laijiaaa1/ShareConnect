@@ -151,6 +151,7 @@ extension GroupViewController {
                 if invitationCode == mutableGroup.invitationCode {
                     completion(true)
                     mutableGroup.addMember(userId: self.currentUser!)
+                    // firstIndex查找集合中滿足條件的第一個
                     if let index = self.groups.firstIndex(where: { $0.documentId == mutableGroup.documentId }) {
                         self.groups[index] = mutableGroup
                     }

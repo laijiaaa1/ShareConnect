@@ -13,7 +13,7 @@ class SearchResultsViewController: SearchViewController {
     var products: [Product] = []
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Search Results"
+        title = "SEARCH RESULTS"
     }
     // MARK: - UICollectionViewDataSource
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

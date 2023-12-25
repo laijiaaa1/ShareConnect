@@ -33,6 +33,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     let hotCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     var browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     let db = Firestore.firestore()
+    var searchResults: [Product] = []
+    var searchSupply: [Product] = []
     var searchTimer: Timer?
     override func viewWillAppear(_ animated: Bool) {
         browsingHistoryCollection.reloadData()
@@ -44,7 +46,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         browsingHistoryCollection.reloadData()
-        let textAttributes = [NSAttributedString.Key.font:UIFont(name: "GeezaPro-Bold", size: 20)]
         view.backgroundColor = .black
         let backPicture = UIImageView()
         backPicture.image = UIImage(named: "9")
@@ -63,7 +64,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         browsingHistoryCollection.delegate = self
         browsingHistoryCollection.dataSource = self
         searchTextField.delegate = self
-        textFieldShouldReturn(searchTextField)
         fetchGroupData()
     }
     @objc func dismissKeyboard() {
@@ -95,7 +95,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             ])
     }
     func groupClass() {
-        let views = [productView, placeView, courseView, foodView]
         let labels = ["Product", "Place", "Course", "Food"]
         let images = ["icons8-camping-tent-72(@3×)", "icons8-room-72(@3×)", "icons8-course-72(@3×)", "icons8-pizza-five-eighths-32"]
         for i in 0..<4 {
@@ -328,19 +327,16 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         }
     }
     func searchProductByName(searchString: String, completion: @escaping (_ searchResults: [Product], _ searchSupply: [Product]) -> Void) {
-        let db = Firestore.firestore()
         let groupsCollection = db.collection("products")
         let query = groupsCollection
             .whereField("product.Name", isGreaterThanOrEqualTo: searchString)
             .whereField("product.Name", isLessThan: searchString + "\u{f8ff}")
-        query.getDocuments { (snapshot, error) in
+        query.getDocuments { [self] (snapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error)")
                 completion([], [])
                 return
             } else {
-                var searchResults: [Product] = []
-                var searchSupply: [Product] = []
                 for document in snapshot!.documents {
                     let data = document.data()
                     if let product = FirestoreService.shared.parseProductData(productData: data){
@@ -362,12 +358,12 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 print("Error fetching public groups: \(error.localizedDescription)")
                 return
             }
+            // 將document轉換為Group物件，並存入groups陣列中，compactMap篩選掉nil
             self.groups = querySnapshot?.documents.compactMap { document in
                 let data = document.data()
                 return Group(data: data, documentId: document.documentID)
             } ?? []
             self.groups.sort { $0.members.count > $1.members.count }
-
             DispatchQueue.main.async {
                 self.hotCollection.reloadData()
             }
@@ -383,6 +379,7 @@ class HistoryCell: UICollectionViewCell {
     }
 }
 extension HomePageViewController: UITextFieldDelegate {
+    // 點擊鍵盤上的Return鍵時，將觸發 textFieldShouldReturn
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let searchString = textField.text, !searchString.isEmpty {
             searchProductByName(searchString: searchString) { [weak self] searchResults, searchSupply in
@@ -392,6 +389,7 @@ extension HomePageViewController: UITextFieldDelegate {
                 self?.navigationController?.pushViewController(searchResultsViewController, animated: true)
             }
         }
+        // 調用resignFirstResponder，鍵盤關閉
         textField.resignFirstResponder()
         return true
     }

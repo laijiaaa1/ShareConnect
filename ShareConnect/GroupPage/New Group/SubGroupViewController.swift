@@ -53,7 +53,6 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         navigationController?.navigationBar.isHidden = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        let userID = Auth.auth().currentUser?.uid ?? ""
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
         fetchRequestsForUser(type: .request)
@@ -64,7 +63,6 @@ class SubGroupViewController: UIViewController, UICollectionViewDelegate, UIColl
         collectionView.reloadData()
     }
     @objc func refresh() {
-        let userID = Auth.auth().currentUser?.uid ?? ""
         if currentButtonType == .request {
             fetchRequestsForUser(type: .request)
         } else if currentButtonType == .supply {

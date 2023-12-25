@@ -84,8 +84,8 @@ class CreateViewController: UIViewController {
         ])
         animationStart()
     }
-    func animationStart(){
-        //圖片上下浮動動畫
+    func animationStart() {
+        // 圖片上下浮動動畫
         let animatedBackgroundImageView = UIImageView(image: UIImage(named: "Create_Green"))
         animatedBackgroundImageView.frame = CGRect(x: 250, y: -20, width: view.bounds.width / 3, height: view.bounds.height / 3)
         animatedBackgroundImageView.contentMode = .scaleAspectFit
