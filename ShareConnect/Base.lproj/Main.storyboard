@@ -296,7 +296,6 @@
                                 </buttonConfiguration>
                                 <connections>
                                     <action selector="loginButtonTapped:" destination="pvm-5d-R8i" eventType="touchUpInside" id="nRl-OB-hcV"/>
-                                    <segue destination="DYw-AW-csk" kind="show" identifier="goToHome" id="w9i-E5-Zmu"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9kF-u2-6q2">

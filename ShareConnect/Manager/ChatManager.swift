@@ -9,7 +9,6 @@ import Foundation
 import FirebaseFirestore
 
 class ChatManager {
-    var cartString = ""
        static let shared = ChatManager()
        private var firestore = Firestore.firestore()
        private var seller: Seller?
@@ -65,36 +64,24 @@ class ChatManager {
                    let profileImageUrl = data["profileImageUrl"] as? String,
                    let buyerID = data["buyer"] as? String,
                    let sellerID = data["seller"] as? String,
-                let chatRoomID = data["chatRoomID"] as? String,
-                let imageURL = data["imageURL"] as? String {
-                    let chatMessage = ChatMessage(text: text, isMe: isMe, timestamp: timestamp, profileImageUrl: profileImageUrl, name: name, chatRoomID: chatRoomID, sellerID: sellerID, buyerID: buyerID, imageURL: imageURL)
+                   let chatRoomID = data["chatRoomID"] as? String,
+                   let audioURL = data["audioURL"] as? String,
+                   let imageURL = data["imageURL"] as? String {
+                    print("Download URL: \(audioURL)")
+                    let chatMessage = ChatMessage(text: text,
+                                                  isMe: isMe,
+                                                  timestamp: timestamp,
+                                                  profileImageUrl: profileImageUrl,
+                                                  name: name,
+                                                  chatRoomID: chatRoomID,
+                                                  sellerID: sellerID,
+                                                  buyerID: buyerID,
+                                                  imageURL: imageURL,
+                                                  audioURL: audioURL)
                     chatMessages.append(chatMessage)
                 }
             }
             completion(chatMessages, nil)
         }
-    }
-    func sendMessageToFirestore(chatRoomDocument: DocumentReference, message: String, isMe: Bool, completion: @escaping (Error?) -> Void) {
-        let messagesCollection = chatRoomDocument.collection("messages")
-        messagesCollection.addDocument(data: [
-            "text": message,
-            "isMe": isMe,
-            "timestamp": FieldValue.serverTimestamp(),
-            "name": isMe ? "Buyer" : seller?.sellerName ?? ""
-        ]) { error in
-            completion(error)
-        }
-    }
-    func convertCartToString(_ cart: [Seller: [Product]]) -> String {
-        for (seller, products) in cart {
-            cartString.append("Seller: \(seller.sellerName)\n")
-            for product in products {
-                cartString.append(" - Product: \(product.name)\n")
-                cartString.append("   Quantity: \(product.quantity ?? 1)\n")
-                cartString.append("   Price: \(product.price)\n")
-            }
-            cartString.append("\n")
-        }
-        return cartString
     }
 }
