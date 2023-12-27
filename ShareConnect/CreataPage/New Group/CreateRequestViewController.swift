@@ -74,7 +74,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         NSLayoutConstraint.activate([
             uploadButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             uploadButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            uploadButton.widthAnchor.constraint(equalToConstant: 320),
+            uploadButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            uploadButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             uploadButton.heightAnchor.constraint(equalToConstant: 160)
         ])
         requestSelectSegment.insertSegment(withTitle: "Public", at: 0, animated: true)
@@ -90,7 +91,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         NSLayoutConstraint.activate([
             requestSelectSegment.topAnchor.constraint(equalTo: uploadButton.bottomAnchor, constant: 20),
             requestSelectSegment.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            requestSelectSegment.widthAnchor.constraint(equalToConstant: 320),
+            requestSelectSegment.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            requestSelectSegment.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             requestSelectSegment.heightAnchor.constraint(equalToConstant: 40)
         ])
         requestTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -106,7 +108,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         NSLayoutConstraint.activate([
             requestTableView.topAnchor.constraint(equalTo: requestSelectSegment.bottomAnchor, constant: 20),
             requestTableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            requestTableView.widthAnchor.constraint(equalToConstant: 320),
+            requestTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            requestTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             requestTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90)
         ])
         requestTableView.footerView(forSection: 0)?.backgroundColor = .white
@@ -123,7 +126,8 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         NSLayoutConstraint.activate([
             doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             doneButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            doneButton.widthAnchor.constraint(equalToConstant: 320),
+            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             doneButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
