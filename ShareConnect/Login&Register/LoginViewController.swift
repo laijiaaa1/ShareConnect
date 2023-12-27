@@ -32,18 +32,26 @@ class LoginViewController: UIViewController {
         guard let email = emailTextField.text, let password = passwordTextField.text else {
             return
         }
-        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+            guard let strongSelf = self else { return }
             if let error = error {
                 print("Error signing in: \(error.localizedDescription)")
-            } else {
-                if let user = Auth.auth().currentUser {
-                    print("User is already registered with UID: \(user.uid)")
-                    if (Auth.auth().currentUser?.uid) != nil {
-                    }
+                strongSelf.showLoginErrorAlert(message: error.localizedDescription)
+            } else if let user = Auth.auth().currentUser {
+                print("User is already registered with UID: \(user.uid)")
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                    self?.navigationController?.pushViewController(tabBarController, animated: true)
                 }
             }
         }
     }
+    func showLoginErrorAlert(message: String) {
+        let alert = UIAlertController(title: "Login Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true)
+    }
+
     func setSignInWithAppleBtn() {
         let signInWithAppleBtn = ASAuthorizationAppleIDButton(authorizationButtonType: .signIn, authorizationButtonStyle: chooseAppleButtonStyle())
         view.addSubview(signInWithAppleBtn)

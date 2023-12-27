@@ -2956,6 +2956,21 @@
                   endingLineNumber = "146"
                   offsetFromSymbolStart = "412">
                </Location>
+               <Location
+                  uuid = "BAFADAD1-2EA9-4193-B2D7-9A69F02D8420 - 3b302bfdbd9a781d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 (Swift.Bool) -&gt; () in ShareConnect.ChatViewController.createOrGetChatRoomDocument() -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatRoom/ChatRoomVC/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "146"
+                  endingLineNumber = "146"
+                  offsetFromSymbolStart = "364">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
@@ -3003,6 +3018,21 @@
                   startingLineNumber = "235"
                   endingLineNumber = "235"
                   offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  uuid = "AB9DE1CC-3979-4882-84B0-AA3CAC3CDAF7 - ec33c47cf5455e66"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.ChatViewController.updateUserChatRoomData(_: __C.FIRCollectionReference, userID: Swift.String, chatRoomID: Swift.String) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/ChatRoom/ChatRoomVC/ChatViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "235"
+                  endingLineNumber = "235"
+                  offsetFromSymbolStart = "1832">
                </Location>
             </Locations>
          </BreakpointContent>

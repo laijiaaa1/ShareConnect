@@ -6,40 +6,43 @@
 //
 
 import XCTest
-@testable import ShareConnect
 import FirebaseAuth
+@testable import ShareConnect
 
-final class ShareConnectTests: XCTestCase {
-
-//    var sut: LoginViewController!
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+class StarRatingViewTests: XCTestCase {
+    var starRatingView: StarRatingView!
+    override func setUp() {
+        super.setUp()
+        starRatingView = StarRatingView()
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    override func tearDown() {
+        starRatingView = nil
+        super.tearDown()
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testRatingButtonTapped() {
+        let button1 = UIButton()
+        let button2 = UIButton()
+        let button3 = UIButton()
+        starRatingView.ratingButtons = [button1, button2, button3]
+        starRatingView.ratingButtonTapped(button: button2)
+        XCTAssertEqual(starRatingView.rating, 2, "Rating should be set to the index + 1 of the tapped button.")
+        starRatingView.ratingButtonTapped(button: button2)
+        XCTAssertEqual(starRatingView.rating, 0, "Tapping the same button again should reset the rating.")
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
+    func testUpdateButtonSelectionStates() {
+            let button1 = UIButton()
+            let button2 = UIButton()
+            let button3 = UIButton()
+            starRatingView.ratingButtons = [button1, button2, button3]
+            starRatingView.rating = 2
+            starRatingView.updateButtonSelectionStates()
+            XCTAssertTrue(button1.isSelected, "Button 1 should be selected because its index is less than the rating.")
+            XCTAssertTrue(button2.isSelected, "Button 2 should be selected because its index is less than the rating.")
+            XCTAssertFalse(button3.isSelected, "Button 3 should not be selected because its index is greater than the rating.")
+            starRatingView.rating = 0
+            starRatingView.updateButtonSelectionStates()
+            XCTAssertFalse(button1.isSelected, "Button 1 should not be selected because the rating is 0.")
+            XCTAssertFalse(button2.isSelected, "Button 2 should not be selected because the rating is 0.")
+            XCTAssertFalse(button3.isSelected, "Button 3 should not be selected because the rating is 0.")
         }
-    }
-//    func testLoginButtonTapped() throws {
-//        sut.emailTextField.text = "lll@gmail.com"
-//        sut.passwordTextField.text = "llllll"
-//        sut.loginButtonTapped(UIButton())
-//        XCTAssertEqual(sut.emailTextField.text, "lll@gmail.com")
-//        XCTAssertEqual(sut.passwordTextField.text, "llllll")
-//    }
-
 }
