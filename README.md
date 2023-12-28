@@ -26,32 +26,31 @@ password: llllll
 https://github.com/laijiaaa1/ShareConnect/assets/131647109/9c9ef6f0-be37-46cc-8d70-0a7483faf12f
 
 ## Feature Overview
-Main Page:
-
+1. Main Page:
 Group Categories
 Group Rankings
 Browsing History
-Groups:
 
+2. Groups:
 Join Groups
 Search for Groups
 Private Groups
-Posting:
 
+3. Posting:
 Create Groups
 Public Posting
 Group Posting
-Products:
 
+4. Products:
 Product Categories
 Add to Cart
 Seller Ratings
 Share with Friends
-Chat:
 
+5. Chat:
 Two-Way Chat for Orders
-Personal Profile Page:
 
+6. Personal Profile Page:
 View Posted Content
 Order History
 Comments
