@@ -402,12 +402,7 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
             enterData[indexPath.row] = cell.textField.text ?? ""
         }
     }
-//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-//        return 150
-//    }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 100
-        //dynemic
         return UITableView.automaticDimension
     }
     @objc func timePickerChanged(sender: UIDatePicker) {
