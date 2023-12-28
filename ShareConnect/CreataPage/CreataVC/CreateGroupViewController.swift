@@ -40,15 +40,13 @@ class CreateGroupViewController: CreateRequestViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "requestCell", for: indexPath) as? RequestCell ?? RequestCell()
         cell.requestLabel.text = "name"
-        cell.addBtn.setBackgroundImage(UIImage(systemName: "plus"), for: .normal)
-        cell.addBtn.tintColor = .white
         cell.backgroundColor = .black
         cell.requestLabel.numberOfLines = 0
         cell.requestLabel.textColor = .white
         cell.textField.textColor = .white
         cell.requestLabel.frame = cell.contentView.bounds
         cell.requestLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        let requestLabels = ["Name", "Description", "Sort", "Require", "No. of people", "Invite Code(Private必填)"]
+        let requestLabels = ["Name", "Description", "Sort", "Require", "Members", "Invite Code"]
         if indexPath.row < requestLabels.count {
             let info = requestLabels[indexPath.row]
             cell.requestLabel.text = info
@@ -90,7 +88,6 @@ class CreateGroupViewController: CreateRequestViewController {
             cell.textField.placeholder = "Enter Invitation Code"
             cell.textField.tag = 5
         }
-        cell.addBtn.tag = indexPath.row
         return cell
     }
     @objc func stepperValueChanged(sender: UIStepper) {

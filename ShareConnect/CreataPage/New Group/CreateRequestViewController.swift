@@ -335,11 +335,11 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
         return selectedGroupID != nil ? 9 : 8
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "requestCell", for: indexPath) as? RequestCell ?? RequestCell()
+        let uniqueIdentifier = "requestCell\(indexPath.row)"
+          tableView.register(RequestCell.self, forCellReuseIdentifier: uniqueIdentifier)
+          
+          let cell = tableView.dequeueReusableCell(withIdentifier: uniqueIdentifier, for: indexPath) as! RequestCell
         cell.requestLabel.text = "name"
-        cell.addBtn.setBackgroundImage(UIImage(systemName: "plus"), for: .normal)
-        cell.addBtn.tintColor = .white
-        cell.addBtn.startAnimatingPressActions()
         cell.backgroundColor = .black
         cell.textField.delegate = self
         cell.textField.textColor = .white
@@ -383,22 +383,27 @@ class CreateRequestViewController: UIViewController, UIImagePickerControllerDele
                 cell.requestLabel.text = "Group"
                 cell.textField.text = selectedGroupName
                 cell.textField.isEnabled = false
-                cell.addBtn.isHidden = true
             } else {
             }
         }
-        cell.addBtn.tag = indexPath.row
-        cell.addBtn.addTarget(self, action: #selector(addBtnTapped(_:)), for: .touchUpInside)
+        cell.textField.tag = indexPath.row
+        cell.textField.addTarget(self, action: #selector(editEnd(_:)), for: .editingDidEnd)
+        let store = enterData[indexPath.row]
+        if store != "" {
+               cell.textField.text = store
+           } else {
+               cell.textField.text = ""
+           }
         return cell
     }
-    @objc func addBtnTapped(_ sender: UIButton) {
+    @objc func editEnd(_ sender: UIButton) {
         let indexPath = IndexPath(row: sender.tag, section: 0)
         if let cell = requestTableView.cellForRow(at: indexPath) as? RequestCell {
             enterData[indexPath.row] = cell.textField.text ?? ""
         }
     }
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 100
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
     @objc func timePickerChanged(sender: UIDatePicker) {
         let formatter = DateFormatter()
