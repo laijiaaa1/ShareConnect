@@ -4,12 +4,12 @@ A resource-sharing platform that facilitates the borrowing and lending of resour
 ## Requirements
 iOS 16.0 and higher.
 ## Features
-Firebase Authentication: Implemented for robust user authentication.
-Firestore Database: To facilitate efficient real-time chat functionality.
-MapKit: Enhanced user experience with integrated map features for geolocation.
-AVFoundation: Enabled voice message transmission for interactive communication.
-Custom UITableViewCell Subclasses: Employed to effectively tackle cell reuse and layout challenges, significantly enhancing UI efficiency and visual coherence.
-Sign In With Apple: Incorporated for secure and efficient user login.
+1. Firebase Authentication: Implemented for robust user authentication.
+2. Firestore Database: To facilitate efficient real-time chat functionality.
+3. MapKit: Enhanced user experience with integrated map features for geolocation.
+4. AVFoundation: Enabled voice message transmission for interactive communication.
+5. Custom UITableViewCell Subclasses: Employed to effectively tackle cell reuse and layout challenges, significantly enhancing UI efficiency and visual coherence.
+6. Sign In With Apple: Incorporated for secure and efficient user login.
 
 ## Getting Started 
 To run the example project, clone the repo, and run pod install from the ShareConnect directory first. Then open the ShareConnect.xcworkspace file.
