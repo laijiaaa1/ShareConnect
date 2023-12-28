@@ -11,7 +11,7 @@ To run the example project, clone the repo, and run pod install from the ShareCo
 3. Run pod install in the terminal.
 4. Build and run the project.
 
-## Technology Used
+## Technologies Employed
 1. Firebase Authentication: Implemented for robust user authentication.
 2. Firestore Database: To facilitate efficient real-time chat functionality.
 3. MapKit: Enhanced user experience with integrated map features for geolocation.
