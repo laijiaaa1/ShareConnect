@@ -5,6 +5,9 @@ A resource-sharing platform that facilitates the borrowing and lending of resour
 iOS 16.0 and higher.
 
 ## Getting Started 
+- TestFlight: https://testflight.apple.com/join/XYHpRvRL
+- clone repo
+  
 To run the example project, clone the repo, and run pod install from the ShareConnect directory first. Then open the ShareConnect.xcworkspace file.
 1. Clone the repo.
 2. Change directory (cd) to the Example folder where the Example app resides.
