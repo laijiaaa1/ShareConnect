@@ -21,9 +21,9 @@ class SettingProfileViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .black
         view.backgroundColor = CustomColors.B1
         outImage.image = UIImage(named: "icons8-logout-90")
-        logoutButton.setTitle("登出", for: .normal)
+        logoutButton.setTitle("Log Out", for: .normal)
         logoutButton.tintColor = UIColor(red: 85/255, green: 85/255, blue: 85/255, alpha: 1.0)
-        deleteAccountButton.setTitle("刪除帳號", for: .normal)
+        deleteAccountButton.setTitle("Delete Account & All Data", for: .normal)
         deleteAccountButton.tintColor = UIColor(red: 85/255, green: 85/255, blue: 85/255, alpha: 1.0)
         logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         deleteAccountButton.addTarget(self, action: #selector(deleteAccountButtonTapped), for: .touchUpInside)
@@ -45,27 +45,27 @@ class SettingProfileViewController: UIViewController {
         ])
     }
     @objc func logoutButtonTapped() {
-        showConfirmationAlert(title: "確認登出", message: "確定要登出嗎？") {
+        showConfirmationAlert(title: "Confirm Logout", message: "Are You Sure To Logout？") {
             self.viewModel.logout { result in
                 switch result {
                 case .success:
-                    print("已登出")
+                    print("Logout Successfully")
                     self.navigateToLoginScreen()
                 case .failure(let error):
-                    print("登出錯誤: \(error.localizedDescription)")
+                    print("Logout Fail: \(error.localizedDescription)")
                 }
             }
         }
     }
     @objc func deleteAccountButtonTapped() {
-        showConfirmationAlert(title: "確認刪除帳號", message: "確定要刪除帳號嗎？") {
+        showConfirmationAlert(title: "Confirm Delete Account", message: "Are You Sure To Delete Account？") {
             self.viewModel.deleteAccount { result in
                 switch result {
                 case .success:
-                    print("帳號已成功刪除")
+                    print("Delete Successfully")
                     self.navigateToLoginScreen()
                 case .failure(let error):
-                    print("刪除帳號錯誤: \(error.localizedDescription)")
+                    print("Delete Fail: \(error.localizedDescription)")
                 }
             }
         }
@@ -82,10 +82,10 @@ class SettingProfileViewController: UIViewController {
     }
     func showConfirmationAlert(title: String, message: String, confirmAction: @escaping () -> Void) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let confirmAction = UIAlertAction(title: "確定", style: .destructive) { _ in
+        let confirmAction = UIAlertAction(title: "Yes", style: .destructive) { _ in
             confirmAction()
         }
-        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(confirmAction)
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
