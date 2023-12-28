@@ -27,31 +27,31 @@ https://github.com/laijiaaa1/ShareConnect/assets/131647109/9c9ef6f0-be37-46cc-8d
 
 ## Feature Overview
 1. Main Page:
-Group Categories
-Group Rankings
-Browsing History
+- Group Categories
+- Group Rankings
+- Browsing History
 
 2. Groups:
-Join Groups
-Search for Groups
-Private Groups
+- Join Groups
+- Search for Groups
+- Private Groups
 
 3. Posting:
-Create Groups
-Public Posting
-Group Posting
+- Create Groups
+- Public Posting
+- Group Posting
 
 4. Products:
-Product Categories
-Add to Cart
-Seller Ratings
-Share with Friends
+- Product Categories
+- Add to Cart
+- Seller Ratings
+- Share with Friends
 
 5. Chat:
-Two-Way Chat for Orders
+- Two-Way Chat for Orders
 
 6. Personal Profile Page:
-View Posted Content
-Order History
-Comments
+- View Posted Content
+- Order History
+- Comments
 
