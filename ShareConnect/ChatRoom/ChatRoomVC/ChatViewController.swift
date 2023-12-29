@@ -388,16 +388,7 @@ class ChatViewController: UIViewController, MKMapViewDelegate, AVAudioRecorderDe
     }
     @objc func sendButtonTapped() {
         guard let message = messageTextField.text else { return }
-//        if let selectedImage = selectedImage {
-//            uploadFixedImage(selectedImage) { [weak self] (imageURL) in
-//                self?.sendMessageToFirestore(message, isMe: true, imageURL: imageURL, location: nil)
-//                self?.selectedImage = nil
-//                self?.imageView.image = nil
-//                self?.currentImageURL = nil
-//            }
-//        } else {
-            sendMessageToFirestore(message, isMe: true, location: nil)
-//        }
+        sendMessageToFirestore(message, isMe: true, location: nil)
         messageTextField.text = ""
         currentLocation = nil
         selectedImage = nil
