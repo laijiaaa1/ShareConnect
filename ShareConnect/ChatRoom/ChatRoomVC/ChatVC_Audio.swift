@@ -25,15 +25,15 @@ extension ChatViewController {
     func startRecording() {
         let audioFilename = getDocumentsDirectory().appendingPathComponent("recording.wav")
         let settings = [
-            AVFormatIDKey: Int(kAudioFormatLinearPCM),
-            AVSampleRateKey: 12000,
-            AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+            AVFormatIDKey: Int(kAudioFormatLinearPCM),  //指定要用於錄製的音訊格式或編解碼器， kAudioFormatLinearPCM （線性脈衝編碼調製）是一種以未壓縮的原始形式表示音訊的格式。這種格式以高品質而聞名，但與壓縮格式相比，會導致更大的檔大小。
+            AVSampleRateKey: 12000,     //較低的採樣率會導致檔大小變小，但可能會降低錄製的品質。
+            AVNumberOfChannelsKey: 1,   // 1 表示單聲道錄音。如果設置為 2 ，它將是立體聲錄音。單聲道使用單聲道，足以滿足大多數基本的錄音需求。
+            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue  //確定音訊編碼的品質。AVAudioQuality.high 是無損音訊編碼，它會導致更大的檔大小。
         ]
         do {
-            audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
+            audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)     //初始化AVAudioRecorder 實例。
             audioRecorder.delegate = self
-            audioRecorder.record()
+            audioRecorder.record()  //開始 AVAudioRecorder 根據給定的設置錄製音訊並將其保存到指定的檔URL。
             isRecording = true
             updateUIForRecording(true)
         } catch {

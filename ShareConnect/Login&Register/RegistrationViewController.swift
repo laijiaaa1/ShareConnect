@@ -155,8 +155,17 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
               let password = passwordTextField.text,
               let name = nameTextField.text,
               let profileImage = profileImageView.image else {
-            return
+            showAlertWith(title: "錯誤", message: "請填寫所有欄位。")
+                   return
         }
+        guard password.count >= 6 else {
+               showAlertWith(title: "密碼太短", message: "密碼必須至少為6碼。")
+               return
+           }
+        guard isValidEmail(email) else {
+             showAlertWith(title: "無效的電子郵件", message: "請輸入有效且完整的電子郵件地址。")
+             return
+         }
         RegistrationManager.shared.registerUser(email: email, password: password, name: name, profileImage: profileImage) { success in
             if success {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -171,5 +180,15 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
                 print("Registration failed")
             }
         }
+    }
+    func showAlertWith(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "確定", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluate(with: email)
     }
 }
