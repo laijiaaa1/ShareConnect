@@ -124,7 +124,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
             // Get user information
             let uid = appleIDCredential.user
             let name = appleIDCredential.fullName
-            let email = appleIDCredential.email
+            let email = appleIDCredential.email ?? ""
             // Create Apple ID login credential
             let idTokenString = String(data: appleIDCredential.identityToken!, encoding: .utf8)!
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)

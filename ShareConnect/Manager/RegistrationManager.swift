@@ -19,25 +19,20 @@ class RegistrationManager {
     func registerUser(email: String?, password: String, name: String, profileImage: UIImage?, completion: @escaping (Bool) -> Void) {
         ProgressHUD.animate("Please wait...", .ballVerticalBounce)
         Auth.auth().createUser(withEmail: email ?? "", password: password) { authResult, error in
-            if let error = error {
-                print("Error creating user: \(error.localizedDescription)")
-                completion(false)
-            } else {
-                if let profileImage = profileImage {
-                    self.uploadProfileImage(profileImage) { imageUrl in
-                        self.updateUserData(email: email, name: name, imageUrl: imageUrl) { success in
-                            completion(success)
-                        }
-                    }
-                } else {
-                    self.updateUserData(email: email, name: name, imageUrl: nil) { success in
+            if let profileImage = profileImage {
+                self.uploadProfileImage(profileImage) { imageUrl in
+                    self.updateUserData(email: email, name: name, imageUrl: imageUrl) { success in
                         completion(success)
                     }
+                }
+            } else {
+                self.updateUserData(email: email, name: name, imageUrl: nil) { success in
+                    completion(success)
                 }
             }
         }
     }
-    private func updateUserData(email: String?, name: String, imageUrl: String?, completion: @escaping (Bool) -> Void) {
+    func updateUserData(email: String?, name: String, imageUrl: String?, completion: @escaping (Bool) -> Void) {
         let uid = Auth.auth().currentUser?.uid ?? ""
         guard !uid.isEmpty else {
             print("Unable to get UID")

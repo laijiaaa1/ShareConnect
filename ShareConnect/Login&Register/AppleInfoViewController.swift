@@ -19,6 +19,8 @@ class AppleInfoViewController: UIViewController, UIImagePickerControllerDelegate
     lazy var nameTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Name"
+        textField.layer.cornerRadius = 10
+        textField.layer.masksToBounds = true
         textField.borderStyle = .roundedRect
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
