@@ -3088,69 +3088,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "490741A0-FD35-4F20-A758-4725D7B0E7BC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ShareConnect/Manager/RegistrationManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
-            landmarkName = "registerUser(email:password:name:profileImage:completion:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "490741A0-FD35-4F20-A758-4725D7B0E7BC - 7a7fa6715de6e39f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ShareConnect.RegistrationManager.registerUser(email: Swift.Optional&lt;Swift.String&gt;, password: Swift.String, name: Swift.String, profileImage: Swift.Optional&lt;__C.UIImage&gt;, completion: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/Manager/RegistrationManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21"
-                  offsetFromSymbolStart = "244">
-               </Location>
-               <Location
-                  uuid = "490741A0-FD35-4F20-A758-4725D7B0E7BC - 94166ceab9464882"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRAuthDataResult&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.RegistrationManager.registerUser(email: Swift.Optional&lt;Swift.String&gt;, password: Swift.String, name: Swift.String, profileImage: Swift.Optional&lt;__C.UIImage&gt;, completion: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/Manager/RegistrationManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21"
-                  offsetFromSymbolStart = "200">
-               </Location>
-               <Location
-                  uuid = "490741A0-FD35-4F20-A758-4725D7B0E7BC - 94166ceab9464882"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRAuthDataResult&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.RegistrationManager.registerUser(email: Swift.Optional&lt;Swift.String&gt;, password: Swift.String, name: Swift.String, profileImage: Swift.Optional&lt;__C.UIImage&gt;, completion: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/Manager/RegistrationManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21"
-                  offsetFromSymbolStart = "164">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "30892260-9792-46BF-9154-D971B8A7F4D3"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -3240,69 +3177,6 @@
                   startingLineNumber = "162"
                   endingLineNumber = "162"
                   offsetFromSymbolStart = "120">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "04C9E299-2E63-478A-ACE0-D03240334276"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ShareConnect/Manager/RegistrationManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
-            landmarkName = "registerUser(email:password:name:profileImage:completion:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "04C9E299-2E63-478A-ACE0-D03240334276 - 7c751ee555d8827b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Bool) -&gt; () in closure #1 (Swift.String) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRAuthDataResult&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.RegistrationManager.registerUser(email: Swift.Optional&lt;Swift.String&gt;, password: Swift.String, name: Swift.String, profileImage: Swift.Optional&lt;__C.UIImage&gt;, completion: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/Manager/RegistrationManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "26"
-                  endingLineNumber = "26"
-                  offsetFromSymbolStart = "84">
-               </Location>
-               <Location
-                  uuid = "04C9E299-2E63-478A-ACE0-D03240334276 - 94166ceab9464867"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRAuthDataResult&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.RegistrationManager.registerUser(email: Swift.Optional&lt;Swift.String&gt;, password: Swift.String, name: Swift.String, profileImage: Swift.Optional&lt;__C.UIImage&gt;, completion: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/Manager/RegistrationManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "26"
-                  endingLineNumber = "26"
-                  offsetFromSymbolStart = "176">
-               </Location>
-               <Location
-                  uuid = "04C9E299-2E63-478A-ACE0-D03240334276 - 94166ceab9464867"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRAuthDataResult&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ShareConnect.RegistrationManager.registerUser(email: Swift.Optional&lt;Swift.String&gt;, password: Swift.String, name: Swift.String, profileImage: Swift.Optional&lt;__C.UIImage&gt;, completion: (Swift.Bool) -&gt; ()) -&gt; ()"
-                  moduleName = "ShareConnect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/Manager/RegistrationManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "26"
-                  endingLineNumber = "26"
-                  offsetFromSymbolStart = "356">
                </Location>
             </Locations>
          </BreakpointContent>
