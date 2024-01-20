@@ -36,6 +36,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     var searchResults: [Product] = []
     var searchSupply: [Product] = []
     var searchTimer: Timer?
+    let labels = ["Product", "Place", "Course", "Food"]
+    let images = ["icons8-camping-tent-72(@3×)", "icons8-room-72(@3×)", "icons8-course-72(@3×)", "icons8-pizza-five-eighths-32"]
     override func viewWillAppear(_ animated: Bool) {
         browsingHistoryCollection.reloadData()
         navigationController?.navigationBar.isHidden = false
@@ -95,8 +97,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             ])
     }
     func groupClass() {
-        let labels = ["Product", "Place", "Course", "Food"]
-        let images = ["icons8-camping-tent-72(@3×)", "icons8-room-72(@3×)", "icons8-course-72(@3×)", "icons8-pizza-five-eighths-32"]
         for i in 0..<4 {
             let containerView = UIView()
             containerView.backgroundColor = .white
@@ -108,7 +108,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             NSLayoutConstraint.activate([
                 containerView.widthAnchor.constraint(equalToConstant: 70),
                 containerView.heightAnchor.constraint(equalToConstant: 70),
-                containerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 170),
+                containerView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 30),
                 containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30 + CGFloat(88 * i))
             ])
             let imageView = UIImageView()
@@ -119,7 +119,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 imageView.widthAnchor.constraint(equalToConstant: 40),
                 imageView.heightAnchor.constraint(equalToConstant: 40),
                 imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+                imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             ])
             let label = UILabel()
             label.text = labels[i]
@@ -142,13 +142,17 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             NSLayoutConstraint.activate([
                 button.widthAnchor.constraint(equalToConstant: 70),
                 button.heightAnchor.constraint(equalToConstant: 70),
-                button.topAnchor.constraint(equalTo: view.topAnchor, constant: 170),
+                button.topAnchor.constraint(equalTo: containerView.topAnchor),
                 button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30 + CGFloat(88 * i))
             ])
         }
     }
     func hotGroup() {
         let hotCollectionLabel = UILabel(frame: CGRect(x: 30, y: 310, width: 160, height: 20))
+//        hotCollectionLabel.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            hotCollectionLabel.topAnchor.constraint(equalTo:
+//        ])
         hotCollectionLabel.text = "Hot Collections"
         hotCollectionLabel.font = UIFont(name: "GeezaPro-Bold", size: 18)
         hotCollectionLabel.textColor = .white
