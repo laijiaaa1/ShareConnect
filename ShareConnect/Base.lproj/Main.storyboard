@@ -266,16 +266,18 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="8" translatesAutoresizingMaskIntoConstraints="NO" id="ZOt-hS-KOb">
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="810"/>
                             </imageView>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tKF-mm-xzx">
-                                <rect key="frame" x="65" y="190" width="241" height="40"/>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tKF-mm-xzx">
+                                <rect key="frame" x="75" y="197" width="241" height="40"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="QYn-8I-vkT"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xy4-ub-94W">
-                                <rect key="frame" x="65" y="256" width="241" height="40"/>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xy4-ub-94W">
+                                <rect key="frame" x="75" y="263" width="241" height="40"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="C6G-DU-VmQ"/>
                                 </constraints>
@@ -283,15 +285,16 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UO0-aG-u6z">
-                                <rect key="frame" x="65" y="364" width="265" height="48"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <rect key="frame" x="75" y="350" width="241" height="43"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="48" id="BuM-vQ-z6Y"/>
+                                    <constraint firstAttribute="height" constant="43" id="BuM-vQ-z6Y"/>
                                 </constraints>
                                 <color key="tintColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="login">
-                                    <backgroundConfiguration key="background" cornerRadius="10"/>
+                                    <backgroundConfiguration key="background" cornerRadius="10">
+                                        <color key="backgroundColor" name="G5"/>
+                                    </backgroundConfiguration>
                                     <directionalEdgeInsets key="contentInsets" top="0.0" leading="0.0" bottom="0.0" trailing="0.0"/>
                                 </buttonConfiguration>
                                 <connections>
@@ -299,7 +302,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9kF-u2-6q2">
-                                <rect key="frame" x="120" y="434" width="150" height="40"/>
+                                <rect key="frame" x="120" y="427" width="150" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="gtN-08-23i"/>
                                 </constraints>
@@ -314,21 +317,22 @@
                         <viewLayoutGuide key="safeArea" id="hqy-14-tUK"/>
                         <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="UO0-aG-u6z" firstAttribute="centerX" secondItem="9kF-u2-6q2" secondAttribute="centerX" constant="2.5" id="1EW-sn-65e"/>
-                            <constraint firstItem="UO0-aG-u6z" firstAttribute="leading" secondItem="hqy-14-tUK" secondAttribute="leading" constant="65" id="5aC-NA-SNR"/>
+                            <constraint firstItem="UO0-aG-u6z" firstAttribute="centerX" secondItem="9kF-u2-6q2" secondAttribute="centerX" constant="0.5" id="1EW-sn-65e"/>
+                            <constraint firstItem="UO0-aG-u6z" firstAttribute="leading" secondItem="hqy-14-tUK" secondAttribute="leading" constant="75" id="5aC-NA-SNR"/>
                             <constraint firstItem="Xy4-ub-94W" firstAttribute="top" secondItem="tKF-mm-xzx" secondAttribute="bottom" constant="26" id="63N-Hh-oWj"/>
-                            <constraint firstItem="tKF-mm-xzx" firstAttribute="leading" secondItem="hqy-14-tUK" secondAttribute="leading" constant="65" id="6kg-8V-DWL"/>
-                            <constraint firstItem="hqy-14-tUK" firstAttribute="trailing" secondItem="tKF-mm-xzx" secondAttribute="trailing" constant="84" id="AuN-ZG-Qsl"/>
+                            <constraint firstItem="tKF-mm-xzx" firstAttribute="leading" secondItem="hqy-14-tUK" secondAttribute="leading" constant="75" id="6kg-8V-DWL"/>
+                            <constraint firstItem="hqy-14-tUK" firstAttribute="trailing" secondItem="tKF-mm-xzx" secondAttribute="trailing" constant="74" id="AuN-ZG-Qsl"/>
                             <constraint firstAttribute="trailing" secondItem="ZOt-hS-KOb" secondAttribute="trailing" id="Gvs-wi-j5r"/>
-                            <constraint firstItem="tKF-mm-xzx" firstAttribute="top" secondItem="hqy-14-tUK" secondAttribute="top" constant="143" id="PrI-zN-kHe"/>
+                            <constraint firstItem="tKF-mm-xzx" firstAttribute="top" secondItem="hqy-14-tUK" secondAttribute="top" constant="150" id="PrI-zN-kHe"/>
                             <constraint firstItem="ZOt-hS-KOb" firstAttribute="leading" secondItem="hqy-14-tUK" secondAttribute="leading" id="Yhm-kM-L3V"/>
                             <constraint firstItem="hqy-14-tUK" firstAttribute="bottom" secondItem="ZOt-hS-KOb" secondAttribute="bottom" id="Z1e-c4-Esq"/>
+                            <constraint firstItem="9kF-u2-6q2" firstAttribute="centerX" secondItem="aXg-Df-vAd" secondAttribute="centerX" id="bJe-dv-Xmr"/>
                             <constraint firstItem="tKF-mm-xzx" firstAttribute="leading" secondItem="Xy4-ub-94W" secondAttribute="leading" id="gvc-CJ-x1H"/>
                             <constraint firstItem="tKF-mm-xzx" firstAttribute="trailing" secondItem="Xy4-ub-94W" secondAttribute="trailing" id="hd6-rP-4j8"/>
-                            <constraint firstItem="UO0-aG-u6z" firstAttribute="top" secondItem="Xy4-ub-94W" secondAttribute="bottom" constant="68" id="jLU-nH-shx"/>
-                            <constraint firstItem="UO0-aG-u6z" firstAttribute="centerX" secondItem="ZOt-hS-KOb" secondAttribute="centerX" constant="2.5" id="m3L-a3-5cc"/>
+                            <constraint firstItem="UO0-aG-u6z" firstAttribute="top" secondItem="Xy4-ub-94W" secondAttribute="bottom" constant="47" id="jLU-nH-shx"/>
+                            <constraint firstItem="UO0-aG-u6z" firstAttribute="centerX" secondItem="ZOt-hS-KOb" secondAttribute="centerX" constant="0.5" id="m3L-a3-5cc"/>
                             <constraint firstItem="ZOt-hS-KOb" firstAttribute="top" secondItem="aXg-Df-vAd" secondAttribute="top" id="mXx-ED-QAR"/>
-                            <constraint firstItem="9kF-u2-6q2" firstAttribute="top" secondItem="UO0-aG-u6z" secondAttribute="bottom" constant="22" id="s9H-Vl-dpt"/>
+                            <constraint firstItem="9kF-u2-6q2" firstAttribute="top" secondItem="UO0-aG-u6z" secondAttribute="bottom" constant="34" id="s9H-Vl-dpt"/>
                             <constraint firstItem="9kF-u2-6q2" firstAttribute="leading" secondItem="hqy-14-tUK" secondAttribute="leading" constant="120" id="wXl-iG-QAI"/>
                         </constraints>
                     </view>
@@ -563,6 +567,9 @@
         <image name="plus.circle.fill" catalog="system" width="128" height="123"/>
         <namedColor name="AccentColor">
             <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="G5">
+            <color red="0.26899999380111694" green="0.37999999523162842" blue="0.99900001287460327" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
