@@ -149,10 +149,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     func hotGroup() {
         let hotCollectionLabel = UILabel(frame: CGRect(x: 30, y: 310, width: 160, height: 20))
-//        hotCollectionLabel.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            hotCollectionLabel.topAnchor.constraint(equalTo:
-//        ])
         hotCollectionLabel.text = "Hot Collections"
         hotCollectionLabel.font = UIFont(name: "GeezaPro-Bold", size: 18)
         hotCollectionLabel.textColor = .white
