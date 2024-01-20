@@ -75,12 +75,12 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         view.addSubview(nameTextField)
         view.addSubview(profileImageView)
         view.addSubview(registerButton)
-        emailTextField.backgroundColor = .clear
-        passwordTextField.backgroundColor = .clear
-        nameTextField.backgroundColor = .clear
-        emailTextField.borderStyle = .none
-        passwordTextField.borderStyle = .none
-        nameTextField.borderStyle = .none
+        emailTextField.backgroundColor = UIColor(named: "G4")
+        passwordTextField.backgroundColor = UIColor(named: "G4")
+        nameTextField.backgroundColor = UIColor(named: "G4")
+        emailTextField.borderStyle = .roundedRect
+        passwordTextField.borderStyle = .roundedRect
+        nameTextField.borderStyle = .roundedRect
         profileImageView.layer.cornerRadius = 70
         profileImageView.layer.masksToBounds = true
         profileImageView.tintColor = .gray
@@ -90,6 +90,7 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
         addImageLabel.text = "Tap to add your image"
         addImageLabel.textColor = .white
         addImageLabel.translatesAutoresizingMaskIntoConstraints = false
+        addImageLabel.textAlignment = .center
         let cancelButton = UIButton()
         cancelButton.setTitle("Cancel", for: .normal)
         cancelButton.setTitleColor(.systemBlue, for: .normal)
@@ -101,11 +102,11 @@ class RegistrationViewController: UIViewController, UIImagePickerControllerDeleg
             emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             emailTextField.heightAnchor.constraint(equalToConstant: 40),
-            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 30),
+            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 10),
             passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             passwordTextField.heightAnchor.constraint(equalToConstant: 40),
-            nameTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 22),
+            nameTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10),
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             nameTextField.heightAnchor.constraint(equalToConstant: 40),
