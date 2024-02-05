@@ -38,6 +38,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     var searchTimer: Timer?
     let labels = ["Product", "Place", "Course", "Food"]
     let images = ["icons8-camping-tent-72(@3×)", "icons8-room-72(@3×)", "icons8-course-72(@3×)", "icons8-pizza-five-eighths-32"]
+    let hotCollectionLabel = UILabel()
     override func viewWillAppear(_ animated: Bool) {
         browsingHistoryCollection.reloadData()
         navigationController?.navigationBar.isHidden = false
@@ -45,8 +46,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGesture)
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+//        view.addGestureRecognizer(tapGesture)
         browsingHistoryCollection.reloadData()
         view.backgroundColor = .black
         let backPicture = UIImageView()
@@ -54,6 +55,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         backPicture.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         view.addSubview(backPicture)
         view.sendSubviewToBack(backPicture)
+        view.addSubview(hotCollectionLabel)
         searchProduct()
         groupClass()
         hotGroup()
@@ -68,9 +70,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         searchTextField.delegate = self
         fetchGroupData()
     }
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
-    }
+//    @objc func dismissKeyboard() {
+//        view.endEditing(true)
+//    }
     @objc func chatListButtonClick() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "ChatListViewController") as? ChatListViewController ?? ChatListViewController()
@@ -109,7 +111,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 containerView.widthAnchor.constraint(equalToConstant: 70),
                 containerView.heightAnchor.constraint(equalToConstant: 70),
                 containerView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 30),
-                containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30 + CGFloat(88 * i))
+                containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25 + CGFloat(88 * i))
             ])
             let imageView = UIImageView()
             imageView.image = UIImage(named: images[i])
@@ -119,7 +121,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 imageView.widthAnchor.constraint(equalToConstant: 40),
                 imageView.heightAnchor.constraint(equalToConstant: 40),
                 imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+                imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
             ])
             let label = UILabel()
             label.text = labels[i]
@@ -132,7 +134,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 label.widthAnchor.constraint(equalToConstant: 70),
                 label.heightAnchor.constraint(equalToConstant: 20),
                 label.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 10),
-                label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30 + CGFloat(88 * i))
+                label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25 + CGFloat(88 * i))
             ])
             let button = UIButton()
             button.tag = i
@@ -143,20 +145,33 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 button.widthAnchor.constraint(equalToConstant: 70),
                 button.heightAnchor.constraint(equalToConstant: 70),
                 button.topAnchor.constraint(equalTo: containerView.topAnchor),
-                button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30 + CGFloat(88 * i))
+                button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25 + CGFloat(88 * i))
             ])
         }
     }
     func hotGroup() {
-        let hotCollectionLabel = UILabel(frame: CGRect(x: 30, y: 310, width: 160, height: 20))
+        hotCollectionLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            hotCollectionLabel.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 160),
+            hotCollectionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            hotCollectionLabel.widthAnchor.constraint(equalToConstant: 160),
+            hotCollectionLabel.heightAnchor.constraint(equalToConstant: 20)
+        ])
         hotCollectionLabel.text = "Hot Collections"
         hotCollectionLabel.font = UIFont(name: "GeezaPro-Bold", size: 18)
         hotCollectionLabel.textColor = .white
         view.addSubview(hotCollectionLabel)
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        let hotScrollView = UIScrollView(frame: CGRect(x: 30, y: 350, width: view.frame.width - 60, height: 150))
+        let hotScrollView = UIScrollView()
+        hotScrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(hotScrollView)
+        NSLayoutConstraint.activate([
+            hotScrollView.topAnchor.constraint(equalTo: hotCollectionLabel.bottomAnchor, constant: 10),
+            hotScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            hotScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            hotScrollView.heightAnchor.constraint(equalToConstant: 150)
+        ])
         hotScrollView.addSubview(hotCollection)
         let totalWidth = CGFloat(hotItems.count) * 160
         hotScrollView.contentSize = CGSize(width: totalWidth, height: hotCollection.frame.height)
@@ -166,20 +181,28 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         hotCollection.showsHorizontalScrollIndicator = false
     }
     func browsHistory() {
-        browsingHistory.frame = CGRect(x: 30, y: 560, width: 160, height: 20)
+        browsingHistory.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(browsingHistory)
+        NSLayoutConstraint.activate([
+            browsingHistory.topAnchor.constraint(equalTo: hotCollection.bottomAnchor, constant: 30),
+            browsingHistory.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            browsingHistory.widthAnchor.constraint(equalToConstant: 160),
+            browsingHistory.heightAnchor.constraint(equalToConstant: 20)
+        ])
         browsingHistory.text = "Browsing History"
         browsingHistory.textColor = .white
         browsingHistory.font = UIFont(name: "GeezaPro-Bold", size: 18)
-        view.addSubview(browsingHistory)
         let layout2 = UICollectionViewFlowLayout()
         layout2.scrollDirection = .horizontal
-        let historyScrollView = UIScrollView(frame: CGRect(x: 30, y: 600, width: view.frame.width - 60, height: 150))
+        let historyScrollView = UIScrollView(frame: CGRect(x: 30, y: 550, width: view.frame.width - 60, height: 150))
         view.addSubview(historyScrollView)
-        self.browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0,
-                                                                        y: 0,
-                                                                        width: browsingHistoryItems.count * 320,
-                                                                        height: Int(historyScrollView.frame.height)),
-                                                          collectionViewLayout: layout2)
+        self.browsingHistoryCollection = UICollectionView(frame: CGRect(
+            x: 0,
+            y: 0,
+            width: browsingHistoryItems.count * 320,
+            height: Int(historyScrollView.bounds.height)),
+            collectionViewLayout: layout2
+        )
         historyScrollView.addSubview(browsingHistoryCollection)
         browsingHistoryCollection.backgroundColor = .clear
         browsingHistoryCollection.showsHorizontalScrollIndicator = false
@@ -339,7 +362,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             } else {
                 for document in snapshot!.documents {
                     let data = document.data()
-                    if let product = FirestoreService.shared.parseProductData(productData: data){
+                    if let product = FirestoreService.shared.parseProductData(productData: data) {
                         if product.itemType == .request {
                             searchResults.append(product)
                         } else if product.itemType == .supply {
