@@ -47,8 +47,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-//        view.addGestureRecognizer(tapGesture)
         view.backgroundColor = .black
         let backPicture = UIImageView()
         backPicture.image = UIImage(named: "9")
@@ -69,9 +67,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         searchTextField.delegate = self
         fetchGroupData()
     }
-//    @objc func dismissKeyboard() {
-//        view.endEditing(true)
-//    }
     @objc func chatListButtonClick() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "ChatListViewController") as? ChatListViewController ?? ChatListViewController()
