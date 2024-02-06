@@ -60,13 +60,14 @@ class DetailViewController: UIViewController {
     override func viewDidLayoutSubviews() {
            super.viewDidLayoutSubviews()
            // 在 Auto Layout 設置完成後，設置 contentView 的尺寸為 scrollView 的＋高度
-           contentView.frame.size = CGSize(width: scrollView.bounds.width, height: scrollView.bounds.height + 100)
+           contentView.frame.size = CGSize(width: scrollView.bounds.width, height: scrollView.bounds.height + 50)
            // 設置 scrollView 的 contentSize 為 contentView 的尺寸
            scrollView.contentSize = contentView.frame.size
        }
     func setupView() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
+        scrollView.backgroundColor = .black
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
         NSLayoutConstraint.activate([

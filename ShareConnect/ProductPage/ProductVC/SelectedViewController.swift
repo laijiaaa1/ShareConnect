@@ -54,7 +54,7 @@ class SelectedViewController: UIViewController {
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        contentView.frame.size = CGSize(width: scrollView.bounds.width, height: scrollView.bounds.height + 100)
+        contentView.frame.size = CGSize(width: scrollView.bounds.width, height: scrollView.bounds.height + 70)
         scrollView.contentSize = contentView.frame.size
     }
     @objc func closeButtonTapped() {
@@ -122,6 +122,7 @@ class SelectedViewController: UIViewController {
     func setup() {
         view.addSubview(scrollView)
         scrollView.frame = view.bounds
+        scrollView.backgroundColor = .black
         scrollView.addSubview(contentView)
         contentView.frame = scrollView.bounds
         contentView.backgroundColor = .black

@@ -32,18 +32,24 @@ class ProvideViewController: SelectedViewController {
         }
     }
     override func setup() {
-        backImage.frame = CGRect(x: 0, y: 0, width: view.frame.width , height: view.frame.height / 2)
+        view.addSubview(scrollView)
+        scrollView.frame = view.bounds
+        scrollView.backgroundColor = .black
+        scrollView.addSubview(contentView)
+        contentView.frame = scrollView.bounds
+        contentView.backgroundColor = .black
+        backImage.frame = CGRect(x: 0, y: -100, width: contentView.frame.width , height: contentView.frame.height - 200)
         backImage.layer.cornerRadius = 15
         backImage.layer.masksToBounds = true
-        view.addSubview(backImage)
-        backView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        contentView.addSubview(backImage)
+        backView.frame = CGRect(x: 0, y: -100, width: contentView.frame.width, height: contentView.frame.height)
         backView.backgroundColor = UIColor(red: 228/255, green: 220/255, blue: 209/255, alpha: 0.5)
-        view.addSubview(backView)
-        infoView.frame = CGRect(x: 0, y: 250, width: view.frame.width, height: view.frame.height - 250)
+        contentView.addSubview(backView)
+        infoView.frame = CGRect(x: 0, y: 250, width: contentView.frame.width, height: contentView.frame.height)
         infoView.backgroundColor = .black
         infoView.layer.cornerRadius = 15
         infoView.layer.masksToBounds = true
-        view.addSubview(infoView)
+        contentView.addSubview(infoView)
         priceView.frame = CGRect(x: 40, y: 70, width: 30, height: 30)
         priceView.image = UIImage(named: "icons8-price-50 (1)")
         infoView.addSubview(priceView)
@@ -57,8 +63,8 @@ class ProvideViewController: SelectedViewController {
         availabilityView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             availabilityView.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 30),
-            availabilityView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            availabilityView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            availabilityView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            availabilityView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             availabilityView.heightAnchor.constraint(equalToConstant: 70)
         ])
         let dateImage = UIImageView()
@@ -86,7 +92,7 @@ class ProvideViewController: SelectedViewController {
         itemLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             itemLabel.topAnchor.constraint(equalTo: availabilityView.bottomAnchor, constant: 60),
-            itemLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
+            itemLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30)
         ])
         itemView.backgroundColor = .white/*UIColor(named: "G7")*/
         itemView.layer.cornerRadius = 10
@@ -113,7 +119,7 @@ class ProvideViewController: SelectedViewController {
         quantity.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             quantity.topAnchor.constraint(equalTo: itemLabel.bottomAnchor, constant: 60),
-            quantity.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
+            quantity.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30)
         ])
         numberLabel.text = "1"
         numberLabel.font = UIFont(name: "PingFangTC-Semibold", size: 20)
@@ -176,8 +182,8 @@ class ProvideViewController: SelectedViewController {
         trolleyButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             trolleyButton.topAnchor.constraint(equalTo: quantity.bottomAnchor, constant: 50),
-            trolleyButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            trolleyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            trolleyButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            trolleyButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             trolleyButton.heightAnchor.constraint(equalToConstant: 50)
         ])
         trolleyButton.addTarget(self, action: #selector(trolleyButtonTapped), for: .touchUpInside)
@@ -186,11 +192,11 @@ class ProvideViewController: SelectedViewController {
         closeButton.backgroundColor = .white/*UIColor(named: "G7")*/
         closeButton.layer.cornerRadius = 30
         closeButton.layer.masksToBounds = true
-        view.addSubview(closeButton)
+        contentView.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             closeButton.topAnchor.constraint(equalTo: infoView.topAnchor, constant: -20),
-            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            closeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             closeButton.heightAnchor.constraint(equalToConstant: 60),
             closeButton.widthAnchor.constraint(equalToConstant: 60)
         ])
