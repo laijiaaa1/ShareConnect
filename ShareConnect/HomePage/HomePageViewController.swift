@@ -31,7 +31,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         ("", "icons8-camp-64", ""),
         ("", "icons8-camp-64", "")]
     let hotCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
-    var browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 800, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
+    var browsingHistoryCollection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 1600, height: 150), collectionViewLayout: UICollectionViewFlowLayout())
     let db = Firestore.firestore()
     var searchResults: [Product] = []
     var searchSupply: [Product] = []
@@ -39,6 +39,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     let labels = ["Product", "Place", "Course", "Food"]
     let images = ["icons8-camping-tent-72(@3×)", "icons8-room-72(@3×)", "icons8-course-72(@3×)", "icons8-pizza-five-eighths-32"]
     let hotCollectionLabel = UILabel()
+    let historyScrollView = UIScrollView()
     override func viewWillAppear(_ animated: Bool) {
         browsingHistoryCollection.reloadData()
         navigationController?.navigationBar.isHidden = false
@@ -48,14 +49,12 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         super.viewDidLoad()
 //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
 //        view.addGestureRecognizer(tapGesture)
-        browsingHistoryCollection.reloadData()
         view.backgroundColor = .black
         let backPicture = UIImageView()
         backPicture.image = UIImage(named: "9")
         backPicture.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         view.addSubview(backPicture)
         view.sendSubviewToBack(backPicture)
-        view.addSubview(hotCollectionLabel)
         searchProduct()
         groupClass()
         hotGroup()
@@ -151,6 +150,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     func hotGroup() {
         hotCollectionLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(hotCollectionLabel)
         NSLayoutConstraint.activate([
             hotCollectionLabel.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 160),
             hotCollectionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
@@ -194,15 +194,15 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         browsingHistory.font = UIFont(name: "GeezaPro-Bold", size: 18)
         let layout2 = UICollectionViewFlowLayout()
         layout2.scrollDirection = .horizontal
-        let historyScrollView = UIScrollView(frame: CGRect(x: 30, y: 550, width: view.frame.width - 60, height: 150))
+        historyScrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(historyScrollView)
-        self.browsingHistoryCollection = UICollectionView(frame: CGRect(
-            x: 0,
-            y: 0,
-            width: browsingHistoryItems.count * 320,
-            height: Int(historyScrollView.bounds.height)),
-            collectionViewLayout: layout2
-        )
+        NSLayoutConstraint.activate([
+            historyScrollView.topAnchor.constraint(equalTo: browsingHistory.bottomAnchor, constant: 10),
+            historyScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            historyScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            historyScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            historyScrollView.heightAnchor.constraint(equalToConstant: 150)
+        ])
         historyScrollView.addSubview(browsingHistoryCollection)
         browsingHistoryCollection.backgroundColor = .clear
         browsingHistoryCollection.showsHorizontalScrollIndicator = false
@@ -290,7 +290,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 cell.frame = CGRect(x: xpoint, y: 0, width: 150, height: 150)
                 let view = UIView()
                 let viewPoint = CGFloat(indexPath.item) * 320
-                view.frame = CGRect(x: 20+viewPoint, y: 28, width: 100, height: 100)
+                view.frame = CGRect(x: 20+viewPoint, y: 25, width: 100, height: 100)
                 view.layer.cornerRadius = 10
                 view.layer.borderWidth = 1
                 collectionView.addSubview(view)
@@ -308,7 +308,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 label.textAlignment = .center
                 label.backgroundColor = .white
                 cell.addSubview(label)
-                let imageButton = UIButton(frame: CGRect(x: 230, y: 80, width: 60, height: 30))
+                let imageButton = UIButton(frame: CGRect(x: 230, y: 75, width: 60, height: 30))
                 imageButton.setTitle("Detail", for: .normal)
                 imageButton.setTitleColor(.white, for: .normal)
                 imageButton.layer.cornerRadius = 10
