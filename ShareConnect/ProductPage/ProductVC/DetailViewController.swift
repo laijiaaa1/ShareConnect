@@ -60,7 +60,7 @@ class DetailViewController: UIViewController {
     override func viewDidLayoutSubviews() {
            super.viewDidLayoutSubviews()
            // 在 Auto Layout 設置完成後，設置 contentView 的尺寸為 scrollView 的＋高度
-           contentView.frame.size = CGSize(width: scrollView.bounds.width, height: scrollView.bounds.height + 50)
+           contentView.frame.size = CGSize(width: scrollView.bounds.width, height: scrollView.bounds.height + 70)
            // 設置 scrollView 的 contentSize 為 contentView 的尺寸
            scrollView.contentSize = contentView.frame.size
        }
@@ -382,9 +382,9 @@ class DetailViewController: UIViewController {
                 self.contentDescriptionView.translatesAutoresizingMaskIntoConstraints = false
                 self.contentDescriptionView.transform = CGAffineTransform(translationX: 30, y: 560)
                 NSLayoutConstraint.activate([
-                    self.contentDescriptionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 600),
-                    self.contentDescriptionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
-                    self.contentDescriptionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
+                    self.contentDescriptionView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 600),
+                    self.contentDescriptionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 30),
+                    self.contentDescriptionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -30),
                     self.contentDescriptionView.heightAnchor.constraint(equalToConstant: 150)
                 ])
                 UIView.animate(withDuration: 0.5) {
