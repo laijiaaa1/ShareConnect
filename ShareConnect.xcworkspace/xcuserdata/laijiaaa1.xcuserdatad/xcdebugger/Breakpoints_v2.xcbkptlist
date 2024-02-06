@@ -3210,6 +3210,21 @@
                   endingLineNumber = "127"
                   offsetFromSymbolStart = "1216">
                </Location>
+               <Location
+                  uuid = "4F1C5B9D-7A77-4F6B-8A00-45AE0E3C93F9 - 85d9f5a8172ae859"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ShareConnect.LoginViewController.authorizationController(controller: __C.ASAuthorizationController, didCompleteWithAuthorization: __C.ASAuthorization) -&gt; ()"
+                  moduleName = "ShareConnect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/laijiaaa1/Documents/ShareConnect/ShareConnect/Login&amp;Register/LoginViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "127"
+                  endingLineNumber = "127"
+                  offsetFromSymbolStart = "1076">
+               </Location>
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>

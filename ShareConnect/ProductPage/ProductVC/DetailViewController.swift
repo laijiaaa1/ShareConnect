@@ -39,6 +39,8 @@ class DetailViewController: UIViewController {
     let sellerButton = UIButton()
     let contentDescriptionView = UIScrollView()
     var isCollected = false
+    let scrollView = UIScrollView()
+    let contentView = UIView()
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
     }
@@ -55,16 +57,39 @@ class DetailViewController: UIViewController {
         }
         loadSavedCollections()
     }
+    override func viewDidLayoutSubviews() {
+           super.viewDidLayoutSubviews()
+           // 在 Auto Layout 設置完成後，設置 contentView 的尺寸為 scrollView 的＋高度
+           contentView.frame.size = CGSize(width: scrollView.bounds.width, height: scrollView.bounds.height + 100)
+           // 設置 scrollView 的 contentSize 為 contentView 的尺寸
+           scrollView.contentSize = contentView.frame.size
+       }
     func setupView() {
-        view.addSubview(titleLabel)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.heightAnchor.constraint(equalTo: view.heightAnchor, constant: 100)
+        ])
+        contentView.addSubview(titleLabel)
         titleLabel.text = "Title"
         titleLabel.font = UIFont(name: "PingFangTC-Semibold", size: 30)
         titleLabel.textColor = .white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 120).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30).isActive = true
         titleLabel.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        view.addSubview(detailImage)
+        contentView.addSubview(detailImage)
         detailImage.image = UIImage(named: "wait")
         detailImage.contentMode = .scaleAspectFill
         detailImage.clipsToBounds = true
@@ -72,20 +97,20 @@ class DetailViewController: UIViewController {
         detailImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             detailImage.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            detailImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            detailImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             detailImage.heightAnchor.constraint(equalToConstant: 180),
             detailImage.widthAnchor.constraint(equalToConstant: 320)
         ])
-        view.addSubview(priceImage)
+        contentView.addSubview(priceImage)
         priceImage.image = UIImage(named: "icons8-price-50 (1)")
         priceImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             priceImage.topAnchor.constraint(equalTo: detailImage.bottomAnchor, constant: 30),
-            priceImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            priceImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             priceImage.heightAnchor.constraint(equalToConstant: 30),
             priceImage.widthAnchor.constraint(equalToConstant: 30)
         ])
-        view.addSubview(price)
+        contentView.addSubview(price)
         price.text = "800 / Day"
         price.font = UIFont(name: "PingFangTC-Semibold", size: 18)
         price.textColor = .white
@@ -93,7 +118,7 @@ class DetailViewController: UIViewController {
         price.centerYAnchor.constraint(equalTo: priceImage.centerYAnchor).isActive = true
         price.leadingAnchor.constraint(equalTo: priceImage.trailingAnchor, constant: 20).isActive = true
         price.widthAnchor.constraint(equalToConstant: 200)
-        view.addSubview(addCartButton)
+        contentView.addSubview(addCartButton)
         addCartButton.setImage(UIImage(named: "icons8-cart-90"), for: .normal)
         addCartButton.translatesAutoresizingMaskIntoConstraints = false
         addCartButton.addTarget(self, action: #selector(goSelectedPage), for: .touchUpInside)
@@ -104,7 +129,7 @@ class DetailViewController: UIViewController {
             addCartButton.heightAnchor.constraint(equalToConstant: 30),
             addCartButton.widthAnchor.constraint(equalToConstant: 30)
         ])
-        view.addSubview(chatButton)
+        contentView.addSubview(chatButton)
         chatButton.addTarget(self, action: #selector(goChatPage), for: .touchUpInside)
         chatButton.setImage(UIImage(named: "icons8-customer-support-90 (1)"), for: .normal)
         chatButton.startAnimatingPressActions()
@@ -115,7 +140,7 @@ class DetailViewController: UIViewController {
             chatButton.heightAnchor.constraint(equalToConstant: 30),
             chatButton.widthAnchor.constraint(equalToConstant: 30)
         ])
-        view.addSubview(collectionButton)
+        contentView.addSubview(collectionButton)
         collectionButton.setImage(UIImage(named: "icons8-bookmark-72(@3×)"), for: .normal)
         collectionButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -126,7 +151,7 @@ class DetailViewController: UIViewController {
         ])
         collectionButton.addTarget(self, action: #selector(addCollection), for: .touchUpInside)
         collectionButton.startAnimatingPressActions()
-        view.addSubview(shareButton)
+        contentView.addSubview(shareButton)
         shareButton.setImage(UIImage(named: "icons8-share-96"), for: .normal)
         shareButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -137,14 +162,14 @@ class DetailViewController: UIViewController {
         ])
         shareButton.addTarget(self, action: #selector(share), for: .touchUpInside)
         shareButton.startAnimatingPressActions()
-        view.addSubview(availabilityView)
+        contentView.addSubview(availabilityView)
         availabilityView.backgroundColor = .white
         availabilityView.layer.cornerRadius = 10
         availabilityView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             availabilityView.topAnchor.constraint(equalTo: priceImage.bottomAnchor, constant: 30),
-            availabilityView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            availabilityView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            availabilityView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            availabilityView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             availabilityView.heightAnchor.constraint(equalToConstant: 70)
         ])
         availabilityView.addSubview(availability)
@@ -169,14 +194,14 @@ class DetailViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dateImageTapped))
         dateImage.isUserInteractionEnabled = true
         dateImage.addGestureRecognizer(tapGesture)
-        view.addSubview(descriptionView)
+        contentView.addSubview(descriptionView)
         descriptionView.backgroundColor = .white /*UIColor(named: "G2")*/
         descriptionView.layer.cornerRadius = 10
         descriptionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             descriptionView.topAnchor.constraint(equalTo: availabilityView.bottomAnchor, constant: 30),
-            descriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            descriptionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            descriptionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            descriptionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             descriptionView.heightAnchor.constraint(equalToConstant: 70)
         ])
         descriptionView.addSubview(descriptionLabel)
@@ -201,14 +226,14 @@ class DetailViewController: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(descriptionButtonTapped))
         descriptionButton.isUserInteractionEnabled = true
         descriptionButton.addGestureRecognizer(tap)
-        view.addSubview(otherView)
+        contentView.addSubview(otherView)
         otherView.backgroundColor = .white /*UIColor(named: "G2")*/
         otherView.layer.cornerRadius = 10
         otherView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             otherView.topAnchor.constraint(equalTo: descriptionView.bottomAnchor, constant: 30),
-            otherView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            otherView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            otherView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            otherView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             otherView.heightAnchor.constraint(equalToConstant: 70)
         ])
         otherView.addSubview(otherLabel)
@@ -230,18 +255,18 @@ class DetailViewController: UIViewController {
             otherButton.widthAnchor.constraint(equalToConstant: 20)
         ])
         let backButton = UIButton()
-        view.addSubview(backButton)
+        contentView.addSubview(backButton)
         backButton.setImage(UIImage(named: "icons8-back-to-50"), for: .normal)
         backButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 65),
-            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            backButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 65),
+            backButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             backButton.heightAnchor.constraint(equalToConstant: 40),
             backButton.widthAnchor.constraint(equalToConstant: 40)
         ])
         backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
         backButton.startAnimatingPressActions()
-        view.addSubview(sellerButton)
+        contentView.addSubview(sellerButton)
         sellerButton.translatesAutoresizingMaskIntoConstraints = false
         sellerButton.backgroundColor = .black
         sellerButton.startAnimatingPressActions()
