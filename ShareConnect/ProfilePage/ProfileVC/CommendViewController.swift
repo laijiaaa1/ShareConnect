@@ -148,11 +148,11 @@ class CommendViewController: UIViewController, UIImagePickerControllerDelegate &
         dismiss(animated: true, completion: nil)
     }
     @objc func submitReview() {
+        ProgressHUD.animate("Please wait...", .ballVerticalBounce)
         viewModel.submitReview(comment: commentTextView.text, rating: Double(starRatingView.rating), image: imageView.image) { success in
             if success {
-                ProgressHUD.animate("Please wait...", .ballVerticalBounce)
                 DispatchQueue.main.async {
-                    ProgressHUD.succeed("Comment Success", delay: 1.5)
+                    ProgressHUD.succeed("Comment Success", delay: 1.5) 
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         self.navigationController?.popViewController(animated: true)
                     }
