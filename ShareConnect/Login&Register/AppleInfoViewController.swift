@@ -44,6 +44,13 @@ class AppleInfoViewController: UIViewController, UIImagePickerControllerDelegate
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    lazy var emailTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Email"
+        textField.borderStyle = .roundedRect
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -57,12 +64,16 @@ class AppleInfoViewController: UIViewController, UIImagePickerControllerDelegate
         view.addSubview(nameTextField)
         view.addSubview(profileImageView)
         view.addSubview(registerButton)
+        view.addSubview(emailTextField)
         nameTextField.backgroundColor = .white
         nameTextField.borderStyle = .none
         profileImageView.layer.cornerRadius = 70
         profileImageView.layer.masksToBounds = true
         profileImageView.tintColor = .gray
         profileImageView.backgroundColor = .clear
+        emailTextField.backgroundColor = .white
+        emailTextField.borderStyle = .none
+        emailTextField.layer.cornerRadius = 10
         let addImageLabel = UILabel()
         view.addSubview(addImageLabel)
         addImageLabel.text = "Tap to add your image"
@@ -79,7 +90,11 @@ class AppleInfoViewController: UIViewController, UIImagePickerControllerDelegate
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             nameTextField.heightAnchor.constraint(equalToConstant: 40),
-            profileImageView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 30),
+            emailTextField.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 20),
+            emailTextField.leadingAnchor.constraint(equalTo: nameTextField.leadingAnchor),
+            emailTextField.trailingAnchor.constraint(equalTo: nameTextField.trailingAnchor),
+            emailTextField.heightAnchor.constraint(equalToConstant: 40),
+            profileImageView.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 30),
             profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             profileImageView.widthAnchor.constraint(equalToConstant: 140),
             profileImageView.heightAnchor.constraint(equalToConstant: 140),
@@ -123,10 +138,11 @@ class AppleInfoViewController: UIViewController, UIImagePickerControllerDelegate
     @objc func registerButtonTapped(_ sender: UIButton) {
         guard let name = nameTextField.text,
               let profileImage = profileImageView.image,
+              let email = emailTextField.text,
               let appleIDCredential = self.appleIDCredential else {
             return
         }
-        RegistrationManager.shared.registerUser(email: "", password: "", name: name, profileImage: profileImage) { success in
+        RegistrationManager.shared.registerUser(email: email, password: "", name: name, profileImage: profileImage) { success in
             if success {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
