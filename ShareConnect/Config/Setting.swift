@@ -78,7 +78,6 @@ class StarRatingView: UIView {
             button.tintColor = UIColor(named: "G3")
             button.setImage(UIImage(systemName: "star"), for: .normal)
             button.setImage(UIImage(systemName: "star.fill"), for: .selected)
-            button.adjustsImageWhenHighlighted = false
             button.addTarget(self, action: #selector(ratingButtonTapped(button:)), for: .touchUpInside)
             ratingButtons.append(button)
             addSubview(button)

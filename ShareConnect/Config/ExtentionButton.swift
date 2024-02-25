@@ -22,6 +22,7 @@ extension UIButton {
     private func animate(_ button: UIButton, transform: CGAffineTransform) {
         UIView.animate(withDuration: 0.4,
                        delay: 0,
+                       //設置彈簧幅度、初始速度、呈現樣式緩進緩出
                        usingSpringWithDamping: 0.5,
                        initialSpringVelocity: 3,
                        options: [.curveEaseInOut],

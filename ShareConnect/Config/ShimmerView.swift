@@ -16,6 +16,7 @@ class ShimmerImageView: UIImageView {
     private var wavePath: UIBezierPath {
         let path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: bounds.height / 2))
+        //使用 for 循環迭代 x 軸上的每個點（從 0 開始，以步長 0.1 遞增，直到達到 bounds 的寬度)
         for angle in stride(from: 0.0, to: Double(bounds.width), by: 0.1) {
             let x = angle
             let y = sin(angle * 2 * Double.pi / 100) * waveHeight + Double(bounds.height / 2)
